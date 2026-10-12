@@ -222,4 +222,25 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-label")) {
+    customElements.define(
+      "sk-label",
+      class extends HTMLElement {
+        forId = ""
+        required = false
+        marker = "after"
+      },
+    )
+  }
+
+  if (!customElements.get("sk-separator")) {
+    customElements.define(
+      "sk-separator",
+      class extends HTMLElement {
+        orientation = "horizontal"
+        decorative = false
+      },
+    )
+  }
 })

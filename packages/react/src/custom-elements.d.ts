@@ -111,6 +111,17 @@ type SkeletonElement = HTMLElement & {
   direction: "ltr" | "rtl"
 }
 
+type LabelElement = HTMLElement & {
+  forId: string
+  required: boolean
+  marker: "after" | "before"
+}
+
+type SeparatorElement = HTMLElement & {
+  orientation: "horizontal" | "vertical"
+  decorative: boolean
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -193,6 +204,16 @@ declare module "react" {
       "sk-skeleton": BaseCustomElement<SkeletonElement> & {
         variant?: "text" | "rect" | "circle"
         direction?: "ltr" | "rtl"
+      }
+      "sk-label": BaseCustomElement<LabelElement> & {
+        for?: string
+        required?: boolean
+        marker?: "after" | "before"
+      }
+      "sk-separator": BaseCustomElement<SeparatorElement> & {
+        orientation?: "horizontal" | "vertical"
+        decorative?: boolean
+        label?: string
       }
     }
   }

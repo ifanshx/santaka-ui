@@ -247,6 +247,63 @@
         </div>
       </section>
 
+      <section aria-labelledby="structure-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="structure-heading">Structure</h2>
+        </sk-text>
+
+        <!--
+          Label is associated through `for`; clicking it focuses the control via
+          the browser's own activation. Separator is a real <hr> that announces
+          itself, unless marked decorative.
+        -->
+        <div class="sk-stack">
+          <!--
+            The control's id is `${hostId}-control`, because the host id belongs
+            to the field element. That suffix is wiring a consumer should not
+            have to know -- tracked as a known limitation until a stable
+            cross-component id contract exists.
+          -->
+          <sk-label for="standalone-email-control">Email address</sk-label>
+          <sk-input
+            id="standalone-email"
+            name="standaloneEmail"
+            label=""
+            placeholder="you@example.com"
+          ></sk-input>
+
+          <sk-label for="standalone-notes-control" required marker="before">Notes</sk-label>
+          <sk-textarea id="standalone-notes" name="standaloneNotes" rows="2" label=""></sk-textarea>
+
+          <sk-label for="standalone-email-confirm-control" required>Confirm email</sk-label>
+          <sk-input
+            id="standalone-email-confirm"
+            name="standaloneEmailConfirm"
+            type="email"
+            label=""
+            placeholder="you@example.com"
+          ></sk-input>
+        </div>
+
+        <sk-separator label="or"></sk-separator>
+        <p class="sk-stack" style="margin: 0">
+          <sk-text variant="sm" muted>
+            Above is a meaningful separator: it announces "or" between two routes.
+          </sk-text>
+        </p>
+
+        <sk-separator decorative></sk-separator>
+        <sk-text variant="sm" muted
+          >Above is a decorative one: purely visual, announced by nothing.</sk-text
+        >
+
+        <div class="sk-cluster" style="align-items: stretch; block-size: 3rem">
+          <sk-text variant="base">Left column</sk-text>
+          <sk-separator orientation="vertical" decorative></sk-separator>
+          <sk-text variant="base">Right column</sk-text>
+        </div>
+      </section>
+
       <section aria-labelledby="loading-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="loading-heading">Waiting</h2>

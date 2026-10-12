@@ -1,0 +1,31 @@
+/*
+ * Separator styles.
+ *
+ * The hairline token, deliberately: a separator divides content, and the 3px
+ * chrome stroke between paragraphs would read as a wall. This is the one
+ * component in the system where the 1px line is the *point*.
+ */
+
+sk-separator {
+  display: block;
+  border: 0;
+  background-color: var(--sk-color-border, #e2dff0);
+  block-size: var(--sk-border-width, 1px);
+  inline-size: 100%;
+}
+
+sk-separator[orientation="vertical"] {
+  display: inline-block;
+  inline-size: var(--sk-border-width, 1px);
+  block-size: 100%;
+  /* The parent gives the height; without it a vertical separator is invisible,
+     which is a real bug rather than a styling choice. */
+  align-self: stretch;
+}
+
+/*
+ * No motion, no chrome, no press: a separator is the absence of a component.
+ * There is no reduced-motion block because nothing animates, and no
+ * forced-colors override because a Canvas-colored hairline is exactly what the
+ * forced palette intends.
+ */

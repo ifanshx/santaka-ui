@@ -32,6 +32,7 @@ Read strictly, "all other boolean props" includes booleans that toggle a
 | `sk-link` | `subtle` | suppresses the underline until hover |
 | `sk-badge` | `dot` | renders a circle instead of a pill |
 | `sk-text` | `muted` | sets the secondary text color |
+| `sk-separator` | `decorative` | removes a purely visual line from the accessibility tree |
 
 Under a strict reading these must become `isExternal`, `isSubtle`, `isDot`.
 

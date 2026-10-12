@@ -516,6 +516,69 @@ const COMPONENTS = [
       ],
     },
   },
+  {
+    name: "label",
+    tag: "sk-label",
+    stability: "stable",
+    cssVariables: [
+      "--sk-color-danger",
+      "--sk-color-text",
+      "--sk-space-1",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-text-sm-weight",
+    ],
+    ai: {
+      summary:
+        "A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.",
+      whenToUse: [
+        "A control was built without its own label and needs one that is actually associated",
+        "A checkbox or switch needs its marker before the text, where the control leads the sentence",
+        "A custom field needs the same label record Input's built-in label uses",
+      ],
+      whenNotToUse: [
+        "The control already has a label prop — Input and Textarea wire their own; two labels for one control is a bug",
+        "It would label nothing — `for` is required; a label with no control is a span with ambition, use plain text",
+        "The text describes a group of controls — use a Fieldset or a heading, not a label",
+      ],
+      accessibility:
+        "Associates through `htmlFor` pointing at the control's id, so clicking the label focuses the control via the browser's own activation — no click handler here, because the platform's is better and reimplementing it means reimplementing its edge cases. The required marker is `aria-hidden`: the control's own `required` attribute carries the semantics, the asterisk is for the sighted, and color alone never carries it (WCAG 1.4.1). `required` here does not set anything on the control — a label reaching into another component's DOM is exactly what section 4 forbids.",
+      example:
+        '<sk-label for="newsletter-email">Email address</sk-label>\n<input id="newsletter-email" type="email">',
+      knownLimitations: [
+        "Field components render their control with the id `${hostId}-control`, so `for` must carry that suffix — a cross-component id contract is tracked as open",
+        "It cannot label a control rendered inside a shadow root it cannot see — `for` must match a light-DOM id",
+        "It does not generate ids; pair it with the control's own id or React's `useId()`",
+      ],
+    },
+  },
+  {
+    name: "separator",
+    tag: "sk-separator",
+    stability: "stable",
+    cssVariables: ["--sk-border-width", "--sk-color-border"],
+    ai: {
+      summary:
+        "A hairline between content: a real <hr> that announces itself unless it is purely visual.",
+      whenToUse: [
+        "Two groups of content need a thematic break between them",
+        "A form's sections need dividing without a heading",
+        "A vertical rule splits two columns",
+      ],
+      whenNotToUse: [
+        "The break is already communicated by a heading or Card boundary — mark it `decorative` or skip it",
+        "You are separating items in a list — use spacing or a list style; it is the honest tool",
+        'Two routes branch at a choice — use Tabs or a Radio Group to express the choice; "or" between buttons is not a widget',
+      ],
+      accessibility:
+        'Renders a real `<hr>`, announced as a separator by screen readers. `decorative` flips it to `role="none"` for lines that exist only for the eye. A `label` (e.g. "or" between two actions) is announced only when the separator is meaningful — a name on a `role="none"` element is a contradiction. The line is the 1px hairline token, not the 3px chrome stroke: a separator divides content, and a 3px stroke between paragraphs reads as a wall.',
+      example: '<sk-separator label="or"></sk-separator>',
+      knownLimitations: [
+        "Vertical separators need a sized parent — `align-self: stretch` is the default, not a guarantee",
+        "No motion, no chrome, by design — the one component where the hairline is the point",
+      ],
+    },
+  },
 ]
 
 for (const component of COMPONENTS) {

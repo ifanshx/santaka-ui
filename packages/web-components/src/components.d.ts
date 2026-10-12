@@ -239,6 +239,37 @@ export namespace Components {
         "variant": "default" | "quiet";
     }
     /**
+     * Label — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The wiring here is the pattern `sk-input` proved in a real browser: the label
+     * is associated with its control through `htmlFor` pointing at the control's id,
+     * and clicking the label focuses the control because the browser's own label
+     * activation does it — this component implements no click handler, because the
+     * platform's is better and reimplementing it would mean reimplementing the
+     * edge cases too.
+     * The required marker is `aria-hidden` and always rendered, even when a
+     * screen-reader user cannot see it, because the `required` attribute on the
+     * control carries the semantics; the asterisk is for the sighted. Color alone
+     * never carries the requirement — WCAG 1.4.1, the same ruling Input made.
+     */
+    interface SkLabel {
+        /**
+          * The `id` of the control this label names. Required for the same reason Link's `href` is: a label with no `for` is a mistake the compiler catches, and passing `""` explicitly is the visible way to say "decorative label".  Named `for`, not `htmlFor`. Stencil maps a camelCase prop to its kebab attribute (`htmlFor` → `html-for`), so a consumer writing the HTML attribute `for` — the only spelling that exists in plain markup — would set nothing, and the label would silently associate with nothing. The first build proved it: `for="standalone-email"` in the page, `for=""` in the DOM. The native `for` attribute name is also what `Element.prototype` reserves, so a prop named `for` would collide with it — hence `for` as the *attribute* via `@Prop({ attribute: "for" })` on a differently-named field.
+          * @default ""
+         */
+        "forId": string;
+        /**
+          * Where the marker sits. `before` reads naturally for checkboxes and switches, where the control leads the sentence.
+          * @default "after"
+         */
+        "marker": "after" | "before";
+        /**
+          * Marks the labeled control as required and renders the marker.  This sets `aria-required` on **this** element, not the control — the consumer sets `required` on the control itself, and the label marking the control on its behalf would be a second component reaching into another's DOM, which §4 forbids.
+          * @default false
+         */
+        "required": boolean;
+    }
+    /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A link is an anchor. This component exists for two reasons, not for
@@ -275,6 +306,35 @@ export namespace Components {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Separator — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders a real `<hr>` because that is the semantic: a thematic break
+     * between content, announced by screen readers unless the consumer says it is
+     * purely visual. `decorative` flips it to `role="none"` — the same ruling
+     * ARIA APG makes for separators that exist only for the eye.
+     * The line is the hairline token (`border.width`), not the 3px chrome stroke:
+     * a separator divides content, and a 3px stroke between paragraphs would read
+     * as a wall. Its geometry is the one place this system uses the hairline
+     * deliberately.
+     */
+    interface SkSeparator {
+        /**
+          * Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break.
+          * @default false
+         */
+        "decorative": boolean;
+        /**
+          * Label for a meaningful separator, e.g. "or" between two actions. Announced only when the separator is not decorative, because a name on a `role="none"` element is a contradiction.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Axis of the line. Vertical separators need a sized parent.
+          * @default "horizontal"
+         */
+        "orientation": "horizontal" | "vertical";
     }
     /**
      * Skeleton — Tier 1 foundation component.
@@ -543,6 +603,26 @@ declare global {
         new (): HTMLSkInputElement;
     };
     /**
+     * Label — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The wiring here is the pattern `sk-input` proved in a real browser: the label
+     * is associated with its control through `htmlFor` pointing at the control's id,
+     * and clicking the label focuses the control because the browser's own label
+     * activation does it — this component implements no click handler, because the
+     * platform's is better and reimplementing it would mean reimplementing the
+     * edge cases too.
+     * The required marker is `aria-hidden` and always rendered, even when a
+     * screen-reader user cannot see it, because the `required` attribute on the
+     * control carries the semantics; the asterisk is for the sighted. Color alone
+     * never carries the requirement — WCAG 1.4.1, the same ruling Input made.
+     */
+    interface HTMLSkLabelElement extends Components.SkLabel, HTMLStencilElement {
+    }
+    var HTMLSkLabelElement: {
+        prototype: HTMLSkLabelElement;
+        new (): HTMLSkLabelElement;
+    };
+    /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A link is an anchor. This component exists for two reasons, not for
@@ -559,6 +639,24 @@ declare global {
     var HTMLSkLinkElement: {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
+    };
+    /**
+     * Separator — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders a real `<hr>` because that is the semantic: a thematic break
+     * between content, announced by screen readers unless the consumer says it is
+     * purely visual. `decorative` flips it to `role="none"` — the same ruling
+     * ARIA APG makes for separators that exist only for the eye.
+     * The line is the hairline token (`border.width`), not the 3px chrome stroke:
+     * a separator divides content, and a 3px stroke between paragraphs would read
+     * as a wall. Its geometry is the one place this system uses the hairline
+     * deliberately.
+     */
+    interface HTMLSkSeparatorElement extends Components.SkSeparator, HTMLStencilElement {
+    }
+    var HTMLSkSeparatorElement: {
+        prototype: HTMLSkSeparatorElement;
+        new (): HTMLSkSeparatorElement;
     };
     /**
      * Skeleton — Tier 1 foundation component.
@@ -663,7 +761,9 @@ declare global {
         "sk-card": HTMLSkCardElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
+        "sk-label": HTMLSkLabelElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-separator": HTMLSkSeparatorElement;
         "sk-skeleton": HTMLSkSkeletonElement;
         "sk-spinner": HTMLSkSpinnerElement;
         "sk-text": HTMLSkTextElement;
@@ -920,6 +1020,37 @@ declare namespace LocalJSX {
         "variant"?: "default" | "quiet";
     }
     /**
+     * Label — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The wiring here is the pattern `sk-input` proved in a real browser: the label
+     * is associated with its control through `htmlFor` pointing at the control's id,
+     * and clicking the label focuses the control because the browser's own label
+     * activation does it — this component implements no click handler, because the
+     * platform's is better and reimplementing it would mean reimplementing the
+     * edge cases too.
+     * The required marker is `aria-hidden` and always rendered, even when a
+     * screen-reader user cannot see it, because the `required` attribute on the
+     * control carries the semantics; the asterisk is for the sighted. Color alone
+     * never carries the requirement — WCAG 1.4.1, the same ruling Input made.
+     */
+    interface SkLabel {
+        /**
+          * The `id` of the control this label names. Required for the same reason Link's `href` is: a label with no `for` is a mistake the compiler catches, and passing `""` explicitly is the visible way to say "decorative label".  Named `for`, not `htmlFor`. Stencil maps a camelCase prop to its kebab attribute (`htmlFor` → `html-for`), so a consumer writing the HTML attribute `for` — the only spelling that exists in plain markup — would set nothing, and the label would silently associate with nothing. The first build proved it: `for="standalone-email"` in the page, `for=""` in the DOM. The native `for` attribute name is also what `Element.prototype` reserves, so a prop named `for` would collide with it — hence `for` as the *attribute* via `@Prop({ attribute: "for" })` on a differently-named field.
+          * @default ""
+         */
+        "forId"?: string;
+        /**
+          * Where the marker sits. `before` reads naturally for checkboxes and switches, where the control leads the sentence.
+          * @default "after"
+         */
+        "marker"?: "after" | "before";
+        /**
+          * Marks the labeled control as required and renders the marker.  This sets `aria-required` on **this** element, not the control — the consumer sets `required` on the control itself, and the label marking the control on its behalf would be a second component reaching into another's DOM, which §4 forbids.
+          * @default false
+         */
+        "required"?: boolean;
+    }
+    /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A link is an anchor. This component exists for two reasons, not for
@@ -956,6 +1087,35 @@ declare namespace LocalJSX {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Separator — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders a real `<hr>` because that is the semantic: a thematic break
+     * between content, announced by screen readers unless the consumer says it is
+     * purely visual. `decorative` flips it to `role="none"` — the same ruling
+     * ARIA APG makes for separators that exist only for the eye.
+     * The line is the hairline token (`border.width`), not the 3px chrome stroke:
+     * a separator divides content, and a 3px stroke between paragraphs would read
+     * as a wall. Its geometry is the one place this system uses the hairline
+     * deliberately.
+     */
+    interface SkSeparator {
+        /**
+          * Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break.
+          * @default false
+         */
+        "decorative"?: boolean;
+        /**
+          * Label for a meaningful separator, e.g. "or" between two actions. Announced only when the separator is not decorative, because a name on a `role="none"` element is a contradiction.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Axis of the line. Vertical separators need a sized parent.
+          * @default "horizontal"
+         */
+        "orientation"?: "horizontal" | "vertical";
     }
     /**
      * Skeleton — Tier 1 foundation component.
@@ -1206,6 +1366,11 @@ declare namespace LocalJSX {
         "maxLength": number;
         "pattern": string;
     }
+    interface SkLabelAttributes {
+        "forId": string;
+        "required": boolean;
+        "marker": "after" | "before";
+    }
     interface SkLinkAttributes {
         "href": string;
         "external": boolean;
@@ -1213,6 +1378,11 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
         "download": string;
+    }
+    interface SkSeparatorAttributes {
+        "orientation": "horizontal" | "vertical";
+        "decorative": boolean;
+        "label": string;
     }
     interface SkSkeletonAttributes {
         "variant": "text" | "rect" | "circle";
@@ -1253,7 +1423,9 @@ declare namespace LocalJSX {
         "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
+        "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
         "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
@@ -1307,6 +1479,21 @@ declare module "@stencil/core" {
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
             "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
             /**
+             * Label — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The wiring here is the pattern `sk-input` proved in a real browser: the label
+             * is associated with its control through `htmlFor` pointing at the control's id,
+             * and clicking the label focuses the control because the browser's own label
+             * activation does it — this component implements no click handler, because the
+             * platform's is better and reimplementing it would mean reimplementing the
+             * edge cases too.
+             * The required marker is `aria-hidden` and always rendered, even when a
+             * screen-reader user cannot see it, because the `required` attribute on the
+             * control carries the semantics; the asterisk is for the sighted. Color alone
+             * never carries the requirement — WCAG 1.4.1, the same ruling Input made.
+             */
+            "sk-label": LocalJSX.IntrinsicElements["sk-label"] & JSXBase.HTMLAttributes<HTMLSkLabelElement>;
+            /**
              * Link — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
              * A link is an anchor. This component exists for two reasons, not for
@@ -1319,6 +1506,19 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            /**
+             * Separator — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * It renders a real `<hr>` because that is the semantic: a thematic break
+             * between content, announced by screen readers unless the consumer says it is
+             * purely visual. `decorative` flips it to `role="none"` — the same ruling
+             * ARIA APG makes for separators that exist only for the eye.
+             * The line is the hairline token (`border.width`), not the 3px chrome stroke:
+             * a separator divides content, and a 3px stroke between paragraphs would read
+             * as a wall. Its geometry is the one place this system uses the hairline
+             * deliberately.
+             */
+            "sk-separator": LocalJSX.IntrinsicElements["sk-separator"] & JSXBase.HTMLAttributes<HTMLSkSeparatorElement>;
             /**
              * Skeleton — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

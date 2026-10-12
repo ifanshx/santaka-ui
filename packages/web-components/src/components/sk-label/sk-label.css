@@ -1,0 +1,37 @@
+/*
+ * Label styles.
+ *
+ * The type step matches Input's label exactly — sm, weight 400 — so a standalone
+ * label beside a field reads identically to the field's own label. That
+ * consistency is the point of having both paths produce the same record.
+ */
+
+sk-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+}
+
+sk-label .sk-label__label {
+  color: var(--sk-color-text, #17141c);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  cursor: pointer;
+}
+
+/*
+ * The marker is color *and* a glyph, so it never relies on color alone
+ * (WCAG 1.4.1). `LinkText` under forced colors keeps it visible against any
+ * canvas — the same ruling Input's marker made.
+ */
+sk-label .sk-label__required {
+  color: var(--sk-color-danger, #dc2626);
+  font-weight: var(--sk-text-sm-weight, 400);
+}
+
+@media (forced-colors: active) {
+  sk-label .sk-label__required {
+    color: LinkText;
+  }
+}

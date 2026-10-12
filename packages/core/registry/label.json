@@ -1,0 +1,67 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "label",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-label/sk-label.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-689277eddf0f2a5d61a9fcdb8df0df0ff3351d3b69fd2844a5b9e5603f2a45a4"
+    },
+    {
+      "path": "src/components/sk-label/sk-label.css",
+      "type": "registry:style",
+      "checksum": "sha256-3f831651199e5507eadbb8df511e56358f0931e6b293a42142b7ee2921a2c95f"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-danger",
+    "--sk-color-text",
+    "--sk-space-1",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.",
+    "whenToUse": [
+      "A control was built without its own label and needs one that is actually associated",
+      "A checkbox or switch needs its marker before the text, where the control leads the sentence",
+      "A custom field needs the same label record Input's built-in label uses"
+    ],
+    "whenNotToUse": [
+      "The control already has a label prop — Input and Textarea wire their own; two labels for one control is a bug",
+      "It would label nothing — `for` is required; a label with no control is a span with ambition, use plain text",
+      "The text describes a group of controls — use a Fieldset or a heading, not a label"
+    ],
+    "accessibility": "Associates through `htmlFor` pointing at the control's id, so clicking the label focuses the control via the browser's own activation — no click handler here, because the platform's is better and reimplementing it means reimplementing its edge cases. The required marker is `aria-hidden`: the control's own `required` attribute carries the semantics, the asterisk is for the sighted, and color alone never carries it (WCAG 1.4.1). `required` here does not set anything on the control — a label reaching into another component's DOM is exactly what section 4 forbids.",
+    "example": "<sk-label for=\"newsletter-email\">Email address</sk-label>\n<input id=\"newsletter-email\" type=\"email\">",
+    "knownLimitations": [
+      "Field components render their control with the id `${hostId}-control`, so `for` must carry that suffix — a cross-component id contract is tracked as open",
+      "It cannot label a control rendered inside a shadow root it cannot see — `for` must match a light-DOM id",
+      "It does not generate ids; pair it with the control's own id or React's `useId()`"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}
