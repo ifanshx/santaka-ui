@@ -1,7 +1,12 @@
 name: CI
 
 # One required workflow, in the order section 18 of plan.md specifies:
-# lint -> typecheck -> test -> build -> size-limit -> publint/attw.
+# lint -> typecheck -> test -> build -> size -> publint + attw.
+#
+# plan.md section 5 names size-limit for budgets and section 4 requires
+# publint AND attw. The budgets are measured by a hand-rolled script instead
+# (ADR-010), and the attw profile is esm-only because section 4 mandates
+# ESM-only output; both deviations are recorded rather than silent.
 #
 # `verify` runs the same command locally, so a green local run and a green CI run
 # mean the same thing. The steps are split here only so a failure names itself.

@@ -34,6 +34,12 @@ export const config: Config = {
   taskQueue: "async",
   sourceMap: true,
   outputTargets: [
+    // ESM only (plan.md section 4: "No CommonJS build is emitted"). Stencil's
+    // `dist` target emits `dist/cjs/` and `index.cjs.js` unconditionally — there
+    // is no `generateCjs` option on `OutputTargetDist` — which put 358 KB of
+    // CommonJS in the published tarball. It was unreachable, because the exports
+    // map names only the ESM entrypoints, so nothing measured it. The build step
+    // deletes it instead; see scripts/strip-cjs-output.mjs.
     { type: "dist", esmLoaderPath: "../loader/" },
     {
       type: "dist-custom-elements",

@@ -31,7 +31,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "validate:package": "publint ."
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },
   "dependencies": {
     "@santaka-ui/utilities": "workspace:^"

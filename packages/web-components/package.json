@@ -29,7 +29,8 @@
     },
     "./loader": {
       "types": "./loader/index.d.ts",
-      "import": "./loader/index.js"
+      "import": "./loader/index.js",
+      "default": "./loader/index.js"
     },
     "./santaka.css": "./dist/santaka.css",
     "./package.json": "./package.json"
@@ -39,14 +40,16 @@
     "provenance": true
   },
   "scripts": {
-    "build": "rimraf dist loader && stencil build --docs && node scripts/build-css.mjs",
+    "build": "rimraf dist loader && stencil build --docs && node scripts/fix-declaration-specifiers.mjs && node scripts/strip-cjs-output.mjs && node scripts/build-css.mjs",
+    "build:fix-types": "node scripts/fix-declaration-specifiers.mjs",
+    "build:strip-cjs": "node scripts/strip-cjs-output.mjs",
     "build:css": "node scripts/build-css.mjs",
     "clean": "rimraf dist loader www .stencil",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "test": "playwright test",
     "size": "node scripts/measure-bundle.mjs",
-    "validate:package": "publint ."
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },
   "peerDependencies": {
     "@santaka-ui/styles": "workspace:^",

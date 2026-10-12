@@ -30,7 +30,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "size": "echo \"[tokens] budget measured by @santaka-ui/web-components/scripts/measure-bundle.mjs\"",
-    "validate:package": "publint ."
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },
   "devDependencies": {
     "eslint": "9.39.5",
