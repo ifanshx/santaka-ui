@@ -277,6 +277,67 @@ export namespace Components {
         "target"?: string;
     }
     /**
+     * Skeleton — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A skeleton is a promise about layout: it exists so that when real content
+     * arrives, nothing shifts. That makes its dimensions the entire feature, which
+     * is why they are set by the consumer rather than inferred — a skeleton that
+     * guesses the content's height is the cause of the layout shift it exists to
+     * prevent.
+     * Two accessibility decisions, both the opposite of the Spinner's:
+     *  - It is `aria-hidden="true"` and takes no role. A skeleton is scaffolding,
+     *    not content; announcing "grey rectangle" five times before a table loads
+     *    is noise. The real content announces itself when it arrives.
+     *  - There is no `label` prop, on purpose. If a region needs an announcement
+     *    while it loads, that is a live region's job and the consumer owns it.
+     */
+    interface SkSkeleton {
+        /**
+          * The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale.
+          * @default "ltr"
+         */
+        "direction": "ltr" | "rtl";
+        /**
+          * The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes.
+          * @default "text"
+         */
+        "variant": "text" | "rect" | "circle";
+    }
+    /**
+     * Spinner — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The visual is lifted from Icon Button's loading state, deliberately: two
+     * components drawing the same ring two different ways is how a design system
+     * drifts. If the spinner's look changes, it changes in both places or the
+     * difference is a bug.
+     * Accessibility is the part that is easy to get wrong, so it is decided here
+     * rather than left to the consumer:
+     *  - The element carries `role="status"`, so a screen reader announces it as a
+     *    live region rather than skipping it as decoration.
+     *  - The visible ring gets `aria-hidden="true"` — it is a picture of waiting,
+     *    and the words are what get announced.
+     *  - `label` defaults to "Loading". A spinner with no text is a picture of
+     *    nothing to a screen reader; the type system makes omitting the words a
+     *    choice the consumer has to make, not an accident.
+     */
+    interface SkSpinner {
+        /**
+          * What the wait is, announced to screen readers in place of the silent ring. "Loading" is the honest default; "Saving draft…" is the better one.
+          * @default "Loading"
+         */
+        "label": string;
+        /**
+          * Ring diameter, from the icon-size tokens so the spinner matches the icon beside it. Not the `size` prop's height scale: a spinner is a circle, and a circle's size is its diameter.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * Announces progress when it is known, e.g. "Uploading 60%".
+          * @default ""
+         */
+        "status": string;
+    }
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -500,6 +561,50 @@ declare global {
         new (): HTMLSkLinkElement;
     };
     /**
+     * Skeleton — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A skeleton is a promise about layout: it exists so that when real content
+     * arrives, nothing shifts. That makes its dimensions the entire feature, which
+     * is why they are set by the consumer rather than inferred — a skeleton that
+     * guesses the content's height is the cause of the layout shift it exists to
+     * prevent.
+     * Two accessibility decisions, both the opposite of the Spinner's:
+     *  - It is `aria-hidden="true"` and takes no role. A skeleton is scaffolding,
+     *    not content; announcing "grey rectangle" five times before a table loads
+     *    is noise. The real content announces itself when it arrives.
+     *  - There is no `label` prop, on purpose. If a region needs an announcement
+     *    while it loads, that is a live region's job and the consumer owns it.
+     */
+    interface HTMLSkSkeletonElement extends Components.SkSkeleton, HTMLStencilElement {
+    }
+    var HTMLSkSkeletonElement: {
+        prototype: HTMLSkSkeletonElement;
+        new (): HTMLSkSkeletonElement;
+    };
+    /**
+     * Spinner — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The visual is lifted from Icon Button's loading state, deliberately: two
+     * components drawing the same ring two different ways is how a design system
+     * drifts. If the spinner's look changes, it changes in both places or the
+     * difference is a bug.
+     * Accessibility is the part that is easy to get wrong, so it is decided here
+     * rather than left to the consumer:
+     *  - The element carries `role="status"`, so a screen reader announces it as a
+     *    live region rather than skipping it as decoration.
+     *  - The visible ring gets `aria-hidden="true"` — it is a picture of waiting,
+     *    and the words are what get announced.
+     *  - `label` defaults to "Loading". A spinner with no text is a picture of
+     *    nothing to a screen reader; the type system makes omitting the words a
+     *    choice the consumer has to make, not an accident.
+     */
+    interface HTMLSkSpinnerElement extends Components.SkSpinner, HTMLStencilElement {
+    }
+    var HTMLSkSpinnerElement: {
+        prototype: HTMLSkSpinnerElement;
+        new (): HTMLSkSpinnerElement;
+    };
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -559,6 +664,8 @@ declare global {
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-skeleton": HTMLSkSkeletonElement;
+        "sk-spinner": HTMLSkSpinnerElement;
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
     }
@@ -851,6 +958,67 @@ declare namespace LocalJSX {
         "target"?: string;
     }
     /**
+     * Skeleton — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A skeleton is a promise about layout: it exists so that when real content
+     * arrives, nothing shifts. That makes its dimensions the entire feature, which
+     * is why they are set by the consumer rather than inferred — a skeleton that
+     * guesses the content's height is the cause of the layout shift it exists to
+     * prevent.
+     * Two accessibility decisions, both the opposite of the Spinner's:
+     *  - It is `aria-hidden="true"` and takes no role. A skeleton is scaffolding,
+     *    not content; announcing "grey rectangle" five times before a table loads
+     *    is noise. The real content announces itself when it arrives.
+     *  - There is no `label` prop, on purpose. If a region needs an announcement
+     *    while it loads, that is a live region's job and the consumer owns it.
+     */
+    interface SkSkeleton {
+        /**
+          * The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale.
+          * @default "ltr"
+         */
+        "direction"?: "ltr" | "rtl";
+        /**
+          * The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes.
+          * @default "text"
+         */
+        "variant"?: "text" | "rect" | "circle";
+    }
+    /**
+     * Spinner — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The visual is lifted from Icon Button's loading state, deliberately: two
+     * components drawing the same ring two different ways is how a design system
+     * drifts. If the spinner's look changes, it changes in both places or the
+     * difference is a bug.
+     * Accessibility is the part that is easy to get wrong, so it is decided here
+     * rather than left to the consumer:
+     *  - The element carries `role="status"`, so a screen reader announces it as a
+     *    live region rather than skipping it as decoration.
+     *  - The visible ring gets `aria-hidden="true"` — it is a picture of waiting,
+     *    and the words are what get announced.
+     *  - `label` defaults to "Loading". A spinner with no text is a picture of
+     *    nothing to a screen reader; the type system makes omitting the words a
+     *    choice the consumer has to make, not an accident.
+     */
+    interface SkSpinner {
+        /**
+          * What the wait is, announced to screen readers in place of the silent ring. "Loading" is the honest default; "Saving draft…" is the better one.
+          * @default "Loading"
+         */
+        "label"?: string;
+        /**
+          * Ring diameter, from the icon-size tokens so the spinner matches the icon beside it. Not the `size` prop's height scale: a spinner is a circle, and a circle's size is its diameter.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * Announces progress when it is known, e.g. "Uploading 60%".
+          * @default ""
+         */
+        "status"?: string;
+    }
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -1046,6 +1214,15 @@ declare namespace LocalJSX {
         "rel": string;
         "download": string;
     }
+    interface SkSkeletonAttributes {
+        "variant": "text" | "rect" | "circle";
+        "direction": "ltr" | "rtl";
+    }
+    interface SkSpinnerAttributes {
+        "size": "sm" | "md" | "lg";
+        "label": string;
+        "status": string;
+    }
     interface SkTextAttributes {
         "variant": "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display";
         "family": "inherit" | "sans" | "display" | "mono";
@@ -1077,6 +1254,8 @@ declare namespace LocalJSX {
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
+        "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
     }
@@ -1140,6 +1319,40 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            /**
+             * Skeleton — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A skeleton is a promise about layout: it exists so that when real content
+             * arrives, nothing shifts. That makes its dimensions the entire feature, which
+             * is why they are set by the consumer rather than inferred — a skeleton that
+             * guesses the content's height is the cause of the layout shift it exists to
+             * prevent.
+             * Two accessibility decisions, both the opposite of the Spinner's:
+             *  - It is `aria-hidden="true"` and takes no role. A skeleton is scaffolding,
+             *    not content; announcing "grey rectangle" five times before a table loads
+             *    is noise. The real content announces itself when it arrives.
+             *  - There is no `label` prop, on purpose. If a region needs an announcement
+             *    while it loads, that is a live region's job and the consumer owns it.
+             */
+            "sk-skeleton": LocalJSX.IntrinsicElements["sk-skeleton"] & JSXBase.HTMLAttributes<HTMLSkSkeletonElement>;
+            /**
+             * Spinner — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The visual is lifted from Icon Button's loading state, deliberately: two
+             * components drawing the same ring two different ways is how a design system
+             * drifts. If the spinner's look changes, it changes in both places or the
+             * difference is a bug.
+             * Accessibility is the part that is easy to get wrong, so it is decided here
+             * rather than left to the consumer:
+             *  - The element carries `role="status"`, so a screen reader announces it as a
+             *    live region rather than skipping it as decoration.
+             *  - The visible ring gets `aria-hidden="true"` — it is a picture of waiting,
+             *    and the words are what get announced.
+             *  - `label` defaults to "Loading". A spinner with no text is a picture of
+             *    nothing to a screen reader; the type system makes omitting the words a
+             *    choice the consumer has to make, not an accident.
+             */
+            "sk-spinner": LocalJSX.IntrinsicElements["sk-spinner"] & JSXBase.HTMLAttributes<HTMLSkSpinnerElement>;
             /**
              * Text — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

@@ -247,6 +247,33 @@
         </div>
       </section>
 
+      <section aria-labelledby="loading-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="loading-heading">Waiting</h2>
+        </sk-text>
+
+        <!--
+          Spinner announces itself by label; the ring is a picture. Skeleton is
+          aria-hidden — scaffolding, not content. The two are opposites on
+          purpose, and both refusals are testable.
+        -->
+        <div class="sk-cluster" style="align-items: center">
+          <sk-spinner label="Saving draft" size="sm"></sk-spinner>
+          <sk-spinner></sk-spinner>
+          <sk-spinner label="Uploading" size="lg"></sk-spinner>
+        </div>
+
+        <div class="sk-stack" style="max-inline-size: 20rem">
+          <sk-skeleton variant="text" style="inline-size: 100%"></sk-skeleton>
+          <sk-skeleton variant="text" style="inline-size: 82%"></sk-skeleton>
+          <sk-skeleton variant="text" style="inline-size: 64%"></sk-skeleton>
+          <div class="sk-cluster" style="align-items: center">
+            <sk-skeleton variant="circle"></sk-skeleton>
+            <sk-skeleton variant="rect" style="inline-size: 10rem"></sk-skeleton>
+          </div>
+        </div>
+      </section>
+
       <section aria-labelledby="materials-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="materials-heading">Materials</h2>

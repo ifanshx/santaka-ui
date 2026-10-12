@@ -1,0 +1,105 @@
+/*
+ * Skeleton styles.
+ *
+ * A skeleton is a promise about layout: it exists so real content arriving does
+ * not shift the page. Its dimensions are therefore the feature, and they come
+ * from the consumer — every variant here sets a *default* size, never a fixed
+ * one the consumer must fight.
+ *
+ * The fill is `surface-sunken` with a shimmer across it: quiet enough to read as
+ * "not here yet", visible enough to read as "planned". It is not a
+ * `color-mix()` — the baseline is Chrome 90, and a dropped mix would leave an
+ * invisible skeleton, which is the one state worse than no skeleton.
+ */
+
+sk-skeleton {
+  display: block;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  border-radius: 0;
+}
+
+/* A text line promises the body step's height, so text that replaces it lands
+   on the same rhythm. Width is the consumer's call — a page of full-width lines
+   reads as an error page. */
+sk-skeleton[variant="text"] {
+  block-size: var(--sk-text-base-line-height, 1.5rem);
+  inline-size: 100%;
+}
+
+sk-skeleton[variant="circle"] {
+  /* A circle is a shape, not a style — the same ruling as the Badge dot. */
+  border-radius: var(--sk-radius-full, 9999px);
+  inline-size: var(--sk-icon-lg, 1.5rem);
+  block-size: var(--sk-icon-lg, 1.5rem);
+  flex: none;
+}
+
+sk-skeleton[variant="rect"] {
+  /* The consumer sizes this one; the default is only a floor. */
+  inline-size: 100%;
+  block-size: var(--sk-height-md, 2.25rem);
+}
+
+/*
+ * The shimmer is a translate of a highlight gradient across the fill, not an
+ * opacity pulse: a pulse reads as "loading" but not as *direction*, and
+ * direction is what makes it feel like progress toward content rather than
+ * toward nothing.
+ */
+sk-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--sk-color-surface, #ffffff), transparent);
+  animation: sk-skeleton-shimmer var(--sk-duration-overlay-slow, 420ms) linear infinite;
+}
+
+sk-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+sk-skeleton[direction="rtl"]::after {
+  transform: translateX(100%);
+  animation-name: sk-skeleton-shimmer-rtl;
+}
+
+@keyframes sk-skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sk-skeleton-shimmer-rtl {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/*
+ * Reduced motion removes the shimmer entirely rather than slowing it. A slower
+ * shimmer is still motion; the skeleton's remaining signal — a grey box in the
+ * shape of the content — is the whole message, and it survives without the
+ * animation.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-skeleton::after {
+    animation: none;
+    /* The highlight wedge is also removed: frozen mid-travel it reads as a
+       rendering defect rather than as shimmer. */
+    content: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-skeleton {
+    background-color: Canvas;
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  sk-skeleton::after {
+    content: none;
+  }
+}

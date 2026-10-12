@@ -452,6 +452,70 @@ const COMPONENTS = [
       ],
     },
   },
+  {
+    name: "spinner",
+    tag: "sk-spinner",
+    stability: "stable",
+    cssVariables: [
+      "--sk-color-text",
+      "--sk-duration-control-slow",
+      "--sk-icon-lg",
+      "--sk-icon-md",
+      "--sk-icon-sm",
+      "--sk-radius-full",
+    ],
+    ai: {
+      summary:
+        "A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.",
+      whenToUse: [
+        "An operation is running and the interface cannot say how far along it is",
+        "A button or icon button is in its loading state and needs an inline indicator",
+      ],
+      whenNotToUse: [
+        "Progress is measurable — use a Progress bar; a spinner cannot say 60%",
+        "Content is loading into a known layout — use a Skeleton, which promises the layout instead of motion",
+      ],
+      accessibility:
+        'Carries `role="status"` so screen readers announce it as a live region. The visible ring is `aria-hidden` — it is a picture of waiting, and `label` (default "Loading") is what gets announced; `status` replaces it when progress is known. Under `prefers-reduced-motion` the spin stops rather than slows: a slow spinner still implies movement it cannot show, so the ring freezes solid and the label carries the whole story. Same ruling as Icon Button\'s loading state — if one changes, both must.',
+      example: '<sk-spinner label="Saving draft"></sk-spinner>',
+      knownLimitations: [
+        "It cannot express progress fraction — that is a Progress bar's job, not a faster spin",
+      ],
+    },
+  },
+  {
+    name: "skeleton",
+    tag: "sk-skeleton",
+    stability: "stable",
+    cssVariables: [
+      "--sk-color-surface",
+      "--sk-color-surface-sunken",
+      "--sk-duration-overlay-slow",
+      "--sk-height-md",
+      "--sk-icon-lg",
+      "--sk-radius-full",
+      "--sk-text-base-line-height",
+    ],
+    ai: {
+      summary:
+        "A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.",
+      whenToUse: [
+        "Content is loading into a known layout and the space must be held",
+        "A list, table, or card grid is fetching and the shape of what arrives is already known",
+      ],
+      whenNotToUse: [
+        "An operation's duration matters — use a Spinner or Progress",
+        "The placeholder would be on screen more than a moment or two — show a real empty state instead",
+      ],
+      accessibility:
+        "`aria-hidden` by design: a skeleton is scaffolding, not content, and announcing five grey rectangles before a table loads is noise. There is no `label` prop on purpose — if a region needs announcing while it loads, that is a live region and the consumer owns it. Real content announces itself when it arrives. Dimensions are the feature: every variant sets a default size the consumer overrides, because a skeleton that guesses the content's height causes the very layout shift it exists to prevent. Under reduced motion the shimmer is removed entirely rather than slowed — a slower shimmer is still motion, and the grey shape is the whole message.",
+      example: '<sk-skeleton variant="text" style="inline-size: 60%"></sk-skeleton>',
+      knownLimitations: [
+        "No slot by design: real content replaces the element, not its children",
+        "`direction` is a prop, not auto-detected — the component does not know its locale",
+      ],
+    },
+  },
 ]
 
 for (const component of COMPONENTS) {

@@ -1,0 +1,75 @@
+/*
+ * Spinner styles.
+ *
+ * The ring is the same construction as Icon Button's loading state — a circle
+ * with a transparent top edge, rotated — because two components drawing the same
+ * ring two ways is drift. The keyframes are duplicated rather than shared: the
+ * build concatenates plain CSS with no templating, and a `shared/spinner.css`
+ * would be a second source of truth for a six-line keyframe.
+ *
+ * It is inline-flex so the ring and its visually-hidden label sit on the text
+ * baseline when used inside a sentence, and block-level elsewhere.
+ */
+
+sk-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* The component is exactly its ring: extra box would make it a control-sized
+     hit target it does not need to be. */
+  inline-size: min-content;
+  block-size: min-content;
+  color: var(--sk-color-text, #17141c);
+}
+
+sk-spinner .sk-spinner__ring {
+  display: block;
+  inline-size: var(--sk-icon-md, 1.25rem);
+  block-size: var(--sk-icon-md, 1.25rem);
+  border: 2px solid currentcolor;
+  border-block-start-color: transparent;
+  border-radius: var(--sk-radius-full, 9999px);
+  animation: sk-spinner-spin var(--sk-duration-control-slow, 180ms) linear infinite;
+}
+
+sk-spinner[size="sm"] .sk-spinner__ring {
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+sk-spinner[size="lg"] .sk-spinner__ring {
+  inline-size: var(--sk-icon-lg, 1.5rem);
+  block-size: var(--sk-icon-lg, 1.5rem);
+}
+
+@keyframes sk-spinner-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/*
+ * Reduced motion stops the spin rather than shortening it. A spinner that spins
+ * for the whole operation announces "work is happening" by moving; with motion
+ * removed it must not imply movement it cannot show. The ring stays visible —
+ * the wait is still represented — but a screen reader user gets the same story
+ * from the label, which is why the label is mandatory.
+ *
+ * This is the same ruling Icon Button made; if one changes, both must.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-spinner .sk-spinner__ring {
+    animation: none;
+    border-block-start-color: currentcolor;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-spinner .sk-spinner__ring {
+    border-color: CanvasText;
+    /* The transparent wedge is the spin's readability. Under forced colors the
+       border collapses to one color, so the wedge is drawn with a dash instead:
+       still a partial ring, still visibly "in progress". */
+    border-block-start-style: dashed;
+  }
+}

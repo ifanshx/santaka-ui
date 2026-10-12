@@ -95,9 +95,11 @@ test.describe("API conventions (static)", () => {
    * `NO_BOOLEAN_PROPS` below holds components that are deliberately stateless
    * surfaces. A card owns no state and takes no interaction, so every boolean it
    * could carry would be decoration — and this guard would otherwise push
-   * exactly the kind of prop ADR-013 exists to prevent.
+   * exactly the kind of prop ADR-013 exists to prevent. The Spinner and Skeleton
+   * join it for the same reason: one announces a wait, the other is scaffolding,
+   * and neither has a state to toggle.
    */
-  const NO_BOOLEAN_PROPS = new Set(["sk-card"])
+  const NO_BOOLEAN_PROPS = new Set(["sk-card", "sk-spinner", "sk-skeleton"])
 
   /** The props ADR-013 records as deliberately unprefixed presentation booleans. */
   const OPEN_IN_ADR_013: Record<string, Set<string>> = {

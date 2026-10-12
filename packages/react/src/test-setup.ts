@@ -201,4 +201,25 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-spinner")) {
+    customElements.define(
+      "sk-spinner",
+      class extends HTMLElement {
+        size = "md"
+        label = "Loading"
+        status = ""
+      },
+    )
+  }
+
+  if (!customElements.get("sk-skeleton")) {
+    customElements.define(
+      "sk-skeleton",
+      class extends HTMLElement {
+        variant = "text"
+        direction = "ltr"
+      },
+    )
+  }
 })

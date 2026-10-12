@@ -1,0 +1,63 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "spinner",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-spinner/sk-spinner.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-d08781c2854bd499ab798683036b7b7fbc3c61f0723e8cea21064990d7847868"
+    },
+    {
+      "path": "src/components/sk-spinner/sk-spinner.css",
+      "type": "registry:style",
+      "checksum": "sha256-bcb15dc052034f65d79da4cfc271591a7a85591d34a39b8982db450b4fd1fedc"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-text",
+    "--sk-duration-control-slow",
+    "--sk-icon-lg",
+    "--sk-icon-md",
+    "--sk-icon-sm",
+    "--sk-radius-full"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.",
+    "whenToUse": [
+      "An operation is running and the interface cannot say how far along it is",
+      "A button or icon button is in its loading state and needs an inline indicator"
+    ],
+    "whenNotToUse": [
+      "Progress is measurable — use a Progress bar; a spinner cannot say 60%",
+      "Content is loading into a known layout — use a Skeleton, which promises the layout instead of motion"
+    ],
+    "accessibility": "Carries `role=\"status\"` so screen readers announce it as a live region. The visible ring is `aria-hidden` — it is a picture of waiting, and `label` (default \"Loading\") is what gets announced; `status` replaces it when progress is known. Under `prefers-reduced-motion` the spin stops rather than slows: a slow spinner still implies movement it cannot show, so the ring freezes solid and the label carries the whole story. Same ruling as Icon Button's loading state — if one changes, both must.",
+    "example": "<sk-spinner label=\"Saving draft\"></sk-spinner>",
+    "knownLimitations": [
+      "It cannot express progress fraction — that is a Progress bar's job, not a faster spin"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

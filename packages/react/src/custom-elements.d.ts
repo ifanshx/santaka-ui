@@ -100,6 +100,17 @@ type TextElement = HTMLElement & {
   muted: boolean
 }
 
+type SpinnerElement = HTMLElement & {
+  size: "sm" | "md" | "lg"
+  label: string
+  status: string
+}
+
+type SkeletonElement = HTMLElement & {
+  variant: "text" | "rect" | "circle"
+  direction: "ltr" | "rtl"
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -173,6 +184,15 @@ declare module "react" {
           "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display"
         family?: "inherit" | "sans" | "display" | "mono"
         muted?: boolean
+      }
+      "sk-spinner": BaseCustomElement<SpinnerElement> & {
+        size?: "sm" | "md" | "lg"
+        label?: string
+        status?: string
+      }
+      "sk-skeleton": BaseCustomElement<SkeletonElement> & {
+        variant?: "text" | "rect" | "circle"
+        direction?: "ltr" | "rtl"
       }
     }
   }

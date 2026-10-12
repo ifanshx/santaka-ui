@@ -20,6 +20,8 @@ export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
 export { SkText } from "./components/sk-text/sk-text.js"
+export { SkSkeleton } from "./components/sk-skeleton/sk-skeleton.js"
+export { SkSpinner } from "./components/sk-spinner/sk-spinner.js"
 export { SkTextarea } from "./components/sk-textarea/sk-textarea.js"
 export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js"
 
@@ -31,6 +33,8 @@ export const COMPONENTS = [
   "sk-icon-button",
   "sk-input",
   "sk-link",
+  "sk-skeleton",
+  "sk-spinner",
   "sk-text",
   "sk-textarea",
 ]
