@@ -11,7 +11,7 @@ package are real, tested, and green; the React package now covers all seven
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **321 tests pass.** All seven
+`pnpm run verify` exits 0 from a cold cache. **333 tests pass.** All seven
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -41,10 +41,26 @@ Seven universal custom elements, each with browser tests against real Chromium:
 | `sk-textarea` | the same contract as Input over a shared base, plus `rows` sizing and vertical resize |
 | `sk-card` | a surface, not a control: no role, no focus, no click handler |
 
-**105 Playwright tests.** All seven carry the brutalist treatment — 3px stroke,
+**117 Playwright tests.** All seven carry the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
+
+### Two materials, and the budgets that measure them
+
+`materials.e2e.ts` asserts the system's two-material rule directly: chrome is
+hard-edged and glass rounds, and a test that only checked chrome would pass on a
+build where glass had quietly become a third hard-edged surface. It also covers
+the press, the focus ring, reduced motion, and the `ghost` variant's deliberate
+flatness at rest.
+
+The runtime budget **was measuring 5 of the 7 components**. Its fixture listed
+the exported classes by hand, so Input, Textarea, and Card shipped without ever
+being imported — and tree-shaking dropped them, leaving the reported figure
+exactly where it was. A budget that stops measuring when a component is added
+is worse than no budget, because the number still looks authoritative. It now
+derives the list from the barrel and throws if it finds none: **11.46 KB**, not
+the 9.34 KB that was being reported.
 
 ### React package
 

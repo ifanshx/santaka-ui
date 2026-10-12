@@ -34,6 +34,26 @@ function componentDirs() {
     .map((entry) => join(componentsSrc, entry.name, `${entry.name}.css`))
 }
 
+/**
+ * Every class the barrel exports, derived from the barrel rather than listed.
+ *
+ * A hardcoded list is a budget that stops measuring the moment a component is
+ * added: the new component ships, the fixture never imports it, tree-shaking
+ * drops it, and the reported figure stays exactly where it was. That is worse
+ * than no budget, because the number still looks authoritative. Reading the
+ * barrel makes the omission impossible.
+ */
+function runtimeExports() {
+  const barrel = readFileSync(join(pkgRoot, "src", "index.ts"), "utf8")
+  const classes = [...barrel.matchAll(/export\s*\{\s*(Sk\w+)\s*\}/g)].map(([, name]) => name)
+  if (classes.length === 0 || !/export const COMPONENTS/.test(barrel)) {
+    throw new Error(
+      "measure-bundle: no Sk* class exports found in src/index.ts. The runtime budget would silently measure nothing.",
+    )
+  }
+  return [...classes, "COMPONENTS"]
+}
+
 async function measureJs(entry, uses) {
   const dir = mkdtempSync(join(tmpdir(), "sk-size-"))
   try {
@@ -81,14 +101,7 @@ const componentCount = componentCssFiles.length
 const BUDGETS = [
   {
     name: "web-components runtime",
-    measure: () =>
-      measureJs(join(pkgRoot, "dist/components/index.js"), [
-        "SkBadge",
-        "SkButton",
-        "SkIconButton",
-        "SkLink",
-        "COMPONENTS",
-      ]),
+    measure: () => measureJs(join(pkgRoot, "dist/components/index.js"), runtimeExports()),
     budgetKb: 12,
   },
   {
