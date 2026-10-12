@@ -1,0 +1,105 @@
+/*
+ * Santaka UI — reset.
+ *
+ * Opinionated but small: it normalizes the box model, removes the default
+ * margins that make layout unpredictable, and makes form controls inherit
+ * font metrics. It does NOT restyle elements, and it never sets a color, so a
+ * consumer that imports only components still gets sane defaults.
+ *
+ * Consumers who do not want a reset can import individual component packages
+ * instead; nothing in the components depends on this file.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  line-height: var(--sk-text-base-line-height, 1.5);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--sk-color-surface, #ffffff);
+  color: var(--sk-color-text, #17141c);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+:target {
+  scroll-margin-block: calc(var(--sk-space-8, 2rem) + var(--sk-height-md, 2.25rem));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

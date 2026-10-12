@@ -1,0 +1,70 @@
+name: Feature request
+description: Propose a capability or a component change for Santaka UI.
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem, not the component. "We need a way to pick a date
+        without typing one" travels; "add a DatePicker" starts an argument about
+        an API that may not be the right shape for that problem.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - A component
+        - A block or pattern
+        - Tokens or theming
+        - The CLI
+        - The registry
+        - Documentation or tooling
+        - Framework support
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: |
+        Describe the situation, who has it, and what they do today. If you are
+        working around a missing capability, say what the workaround costs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: audience
+    attributes:
+      label: Who has this problem?
+      description: How many projects, and is it specific to a framework?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried instead?
+      description: A library, a custom component, or nothing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: If you have a proposed API
+      description: |
+        Optional, and not a binding. Public API changes start as an RFC issue
+        anyway, so an early sketch saves a round trip.
+      render: typescript
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and discussions for this
+          required: true
+        - label: This is not a security issue
+          required: true

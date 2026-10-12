@@ -1,0 +1,18 @@
+node_modules
+dist
+www
+loader
+.stencil
+coverage
+.turbo
+playwright-report
+test-results
+pnpm-lock.yaml
+
+# Generated artifacts: never hand-edit, never reformat.
+packages/*/schema/
+packages/*/src/components.d.ts
+packages/*/custom-elements.json
+
+# Prose documents are checked by review, not by a formatter.
+*.md

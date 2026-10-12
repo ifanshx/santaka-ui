@@ -1,0 +1,136 @@
+{
+  "font": {
+    "$description": "Font stacks. The default is the platform UI stack: no network request, no font license to track.",
+    "sans": {
+      "$value": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      "$type": "fontFamily"
+    },
+    "mono": {
+      "$value": "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
+      "$type": "fontFamily"
+    }
+  },
+  "text": {
+    "$description": "Type scale. Each token emits a shorthand pair: size / line-height.",
+    "xs": {
+      "$value": "0.75rem / 1rem",
+      "$description": "Labels, badges, dense table metadata.",
+      "$extensions": { "sk.fontWeight": "500", "sk.letterSpacing": "0.04em" }
+    },
+    "sm": {
+      "$value": "0.875rem / 1.25rem",
+      "$description": "Secondary text, help copy.",
+      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0.01em" }
+    },
+    "base": {
+      "$value": "1rem / 1.5rem",
+      "$description": "Body text.",
+      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0" }
+    },
+    "lg": {
+      "$value": "1.125rem / 1.75rem",
+      "$description": "Lead paragraphs, card titles.",
+      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0" }
+    },
+    "xl": {
+      "$value": "1.25rem / 1.75rem",
+      "$description": "Section headings.",
+      "$extensions": { "sk.fontWeight": "600", "sk.letterSpacing": "0" }
+    },
+    "2xl": {
+      "$value": "1.5rem / 2rem",
+      "$description": "Page headings.",
+      "$extensions": { "sk.fontWeight": "600", "sk.letterSpacing": "-0.01em" }
+    },
+    "3xl": {
+      "$value": "1.875rem / 2.25rem",
+      "$description": "Hero headings.",
+      "$extensions": { "sk.fontWeight": "700", "sk.letterSpacing": "-0.02em" }
+    },
+    "4xl": {
+      "$value": "2.25rem / 2.5rem",
+      "$description": "Display headings.",
+      "$extensions": { "sk.fontWeight": "700", "sk.letterSpacing": "-0.02em" }
+    }
+  },
+  "space": {
+    "$description": "Spacing scale, rem-based so it honors the user's root font size.",
+    "1": { "$value": "0.25rem" },
+    "2": { "$value": "0.5rem" },
+    "3": { "$value": "0.75rem" },
+    "4": { "$value": "1rem" },
+    "5": { "$value": "1.25rem" },
+    "6": { "$value": "1.5rem" },
+    "8": { "$value": "2rem" },
+    "10": { "$value": "2.5rem" },
+    "12": { "$value": "3rem" },
+    "16": { "$value": "4rem" },
+    "20": { "$value": "5rem" },
+    "24": { "$value": "6rem" }
+  },
+  "height": {
+    "$description": "Control heights. Icon-only controls must still hit --sk-touch-min.",
+    "sm": { "$value": "1.75rem", "$description": "28px." },
+    "md": { "$value": "2.25rem", "$description": "36px." },
+    "lg": { "$value": "2.75rem", "$description": "44px." }
+  },
+  "icon": {
+    "$description": "Icon box sizes.",
+    "sm": { "$value": "1rem" },
+    "md": { "$value": "1.25rem" },
+    "lg": { "$value": "1.5rem" }
+  },
+  "touch": {
+    "min": {
+      "$value": "2.75rem",
+      "$description": "44px minimum hit target for every interactive element (WCAG 2.2 target size)."
+    }
+  },
+  "radius": {
+    "$description": "Corner radii.",
+    "sm": { "$value": "0.25rem" },
+    "md": { "$value": "0.375rem" },
+    "lg": { "$value": "0.5rem" },
+    "xl": { "$value": "0.75rem" },
+    "full": { "$value": "9999px" }
+  },
+  "border": {
+    "width": { "$value": "1px" }
+  },
+  "ring": {
+    "$description": "Focus ring geometry.",
+    "width": { "$value": "2px" },
+    "offset": { "$value": "2px" }
+  },
+  "shadow": {
+    "$description": "Elevation. Light-theme alphas; the dark theme raises alpha to 0.24 / 0.32 / 0.40 / 0.56.",
+    "xs": { "$value": "0 1px 2px rgb(23 20 28 / 0.06)" },
+    "sm": { "$value": "0 1px 3px rgb(23 20 28 / 0.10), 0 1px 2px rgb(23 20 28 / 0.06)" },
+    "md": { "$value": "0 4px 12px rgb(23 20 28 / 0.12)" },
+    "lg": { "$value": "0 12px 32px rgb(23 20 28 / 0.16)" }
+  },
+  "duration": {
+    "$description": "Motion durations. The reduced-motion override in themes/index.tokens.json collapses these to 1ms.",
+    "instant": { "$value": "0ms" },
+    "fast": { "$value": "120ms" },
+    "normal": { "$value": "200ms" },
+    "slow": { "$value": "320ms" }
+  },
+  "ease": {
+    "$description": "Easing curves.",
+    "standard": { "$value": "cubic-bezier(0.2, 0, 0, 1)" },
+    "exit": { "$value": "cubic-bezier(0.4, 0, 1, 1)" },
+    "emphasized": { "$value": "cubic-bezier(0.34, 1.4, 0.64, 1)" }
+  },
+  "z": {
+    "$description": "Layer tokens. Components read these instead of hard-coding z-index.",
+    "base": { "$value": "0" },
+    "dropdown": { "$value": "1000" },
+    "sticky": { "$value": "1100" },
+    "overlay": { "$value": "1300" },
+    "popover": { "$value": "1400" },
+    "toast": { "$value": "1500" },
+    "tooltip": { "$value": "1600" },
+    "modal": { "$value": "1700" }
+  }
+}

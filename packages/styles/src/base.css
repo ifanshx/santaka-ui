@@ -1,0 +1,54 @@
+/*
+ * Santaka UI — base element styles.
+ *
+ * Typography defaults for the elements a consumer writes by hand. Components
+ * never rely on this file; they read tokens directly.
+ */
+
+:root {
+  --sk-font-body: var(--sk-font-sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  --sk-font-code: var(--sk-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+
+body {
+  font-family: var(--sk-font-body);
+  font-size: var(--sk-text-base-size, 1rem);
+  font-weight: var(--sk-text-base-weight, 400);
+  letter-spacing: var(--sk-text-base-tracking, 0);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--sk-font-code);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: var(--sk-ring-width, 2px) solid var(--sk-color-focus-ring, #6d28d9);
+  outline-offset: var(--sk-ring-offset, 2px);
+}
+
+/* Components inside a dialog or menu must not show a second ring. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background-color: var(--sk-color-primary, #6d28d9);
+  color: var(--sk-color-primary-fg, #ffffff);
+}
+
+hr {
+  border: 0;
+  border-block-start: var(--sk-border-width, 1px) solid var(--sk-color-border, #e2dff0);
+}
+
+table {
+  border-collapse: collapse;
+}

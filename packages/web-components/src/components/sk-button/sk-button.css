@@ -1,0 +1,135 @@
+/*
+ * Button styles.
+ *
+ * Every value is a token with a literal fallback, so the component renders
+ * correctly even if the consumer forgot to import the theme (section 4, CSS).
+ * Colors live on the control surface and inherit to the label, which is why
+ * `color: inherit` appears on the host.
+ */
+
+sk-button {
+  --sk-button-bg: var(--sk-color-primary, #6d28d9);
+  --sk-button-bg-hover: var(--sk-color-primary-hover, #5b21b6);
+  --sk-button-fg: var(--sk-color-primary-fg, #ffffff);
+  --sk-button-border: transparent;
+  --sk-button-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sk-space-2, 0.5rem);
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  min-inline-size: var(--sk-touch-min, 2.75rem);
+  padding-inline: var(--sk-space-4, 1rem);
+  border: var(--sk-border-width, 1px) solid var(--sk-button-border);
+  border-radius: var(--sk-radius-md, 0.375rem);
+  background-color: var(--sk-button-bg);
+  color: var(--sk-button-fg);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--sk-duration-fast, 120ms)
+      var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/*
+ * Sizes control the visual weight, not the hit area.
+ *
+ * `--sk-touch-min` (44px) is the WCAG 2.2 target-size floor and is enforced on
+ * every size, including `sm` and every icon-only button. A `sm` button is
+ * therefore visually shorter than an `lg` one through padding and type scale,
+ * but never smaller than the minimum target.
+ */
+sk-button[size="sm"] {
+  padding-inline: var(--sk-space-3, 0.75rem);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  border-radius: var(--sk-radius-sm, 0.25rem);
+}
+
+sk-button[size="lg"] {
+  padding-inline: var(--sk-space-5, 1.25rem);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  border-radius: var(--sk-radius-lg, 0.5rem);
+}
+
+/* Variants */
+sk-button[variant="secondary"] {
+  --sk-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-button-fg: var(--sk-color-text, #17141c);
+  --sk-button-border: var(--sk-color-border-strong, #8b85a0);
+}
+
+sk-button[variant="secondary"]:hover:not([data-disabled]) {
+  --sk-button-bg: var(--sk-color-surface-sunken, #f1eef8);
+}
+
+sk-button[variant="outline"] {
+  --sk-button-bg: transparent;
+  --sk-button-fg: var(--sk-color-text, #17141c);
+  --sk-button-border: var(--sk-color-border-strong, #8b85a0);
+}
+
+sk-button[variant="outline"]:hover:not([data-disabled]) {
+  --sk-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+}
+
+sk-button[variant="ghost"] {
+  --sk-button-bg: transparent;
+  --sk-button-fg: var(--sk-color-primary, #6d28d9);
+  --sk-button-border: transparent;
+}
+
+sk-button[variant="ghost"]:hover:not([data-disabled]) {
+  --sk-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+}
+
+sk-button[variant="danger"] {
+  --sk-button-bg: var(--sk-color-danger, #dc2626);
+  --sk-button-bg-hover: var(--sk-color-danger-hover, #b91c1c);
+  --sk-button-fg: var(--sk-color-primary-fg, #ffffff);
+}
+
+sk-button:hover:not([data-disabled]):not([data-loading]) {
+  --sk-button-bg: var(--sk-button-bg-hover);
+}
+
+sk-button[data-disabled],
+sk-button[data-loading] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* A loading button is aria-busy, not disabled, so it keeps its focusability
+   semantics for assistive technology while blocking pointer input. */
+sk-button[data-loading] {
+  cursor: progress;
+}
+
+sk-button:focus-visible {
+  outline: var(--sk-ring-width, 2px) solid var(--sk-button-ring);
+  outline-offset: var(--sk-ring-offset, 2px);
+}
+
+@media (forced-colors: active) {
+  sk-button {
+    border-color: ButtonBorder;
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+
+  sk-button:focus-visible {
+    outline-color: Highlight;
+  }
+}

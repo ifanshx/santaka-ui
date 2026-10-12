@@ -1,0 +1,36 @@
+{
+  "globalDependencies": ["tsconfig.json", "**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "www/**", "loader/**", ".stencil/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**", "playwright-report/**", "test-results/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build", "^test"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
+    "size": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "validate:package": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

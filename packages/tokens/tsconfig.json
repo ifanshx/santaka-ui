@@ -1,0 +1,10 @@
+{
+  "extends": "../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true
+  },
+  "include": ["scripts"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "santaka-ui-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Santaka UI — one design system, every framework, your code.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.34.7",
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "turbo run clean && rimraf node_modules/.cache .turbo",
+    "release": "turbo run build && changeset publish",
+    "release:check": "turbo run build && changeset status",
+    "size": "turbo run size",
+    "validate:packages": "turbo run validate:package",
+    "docs:tokens": "pnpm --filter @santaka-ui/tokens build",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run size && pnpm run validate:packages"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.3",
+    "@eslint/js": "9.39.5",
+    "@types/node": "22.20.2",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.13.0",
+    "prettier": "3.9.10",
+    "rimraf": "6.0.1",
+    "turbo": "2.11.7",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@stencil/core",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
+}

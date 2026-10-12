@@ -1,0 +1,43 @@
+name: Publish
+
+# Publishing runs from CI only, with npm trusted publishing — no developer
+# machine holds a token (section 13, Contributing and community governance).
+#
+# The workflow is inert until a release is requested: it triggers on
+# `workflow_dispatch` or when a changeset release PR is published, and it
+# refuses to run on anything but `main`.
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Verify before publishing
+        run: pnpm install --frozen-lockfile && pnpm run verify
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Publish with provenance
+        run: pnpm exec changeset publish

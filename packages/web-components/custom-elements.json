@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "2.1.0",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/components/sk-button/sk-button.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "customElement": true,
+          "tagName": "sk-button",
+          "name": "SkButton",
+          "description": "Button — Tier 1 foundation component.\n\nBehavior owner: `web-components` (section 4, Implementation ownership rule).\nThe React package adapts this specification; it does not reimplement it.\n\nConventions enforced here, per section 4:\n  - `variant` and `size` are the only visual configuration props.\n  - `disabled` and `loading` are ARIA names, not `isDisabled`.\n  - State is exposed as `data-*` attributes for CSS and tests.\n  - Styling hooks are `data-slot`, not utility classes.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "Disables interaction. Mirrors the ARIA name.",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "loading",
+              "description": "Shows a busy state and blocks interaction.",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "loading"
+            },
+            {
+              "name": "size",
+              "description": "Control height.",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "\"md\"",
+              "fieldName": "size"
+            },
+            {
+              "name": "type",
+              "description": "`submit`, `reset`, or `button`. Native semantics, so a Button inside a form\nbehaves like the `<button>` a consumer would have written by hand.",
+              "type": {
+                "text": "\"button\" | \"reset\" | \"submit\""
+              },
+              "default": "\"button\"",
+              "fieldName": "type"
+            },
+            {
+              "name": "variant",
+              "description": "Visual emphasis.",
+              "type": {
+                "text": "\"danger\" | \"ghost\" | \"outline\" | \"primary\" | \"secondary\""
+              },
+              "default": "\"primary\"",
+              "fieldName": "variant"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "description": "Disables interaction. Mirrors the ARIA name.",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "description": "Shows a busy state and blocks interaction.",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "description": "Control height.",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "\"md\"",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "description": "`submit`, `reset`, or `button`. Native semantics, so a Button inside a form\nbehaves like the `<button>` a consumer would have written by hand.",
+              "type": {
+                "text": "\"button\" | \"reset\" | \"submit\""
+              },
+              "default": "\"button\"",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "description": "Visual emphasis.",
+              "type": {
+                "text": "\"danger\" | \"ghost\" | \"outline\" | \"primary\" | \"secondary\""
+              },
+              "default": "\"primary\"",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The default slot"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SkButton",
+          "declaration": {
+            "name": "SkButton"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "sk-button",
+          "declaration": {
+            "name": "SkButton"
+          }
+        }
+      ]
+    }
+  ]
+}

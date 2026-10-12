@@ -1,0 +1,60 @@
+/*
+ * Santaka UI — primitives.
+ *
+ * The small set of single-purpose utilities that every design system ends up
+ * needing. Each one is a class rather than a component because it has no state
+ * and no behavior of its own.
+ */
+
+.sk-visually-hidden:not(:focus):not(:active) {
+  clip-path: inset(50%);
+  block-size: 1px;
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.sk-focus-ring:focus-visible {
+  outline: var(--sk-ring-width, 2px) solid var(--sk-color-focus-ring, #6d28d9);
+  outline-offset: var(--sk-ring-offset, 2px);
+  border-radius: var(--sk-radius-sm, 0.25rem);
+}
+
+.sk-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4, 1rem);
+}
+
+.sk-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sk-space-3, 0.75rem);
+}
+
+.sk-surface-raised {
+  background-color: var(--sk-color-surface-raised, #f7f5fb);
+  border: var(--sk-border-width, 1px) solid var(--sk-color-border, #e2dff0);
+  border-radius: var(--sk-radius-lg, 0.5rem);
+}
+
+.sk-text-muted {
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+/*
+ * Directional icons mirror under RTL (section 6, Right-to-left support).
+ * Keyboard semantics derive direction from computed style at interaction
+ * time, never from this rule.
+ */
+[dir="rtl"] .sk-icon--directional {
+  transform: scaleX(-1);
+}
+
+@media (forced-colors: active) {
+  .sk-focus-ring:focus-visible {
+    outline-color: Highlight;
+  }
+}

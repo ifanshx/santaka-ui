@@ -1,0 +1,34 @@
+node_modules/
+dist/
+www/
+loader/
+.stencil/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Playwright
+playwright-report/
+test-results/
+.playwright/
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Changesets artifacts
+.changeset/*.md
+!.changeset/README.md

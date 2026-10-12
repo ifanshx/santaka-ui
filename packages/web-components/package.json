@@ -1,0 +1,64 @@
+{
+  "name": "@santaka-ui/web-components",
+  "version": "0.1.0",
+  "description": "Santaka UI universal custom elements: the default owner of component behavior.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "./dist/components/index.js"
+  ],
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "main": "./dist/components/index.js",
+  "module": "./dist/components/index.js",
+  "types": "./dist/components/index.d.ts",
+  "collection": "./dist/collection/collection-manifest.json",
+  "collection:main": "./dist/collection/index.js",
+  "collection:module": "./dist/esm/index.js",
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
+    "./loader": {
+      "types": "./loader/index.d.ts",
+      "import": "./loader/index.js"
+    },
+    "./santaka.css": "./dist/santaka.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "rimraf dist loader && stencil build --docs && node scripts/build-css.mjs",
+    "build:css": "node scripts/build-css.mjs",
+    "clean": "rimraf dist loader www .stencil",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "playwright test",
+    "size": "node scripts/measure-bundle.mjs",
+    "validate:package": "publint ."
+  },
+  "peerDependencies": {
+    "@santaka-ui/styles": "workspace:^",
+    "@santaka-ui/tokens": "workspace:^"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@stencil/core": "4.45.2",
+    "esbuild": "0.25.10",
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3"
+  }
+}

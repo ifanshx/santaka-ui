@@ -1,0 +1,16 @@
+{
+  "extends": "../../tooling/typescript/dom.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "types": ["@stencil/core"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "loader", "www", ".stencil"]
+}

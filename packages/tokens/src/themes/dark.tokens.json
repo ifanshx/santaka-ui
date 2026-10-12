@@ -1,0 +1,85 @@
+{
+  "color": {
+    "$description": "Semantic color contract, dark theme. Every token documents its fallback value here.",
+    "surface": {
+      "$value": "{color.ink.900}",
+      "$description": "Page background."
+    },
+    "surface-raised": {
+      "$value": "{color.ink.850}",
+      "$description": "Cards, popovers, elevated surfaces."
+    },
+    "surface-sunken": {
+      "$value": "{color.ink.950}",
+      "$description": "Wells, inset regions, table stripes."
+    },
+    "border": {
+      "$value": "#2A2438",
+      "$description": "Decorative separators only; not load-bearing for meaning."
+    },
+    "border-strong": {
+      "$value": "{color.ink.875}",
+      "$description": "Input borders and control outlines. 3.46:1 vs surface."
+    },
+    "text": {
+      "$value": "#F5F3FA",
+      "$description": "Primary text. 17.54:1 vs surface."
+    },
+    "text-muted": {
+      "$value": "{color.ink.400}",
+      "$description": "Secondary text and helper copy. 7.96:1 vs surface."
+    },
+    "primary": {
+      "$value": "{color.violet.600}",
+      "$description": "Primary action surface. White text 5.70:1."
+    },
+    "primary-hover": {
+      "$value": "{color.violet.700}",
+      "$description": "White text 7.10:1."
+    },
+    "primary-fg": {
+      "$value": "{color.white}",
+      "$description": "Text and icon color on top of --sk-color-primary."
+    },
+    "danger": {
+      "$value": "{color.red.550}",
+      "$description": "Destructive action surface. White text 4.72:1; 4.09:1 vs surface."
+    },
+    "danger-hover": {
+      "$value": "{color.red.700}",
+      "$description": "White text 6.47:1; 5.72:1 vs surface."
+    },
+    "danger-fg": {
+      "$value": "{color.red.300}",
+      "$description": "Danger text and icons on dark surfaces."
+    },
+    "success": {
+      "$value": "{color.green.400}",
+      "$description": "9.18:1 on the dark surface."
+    },
+    "success-fg": {
+      "$value": "{color.green.300}",
+      "$description": "Success text and icons on dark surfaces."
+    },
+    "warning": {
+      "$value": "{color.amber.300}",
+      "$description": "12.09:1 on the dark surface."
+    },
+    "warning-fg": {
+      "$value": "{color.amber.300}",
+      "$description": "Warning text and icons on dark surfaces."
+    },
+    "accent-coral": {
+      "$value": "{color.coral.300}",
+      "$description": "Decoration and data-viz accent. Never the sole carrier of state."
+    },
+    "accent-mint": {
+      "$value": "{color.mint.300}",
+      "$description": "Decoration and data-viz accent. Never the sole carrier of state."
+    },
+    "focus-ring": {
+      "$value": "{color.violet.300}",
+      "$description": "Focus indicator. 10.46:1 vs surface; 3:1 against adjacent colors."
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "@santaka-ui/styles",
+  "version": "0.1.0",
+  "description": "Santaka UI reset, base element styles, focus-ring and visually-hidden primitives.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./reset.css": "./dist/reset.css",
+    "./base.css": "./dist/base.css",
+    "./primitives.css": "./dist/primitives.css",
+    "./index.css": "./dist/index.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "node scripts/build-styles.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "node scripts/build-styles.mjs --check",
+    "size": "echo \"[styles] CSS budgets are measured with the component stylesheet\"",
+    "validate:package": "publint ."
+  },
+  "peerDependencies": {
+    "@santaka-ui/tokens": "workspace:^"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "@santaka-ui/react",
+  "version": "0.1.0",
+  "description": "React adapter for Santaka UI components.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "validate:package": "publint ."
+  },
+  "dependencies": {
+    "@santaka-ui/utilities": "workspace:^"
+  },
+  "peerDependencies": {
+    "@santaka-ui/web-components": "workspace:^",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@santaka-ui/web-components": "workspace:^",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "9.39.5",
+    "jsdom": "30.1.2",
+    "publint": "0.3.25",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "vitest": "4.1.11"
+  }
+}

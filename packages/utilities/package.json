@@ -1,0 +1,39 @@
+{
+  "name": "@santaka-ui/utilities",
+  "version": "0.1.0",
+  "description": "Minimal framework-neutral helpers shared by every Santaka UI implementation.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "validate:package": "publint ."
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

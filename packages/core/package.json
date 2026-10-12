@@ -1,0 +1,48 @@
+{
+  "name": "@santaka-ui/core",
+  "version": "0.1.0",
+  "description": "Santaka UI framework-neutral contracts: component metadata, registry schema, validation.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist",
+    "schema"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema/registry-item-v1.json": "./schema/registry-item-v1.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs",
+    "clean": "rimraf dist schema",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "validate:package": "publint ."
+  },
+  "dependencies": {
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

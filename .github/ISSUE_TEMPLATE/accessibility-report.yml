@@ -1,0 +1,87 @@
+name: Accessibility report
+description: A component or page fails a WCAG 2.2 AA criterion.
+labels: ["accessibility", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Section 12 of `plan.md` sets WCAG 2.2 AA as the product target and states
+        honestly what that covers. A report needs the specific criterion, the
+        assistive technology, and what a user would experience — an automated
+        scan result alone is not enough to act on.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - "@santaka-ui/tokens"
+        - "@santaka-ui/styles"
+        - "@santaka-ui/web-components"
+        - "@santaka-ui/react"
+        - The documentation site
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: criterion
+    attributes:
+      label: WCAG criterion
+      description: For example "2.4.7 Focus Visible" or "4.1.2 Name, Role, Value".
+      placeholder: 2.4.7 Focus Visible
+    validations:
+      required: true
+
+  - type: input
+    id: level
+    attributes:
+      label: Conformance level
+      options:
+        - A
+        - AA
+        - AAA
+    validations:
+      required: true
+
+  - type: input
+    id: at
+    attributes:
+      label: Assistive technology and browser
+      description: For example "NVDA 2025.1 + Firefox 133" or "VoiceOver + Safari 18".
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen?
+      description: The behavior the criterion requires.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happens instead?
+      description: What the user experiences, step by step.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Code, a URL, or the steps to reach it.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I checked the "known limitations" note on the component page
+          required: false
+        - label: I am not reporting a third-party component's issue
+          required: true

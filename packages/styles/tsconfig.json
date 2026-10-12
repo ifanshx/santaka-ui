@@ -1,0 +1,10 @@
+{
+  "extends": "../../tooling/typescript/dom.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules", "dist"]
+}

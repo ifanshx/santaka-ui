@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+  - examples/*
+  - tooling/*
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@stencil/core"
+  - esbuild
+  - unrs-resolver

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-sk-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Santaka UI — vanilla smoke</title>
+
+    <link rel="stylesheet" href="/packages/tokens/dist/css/light.css" />
+    <link rel="stylesheet" href="/packages/tokens/dist/css/dark.css" />
+    <link rel="stylesheet" href="/packages/web-components/dist/santaka.css" />
+    <link rel="stylesheet" href="/packages/styles/dist/index.css" />
+
+    <script>
+      // Section 6, Theme switching: read the same storage key the docs and
+      // React's ThemeScript use, and set the attribute before first paint.
+      try {
+        var v = localStorage.getItem("sk-theme") || "system"
+        var d =
+          v === "dark" || (v === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+        document.documentElement.setAttribute("data-sk-theme", d ? "dark" : "light")
+      } catch {}
+    </script>
+    <script type="module" src="/examples/vanilla-html/main.js"></script>
+  </head>
+
+  <body>
+    <main class="sk-stack" style="max-inline-size: 40rem; margin-inline: auto; padding: 2rem">
+      <h1 style="font-size: var(--sk-text-2xl-size)">Santaka UI — universal elements</h1>
+
+      <section class="sk-cluster" aria-label="Variants">
+        <sk-button variant="primary">Primary</sk-button>
+        <sk-button variant="secondary">Secondary</sk-button>
+        <sk-button variant="outline">Outline</sk-button>
+        <sk-button variant="ghost">Ghost</sk-button>
+        <sk-button variant="danger">Danger</sk-button>
+      </section>
+
+      <section class="sk-cluster" aria-label="Sizes">
+        <sk-button size="sm">Small</sk-button>
+        <sk-button size="md">Medium</sk-button>
+        <sk-button size="lg">Large</sk-button>
+      </section>
+
+      <section class="sk-cluster" aria-label="States">
+        <sk-button disabled>Disabled</sk-button>
+        <sk-button loading>Loading</sk-button>
+      </section>
+
+      <form id="probe" class="sk-cluster">
+        <sk-button type="submit" variant="primary">Submit</sk-button>
+        <output id="result" data-slot="result" class="sk-text-muted">no submit yet</output>
+      </form>
+
+      <p class="sk-text-muted" id="log" aria-live="polite"></p>
+    </main>
+  </body>
+</html>

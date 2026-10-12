@@ -1,0 +1,42 @@
+{
+  "name": "@santaka-ui/tokens",
+  "version": "0.1.0",
+  "description": "Santaka UI design tokens: DTCG source of truth compiled to CSS custom properties.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist/css",
+    "src"
+  ],
+  "exports": {
+    "./css": "./dist/css/index.css",
+    "./css/light.css": "./dist/css/light.css",
+    "./css/dark.css": "./dist/css/dark.css",
+    "./css/index.css": "./dist/css/index.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "node scripts/build-tokens.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "size": "echo \"[tokens] budget measured by @santaka-ui/web-components/scripts/measure-bundle.mjs\"",
+    "validate:package": "publint ."
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

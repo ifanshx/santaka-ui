@@ -1,0 +1,99 @@
+name: Bug report
+description: Something in a Santaka package does not behave as documented.
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Section 12 of `plan.md` sets the definition of
+        Done; a bug is anything that violates it or the documentation.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - "@santaka-ui/tokens"
+        - "@santaka-ui/styles"
+        - "@santaka-ui/utilities"
+        - "@santaka-ui/core"
+        - "@santaka-ui/web-components"
+        - "@santaka-ui/react"
+        - The CLI
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: How are you using it
+      options:
+        - Plain HTML / JavaScript
+        - React + Vite
+        - Next.js
+        - Vue
+        - Nuxt
+        - Svelte / SvelteKit
+        - Angular
+        - Astro
+        - Another framework
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 131, Firefox 133, Safari 18
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      description: Quote the documentation line that describes it, if there is one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+      description: Include the exact error or the wrong rendering.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: |
+        The smallest thing that shows the problem — a CodeSandbox link, a
+        repository, or the code below. A minimal reproduction is the fastest
+        path to a fix.
+      render: typescript
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues for this
+          required: true
+        - label: I am on the latest release
+          required: true
+        - label: This is not a security issue (use the security advisory form instead)
+          required: true
