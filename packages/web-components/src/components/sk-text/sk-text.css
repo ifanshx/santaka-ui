@@ -1,0 +1,118 @@
+/*
+ * Text styles.
+ *
+ * One rule per type step, applied to the host by attribute. The selectors are
+ * attribute-driven (`sk-text[variant="lg"]`) rather than class-driven because
+ * the component renders no wrapper: the element the consumer chose *is* the
+ * text element, and scoping by data-slot would require a child this component
+ * does not own.
+ *
+ * Each step sets the whole record — size, line-height, weight, tracking — from
+ * the token that defines all four. Setting only the size is the mistake the
+ * example page was making before this component existed.
+ */
+
+sk-text {
+  display: block;
+}
+
+sk-text[variant="xs"] {
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  letter-spacing: var(--sk-text-xs-tracking, 0.04em);
+}
+
+sk-text[variant="sm"] {
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+sk-text[variant="base"] {
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  font-weight: var(--sk-text-base-weight, 400);
+  letter-spacing: var(--sk-text-base-tracking, 0);
+}
+
+sk-text[variant="lg"] {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+  line-height: var(--sk-text-lg-line-height, 1.75rem);
+  font-weight: var(--sk-text-lg-weight, 400);
+  letter-spacing: var(--sk-text-lg-tracking, 0);
+}
+
+sk-text[variant="xl"] {
+  font-size: var(--sk-text-xl-size, 1.25rem);
+  line-height: var(--sk-text-xl-line-height, 1.75rem);
+  font-weight: var(--sk-text-xl-weight, 600);
+  letter-spacing: var(--sk-text-xl-tracking, 0);
+}
+
+sk-text[variant="2xl"] {
+  font-size: var(--sk-text-2xl-size, 1.5rem);
+  line-height: var(--sk-text-2xl-line-height, 2rem);
+  font-weight: var(--sk-text-2xl-weight, 600);
+  letter-spacing: var(--sk-text-2xl-tracking, -0.01em);
+}
+
+sk-text[variant="3xl"] {
+  font-size: var(--sk-text-3xl-size, 1.875rem);
+  line-height: var(--sk-text-3xl-line-height, 2.25rem);
+  font-weight: var(--sk-text-3xl-weight, 700);
+  letter-spacing: var(--sk-text-3xl-tracking, -0.02em);
+}
+
+sk-text[variant="4xl"] {
+  font-size: var(--sk-text-4xl-size, 2.25rem);
+  line-height: var(--sk-text-4xl-line-height, 2.5rem);
+  font-weight: var(--sk-text-4xl-weight, 700);
+  letter-spacing: var(--sk-text-4xl-tracking, -0.02em);
+}
+
+sk-text[variant="display-sm"] {
+  font-size: var(--sk-text-display-sm-size, 1.75rem);
+  line-height: var(--sk-text-display-sm-line-height, 2.25rem);
+  font-weight: var(--sk-text-display-sm-weight, 800);
+  letter-spacing: var(--sk-text-display-sm-tracking, -0.02em);
+}
+
+sk-text[variant="display"] {
+  font-size: var(--sk-text-display-size, 2.5rem);
+  line-height: var(--sk-text-display-line-height, 3rem);
+  font-weight: var(--sk-text-display-weight, 800);
+  letter-spacing: var(--sk-text-display-tracking, -0.03em);
+}
+
+/*
+ * The display face applies when asked for, and it is the one place a heading
+ * style reaches for a family. Leaving `family="inherit"` untouched is the
+ * default so body copy keeps whatever the consumer set on `--sk-font-body`.
+ */
+sk-text[family="display"] {
+  font-family: var(--sk-font-display, system-ui, sans-serif);
+}
+
+sk-text[family="sans"] {
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-text[family="mono"] {
+  font-family: var(--sk-font-mono, ui-monospace, monospace);
+}
+
+/* Muted is the one color a text component owns. It replaces the
+   `.sk-text-muted` utility, which now exists only as a deprecated alias. */
+sk-text[muted] {
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+/*
+ * No brutalist chrome here on purpose: text is not a surface. No stroke, no
+ * shadow, no press, no transition — and therefore no reduced-motion block
+ * needed, because there is nothing animating to reduce. If this component ever
+ * gains an animation, it must add its own reduced-motion handling; the global
+ * reset does not cover transforms.
+ */

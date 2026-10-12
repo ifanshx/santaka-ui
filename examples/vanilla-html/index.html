@@ -25,7 +25,37 @@
 
   <body>
     <main class="sk-stack" style="max-inline-size: 44rem; margin-inline: auto; padding: 2rem">
-      <h1 style="font-size: var(--sk-text-2xl-size)">Santaka UI — universal elements</h1>
+      <sk-text variant="2xl" family="display">
+        <h1>Santaka UI — universal elements</h1>
+      </sk-text>
+
+      <section aria-labelledby="type-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="type-heading">Typography</h2>
+        </sk-text>
+
+        <!--
+          Each step is the whole record, not a size: weight and tracking come from
+          the same token. The heading elements below are the consumer's document
+          structure; sk-text only decides how they look.
+        -->
+        <sk-text variant="display" family="display">
+          <h3>Display 800</h3>
+        </sk-text>
+        <sk-text variant="display-sm" family="display">
+          <h3>Display small 800</h3>
+        </sk-text>
+        <sk-text variant="2xl">
+          <h3>Heading 2XL 600</h3>
+        </sk-text>
+        <sk-text variant="lg">
+          <h3>Heading LG 400</h3>
+        </sk-text>
+        <sk-text variant="base">Body text at the base step, weight 400.</sk-text>
+        <sk-text variant="sm" muted>Small muted text, weight 400, tracking 0.01em.</sk-text>
+        <sk-text variant="xs" muted>Extra small muted, weight 500, tracking 0.04em.</sk-text>
+        <sk-text variant="base" family="mono">Monospace family for code-adjacent copy.</sk-text>
+      </section>
 
       <section class="sk-cluster" aria-label="Variants">
         <sk-button variant="primary">Primary</sk-button>
@@ -47,7 +77,9 @@
       </section>
 
       <section aria-labelledby="icon-heading" class="sk-stack">
-        <h2 id="icon-heading" style="font-size: var(--sk-text-lg-size)">Icon buttons</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="icon-heading">Icon buttons</h2>
+        </sk-text>
         <div class="sk-cluster">
           <sk-icon-button label="Add item" variant="ghost">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -84,7 +116,9 @@
       </section>
 
       <section aria-labelledby="link-heading" class="sk-stack">
-        <h2 id="link-heading" style="font-size: var(--sk-text-lg-size)">Links</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="link-heading">Links</h2>
+        </sk-text>
         <p>
           Read the <sk-link href="#variants">full documentation</sk-link> or check the
           <sk-link href="https://stenciljs.com" external>Stencil docs</sk-link>. A
@@ -94,7 +128,9 @@
       </section>
 
       <section aria-labelledby="badge-heading" class="sk-stack">
-        <h2 id="badge-heading" style="font-size: var(--sk-text-lg-size)">Badges</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="badge-heading">Badges</h2>
+        </sk-text>
         <div class="sk-cluster">
           <sk-badge variant="neutral">Draft</sk-badge>
           <sk-badge variant="primary">Featured</sk-badge>
@@ -107,7 +143,9 @@
       </section>
 
       <section aria-labelledby="input-heading" class="sk-stack">
-        <h2 id="input-heading" style="font-size: var(--sk-text-lg-size)">Inputs</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="input-heading">Inputs</h2>
+        </sk-text>
         <sk-input
           id="example-name"
           name="name"
@@ -135,7 +173,9 @@
       </section>
 
       <section aria-labelledby="textarea-heading" class="sk-stack">
-        <h2 id="textarea-heading" style="font-size: var(--sk-text-lg-size)">Textareas</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="textarea-heading">Textareas</h2>
+        </sk-text>
         <sk-textarea
           id="example-bio"
           name="bio"
@@ -170,7 +210,9 @@
       </section>
 
       <section aria-labelledby="card-heading" class="sk-stack">
-        <h2 id="card-heading" style="font-size: var(--sk-text-lg-size)">Card</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="card-heading">Card</h2>
+        </sk-text>
         <div class="sk-cluster" style="align-items: stretch">
           <!--
             The title here is a real <h2 slot="header">, not the `title` prop: the
@@ -198,24 +240,32 @@
 
           <sk-card variant="bare" padding="none" style="min-inline-size: 16rem">
             <strong>Bare, no padding</strong>
-            <p class="sk-text-muted">Grouped, not elevated. No fill, no shadow.</p>
+            <sk-text variant="base" muted>
+              <p>Grouped, not elevated. No fill, no shadow.</p>
+            </sk-text>
           </sk-card>
         </div>
       </section>
 
       <section aria-labelledby="materials-heading" class="sk-stack">
-        <h2 id="materials-heading" style="font-size: var(--sk-text-lg-size)">Materials</h2>
+        <sk-text variant="lg" family="display">
+          <h2 id="materials-heading">Materials</h2>
+        </sk-text>
         <div class="sk-cluster" style="align-items: stretch">
           <div class="sk-glass" style="padding: var(--sk-space-6); min-inline-size: 16rem">
             <strong>Glass overlay</strong>
-            <p class="sk-text-muted">Frosted panel. Floating layers only.</p>
+            <sk-text variant="base" muted>
+              <p>Frosted panel. Floating layers only.</p>
+            </sk-text>
           </div>
           <sk-card
             title="Brutalist chrome"
             subtitle="The Card component"
             style="min-inline-size: 16rem"
           >
-            <p class="sk-text-muted">Hard edges. Everything you press.</p>
+            <sk-text variant="base" muted>
+              <p>Hard edges. Everything you press.</p>
+            </sk-text>
           </sk-card>
         </div>
       </section>

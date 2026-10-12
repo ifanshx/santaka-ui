@@ -103,6 +103,7 @@ test.describe("API conventions (static)", () => {
   const OPEN_IN_ADR_013: Record<string, Set<string>> = {
     "sk-link": new Set(["external", "subtle"]),
     "sk-badge": new Set(["dot"]),
+    "sk-text": new Set(["muted"]),
   }
 
   test("every boolean prop is an ARIA state, is/has/can prefixed, or on the ADR-013 record", () => {

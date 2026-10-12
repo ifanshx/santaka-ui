@@ -7,11 +7,11 @@ what exists today. Every claim below is checked against the repository.
 ## Summary
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
-package are real, tested, and green; the React package now covers all seven
+package are real, tested, and green; the React package now covers all eight
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **333 tests pass.** All seven
+`pnpm run verify` exits 0 from a cold cache. **349 tests pass.** All eight
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -29,7 +29,7 @@ packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Seven universal custom elements, each with browser tests against real Chromium:
+Eight universal custom elements, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -40,8 +40,9 @@ Seven universal custom elements, each with browser tests against real Chromium:
 | `sk-input` | FACE submission, all three form callbacks, native validation, label and error wiring |
 | `sk-textarea` | the same contract as Input over a shared base, plus `rows` sizing and vertical resize |
 | `sk-card` | a surface, not a control: no role, no focus, no click handler |
+| `sk-text` | applies one whole type step; the consumer element keeps its semantics |
 
-**117 Playwright tests.** All seven carry the brutalist treatment — 3px stroke,
+**123 Playwright tests.** Chrome carries the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
@@ -64,8 +65,8 @@ the 9.34 KB that was being reported.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, `Badge`, `Card`, `Input`, `Textarea`, plus `ThemeScript` /
-`useTheme`. **78 tests.** Two requirements are enforced in the type system
+`Button`, `IconButton`, `Link`, `Badge`, `Card`, `Input`, `Textarea`, `Text`, plus `ThemeScript` /
+`useTheme`. **85 tests.** Two requirements are enforced in the type system
 rather than left to review: `<Badge dot />` does not compile without
 `statusLabel`, and `Input` generates its id with `useId()` so the id stays
 stable across re-renders.
@@ -131,8 +132,8 @@ open), 014 (browser baseline), 017 (token values and design direction).
 
 ### Blocking Tier 1
 
-- **Typography, Separator, Spinner, Skeleton, Label** —
-  five of the twelve Tier 1 components do not exist. Card landed most recently.
+- **Separator, Spinner, Skeleton, Label** —
+  four of the twelve Tier 1 components do not exist. Text landed most recently.
 - **No Storybook.** Section 10's workshop; nothing in the repo references it.
 
 ### Blocking Stable

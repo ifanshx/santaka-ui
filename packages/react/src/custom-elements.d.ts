@@ -94,6 +94,12 @@ type CardElement = HTMLElement & {
   subtitle: string
 }
 
+type TextElement = HTMLElement & {
+  variant: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display"
+  family: "inherit" | "sans" | "display" | "mono"
+  muted: boolean
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -161,6 +167,12 @@ declare module "react" {
         padding?: "none" | "sm" | "md" | "lg"
         heading?: string
         subtitle?: string
+      }
+      "sk-text": BaseCustomElement<TextElement> & {
+        variant?:
+          "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display"
+        family?: "inherit" | "sans" | "display" | "mono"
+        muted?: boolean
       }
     }
   }

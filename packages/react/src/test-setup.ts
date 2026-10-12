@@ -190,4 +190,15 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-text")) {
+    customElements.define(
+      "sk-text",
+      class extends HTMLElement {
+        variant = "base"
+        family = "inherit"
+        muted = false
+      },
+    )
+  }
 })
