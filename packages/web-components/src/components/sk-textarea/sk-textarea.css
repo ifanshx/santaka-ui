@@ -1,0 +1,143 @@
+/*
+ * Textarea styles.
+ *
+ * A textarea is chrome, so it carries the same brutalist treatment as Input:
+ * a 3px stroke, no rounding, and a zero-blur offset shadow. It deliberately
+ * reuses Input's visual tokens rather than declaring its own, because the two are
+ * the same surface and a consumer who rebrands one expects the other to follow.
+ *
+ * Sizing comes from `rows` on the element, not from a CSS height, so the control
+ * matches what the browser actually renders for that many lines.
+ */
+
+sk-textarea {
+  --sk-textarea-bg: var(--sk-color-surface, #ffffff);
+  --sk-textarea-fg: var(--sk-color-text, #17141c);
+  --sk-textarea-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-textarea-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-textarea-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-textarea .sk-textarea__label {
+  color: var(--sk-textarea-fg);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-textarea .sk-textarea__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+sk-textarea .sk-textarea__control {
+  box-sizing: border-box;
+  /* A textarea sizes itself from `rows`; `width: 100%` only stops the default
+     20-column default from leaving the field narrower than its container. */
+  width: 100%;
+  min-block-size: calc(var(--sk-touch-min, 2.75rem) * 2);
+  padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-textarea-border);
+  border-radius: 0;
+  background-color: var(--sk-textarea-bg);
+  color: var(--sk-textarea-fg);
+  box-shadow: var(--sk-textarea-shadow) var(--sk-color-shadow, #17141c);
+  font-family: inherit;
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  /* Long-form text is edited, not typed in one line; resizing is a user
+     affordance, not a layout bug. */
+  resize: vertical;
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    border-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+sk-textarea .sk-textarea__control:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-textarea-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-textarea .sk-textarea__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+/* Read-only is not disabled: the value is still submitted and the field is still
+   focusable, so it must not read as unavailable. */
+sk-textarea .sk-textarea__control:read-only {
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-textarea[data-invalid] .sk-textarea__control {
+  --sk-textarea-border: var(--sk-color-danger, #dc2626);
+}
+
+sk-textarea[variant="quiet"] {
+  --sk-textarea-bg: transparent;
+  --sk-textarea-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-textarea .sk-textarea__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-textarea .sk-textarea__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger, #dc2626);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-textarea .sk-textarea__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+@media (forced-colors: active) {
+  sk-textarea {
+    --sk-textarea-border: CanvasText;
+    --sk-textarea-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-textarea[data-invalid] {
+    --sk-textarea-border: LinkText;
+  }
+
+  sk-textarea .sk-textarea__control {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  sk-textarea[data-invalid] .sk-textarea__control {
+    border: 2px solid LinkText;
+  }
+
+  sk-textarea .sk-textarea__required {
+    color: LinkText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  sk-textarea .sk-textarea__control {
+    transition: none;
+  }
+}

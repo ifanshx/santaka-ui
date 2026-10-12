@@ -11,7 +11,7 @@ package are real, tested, and green; the React package now covers all four
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **256 tests pass.** All six
+`pnpm run verify` exits 0 from a cold cache. **306 tests pass.** All six
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -29,7 +29,7 @@ packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Five universal custom elements, each with browser tests against real Chromium:
+Six universal custom elements, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -38,16 +38,17 @@ Five universal custom elements, each with browser tests against real Chromium:
 | `sk-link` | anchor semantics, external indicator, theme |
 | `sk-badge` | variant fills from tokens (not `color-mix`), dot label for WCAG 1.4.1 |
 | `sk-input` | FACE submission, all three form callbacks, native validation, label and error wiring |
+| `sk-textarea` | the same contract as Input over a shared base, plus `rows` sizing and vertical resize |
 
-**74 Playwright tests.** All five carry the brutalist treatment — 3px stroke,
+**95 Playwright tests.** All six carry the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, `Badge`, `Input`, plus `ThemeScript` /
-`useTheme`. **56 tests.** Two requirements are enforced in the type system
+`Button`, `IconButton`, `Link`, `Badge`, `Input`, `Textarea`, plus `ThemeScript` /
+`useTheme`. **70 tests.** Two requirements are enforced in the type system
 rather than left to review: `<Badge dot />` does not compile without
 `statusLabel`, and `Input` generates its id with `useId()` so the id stays
 stable across re-renders.
@@ -59,6 +60,15 @@ stable across re-renders.
 - `validate`, `cn`, `id` — 20 tests.
 - **5 exports-contract tests** asserting every stylesheet a package builds is
   reachable through `exports`, and every export resolves to a file that exists.
+
+### Form controls share one base
+
+`sk-input` and `sk-textarea` are the same contract over a different element, so
+their form behavior lives in `shared/form-control-base.ts` rather than twice.
+The extraction is not cosmetic: the base reads and writes the component through
+**accessors**, because an earlier snapshot-shaped state object looked simpler and
+silently broke value propagation — the base wrote to a copy the component never
+saw, and the field stopped submitting.
 
 ### Distribution
 
@@ -86,8 +96,8 @@ open), 014 (browser baseline), 017 (token values and design direction).
 
 ### Blocking Tier 1
 
-- **Card, Typography, Separator, Spinner, Skeleton, Textarea, Label** —
-  seven of the twelve Tier 1 components do not exist. Input landed most recently.
+- **Card, Typography, Separator, Spinner, Skeleton, Label** —
+  six of the twelve Tier 1 components do not exist. Textarea landed most recently.
 - **No Storybook.** Section 10's workshop; nothing in the repo references it.
 
 ### Blocking Stable

@@ -70,6 +70,23 @@ type InputElement = HTMLElement & {
   pattern: string
 }
 
+type TextareaElement = HTMLElement & {
+  rows: number
+  cols?: number
+  variant: string
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  readOnly: boolean
+  required: boolean
+  value: string
+  defaultValue: string
+  minLength?: number
+  maxLength?: number
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -108,6 +125,26 @@ declare module "react" {
         pattern?: string
         placeholder?: string
         autocomplete?: string
+        form?: string
+        "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
+      }
+      "sk-textarea": BaseCustomElement<TextareaElement> & {
+        rows?: number
+        cols?: number
+        variant?: string
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        readonly?: boolean
+        required?: boolean
+        name?: string
+        value?: string
+        "default-value"?: string
+        minlength?: number
+        maxlength?: number
+        placeholder?: string
         form?: string
         "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }

@@ -144,7 +144,7 @@ export namespace Components {
          */
         "form"?: string;
         /**
-          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary that lists several fields.
+          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary listing several fields.
           * @default false
          */
         "invalid": boolean;
@@ -240,6 +240,103 @@ export namespace Components {
          */
         "target"?: string;
     }
+    /**
+     * Textarea — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A textarea is an input with a different rendered element, and that is exactly
+     * what it is here: the form contract, validation reporting, label wiring, and
+     * change-event rule all live in `shared/form-control-base.ts`, shared with
+     * `sk-input`. A second copy would be a second thing to fix the moment
+     * accessibility behavior changed.
+     * The differences are the ones the element demands, not decoration:
+     *  - `rows` and `cols` are what size a textarea. There is no `size` in the
+     *    Button sense, so this component takes `rows` and leaves the visual axis to
+     *    the one the browser already understands.
+     *  - `<textarea>` takes its initial content as *children*, not a `value`
+     *    attribute, so the fallback path for plain HTML is the text content.
+     *  - `pattern` does not apply to a textarea at all. Long-form text has no
+     *    single-line grammar, so the prop is absent rather than accepted and
+     *    ignored.
+     */
+    interface SkTextarea {
+        /**
+          * Visible columns, for the few cases where it matters.
+         */
+        "cols"?: number;
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue": string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid independently of any error text.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Maximum accepted length, enforced natively. Same attribute-name reason.
+         */
+        "maxLength"?: number;
+        /**
+          * Minimum accepted length, enforced natively.  Attribute-observed because Stencil's camelCase-to-kebab mapping produces `min-length`, not the native `minlength`, so `<sk-textarea minlength="2">` was silently ignored — the same class of defect `readonly` had.
+         */
+        "minLength"?: number;
+        /**
+          * Placeholder text. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder": string;
+        /**
+          * Makes the field non-editable but still submitted and focusable.  Attribute-observed, for the same reason as `sk-input`: Stencil's camelCase-to-kebab mapping produces `read-only`, not the native `readonly`.
+          * @default false
+         */
+        "readOnly": boolean;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Visible rows. The browser's own sizing, not a pixel value.
+          * @default 4
+         */
+        "rows": number;
+        /**
+          * The value. Uncontrolled by default: typed value only if set.
+          * @default ""
+         */
+        "value": string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant": "default" | "quiet";
+    }
 }
 declare global {
     /**
@@ -307,12 +404,38 @@ declare global {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
     };
+    /**
+     * Textarea — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A textarea is an input with a different rendered element, and that is exactly
+     * what it is here: the form contract, validation reporting, label wiring, and
+     * change-event rule all live in `shared/form-control-base.ts`, shared with
+     * `sk-input`. A second copy would be a second thing to fix the moment
+     * accessibility behavior changed.
+     * The differences are the ones the element demands, not decoration:
+     *  - `rows` and `cols` are what size a textarea. There is no `size` in the
+     *    Button sense, so this component takes `rows` and leaves the visual axis to
+     *    the one the browser already understands.
+     *  - `<textarea>` takes its initial content as *children*, not a `value`
+     *    attribute, so the fallback path for plain HTML is the text content.
+     *  - `pattern` does not apply to a textarea at all. Long-form text has no
+     *    single-line grammar, so the prop is absent rather than accepted and
+     *    ignored.
+     */
+    interface HTMLSkTextareaElement extends Components.SkTextarea, HTMLStencilElement {
+    }
+    var HTMLSkTextareaElement: {
+        prototype: HTMLSkTextareaElement;
+        new (): HTMLSkTextareaElement;
+    };
     interface HTMLElementTagNameMap {
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-textarea": HTMLSkTextareaElement;
     }
 }
 declare namespace LocalJSX {
@@ -466,7 +589,7 @@ declare namespace LocalJSX {
          */
         "form"?: string;
         /**
-          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary that lists several fields.
+          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary listing several fields.
           * @default false
          */
         "invalid"?: boolean;
@@ -566,6 +689,107 @@ declare namespace LocalJSX {
          */
         "target"?: string;
     }
+    /**
+     * Textarea — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A textarea is an input with a different rendered element, and that is exactly
+     * what it is here: the form contract, validation reporting, label wiring, and
+     * change-event rule all live in `shared/form-control-base.ts`, shared with
+     * `sk-input`. A second copy would be a second thing to fix the moment
+     * accessibility behavior changed.
+     * The differences are the ones the element demands, not decoration:
+     *  - `rows` and `cols` are what size a textarea. There is no `size` in the
+     *    Button sense, so this component takes `rows` and leaves the visual axis to
+     *    the one the browser already understands.
+     *  - `<textarea>` takes its initial content as *children*, not a `value`
+     *    attribute, so the fallback path for plain HTML is the text content.
+     *  - `pattern` does not apply to a textarea at all. Long-form text has no
+     *    single-line grammar, so the prop is absent rather than accepted and
+     *    ignored.
+     */
+    interface SkTextarea {
+        /**
+          * Visible columns, for the few cases where it matters.
+         */
+        "cols"?: number;
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue"?: string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid independently of any error text.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Maximum accepted length, enforced natively. Same attribute-name reason.
+         */
+        "maxLength"?: number;
+        /**
+          * Minimum accepted length, enforced natively.  Attribute-observed because Stencil's camelCase-to-kebab mapping produces `min-length`, not the native `minlength`, so `<sk-textarea minlength="2">` was silently ignored — the same class of defect `readonly` had.
+         */
+        "minLength"?: number;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * Placeholder text. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the field non-editable but still submitted and focusable.  Attribute-observed, for the same reason as `sk-input`: Stencil's camelCase-to-kebab mapping produces `read-only`, not the native `readonly`.
+          * @default false
+         */
+        "readOnly"?: boolean;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Visible rows. The browser's own sizing, not a pixel value.
+          * @default 4
+         */
+        "rows"?: number;
+        /**
+          * The value. Uncontrolled by default: typed value only if set.
+          * @default ""
+         */
+        "value"?: string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant"?: "default" | "quiet";
+    }
 
     interface SkBadgeAttributes {
         "variant": "neutral" | "primary" | "success" | "warning" | "danger";
@@ -616,6 +840,24 @@ declare namespace LocalJSX {
         "rel": string;
         "download": string;
     }
+    interface SkTextareaAttributes {
+        "rows": number;
+        "cols": number;
+        "variant": "default" | "quiet";
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "readOnly": boolean;
+        "required": boolean;
+        "placeholder": string;
+        "form": string;
+        "value": string;
+        "defaultValue": string;
+        "minLength": number;
+        "maxLength": number;
+    }
 
     interface IntrinsicElements {
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
@@ -623,6 +865,7 @@ declare namespace LocalJSX {
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -669,6 +912,26 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            /**
+             * Textarea — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * A textarea is an input with a different rendered element, and that is exactly
+             * what it is here: the form contract, validation reporting, label wiring, and
+             * change-event rule all live in `shared/form-control-base.ts`, shared with
+             * `sk-input`. A second copy would be a second thing to fix the moment
+             * accessibility behavior changed.
+             * The differences are the ones the element demands, not decoration:
+             *  - `rows` and `cols` are what size a textarea. There is no `size` in the
+             *    Button sense, so this component takes `rows` and leaves the visual axis to
+             *    the one the browser already understands.
+             *  - `<textarea>` takes its initial content as *children*, not a `value`
+             *    attribute, so the fallback path for plain HTML is the text content.
+             *  - `pattern` does not apply to a textarea at all. Long-form text has no
+             *    single-line grammar, so the prop is absent rather than accepted and
+             *    ignored.
+             */
+            "sk-textarea": LocalJSX.IntrinsicElements["sk-textarea"] & JSXBase.HTMLAttributes<HTMLSkTextareaElement>;
         }
     }
 }

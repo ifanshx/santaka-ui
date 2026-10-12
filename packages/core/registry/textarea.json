@@ -1,0 +1,92 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "textarea",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-textarea/sk-textarea.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-f921792991a29ef6f8678b9f45a5f5f87dd0ac8a855963b8b190bd3212d3787a"
+    },
+    {
+      "path": "src/components/sk-textarea/sk-textarea.css",
+      "type": "registry:style",
+      "checksum": "sha256-01200f16044cc9fdd12185abfe4e3b52f9a6fcb04fe1d0f7e488b9ab70995113"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-icon-sm",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A multi-line text field that participates in a plain HTML form, for text too long to type on one line.",
+    "whenToUse": [
+      "The value runs to several lines: a bio, a comment, release notes, an address",
+      "The consumer wants the browser to size the field by line count",
+      "It must submit through a plain `<form>` with no JavaScript state"
+    ],
+    "whenNotToUse": [
+      "The value is a single short string — use an Input",
+      "The value is one of a fixed set — use a Select or Radio Group",
+      "It only toggles a boolean — use a Checkbox or Switch"
+    ],
+    "accessibility": "Renders a real native `<textarea>`, so the browser supplies constraint validation and the error bubble rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). The field resizes vertically by default, because long-form text is edited rather than typed in one line. Shares its form contract with Input.",
+    "example": "<sk-textarea name=\"bio\" label=\"Bio\" rows=\"4\"></sk-textarea>",
+    "knownLimitations": [
+      "There is no `pattern` prop: a textarea has no single-line grammar for a pattern to constrain",
+      "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

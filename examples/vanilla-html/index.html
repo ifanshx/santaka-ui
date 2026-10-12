@@ -128,6 +128,41 @@
         <sk-input id="example-disabled" name="legacy" label="Legacy field" disabled></sk-input>
       </section>
 
+      <section aria-labelledby="textarea-heading" class="sk-stack">
+        <h2 id="textarea-heading" style="font-size: var(--sk-text-lg-size)">Textareas</h2>
+        <sk-textarea
+          id="example-bio"
+          name="bio"
+          label="Bio"
+          rows="4"
+          description="Markdown is supported."
+        ></sk-textarea>
+        <sk-textarea
+          id="example-notes"
+          name="notes"
+          label="Release notes"
+          rows="3"
+          variant="quiet"
+        ></sk-textarea>
+        <sk-textarea
+          id="example-notes-error"
+          name="notesError"
+          label="Summary"
+          rows="3"
+          error="A summary is required before publishing."
+          invalid
+          required
+        ></sk-textarea>
+        <sk-textarea
+          id="example-notes-readonly"
+          name="notesReadonly"
+          label="Locked notes"
+          rows="2"
+          readonly
+          value="Published at 2026-10-12."
+        ></sk-textarea>
+      </section>
+
       <section aria-labelledby="materials-heading" class="sk-stack">
         <h2 id="materials-heading" style="font-size: var(--sk-text-lg-size)">Materials</h2>
         <div class="sk-cluster" style="align-items: stretch">

@@ -18,7 +18,15 @@ export { SkButton } from "./components/sk-button/sk-button.js"
 export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
+export { SkTextarea } from "./components/sk-textarea/sk-textarea.js"
 export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js"
 
 /** Custom element tags this package defines. */
-export const COMPONENTS = ["sk-badge", "sk-button", "sk-icon-button", "sk-input", "sk-link"]
+export const COMPONENTS = [
+  "sk-badge",
+  "sk-button",
+  "sk-icon-button",
+  "sk-input",
+  "sk-link",
+  "sk-textarea",
+]

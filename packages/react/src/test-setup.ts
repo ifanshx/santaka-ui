@@ -146,4 +146,36 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-textarea")) {
+    customElements.define(
+      "sk-textarea",
+      class extends HTMLElement {
+        rows = 4
+        cols?: number
+        variant = "default"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        readOnly = false
+        required = false
+        value = ""
+        defaultValue = ""
+        minLength?: number
+        maxLength?: number
+
+        static get observedAttributes() {
+          return ["readonly", "minlength", "maxlength"]
+        }
+
+        attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+          if (name === "readonly") this.readOnly = value !== null
+          if (name === "minlength") this.minLength = value === null ? undefined : Number(value)
+          if (name === "maxlength") this.maxLength = value === null ? undefined : Number(value)
+        }
+      },
+    )
+  }
 })
