@@ -182,6 +182,9 @@ importers:
       '@playwright/test':
         specifier: 1.64.0
         version: 1.64.0
+      '@santaka-ui/utilities':
+        specifier: workspace:^
+        version: link:../utilities
       '@stencil/core':
         specifier: 4.45.2
         version: 4.45.2

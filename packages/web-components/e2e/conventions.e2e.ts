@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readdirSync, readFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
@@ -25,8 +25,17 @@ const here = dirname(fileURLToPath(import.meta.url))
 const pkgRoot = resolve(here, "..")
 const componentsDir = resolve(pkgRoot, "src", "components")
 
-/** The components that ship today. Added to as Tier 1 lands. */
-const COMPONENTS = ["sk-badge", "sk-button", "sk-icon-button", "sk-link"] as const
+/**
+ * The components that ship, read from the component directories rather than a
+ * hand-kept list. A hand-maintained list silently stops covering a new
+ * component the moment one is added — which is the exact decay this test exists
+ * to prevent, and it is how `sk-input` would have shipped unchecked.
+ */
+const COMPONENTS = readdirSync(componentsDir, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .filter((name) => name.startsWith("sk-"))
+  .sort() as readonly string[]
 
 /**
  * Boolean props that mirror an ARIA state use the ARIA name verbatim (§4
@@ -42,6 +51,10 @@ const ARIA_BOOLEAN_PROPS = new Set([
   "disabled",
   "invalid",
   "loading",
+  // ADR-013: `readonly` is both an ARIA attribute and a native form-control
+  // attribute, and it means something `disabled` cannot — a read-only field is
+  // still submitted and still focusable. §4's list omits it.
+  "readOnly",
 ])
 
 /**

@@ -52,16 +52,24 @@ in a document titled "component API conventions".
    `invalid`, `open`, `checked`, `selected`, `expanded`, `required` — the
    conformance test treats this as an exhaustive list. A boolean mirroring an
    ARIA state that is not on this list is a violation.
-2. **State booleans take is/has/can.** A boolean that toggles component *state* —
+2. **`readOnly` joins that list.** §4's list omits it, but `readonly` is both an
+   ARIA attribute and a native form-control attribute, and it means something
+   `disabled` cannot: a read-only field is still submitted and still focusable. A
+   form control with no read-only state could not express a value the user must
+   not change but must still send, such as a server-assigned identifier. Naming it
+   `isReadOnly` would read as a claim about the value rather than the field's
+   editability.
+3. **State booleans take is/has/can.** A boolean that toggles component *state* —
    something a screen reader conveys and a consumer wires to — is prefixed.
    `hasIcon`, `canSubmit` fit here.
-3. **Presentation booleans are open.** The conformance test classifies every
+4. **Presentation booleans are open.** The conformance test classifies every
    boolean and reports the ones fitting neither reading, naming ADR-013 as the
    owner of the decision. `sk-link.external`, `sk-link.subtle`, and
    `sk-badge.dot` are the live instances.
-4. **Renaming is the default when the question resolves toward prefixing.** If it
+5. **Renaming is the default when the question resolves toward prefixing.** If it
    does, `external` → `isExternal` and friends ship as a minor-with-notice,
    because the prop names are public API in every framework adapter.
+
 
 ### Recommendation, not yet adopted
 

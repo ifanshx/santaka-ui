@@ -100,6 +100,34 @@
         </div>
       </section>
 
+      <section aria-labelledby="input-heading" class="sk-stack">
+        <h2 id="input-heading" style="font-size: var(--sk-text-lg-size)">Inputs</h2>
+        <sk-input
+          id="example-name"
+          name="name"
+          label="Display name"
+          description="Shown on your public profile."
+          required
+        ></sk-input>
+        <sk-input id="example-email" name="email" type="email" label="Email" required></sk-input>
+        <sk-input
+          id="example-error"
+          name="handle"
+          label="Handle"
+          error="That handle is already taken. Try another."
+          invalid
+        ></sk-input>
+        <sk-input id="example-quiet" name="bio" label="Bio" variant="quiet" size="sm"></sk-input>
+        <sk-input
+          id="example-readonly"
+          name="id"
+          label="Account ID"
+          value="acc_01H8XK2"
+          readonly
+        ></sk-input>
+        <sk-input id="example-disabled" name="legacy" label="Legacy field" disabled></sk-input>
+      </section>
+
       <section aria-labelledby="materials-heading" class="sk-stack">
         <h2 id="materials-heading" style="font-size: var(--sk-text-lg-size)">Materials</h2>
         <div class="sk-cluster" style="align-items: stretch">

@@ -52,6 +52,24 @@ type BadgeElement = HTMLElement & {
   statusLabel: string
 }
 
+type InputElement = HTMLElement & {
+  type: string
+  variant: string
+  size: string
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  readOnly: boolean
+  required: boolean
+  value: string
+  defaultValue: string
+  minLength?: number
+  maxLength?: number
+  pattern: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -70,6 +88,28 @@ declare module "react" {
         size?: string
         dot?: boolean
         "status-label"?: string
+      }
+      "sk-input": BaseCustomElement<InputElement> & {
+        type?: string
+        variant?: string
+        size?: string
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        readonly?: boolean
+        required?: boolean
+        name?: string
+        value?: string
+        "default-value"?: string
+        minlength?: number
+        maxlength?: number
+        pattern?: string
+        placeholder?: string
+        autocomplete?: string
+        form?: string
+        "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }
     }
   }

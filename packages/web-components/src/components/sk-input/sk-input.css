@@ -1,0 +1,180 @@
+/*
+ * Input styles.
+ *
+ * An input is chrome, not a floating layer, so it carries the same brutalist
+ * treatment as Button: a 3px stroke, no rounding, and a zero-blur offset shadow.
+ *
+ * The state that matters is `data-invalid`, not a variant prop. An invalid field
+ * is never conveyed by color alone — the component renders an error icon and
+ * text alongside the red stroke — so the border is reinforcement, not the only
+ * signal (WCAG 1.4.1).
+ */
+
+sk-input {
+  --sk-input-bg: var(--sk-color-surface, #ffffff);
+  --sk-input-fg: var(--sk-color-text, #17141c);
+  --sk-input-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-input-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-input-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-input .sk-input__label {
+  color: var(--sk-input-fg);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-input .sk-input__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+sk-input .sk-input__control {
+  box-sizing: border-box;
+  width: 100%;
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  padding-inline: var(--sk-space-3, 0.75rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-input-border);
+  border-radius: 0;
+  background-color: var(--sk-input-bg);
+  color: var(--sk-input-fg);
+  box-shadow: var(--sk-input-shadow) var(--sk-color-shadow, #17141c);
+  font-family: inherit;
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    border-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+/*
+ * The focus ring is a hard 3px stroke at 3px offset, matching every other
+ * control. The inner input keeps its own focus ring rather than the host's,
+ * because the host is not a tab stop — see the `tabindex` comment in the
+ * component.
+ */
+sk-input .sk-input__control:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-input-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-input .sk-input__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  /* A disabled field keeps its stroke: removing it would make the field's
+     boundary harder to see, not easier. */
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-input .sk-input__control:read-only {
+  /* Read-only is not disabled: the value is still submitted and the field is
+     still focusable, so it must not read as unavailable. */
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-input[data-invalid] .sk-input__control {
+  --sk-input-border: var(--sk-color-danger, #dc2626);
+}
+
+/* Sizes change the field's height, never its 44px target. */
+sk-input[size="sm"] .sk-input__control {
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  padding-inline: var(--sk-space-2, 0.5rem);
+}
+
+sk-input[size="lg"] .sk-input__control {
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  font-size: var(--sk-text-lg-size, 1.125rem);
+  padding-inline: var(--sk-space-4, 1rem);
+}
+
+/*
+ * `quiet` drops the fill and the shadow so a field can sit inside a card
+ * without three competing hard edges. The stroke stays — the field's boundary
+ * is what makes it a field.
+ */
+sk-input[variant="quiet"] {
+  --sk-input-bg: transparent;
+  --sk-input-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-input .sk-input__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-input .sk-input__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger-fg, #b91c1c);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-input .sk-input__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+  sk-input .sk-input__error {
+    color: var(--sk-color-danger, #dc2626);
+  }
+}
+
+/*
+ * Forced colors: the browser's own palette replaces every author color, so the
+ * brutalist shadow disappears entirely and the stroke is the only boundary left.
+ * `CanvasText` is the system text color and is guaranteed to contrast with
+ * `Canvas`, which the invalid state relies on.
+ */
+@media (forced-colors: active) {
+  sk-input {
+    --sk-input-border: CanvasText;
+    --sk-input-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-input[data-invalid] {
+    --sk-input-border: LinkText;
+  }
+
+  sk-input .sk-input__control {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  sk-input[data-invalid] .sk-input__control {
+    border: 2px solid LinkText;
+  }
+
+  sk-input .sk-input__required {
+    color: LinkText;
+  }
+}
+
+/*
+ * Reduced motion removes the shadow transition rather than shortening it: a 1ms
+ * change is still a change, and the field's shadow does not need to move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-input .sk-input__control {
+    transition: none;
+  }
+}

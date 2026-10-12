@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
+import { InputType } from "./components/sk-input/sk-input";
 export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
+export { InputType } from "./components/sk-input/sk-input";
 export namespace Components {
     /**
      * Badge — Tier 1 display component.
@@ -112,6 +114,94 @@ export namespace Components {
          */
         "variant": ButtonVariant;
     }
+    interface SkInput {
+        /**
+          * Autocomplete hint for the browser and password managers.
+         */
+        "autocomplete"?: string;
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue": string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary that lists several fields.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Maximum accepted length, enforced natively.
+         */
+        "maxLength"?: number;
+        /**
+          * Minimum accepted length, enforced natively.
+         */
+        "minLength"?: number;
+        /**
+          * Regular expression the value must match, enforced natively.
+          * @default ""
+         */
+        "pattern": string;
+        /**
+          * Placeholder text. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder": string;
+        /**
+          * Makes the field non-editable but still submitted and focusable.  Attribute-observed, unlike `disabled`: the HTML attribute name is `readonly` in every case, so Stencil's camelCase-to-kebab mapping cannot be relied on to match it, and a consumer writing `<sk-input readonly>` in plain HTML was silently getting an editable field.
+          * @default false
+         */
+        "readOnly": boolean;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * Native input type. Visual configuration stays `variant`/`size` only.
+          * @default "text"
+         */
+        "type": InputType;
+        /**
+          * The value. Uncontrolled by default: typed value only if set.
+          * @default ""
+         */
+        "value": string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant": "default" | "quiet";
+    }
     /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -193,6 +283,12 @@ declare global {
         prototype: HTMLSkIconButtonElement;
         new (): HTMLSkIconButtonElement;
     };
+    interface HTMLSkInputElement extends Components.SkInput, HTMLStencilElement {
+    }
+    var HTMLSkInputElement: {
+        prototype: HTMLSkInputElement;
+        new (): HTMLSkInputElement;
+    };
     /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -215,6 +311,7 @@ declare global {
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-icon-button": HTMLSkIconButtonElement;
+        "sk-input": HTMLSkInputElement;
         "sk-link": HTMLSkLinkElement;
     }
 }
@@ -339,6 +436,98 @@ declare namespace LocalJSX {
          */
         "variant"?: ButtonVariant;
     }
+    interface SkInput {
+        /**
+          * Autocomplete hint for the browser and password managers.
+         */
+        "autocomplete"?: string;
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue"?: string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary that lists several fields.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Maximum accepted length, enforced natively.
+         */
+        "maxLength"?: number;
+        /**
+          * Minimum accepted length, enforced natively.
+         */
+        "minLength"?: number;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * Regular expression the value must match, enforced natively.
+          * @default ""
+         */
+        "pattern"?: string;
+        /**
+          * Placeholder text. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the field non-editable but still submitted and focusable.  Attribute-observed, unlike `disabled`: the HTML attribute name is `readonly` in every case, so Stencil's camelCase-to-kebab mapping cannot be relied on to match it, and a consumer writing `<sk-input readonly>` in plain HTML was silently getting an editable field.
+          * @default false
+         */
+        "readOnly"?: boolean;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * Native input type. Visual configuration stays `variant`/`size` only.
+          * @default "text"
+         */
+        "type"?: InputType;
+        /**
+          * The value. Uncontrolled by default: typed value only if set.
+          * @default ""
+         */
+        "value"?: string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant"?: "default" | "quiet";
+    }
     /**
      * Link — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -399,6 +588,26 @@ declare namespace LocalJSX {
         "loading": boolean;
         "type": ButtonType;
     }
+    interface SkInputAttributes {
+        "type": InputType;
+        "variant": "default" | "quiet";
+        "size": "sm" | "md" | "lg";
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "readOnly": boolean;
+        "required": boolean;
+        "autocomplete": string;
+        "placeholder": string;
+        "form": string;
+        "value": string;
+        "defaultValue": string;
+        "minLength": number;
+        "maxLength": number;
+        "pattern": string;
+    }
     interface SkLinkAttributes {
         "href": string;
         "external": boolean;
@@ -412,6 +621,7 @@ declare namespace LocalJSX {
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
+        "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
     }
 }
@@ -445,6 +655,7 @@ declare module "@stencil/core" {
              */
             "sk-button": LocalJSX.IntrinsicElements["sk-button"] & JSXBase.HTMLAttributes<HTMLSkButtonElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
+            "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
             /**
              * Link — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

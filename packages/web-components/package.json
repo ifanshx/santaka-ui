@@ -53,11 +53,13 @@
   },
   "peerDependencies": {
     "@santaka-ui/styles": "workspace:^",
-    "@santaka-ui/tokens": "workspace:^"
+    "@santaka-ui/tokens": "workspace:^",
+    "@santaka-ui/utilities": "workspace:^"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
     "@stencil/core": "4.45.2",
+    "@santaka-ui/utilities": "workspace:^",
     "esbuild": "0.25.10",
     "eslint": "9.39.5",
     "publint": "0.3.25",

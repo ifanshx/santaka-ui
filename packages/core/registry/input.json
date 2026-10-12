@@ -1,0 +1,95 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "input",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-input/sk-input.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-8e3f6afb5c6efc12b31a2ecd2163a5d3a7e61119dc00f9e2a9ff756733655aaa"
+    },
+    {
+      "path": "src/components/sk-input/sk-input.css",
+      "type": "registry:style",
+      "checksum": "sha256-7cd869779ce6d91a047f1931984cbf145c5ab0c973d43ce280e43737ce7d953d"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-danger-fg",
+    "--sk-color-focus-ring",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-icon-sm",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-lg-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.",
+    "whenToUse": [
+      "The value is a short string: a name, an email, a handle, a search term",
+      "It must submit through a plain `<form>` with no JavaScript state",
+      "The browser's own constraint validation is wanted rather than a bespoke rules engine"
+    ],
+    "whenNotToUse": [
+      "The value is long-form text — use a Textarea",
+      "The value is one of a fixed set — use a Select or Radio Group",
+      "It only toggles a boolean — use a Checkbox or Switch"
+    ],
+    "accessibility": "Renders a real native `<input>`, so the browser supplies constraint validation, password managers, autofill, and IME composition rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error also sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `readOnly` keeps the value submitted and focusable, which is what distinguishes it from `disabled`.",
+    "example": "<sk-input name=\"email\" type=\"email\" label=\"Email\" required></sk-input>",
+    "knownLimitations": [
+      "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
+      "The `pattern` prop takes a string, not a RegExp, because it becomes a native attribute"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

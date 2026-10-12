@@ -106,4 +106,44 @@ beforeAll(() => {
       },
     )
   }
+
+  // `readonly` is the one attribute whose name differs from its camelCase prop:
+  // the HTML attribute is lowercase, so Stencil's default kebab mapping is
+  // overridden in the component. The stub has to observe the same name.
+  if (!customElements.get("sk-input")) {
+    customElements.define(
+      "sk-input",
+      class extends HTMLElement {
+        type = "text"
+        variant = "default"
+        size = "md"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        readOnly = false
+        required = false
+        value = ""
+        defaultValue = ""
+        minLength?: number
+        maxLength?: number
+        pattern = ""
+
+        // React writes an unknown attribute on a custom element rather than a
+        // property, so `minlength={2}` arrives here as an attribute. Observing
+        // it is what keeps the stub faithful to a real upgraded element; without
+        // it an adapter test would read `undefined` where a browser reads 2.
+        static get observedAttributes() {
+          return ["readonly", "minlength", "maxlength"]
+        }
+
+        attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+          if (name === "readonly") this.readOnly = value !== null
+          if (name === "minlength") this.minLength = value === null ? undefined : Number(value)
+          if (name === "maxlength") this.maxLength = value === null ? undefined : Number(value)
+        }
+      },
+    )
+  }
 })

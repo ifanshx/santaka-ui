@@ -1009,10 +1009,10 @@ Review this list at the end of every two-week phase. A risk without a named owne
 ### Weeks 3–4 — Tokens and core UI
 
 - [x] Implement semantic tokens and light/dark themes.
-- [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge. Still missing: Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label.)*
-- [ ] Add React and universal Web Components implementations for the agreed core subset. *(Both complete for all four shipped components: universal Button, Icon Button, Link, Badge; React adapters for each of them. Badge's adapter landed most recently.)*
+- [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge, Input. Still missing: Card, Typography, Separator, Spinner, Skeleton, Textarea, Label.)*
+- [x] Add React and universal Web Components implementations for the agreed core subset. *(Complete for all five shipped components: universal Button, Icon Button, Link, Badge, Input; a React adapter for each.)*
 - [ ] Add Storybook stories and baseline tests. *(No Storybook exists anywhere in the repo.)*
-- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Button's form participation is proven, including `type="submit"` via `requestSubmit()`. Input and Select do not exist.)*
+- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Input's form participation is proven in Chromium: submission through a plain form, `formResetCallback` restoring the initial value, `formDisabledCallback` withholding a disabled field, and `formStateRestoreCallback` on restore. Select does not exist, and React 19 form actions are untested.)*
 
 **Exit criteria:** basic components work in React + Vite and plain HTML, with a repeatable build.
 
@@ -1086,7 +1086,7 @@ A release candidate is ready only when the applicable items are checked and evid
 
 - [ ] Core component documentation and examples are complete.
 - [ ] Public TypeScript types and package exports validate in clean consumer projects. *(`attw --pack` and `publint` pass on the packed tarball of all six packages, which is the strongest check available without a consumer fixture. Nothing has yet installed the package into a scratch project and imported it, which is what this gate actually asks for.)*
-- [x] Unit, component, interaction, and browser tests pass in CI. *(196 tests pass on every run — 28 token pipeline, 20 token contract, 5 exports contract, 28 core, 20 utilities, 42 React, and 54 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
+- [x] Unit, component, interaction, and browser tests pass in CI. *(256 tests pass on every run — 28 token pipeline, 20 token contract, 5 exports contract, 58 core, 20 utilities, 56 React, and 74 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
 - [ ] Keyboard navigation and focus management have been manually reviewed.
 - [ ] Automated accessibility checks and targeted manual reviews are documented.
 - [x] Light/dark themes, forced-colors considerations, and reduced motion are reviewed. *(Token contract tests assert the glass fallback panel clears 4.5:1 against each theme's own text and is near-opaque; `forced-colors` is handled in all four components and in `glass.css`; `prefers-reduced-motion` removes the press transform rather than merely shortening it.)*
@@ -1100,7 +1100,7 @@ A release candidate is ready only when the applicable items are checked and evid
 - [ ] Dependency licenses and security scans are reviewed.
 - [ ] Changelog, semver policy, upgrade notes, and migration guidance are prepared.
 - [x] Component API conventions are enforced by a conformance test, and no Stable component deviates. *(Nine tests in `conventions.e2e.ts`, checking section 4's grammar statically and at runtime. One question is recorded as open in ADR-013 rather than enforced either way: whether a presentation boolean takes the `is`/`has`/`can` prefix.)*
-- [ ] Every form control submits through a plain `<form>` in React, Vue, and the universal package.
+- [ ] Every form control submits through a plain `<form>` in React, Vue, and the universal package. *(Proven for Input in the universal package — submission, reset, disabled-withholding, and state-restore callbacks are all asserted in Chromium. The React path forwards to the same element, and Vue does not exist.)*
 - [x] `publint` and `attw` are clean for every published package. *(All six pass both. `attw` found a real defect when it was introduced: Stencil's generated declarations re-export from a directory specifier, so the shipped types did not resolve under `node16`. Fixed in the build.)*
 - [ ] The documented support matrix is generated from the Playwright projects that actually run.
 - [ ] Every component has an RTL visual regression case and a `--sk-touch-min` compliant target. *(`--sk-touch-min` is proven for Button and Icon Button, including a Core-tier case where `aspect-ratio` is unavailable. RTL is covered for Button only, and by interaction test rather than visual regression — no visual-regression suite exists yet.)*

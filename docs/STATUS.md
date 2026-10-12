@@ -11,7 +11,7 @@ package are real, tested, and green; the React package now covers all four
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **196 tests pass.** All six
+`pnpm run verify` exits 0 from a cold cache. **256 tests pass.** All six
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -29,7 +29,7 @@ packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Four universal custom elements, each with browser tests against real Chromium:
+Five universal custom elements, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -37,17 +37,20 @@ Four universal custom elements, each with browser tests against real Chromium:
 | `sk-icon-button` | accessible name, square hit target on **both** browser tiers, spinner |
 | `sk-link` | anchor semantics, external indicator, theme |
 | `sk-badge` | variant fills from tokens (not `color-mix`), dot label for WCAG 1.4.1 |
+| `sk-input` | FACE submission, all three form callbacks, native validation, label and error wiring |
 
-**54 Playwright tests.** All four carry the brutalist treatment — 3px stroke,
+**74 Playwright tests.** All five carry the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, `Badge`, plus `ThemeScript` / `useTheme`. **42
-tests.** Badge's adapter enforces the WCAG 1.4.1 requirement in the type
-system: `<Badge dot />` does not compile without `statusLabel`.
+`Button`, `IconButton`, `Link`, `Badge`, `Input`, plus `ThemeScript` /
+`useTheme`. **56 tests.** Two requirements are enforced in the type system
+rather than left to review: `<Badge dot />` does not compile without
+`statusLabel`, and `Input` generates its id with `useId()` so the id stays
+stable across re-renders.
 
 ### Core and utilities
 
@@ -83,8 +86,8 @@ open), 014 (browser baseline), 017 (token values and design direction).
 
 ### Blocking Tier 1
 
-- **Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label** —
-  eight of the twelve Tier 1 components do not exist.
+- **Card, Typography, Separator, Spinner, Skeleton, Textarea, Label** —
+  seven of the twelve Tier 1 components do not exist. Input landed most recently.
 - **No Storybook.** Section 10's workshop; nothing in the repo references it.
 
 ### Blocking Stable
