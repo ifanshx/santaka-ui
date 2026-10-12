@@ -29,7 +29,7 @@
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
-    "test": "node scripts/build-styles.mjs --check",
+    "test": "pnpm --filter @santaka-ui/tokens build && node scripts/build-styles.mjs --check",
     "size": "echo \"[styles] CSS budgets are measured with the component stylesheet\"",
     "validate:package": "publint ."
   },
@@ -37,6 +37,7 @@
     "@santaka-ui/tokens": "workspace:^"
   },
   "devDependencies": {
+    "@santaka-ui/tokens": "workspace:^",
     "eslint": "9.39.5",
     "publint": "0.3.25",
     "rimraf": "6.0.1",
