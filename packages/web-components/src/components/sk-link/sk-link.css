@@ -1,6 +1,11 @@
 /*
  * Link styles.
  *
+ * A link is chrome, not a floating layer, so it gets the brutalist treatment
+ * and no glass: no rounding, and an underline thick enough to match the 3px
+ * stroke language. A link has no press state — it is followed, not depressed —
+ * so its hover treatment is weight and color rather than a lifted shadow.
+ *
  * The focus treatment matters more than the color: a link is the most common
  * keyboard target on a page, so its focus ring is never suppressed and never
  * overlapped by the underline.
@@ -18,15 +23,19 @@ sk-link {
 sk-link .sk-link__anchor {
   color: var(--sk-color-primary, #6d28d9);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
-  border-radius: var(--sk-radius-sm, 0.25rem);
-  transition: color var(--sk-duration-fast, 120ms)
-    var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+  border-radius: 0;
+  transition:
+    color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    text-decoration-thickness var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 sk-link .sk-link__anchor:hover {
   color: var(--sk-color-primary-hover, #5b21b6);
+  text-decoration-thickness: 3px;
 }
 
 /* `subtle` removes the underline until the link is hovered or focused, which
@@ -41,8 +50,8 @@ sk-link[data-subtle] .sk-link__anchor:focus-visible {
 }
 
 sk-link .sk-link__anchor:focus-visible {
-  outline: var(--sk-ring-width, 2px) solid var(--sk-color-focus-ring, #6d28d9);
-  outline-offset: var(--sk-ring-offset, 2px);
+  outline: var(--sk-ring-width, 3px) solid var(--sk-color-focus-ring, #6d28d9);
+  outline-offset: var(--sk-ring-offset, 3px);
 }
 
 /*
@@ -81,6 +90,18 @@ sk-link .sk-link__external::after {
   block-size: 1px;
   background-color: currentcolor;
   transform-origin: left center;
+}
+
+/*
+ * A 1ms underline thickening is still an animation, so reduced motion drops the
+ * thickness transition. The thicker hover decoration itself stays: it is a static
+ * style on a text decoration, and removing it would remove the affordance
+ * rather than the motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-link .sk-link__anchor {
+    transition: none;
+  }
 }
 
 @media (forced-colors: active) {

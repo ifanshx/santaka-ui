@@ -1,29 +1,39 @@
 /*
  * Icon Button styles.
  *
- * The control is square: equal inline and block size, sized by the same
- * `--sk-touch-min` floor as every other interactive element, so an icon-only
- * button is never smaller to hit than a labelled one. Size variants change the
- * icon, not the target.
+ * An icon button is chrome, not a floating layer, so it carries the same
+ * brutalist treatment as Button: a 3px stroke, no rounding on the control, and
+ * a zero-blur offset shadow. The control is also square: equal inline and block
+ * size, sized by the same `--sk-touch-min` floor as every other interactive
+ * element, so an icon-only button is never smaller to hit than a labelled one.
+ * Size variants change the icon, not the target.
  */
 
 sk-icon-button {
   --sk-icon-button-bg: transparent;
   --sk-icon-button-fg: var(--sk-color-text, #17141c);
-  --sk-icon-button-border: transparent;
+  --sk-icon-button-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-icon-button-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
   --sk-icon-button-ring: var(--sk-color-focus-ring, #6d28d9);
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--sk-space-2, 0.5rem);
+  /* Square by construction, not by coincidence. An icon-only control's inline
+     size is content-driven (icon plus padding), so a 44px floor on that axis
+     alone left the hit target wider than it was tall once the 3px stroke was
+     added. `aspect-ratio` ties the axes together, so the density steps below
+     still change the size — they just change it on both axes at once. */
   min-block-size: var(--sk-touch-min, 2.75rem);
   min-inline-size: var(--sk-touch-min, 2.75rem);
+  aspect-ratio: 1;
+  border: var(--sk-border-thick, 3px) solid var(--sk-icon-button-border);
   padding-inline: var(--sk-space-2, 0.5rem);
-  border: var(--sk-border-width, 1px) solid var(--sk-icon-button-border);
-  border-radius: var(--sk-radius-md, 0.375rem);
+  border-radius: 0;
   background-color: var(--sk-icon-button-bg);
   color: var(--sk-icon-button-fg);
+  box-shadow: var(--sk-icon-button-shadow) var(--sk-color-shadow, #17141c);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   line-height: var(--sk-text-sm-line-height, 1.25rem);
   text-align: center;
@@ -31,16 +41,30 @@ sk-icon-button {
   cursor: pointer;
   user-select: none;
   transition:
-    background-color var(--sk-duration-fast, 120ms)
-      var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-    border-color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-    color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    translate var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+/* The press, matching Button: half the 3px stroke, no layout shift. */
+sk-icon-button:hover:not([data-disabled]):not([data-loading]) {
+  box-shadow: var(--sk-shadow-brutal-hover, 7px 7px 0 0) var(--sk-color-shadow, #17141c);
+  translate: -2px -2px;
+}
+
+sk-icon-button:active:not([data-disabled]):not([data-loading]) {
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  translate: 3px 3px;
 }
 
 /* Sizes change the icon and the density, never the 44px target. */
 sk-icon-button[size="sm"] {
   padding-inline: var(--sk-space-1, 0.25rem);
-  border-radius: var(--sk-radius-sm, 0.25rem);
 }
 
 sk-icon-button[size="sm"] .sk-icon-button__icon {
@@ -50,7 +74,6 @@ sk-icon-button[size="sm"] .sk-icon-button__icon {
 
 sk-icon-button[size="lg"] {
   padding-inline: var(--sk-space-3, 0.75rem);
-  border-radius: var(--sk-radius-lg, 0.5rem);
 }
 
 sk-icon-button[size="lg"] .sk-icon-button__icon {
@@ -75,51 +98,22 @@ sk-icon-button .sk-icon-button__icon > svg {
 sk-icon-button[variant="primary"] {
   --sk-icon-button-bg: var(--sk-color-primary, #6d28d9);
   --sk-icon-button-fg: var(--sk-color-primary-fg, #ffffff);
-  --sk-icon-button-border: transparent;
-}
-
-sk-icon-button[variant="primary"]:hover:not([data-disabled]) {
-  --sk-icon-button-bg: var(--sk-color-primary-hover, #5b21b6);
 }
 
 sk-icon-button[variant="secondary"] {
   --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
-  --sk-icon-button-fg: var(--sk-color-text, #17141c);
-  --sk-icon-button-border: var(--sk-color-border-strong, #8b85a0);
 }
 
-sk-icon-button[variant="secondary"]:hover:not([data-disabled]) {
-  --sk-icon-button-bg: var(--sk-color-surface-sunken, #f1eef8);
-}
-
-sk-icon-button[variant="outline"] {
-  --sk-icon-button-bg: transparent;
-  --sk-icon-button-fg: var(--sk-color-text, #17141c);
-  --sk-icon-button-border: var(--sk-color-border-strong, #8b85a0);
-}
-
-sk-icon-button[variant="outline"]:hover:not([data-disabled]) {
-  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
-}
-
+/* Ghost is flat at rest — stroke only, no shadow — so it reads as the
+   quietest chrome. Hover brings the shadow in. */
 sk-icon-button[variant="ghost"] {
   --sk-icon-button-bg: transparent;
-  --sk-icon-button-fg: var(--sk-color-text, #17141c);
-  --sk-icon-button-border: transparent;
-}
-
-sk-icon-button[variant="ghost"]:hover:not([data-disabled]) {
-  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-icon-button-shadow: var(--sk-shadow-brutal-none, none);
 }
 
 sk-icon-button[variant="danger"] {
   --sk-icon-button-bg: transparent;
   --sk-icon-button-fg: var(--sk-color-danger, #dc2626);
-  --sk-icon-button-border: transparent;
-}
-
-sk-icon-button[variant="danger"]:hover:not([data-disabled]) {
-  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
 }
 
 sk-icon-button[data-disabled],
@@ -133,17 +127,19 @@ sk-icon-button[data-loading] {
 }
 
 sk-icon-button:focus-visible {
-  outline: var(--sk-ring-width, 2px) solid var(--sk-icon-button-ring);
-  outline-offset: var(--sk-ring-offset, 2px);
+  outline: var(--sk-ring-width, 3px) solid var(--sk-icon-button-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
 }
 
+/* The spinner is a circle by shape, not a style choice, so it keeps the full
+   radius while every other surface on the control is square. */
 sk-icon-button .sk-icon-button__spinner {
   inline-size: var(--sk-icon-md, 1.25rem);
   block-size: var(--sk-icon-md, 1.25rem);
   border: 2px solid currentcolor;
   border-block-start-color: transparent;
   border-radius: var(--sk-radius-full, 9999px);
-  animation: sk-icon-button-spin var(--sk-duration-slow, 320ms) linear infinite;
+  animation: sk-icon-button-spin var(--sk-duration-control-slow, 180ms) linear infinite;
 }
 
 @keyframes sk-icon-button-spin {
@@ -155,9 +151,15 @@ sk-icon-button .sk-icon-button__spinner {
 /*
  * Reduced motion is implemented once as a token override (section 6), but a
  * spinning affordance that persists for the whole operation is worse than a
- * fading one, so the animation stops rather than merely shortening.
+ * fading one, so the animation stops rather than merely shortening. The press
+ * movement goes with it: a 1ms lift is still a lift.
  */
 @media (prefers-reduced-motion: reduce) {
+  sk-icon-button:hover:not([data-disabled]):not([data-loading]),
+  sk-icon-button:active:not([data-disabled]):not([data-loading]) {
+    translate: none;
+  }
+
   sk-icon-button .sk-icon-button__spinner {
     animation: none;
     border-block-start-color: currentcolor;

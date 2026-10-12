@@ -9,6 +9,39 @@ import { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/butto
 export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 export namespace Components {
     /**
+     * Badge — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A badge is a static label, not an interactive element. That is stated here
+     * because "badge" invites the wrong implementation: a clickable badge is a
+     * button with extra steps, and a badge inside a link is the link's job.
+     * The one behavior worth encoding is the dot. A status dot conveys meaning by
+     * color alone, which WCAG 1.4.1 forbids, so `variant="dot"` renders a shape that
+     * also carries a text label the consumer supplies. `statusLabel` is required
+     * for that variant in the React types.
+     */
+    interface SkBadge {
+        /**
+          * Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color.
+          * @default false
+         */
+        "dot": boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size": "sm" | "md";
+        /**
+          * Screen-reader text for the dot variant. Required when `dot` is set.
+          * @default ""
+         */
+        "statusLabel": string;
+        /**
+          * Visual emphasis.
+          * @default "neutral"
+         */
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
      * Button — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -120,6 +153,23 @@ export namespace Components {
 }
 declare global {
     /**
+     * Badge — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A badge is a static label, not an interactive element. That is stated here
+     * because "badge" invites the wrong implementation: a clickable badge is a
+     * button with extra steps, and a badge inside a link is the link's job.
+     * The one behavior worth encoding is the dot. A status dot conveys meaning by
+     * color alone, which WCAG 1.4.1 forbids, so `variant="dot"` renders a shape that
+     * also carries a text label the consumer supplies. `statusLabel` is required
+     * for that variant in the React types.
+     */
+    interface HTMLSkBadgeElement extends Components.SkBadge, HTMLStencilElement {
+    }
+    var HTMLSkBadgeElement: {
+        prototype: HTMLSkBadgeElement;
+        new (): HTMLSkBadgeElement;
+    };
+    /**
      * Button — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -162,12 +212,46 @@ declare global {
         new (): HTMLSkLinkElement;
     };
     interface HTMLElementTagNameMap {
+        "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-link": HTMLSkLinkElement;
     }
 }
 declare namespace LocalJSX {
+    /**
+     * Badge — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A badge is a static label, not an interactive element. That is stated here
+     * because "badge" invites the wrong implementation: a clickable badge is a
+     * button with extra steps, and a badge inside a link is the link's job.
+     * The one behavior worth encoding is the dot. A status dot conveys meaning by
+     * color alone, which WCAG 1.4.1 forbids, so `variant="dot"` renders a shape that
+     * also carries a text label the consumer supplies. `statusLabel` is required
+     * for that variant in the React types.
+     */
+    interface SkBadge {
+        /**
+          * Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color.
+          * @default false
+         */
+        "dot"?: boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size"?: "sm" | "md";
+        /**
+          * Screen-reader text for the dot variant. Required when `dot` is set.
+          * @default ""
+         */
+        "statusLabel"?: string;
+        /**
+          * Visual emphasis.
+          * @default "neutral"
+         */
+        "variant"?: "neutral" | "primary" | "success" | "warning" | "danger";
+    }
     /**
      * Button — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -294,6 +378,12 @@ declare namespace LocalJSX {
         "target"?: string;
     }
 
+    interface SkBadgeAttributes {
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+        "size": "sm" | "md";
+        "dot": boolean;
+        "statusLabel": string;
+    }
     interface SkButtonAttributes {
         "variant": ButtonVariant;
         "size": ButtonSize;
@@ -319,6 +409,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
@@ -328,6 +419,18 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * Badge — Tier 1 display component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A badge is a static label, not an interactive element. That is stated here
+             * because "badge" invites the wrong implementation: a clickable badge is a
+             * button with extra steps, and a badge inside a link is the link's job.
+             * The one behavior worth encoding is the dot. A status dot conveys meaning by
+             * color alone, which WCAG 1.4.1 forbids, so `variant="dot"` renders a shape that
+             * also carries a text label the consumer supplies. `statusLabel` is required
+             * for that variant in the React types.
+             */
+            "sk-badge": LocalJSX.IntrinsicElements["sk-badge"] & JSXBase.HTMLAttributes<HTMLSkBadgeElement>;
             /**
              * Button — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

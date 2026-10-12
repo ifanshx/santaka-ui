@@ -26,18 +26,30 @@
     {
       "path": "src/components/sk-button/sk-button.css",
       "type": "registry:style",
-      "checksum": "sha256-2e4cd2439efa5c3ee81deac82fcb7a6d51120d58d772d5a0f473040d66998294"
+      "checksum": "sha256-65834fff65a09091f518be06bc80fe0b077c47de482543d4204cbd9ca0a797f6"
     }
   ],
   "cssVariables": [
-    "--sk-color-primary",
-    "--sk-color-primary-hover",
-    "--sk-color-primary-fg",
-    "--sk-color-text",
-    "--sk-color-surface-raised",
-    "--sk-color-surface-sunken",
+    "--sk-border-thick",
     "--sk-color-border-strong",
-    "--sk-touch-min"
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-touch-min",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-hover",
+    "--sk-shadow-brutal-none"
   ],
   "localesCovered": [
     "en-US"

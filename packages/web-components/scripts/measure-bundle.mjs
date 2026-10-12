@@ -83,6 +83,7 @@ const BUDGETS = [
     name: "web-components runtime",
     measure: () =>
       measureJs(join(pkgRoot, "dist/components/index.js"), [
+        "SkBadge",
         "SkButton",
         "SkIconButton",
         "SkLink",
@@ -95,6 +96,12 @@ const BUDGETS = [
     measure: () => measureCss(componentCssFiles, componentCount),
     budgetKb: 4,
   },
+  // Raised from 12 KB when the neo-brutalist and glass token layer landed. The
+  // growth is the token surface itself — the brutal shadow ladder, the arcade
+  // motion pairs, the glass alpha group, and the four per-theme `*-subtle`
+  // badge fills — not a regression. It is not comment weight: esbuild strips
+  // comments before this measurement, so the emitted `$description` prose
+  // contributes nothing here and trimming it would recover 0 bytes.
   {
     name: "token themes, light + dark",
     measure: () =>
@@ -102,7 +109,7 @@ const BUDGETS = [
         join(repoRoot, "packages/tokens/dist/css/light.css"),
         join(repoRoot, "packages/tokens/dist/css/dark.css"),
       ]),
-    budgetKb: 12,
+    budgetKb: 13,
   },
 ]
 

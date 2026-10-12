@@ -26,21 +26,35 @@
     {
       "path": "src/components/sk-icon-button/sk-icon-button.css",
       "type": "registry:style",
-      "checksum": "sha256-0b499057a8c5d300e14584a17d043e0340b035389570a58af984b8d30159fc28"
+      "checksum": "sha256-3a646c31810d49496ee639cd590ab4632a8963351e28033c3ee43980ff70b40b"
     }
   ],
   "cssVariables": [
-    "--sk-color-primary",
-    "--sk-color-primary-hover",
-    "--sk-color-primary-fg",
-    "--sk-color-text",
-    "--sk-color-surface-raised",
+    "--sk-border-thick",
     "--sk-color-border-strong",
     "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-touch-min",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-duration-control-slow",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
     "--sk-icon-sm",
     "--sk-icon-md",
     "--sk-icon-lg",
-    "--sk-touch-min"
+    "--sk-radius-full",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-hover",
+    "--sk-shadow-brutal-none"
   ],
   "localesCovered": [
     "en-US"

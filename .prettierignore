@@ -13,6 +13,7 @@ pnpm-lock.yaml
 packages/*/schema/
 packages/*/src/components.d.ts
 packages/*/custom-elements.json
+packages/core/registry/
 
 # Prose documents are checked by review, not by a formatter.
 *.md

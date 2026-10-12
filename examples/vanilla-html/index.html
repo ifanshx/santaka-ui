@@ -87,6 +87,40 @@
         <p><sk-link href="" data-slot="link">A link with no destination</sk-link></p>
       </section>
 
+      <section aria-labelledby="badge-heading" class="sk-stack">
+        <h2 id="badge-heading" style="font-size: var(--sk-text-lg-size)">Badges</h2>
+        <div class="sk-cluster">
+          <sk-badge variant="neutral">Draft</sk-badge>
+          <sk-badge variant="primary">Featured</sk-badge>
+          <sk-badge variant="success">Active</sk-badge>
+          <sk-badge variant="warning">Pending</sk-badge>
+          <sk-badge variant="danger">Failed</sk-badge>
+          <sk-badge dot variant="success" status-label="Active"></sk-badge>
+        </div>
+      </section>
+
+      <section aria-labelledby="materials-heading" class="sk-stack">
+        <h2 id="materials-heading" style="font-size: var(--sk-text-lg-size)">Materials</h2>
+        <div class="sk-cluster" style="align-items: stretch">
+          <div class="sk-glass" style="padding: var(--sk-space-6); min-inline-size: 16rem">
+            <strong>Glass overlay</strong>
+            <p class="sk-text-muted">Frosted panel. Floating layers only.</p>
+          </div>
+          <div
+            class="sk-surface-raised"
+            style="
+              padding: var(--sk-space-6);
+              min-inline-size: 16rem;
+              border: var(--sk-border-thick) solid var(--sk-color-border-strong);
+              box-shadow: var(--sk-shadow-brutal) var(--sk-color-shadow);
+            "
+          >
+            <strong>Brutalist chrome</strong>
+            <p class="sk-text-muted">Hard edges. Everything you press.</p>
+          </div>
+        </div>
+      </section>
+
       <form id="probe" class="sk-cluster">
         <sk-button type="submit" variant="primary">Submit</sk-button>
         <output id="result" data-slot="result" class="sk-text-muted">no submit yet</output>

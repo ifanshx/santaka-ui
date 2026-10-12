@@ -110,3 +110,57 @@ test("mirrors direction under RTL", async ({ page }) => {
     .evaluate((el) => getComputedStyle(el).direction)
   expect(direction).toBe("rtl")
 })
+
+test("brutalist chrome: thick border, no radius, hard offset shadow", async ({ page }) => {
+  const button = page.locator('sk-button[variant="primary"]').first()
+  const style = await button.evaluate((el) => {
+    const cs = getComputedStyle(el)
+    return {
+      borderWidth: cs.borderTopWidth,
+      borderStyle: cs.borderTopStyle,
+      radius: cs.borderTopLeftRadius,
+      boxShadow: cs.boxShadow,
+    }
+  })
+  expect(style.borderWidth).toBe("3px")
+  expect(style.borderStyle).toBe("solid")
+  expect(style.radius).toBe("0px")
+  // A hard offset shadow has a nonzero x/y offset and a zero blur radius.
+  // Chromium serializes the token's color as oklch() because the theme emits
+  // it inside an @supports block; the geometry, not the color's format, is what
+  // this asserts.
+  expect(style.boxShadow).not.toBe("none")
+  expect(style.boxShadow).toMatch(/^\S+\([^)]*\) (-?\d+(?:\.\d+)?)px (-?\d+(?:\.\d+)?)px 0px/)
+})
+
+test("the press moves the control and shrinks its shadow", async ({ page }) => {
+  const button = page.locator('sk-button[variant="primary"]').first()
+  const rest = await button.evaluate((el) => {
+    const cs = getComputedStyle(el)
+    return { shadow: cs.boxShadow, x: cs.translate }
+  })
+  expect(rest.shadow).not.toBe("none")
+
+  await button.hover()
+  // The arcade curve overshoots, so the resting translate has to be polled for
+  // rather than read on the next frame.
+  await expect
+    .poll(async () => button.evaluate((el) => getComputedStyle(el).translate))
+    .toBe("-2px -2px")
+  const hovered = await button.evaluate((el) => getComputedStyle(el).boxShadow)
+  expect(hovered).not.toBe(rest.shadow)
+  // The 2px lift is half the 3px stroke: the control stays registered to its
+  // place in the layout while the shadow does the moving.
+})
+
+test("the focus ring is a hard 3px ring at 3px offset", async ({ page }) => {
+  const button = page.locator('sk-button[variant="primary"]').first()
+  await button.focus()
+  const ring = await button.evaluate((el) => {
+    const cs = getComputedStyle(el)
+    return { width: cs.outlineWidth, offset: cs.outlineOffset, style: cs.outlineStyle }
+  })
+  expect(ring.style).not.toBe("none")
+  expect(Number.parseFloat(ring.width)).toBeGreaterThanOrEqual(3)
+  expect(Number.parseFloat(ring.offset)).toBeGreaterThanOrEqual(3)
+})

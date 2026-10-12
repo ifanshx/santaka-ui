@@ -1,0 +1,115 @@
+/*
+ * Badge styles.
+ *
+ * A badge is chrome, so it carries the brutalist treatment: a 3px stroke, no
+ * rounding, and a hard offset shadow.
+ *
+ * The contrast that matters is the text-on-background pair, not the
+ * background-on-surface pair, so each variant sets a foreground and a background
+ * that were measured together. The backgrounds come from the theme's `*-subtle`
+ * tokens rather than `color-mix()`: mixing needs Chrome 111 / Safari 16.2, and
+ * the browser support baseline is Chrome 90 / Safari 15.4 (section 4). A
+ * dropped `color-mix()` would leave a Core-tier browser with no fill at all.
+ */
+
+sk-badge {
+  --sk-badge-bg: var(--sk-color-surface-sunken, #f1eef8);
+  --sk-badge-fg: var(--sk-color-text, #17141c);
+  --sk-badge-dot: var(--sk-color-text-muted, #5f5a6b);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-1, 0.25rem);
+  padding-inline: var(--sk-space-2, 0.5rem);
+  min-block-size: 1.25rem;
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: 0;
+  background-color: var(--sk-badge-bg);
+  color: var(--sk-badge-fg);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  letter-spacing: var(--sk-text-xs-tracking, 0.04em);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+sk-badge[data-size="md"] {
+  min-block-size: 1.5rem;
+  padding-inline: var(--sk-space-3, 0.75rem);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+/*
+ * Variants pair a foreground with a background chosen together, so the text
+ * clears 4.5:1 against its own fill rather than only against the page.
+ */
+sk-badge[data-variant="primary"] {
+  --sk-badge-bg: var(--sk-color-primary, #6d28d9);
+  --sk-badge-fg: var(--sk-color-primary-fg, #ffffff);
+  --sk-badge-dot: var(--sk-color-primary, #6d28d9);
+}
+
+sk-badge[data-variant="success"] {
+  --sk-badge-bg: var(--sk-color-success-subtle, #e9f6ed);
+  --sk-badge-fg: var(--sk-color-success-fg, #166534);
+  --sk-badge-dot: var(--sk-color-success, #15803d);
+}
+
+sk-badge[data-variant="warning"] {
+  --sk-badge-bg: var(--sk-color-warning-subtle, #fcf3e4);
+  --sk-badge-fg: var(--sk-color-warning-fg, #92400e);
+  --sk-badge-dot: var(--sk-color-warning, #92400e);
+}
+
+sk-badge[data-variant="danger"] {
+  --sk-badge-bg: var(--sk-color-danger-subtle, #fdeded);
+  --sk-badge-fg: var(--sk-color-danger-fg, #b91c1c);
+  --sk-badge-dot: var(--sk-color-danger, #dc2626);
+}
+
+/*
+ * The dot variant is a colored circle — a shape, not a style choice, so it keeps
+ * the full radius. It drops the badge's stroke and offset shadow, which would
+ * swallow it at 10px, and keeps only the surface ring that separates it from
+ * whatever is behind it.
+ *
+ * The dot is never the only carrier of meaning: the consumer supplies
+ * `statusLabel`, rendered visually hidden, so the state is announced rather
+ * than only shown (WCAG 1.4.1).
+ */
+sk-badge[data-dot] {
+  min-inline-size: 0.625rem;
+  min-block-size: 0.625rem;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  padding-inline: 0;
+  border: 0;
+  border-radius: var(--sk-radius-full, 9999px);
+  background-color: var(--sk-badge-dot);
+  box-shadow: 0 0 0 2px var(--sk-color-surface, #ffffff);
+}
+
+sk-badge[data-dot][data-size="md"] {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  min-inline-size: 0.75rem;
+  min-block-size: 0.75rem;
+}
+
+@media (forced-colors: active) {
+  sk-badge {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  sk-badge[data-dot] {
+    border: none;
+    background-color: CanvasText;
+  }
+}
