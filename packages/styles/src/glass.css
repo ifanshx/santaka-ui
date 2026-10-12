@@ -10,21 +10,28 @@
  * near-opaque surface rather than rendering text over unblurred content
  * (section 4, CSS). The `-webkit-` prefix is required for Safari 16.4, which is
  * inside the Baseline tier.
+ *
+ * Every reference carries a literal fallback, which for glass means the
+ * *light* theme values: section 6's token contract requires a usable surface
+ * when the theme is not imported at all. A consumer who imports only the dark
+ * theme is covered by the `@supports` branch reading the dark tokens; the
+ * literals here are the last-resort floor, not the dark theme's design.
  */
 .sk-glass {
   position: relative;
   overflow: hidden;
-  background-color: var(--sk-glass-fallback);
-  border: var(--sk-border-width, 1px) solid var(--sk-glass-border);
+  background-color: var(--sk-glass-fallback, rgb(247 245 251 / 0.98));
+  border: var(--sk-border-width, 1px) solid var(--sk-glass-border, rgb(255 255 255 / 0.6));
   border-radius: var(--sk-radius-glass, 1.25rem);
-  box-shadow: var(--sk-shadow-lg);
+  box-shadow: var(--sk-shadow-lg, 6px 6px 0 0) var(--sk-color-shadow, #17141c);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .sk-glass {
-    background-color: var(--sk-glass-bg);
-    -webkit-backdrop-filter: blur(var(--sk-glass-blur)) saturate(var(--sk-glass-saturate));
-    backdrop-filter: blur(var(--sk-glass-blur)) saturate(var(--sk-glass-saturate));
+    background-color: var(--sk-glass-bg, rgb(255 255 255 / 0.72));
+    -webkit-backdrop-filter: blur(var(--sk-glass-blur, 24px))
+      saturate(var(--sk-glass-saturate, 180%));
+    backdrop-filter: blur(var(--sk-glass-blur, 24px)) saturate(var(--sk-glass-saturate, 180%));
   }
 
   /* The specular top edge is what reads as iOS rather than as a translucent box. */
@@ -34,7 +41,7 @@
     inset-block-start: 0;
     inset-inline: var(--sk-space-4, 1rem);
     block-size: 1px;
-    background-color: var(--sk-glass-highlight);
+    background-color: var(--sk-glass-highlight, rgb(255 255 255 / 0.55));
     pointer-events: none;
   }
 }
@@ -60,5 +67,22 @@
 @media (prefers-reduced-motion: reduce) {
   .sk-glass {
     animation: none;
+  }
+}
+
+/*
+ * High contrast: `backdrop-filter` paints nothing under forced colors, so the
+ * panel would render as its own translucent border on the page canvas. The
+ * system color keywords give a guaranteed-contrasting opaque surface instead.
+ */
+@media (forced-colors: active) {
+  .sk-glass {
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+    forced-color-adjust: none;
+  }
+
+  .sk-glass::before {
+    display: none;
   }
 }

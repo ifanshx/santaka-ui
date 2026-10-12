@@ -83,7 +83,7 @@
     },
     "primary-subtle": {
       "$value": "#1F1533",
-      "$description": "Tinted fill for badges and soft state chips. Primary foreground on it is 12.47:1."
+      "$description": "Tinted fill for badges and soft state chips. Pair it with --sk-color-primary-fg, not --sk-color-primary: white on this fill is 17.31:1, while violet is 3.04:1. Note this is the reverse of the light theme, where the pairing flips — check the theme rather than assuming."
     },
     "accent-coral": {
       "$value": "{color.coral.300}",
@@ -103,7 +103,7 @@
     }
   },
   "glass": {
-    "$description": "Glass overlay roles, dark theme. The only alpha values in the system; blur, saturate, and fallback are theme-independent and declared in dimensions.tokens.json.",
+    "$description": "Glass overlay roles, dark theme. The only alpha values in the system; `blur` and `saturate` are theme-independent and declared in dimensions.tokens.json, every color here is per theme.",
     "bg": { "$value": "rgb(26 22 34 / 0.72)" },
     "bg-strong": {
       "$value": "rgb(20 17 26 / 0.86)",
@@ -113,6 +113,10 @@
     "highlight": {
       "$value": "rgb(255 255 255 / 0.10)",
       "$description": "Top-edge specular line; what reads as iOS rather than a translucent box."
+    },
+    "fallback": {
+      "$value": "rgb(15 13 20 / 0.98)",
+      "$description": "Solid surface used when `backdrop-filter` is unsupported, dark theme. Near-black rather than a light surface: a fallback must never put light text on a light panel."
     }
   }
 }

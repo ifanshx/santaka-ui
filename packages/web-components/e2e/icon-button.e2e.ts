@@ -72,6 +72,52 @@ test("is square, so the hit target matches what is drawn", async ({ page }) => {
   expect(box.width).toBe(box.height)
 })
 
+test("stays square on the Core tier, where aspect-ratio is unavailable", async ({ page }) => {
+  // `aspect-ratio` is Baseline-tier (Chrome 111 / Safari 16.4); the Core tier is
+  // Chrome 90 / Safari 15.4 and drops it. A browser without it must still get a
+  // square target of at least 44x44, so the stylesheet states fixed sizes for
+  // that branch. `@supports` is resolved at parse time, so a Core browser
+  // cannot be simulated by neutralizing the property afterward — the cascade a
+  // Core browser sees is reproduced instead: the Baseline branch cancelled, the
+  // Core branch applied.
+  //
+  // The `@santaka-ui/styles` reset is detached first, which is the harsher half
+  // of the same claim: a consumer who never imports it still gets square
+  // geometry, because the control declares its own box model rather than
+  // inheriting one. Detaching the real stylesheet is the only faithful way to
+  // simulate its absence — injecting `content-box !important` would outrank the
+  // very declaration under test and prove nothing.
+  await page.evaluate(() => {
+    for (const link of document.querySelectorAll('link[rel="stylesheet"]')) {
+      if (link.getAttribute("href")?.includes("/packages/styles/dist/index.css")) link.remove()
+    }
+  })
+  await page.addStyleTag({
+    content: `
+      sk-icon-button { block-size: auto !important; inline-size: auto !important; aspect-ratio: auto !important; }
+      sk-icon-button { block-size: var(--sk-touch-min, 2.75rem) !important; inline-size: var(--sk-touch-min, 2.75rem) !important; }
+      sk-icon-button[size="md"] { block-size: 3rem !important; inline-size: 3rem !important; }
+      sk-icon-button[size="lg"] { block-size: 3.5rem !important; inline-size: 3.5rem !important; }
+    `,
+  })
+
+  const boxes = await page.locator("sk-icon-button").evaluateAll((els) =>
+    els.map((el) => {
+      const rect = el.getBoundingClientRect()
+      return {
+        label: el.getAttribute("label"),
+        height: Math.round(rect.height),
+        width: Math.round(rect.width),
+      }
+    }),
+  )
+  for (const box of boxes) {
+    expect(box.width, `${box.label} width`).toBeGreaterThanOrEqual(44)
+    expect(box.height, `${box.label} height`).toBeGreaterThanOrEqual(44)
+    expect(box.width, `${box.label} is square on the Core tier`).toBe(box.height)
+  }
+})
+
 test("activates on click", async ({ page }) => {
   await page.locator('sk-icon-button[label="Edit"]').click()
   await expect(page.locator("#log")).toContainText("clicked")

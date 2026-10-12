@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-icon-button/sk-icon-button.css",
       "type": "registry:style",
-      "checksum": "sha256-3a646c31810d49496ee639cd590ab4632a8963351e28033c3ee43980ff70b40b"
+      "checksum": "sha256-61bcc51fbee2d0579b1688f9611b3d982c615e3680e2ca93da995cb8fad8531c"
     }
   ],
   "cssVariables": [

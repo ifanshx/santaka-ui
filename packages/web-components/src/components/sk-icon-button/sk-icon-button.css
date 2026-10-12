@@ -23,11 +23,25 @@ sk-icon-button {
   /* Square by construction, not by coincidence. An icon-only control's inline
      size is content-driven (icon plus padding), so a 44px floor on that axis
      alone left the hit target wider than it was tall once the 3px stroke was
-     added. `aspect-ratio` ties the axes together, so the density steps below
-     still change the size — they just change it on both axes at once. */
+     added — 66x50 rather than a square.
+
+     `aspect-ratio` is Baseline-tier (Chrome 111 / Safari 16.4), and the Core
+     tier is Chrome 90 / Safari 15.4, so it cannot be the only mechanism: a
+     browser that drops the declaration would fall straight back to the
+     non-square bug. The fixed sizes below carry the Core contract — square,
+     and at least 44px on both axes — and the `@supports` block after this rule
+     hands sizing back to content on Baseline, where the size steps can grow
+     the control evenly again. */
   min-block-size: var(--sk-touch-min, 2.75rem);
   min-inline-size: var(--sk-touch-min, 2.75rem);
-  aspect-ratio: 1;
+  block-size: var(--sk-touch-min, 2.75rem);
+  inline-size: var(--sk-touch-min, 2.75rem);
+  /* A bordered control owns its box model. The fixed square sizes below are
+     written against `border-box`, and a consumer who does not import the
+     optional `@santaka-ui/styles` reset would otherwise measure this control
+     in `content-box` and get a 66x50 box instead of a 44x44 one. Declaring it
+     here means the geometry holds whether or not the reset is present. */
+  box-sizing: border-box;
   border: var(--sk-border-thick, 3px) solid var(--sk-icon-button-border);
   padding-inline: var(--sk-space-2, 0.5rem);
   border-radius: 0;
@@ -79,6 +93,46 @@ sk-icon-button[size="lg"] {
 sk-icon-button[size="lg"] .sk-icon-button__icon {
   inline-size: var(--sk-icon-lg, 1.5rem);
   block-size: var(--sk-icon-lg, 1.5rem);
+}
+
+/*
+ * Baseline tier only. Once `aspect-ratio` is available the fixed square sizes
+ * above are released, so a larger icon grows the control on both axes and the
+ * `size` steps mean something again. The 44px floors stay in force either way,
+ * so the Core fallback and this branch agree on the contract that matters: a
+ * square target of at least 44x44 CSS px.
+ */
+@supports (aspect-ratio: 1) {
+  sk-icon-button {
+    block-size: auto;
+    inline-size: auto;
+    aspect-ratio: 1;
+  }
+}
+
+/*
+ * Core tier. `block-size`/`inline-size` are honoured by every browser in the
+ * support matrix, so this branch is what guarantees a square target there —
+ * and it must, because a Core browser drops `aspect-ratio` outright and would
+ * otherwise render the 66x50 non-square control that the 44px floors alone
+ * produce. The size steps are stated explicitly rather than derived from
+ * padding, because a Core browser cannot derive them.
+ */
+@supports not (aspect-ratio: 1) {
+  sk-icon-button {
+    block-size: var(--sk-touch-min, 2.75rem);
+    inline-size: var(--sk-touch-min, 2.75rem);
+  }
+
+  sk-icon-button[size="md"] {
+    block-size: 3rem;
+    inline-size: 3rem;
+  }
+
+  sk-icon-button[size="lg"] {
+    block-size: 3.5rem;
+    inline-size: 3.5rem;
+  }
 }
 
 sk-icon-button .sk-icon-button__icon {

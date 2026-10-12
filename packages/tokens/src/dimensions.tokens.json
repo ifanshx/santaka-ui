@@ -139,13 +139,9 @@
     "brutal-none": { "$value": "none" }
   },
   "glass": {
-    "$description": "The only alpha values in the system, which is what makes glass read as a distinct material. Theme-dependent roles are overridden per theme; `blur`, `saturate`, and `fallback` are not.",
+    "$description": "The only alpha values in the system, which is what makes glass read as a distinct material. Every color here is theme-dependent and declared per theme, because a translucent panel has to track the theme's surface; only the effect values are shared.",
     "blur": { "$value": "24px" },
-    "saturate": { "$value": "180%" },
-    "fallback": {
-      "$value": "rgb(247 245 251 / 0.98)",
-      "$description": "Solid surface when `backdrop-filter` is unsupported; near-opaque so text stays legible."
-    }
+    "saturate": { "$value": "180%" }
   },
   "duration": {
     "$description": "Motion durations, split by layer. Interactive controls use short arcade timing; floating overlays use longer float timing. The reduced-motion override in styles/reset.css collapses these.",
