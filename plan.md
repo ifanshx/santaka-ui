@@ -449,8 +449,15 @@ The default stack is the platform UI stack, so there is no network request and n
 ```text
 --sk-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
 --sk-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace
+--sk-font-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 ```
 
+
+`--sk-font-display` is the face for display and heading text. Its declared stack
+is the platform fallback: **no webfont ships in the default path**, so a consumer
+replaces the whole stack in one line with a geometric or techno sans (Space
+Grotesk, Chakra Petch) by setting the custom property. This is recorded in
+ADR-017.
 Inter Variable is offered as an opt-in package via `@fontsource-variable/inter` (SIL Open Font License 1.1) and is documented as such. No other webfont ships in the default path.
 
 | Token | Size / line-height | Weight | Tracking |
@@ -463,6 +470,8 @@ Inter Variable is offered as an opt-in package via `@fontsource-variable/inter` 
 | `--sk-text-2xl` | `1.5rem` / `2rem` | 600 | `-0.01em` |
 | `--sk-text-3xl` | `1.875rem` / `2.25rem` | 700 | `-0.02em` |
 | `--sk-text-4xl` | `2.25rem` / `2.5rem` | 700 | `-0.02em` |
+| `--sk-text-display-sm` | `1.75rem` / `2.25rem` | 800 | `-0.02em` |
+| `--sk-text-display` | `2.5rem` / `3rem` | 800 | `-0.03em` |
 
 #### Spacing, sizing, and shape
 
@@ -476,46 +485,79 @@ Inter Variable is offered as an opt-in package via `@fontsource-variable/inter` 
 --sk-icon-sm: 1rem        --sk-icon-md: 1.25rem            --sk-icon-lg: 1.5rem
 --sk-touch-min: 2.75rem   (44px, the minimum target size for every interactive element)
 
---sk-radius-sm: 0.25rem  --sk-radius-md: 0.375rem  --sk-radius-lg: 0.5rem
---sk-radius-xl: 0.75rem  --sk-radius-full: 9999px
---sk-border-width: 1px   --sk-ring-width: 2px   --sk-ring-offset: 2px
+--sk-radius-sm: 0   --sk-radius-md: 0   --sk-radius-lg: 0   --sk-radius-xl: 0
+--sk-radius-full: 9999px   (a shape, not a style: badge dot, spinner)
+--sk-radius-glass: 1.25rem   --sk-radius-glass-lg: 1.75rem   (floating overlays)
+--sk-border-width: 1px   --sk-border-thick: 3px   (all brutalist chrome)
+--sk-ring-width: 3px   --sk-ring-offset: 3px   (a hard offset ring, not a glow)
 ```
+
+Chrome has no corner rounding. `radius.full` remains a circle because the badge
+dot and the spinner are circles by shape; glass overlays take their own large
+radii so a floating panel can never be mistaken for a pill. Borders carry
+exactly two weights: `border-width` for hairlines and separators, `border-thick`
+for every brutalist control. Recorded in ADR-017.
 
 `--sk-touch-min` is enforced in the Definition of Done: no interactive component may render a hit target smaller than 44×44 CSS px, including icon buttons.
 
 #### Elevation and motion
 
 ```text
---sk-shadow-xs: 0 1px 2px rgb(23 20 28 / 0.06)
---sk-shadow-sm: 0 1px 3px rgb(23 20 28 / 0.10), 0 1px 2px rgb(23 20 28 / 0.06)
---sk-shadow-md: 0 4px 12px rgb(23 20 28 / 0.12)
---sk-shadow-lg: 0 12px 32px rgb(23 20 28 / 0.16)
+--sk-shadow-xs: 2px 2px 0 0      --sk-shadow-sm: 3px 3px 0 0
+--sk-shadow-md: 4px 4px 0 0      --sk-shadow-lg: 6px 6px 0 0
+--sk-shadow-brutal: 5px 5px 0 0
+--sk-shadow-brutal-hover: 7px 7px 0 0
+--sk-shadow-brutal-active: 2px 2px 0 0
+--sk-shadow-brutal-none: none
 ```
 
-Dark-theme shadows raise the alpha to 0.24 / 0.32 / 0.40 / 0.56 against the same offsets.
+Elevation is a hard offset with **zero blur**. No shadow token carries a color:
+the component supplies `--sk-color-shadow`, so one ladder serves both themes and
+the dark theme no longer raises an alpha on a blur that does not exist. Recorded
+in ADR-017.
 
 ```text
---sk-duration-instant: 0ms     --sk-duration-fast: 120ms
---sk-duration-normal: 200ms    --sk-duration-slow: 320ms
---sk-ease-standard: cubic-bezier(0.2, 0, 0, 1)
---sk-ease-exit: cubic-bezier(0.4, 0, 1, 1)
---sk-ease-emphasized: cubic-bezier(0.34, 1.4, 0.64, 1)
+--sk-duration-instant: 0ms
+--sk-duration-control-fast: 90ms   --sk-duration-control: 140ms   --sk-duration-control-slow: 180ms
+--sk-duration-overlay: 280ms       --sk-duration-overlay-slow: 420ms
+
+--sk-ease-arcade: cubic-bezier(0.34, 1.56, 0.64, 1)
+--sk-ease-arcade-exit: cubic-bezier(0.4, 0, 0.6, 1)
+--sk-ease-glass: cubic-bezier(0.32, 0.72, 0, 1)
+--sk-ease-glass-exit: cubic-bezier(0.4, 0, 1, 1)
 ```
 
-Reduced motion is implemented once as a token override, not per component:
+Motion is split by layer, so a component picks its personality by reading one
+token. Interactive controls use the `control-*` durations and `ease-arcade`,
+whose overshoot past 1.0 is what makes a press visibly spring back. Floating
+overlays use the `overlay-*` durations and `ease-glass`, which starts fast and
+settles long.
+
+Reduced motion is implemented once, as a global property override rather than a
+token override — the shipped mechanism is in `styles/src/reset.css`:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --sk-duration-instant: 0ms;
-    --sk-duration-fast: 1ms;
-    --sk-duration-normal: 1ms;
-    --sk-duration-slow: 1ms;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-property: none !important;
+    scroll-behavior: auto !important;
   }
 }
 ```
 
-Components additionally drop transform-based entrances under reduced motion, because a 1ms slide is still a slide.
+`transition-property: none` is what makes this correct rather than merely fast:
+shortening a transition still animates the property, and a 1ms slide is still a
+slide.
+
+Components additionally drop the **transform** under reduced motion, not just the
+duration — a control that lifts 2px on hover must not lift at all when motion is
+reduced. Each animated component carries its own block; this is the same reason
+the Icon Button spinner sets `animation: none` rather than a shorter period.
 
 #### Z-index
 
@@ -573,7 +615,27 @@ There is no `unstyled` prop and no per-component escape-hatch prop. A consumer w
 
 ### Visual identity
 
-Direction: **Playful Engineering** — polished and professional with moments of warmth. Use an ink/dark base, violet/lavender as a recognizable accent, and limited coral or mint accents. Typography and spacing should remain calm and readable. Use an optional mascot (working name: “Taka”) for onboarding, empty states, and easter eggs rather than every screen. Humor must never make error messages unclear or blame users.
+Direction: **Arcade neo-brutalism for chrome, iOS glass for floating layers.**
+Every surface you press and read — buttons, inputs, cards, badges — is hard-edged:
+a 3px stroke, no rounding, and a hard offset shadow with zero blur. Only floating
+layers (dialog, popover, toast, tooltip, command palette) get glass, and the
+glass reads as genuinely floating precisely because everything around it is
+hard-edged. The ink/dark base, violet accent, and limited coral/mint remain.
+
+> **This supersedes the earlier "calm and readable" tone.** The previous
+> direction recorded here was *Playful Engineering* with calm typography. Weight
+> 800 display type, hard offset shadows, and an overshoot easing are
+> attention-grabbing by design, which is a real departure from §1.8's "playful,
+> not distracting". It was adopted deliberately and the trade-off is recorded in
+> **ADR-017**, including what would reverse it. An optional mascot ("Taka") is
+> still reserved for onboarding, empty states, and easter eggs rather than every
+> screen; humor must never make error messages unclear or blame users.
+>
+> Two materials ship in the token layer: `glass` holds the only alpha values in
+> the system, which is what makes glass read as a distinct material, and every
+> color in it is declared per theme — including `fallback`, the solid surface
+> used when `backdrop-filter` is unsupported, because a fallback panel must still
+> match the theme it renders in.
 
 ### Right-to-left support
 
@@ -706,9 +768,9 @@ npx santaka@latest update
 - Keep package supply-chain review, dependency scanning, and license checks in release CI.
 - Treat third-party registry content as untrusted until reviewed by the installing developer.
 
-### Component metadata schema
 
 Every registry entry is one JSON object validated against a versioned JSON Schema (`packages/registry/schema/`). The `ai` block in section 11 is part of that schema, not an extra file.
+
 
 ```json
 {
@@ -725,7 +787,7 @@ Every registry entry is one JSON object validated against a versioned JSON Schem
   "peerDependencies": {},
   "registryDependencies": [],
   "files": [{ "path": "src/components/select/select.tsx", "type": "registry:ui", "checksum": "sha256-…" }],
-  "cssVariables": ["--sk-color-primary", "--sk-radius-md"],
+  "cssVariables": ["--sk-color-primary", "--sk-border-thick", "--sk-shadow-brutal"],
   "localesCovered": ["en-US"],
   "license": "MIT",
   "ai": { "summary": "…", "whenToUse": ["…"], "whenNotToUse": ["…"] }
@@ -926,7 +988,7 @@ This is a planning estimate for a small team of roughly 2–4 experienced contri
 - [ ] Verify the legal preconditions in section 13: trademark search, npm scope availability, domain, mascot originality.
 - [ ] Build a small visual prototype and test package architecture decisions early.
 - [x] Write the API conventions, forms contract, and starter token values into the shared `tooling/` config, then implement Button against them as the first conformance test.
-- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them.
+- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(ADR-010, ADR-013, ADR-014, and ADR-017 now exist under `docs/adr/`. Still missing: ADR-001, ADR-002, ADR-004, ADR-005, ADR-012, ADR-016, ADR-018 — several are referenced from source but have no file yet. The Next.js SSR proof is not done.)*
 
 **Exit criteria:** architecture decision record, working monorepo, first token build, and a documented proof of concept.
 
@@ -947,10 +1009,10 @@ Review this list at the end of every two-week phase. A risk without a named owne
 ### Weeks 3–4 — Tokens and core UI
 
 - [x] Implement semantic tokens and light/dark themes.
-- [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Button is done and proven in Chromium; the rest are next.)*
-- [ ] Add React and universal Web Components implementations for the agreed core subset.
-- [ ] Add Storybook stories and baseline tests.
-- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package.
+- [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge. Still missing: Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label.)*
+- [ ] Add React and universal Web Components implementations for the agreed core subset. *(Web Components: all four shipped. React: Button, Icon Button, and Link only — Badge has no adapter yet.)*
+- [ ] Add Storybook stories and baseline tests. *(No Storybook exists anywhere in the repo.)*
+- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Button's form participation is proven, including `type="submit"` via `requestSubmit()`. Input and Select do not exist.)*
 
 **Exit criteria:** basic components work in React + Vite and plain HTML, with a repeatable build.
 
