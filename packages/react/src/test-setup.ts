@@ -178,4 +178,16 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-card")) {
+    customElements.define(
+      "sk-card",
+      class extends HTMLElement {
+        variant = "default"
+        padding = "md"
+        heading = ""
+        subtitle = ""
+      },
+    )
+  }
 })

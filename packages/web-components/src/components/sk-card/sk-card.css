@@ -1,0 +1,136 @@
+/*
+ * Card styles.
+ *
+ * A card is chrome, not a floating layer, so it carries the same brutalist
+ * treatment as every other control: a 3px stroke, no rounding, and a zero-blur
+ * offset shadow.
+ *
+ * A card is a surface, not a control. Nothing here makes it focusable or
+ * interactive, deliberately — a clickable card is a link or a button wearing a
+ * card's styling, and this component having no way to express that is the point.
+ */
+
+sk-card {
+  --sk-card-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-card-fg: var(--sk-color-text, #17141c);
+  --sk-card-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-card-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-card-gap: var(--sk-space-4, 1rem);
+  --sk-card-padding: var(--sk-space-5, 1.25rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-card-gap);
+  padding: var(--sk-card-padding);
+  border: var(--sk-border-thick, 3px) solid var(--sk-card-border);
+  border-radius: 0;
+  background-color: var(--sk-card-bg);
+  color: var(--sk-card-fg);
+  box-shadow: var(--sk-card-shadow) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  /* A card is content, not a control: it takes the width it is given rather than
+     shrinking to its content the way an inline-flex box would. */
+  box-sizing: border-box;
+}
+
+sk-card .sk-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+}
+
+sk-card .sk-card__subtitle {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-card .sk-card__heading {
+  font-size: var(--sk-text-xl-size, 1.25rem);
+  font-weight: var(--sk-text-xl-weight, 600);
+  line-height: var(--sk-text-xl-line-height, 1.75rem);
+}
+
+/*
+ * A footer is separated by a rule rather than by a gap, because a card's footer
+ * usually holds actions and an action row needs a boundary the eye can find.
+ *
+ * The rule is on the wrapper, not on `slot[name="footer"]`. Scoped mode removes
+ * the slot element and relocates the assigned nodes, so a slot selector matches
+ * nothing — the first version of this file styled it and the style silently
+ * never applied. Caught by e2e/card.e2e.ts timing out on a missing element.
+ */
+sk-card .sk-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  padding-block-start: var(--sk-card-gap);
+  border-block-start: var(--sk-border-width, 1px) solid var(--sk-color-border, #e2dff0);
+}
+
+/* An unfilled footer slot must leave nothing behind — not a bare rule drawn
+   across an empty band. `:empty` matches here because CSS ignores the comment
+   nodes scoped-mode rendering leaves behind. */
+sk-card .sk-card__footer:empty {
+  display: none;
+}
+
+sk-card[padding="none"] {
+  --sk-card-padding: 0;
+  --sk-card-gap: 0;
+}
+
+sk-card[padding="sm"] {
+  --sk-card-padding: var(--sk-space-3, 0.75rem);
+  --sk-card-gap: var(--sk-space-3, 0.75rem);
+}
+
+sk-card[padding="lg"] {
+  --sk-card-padding: var(--sk-space-6, 1.5rem);
+  --sk-card-gap: var(--sk-space-5, 1.25rem);
+}
+
+/* `outlined` drops the fill for a card sitting inside another surface, where two
+   competing fills would fight. The stroke stays: it is the card's boundary. */
+sk-card[variant="outlined"] {
+  --sk-card-bg: transparent;
+}
+
+/* `bare` drops the shadow too, for a card that groups rather than elevates. */
+sk-card[variant="bare"] {
+  --sk-card-bg: transparent;
+  --sk-card-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+@media (forced-colors: active) {
+  /*
+   * Forced colors replaces authored colors wholesale, so the border is pinned to
+   * CanvasText so the card keeps a visible boundary, and the shadow is dropped:
+   * a zero-blur offset shadow paints a hard block of the forced backdrop that
+   * reads as a rendering artifact rather than as elevation.
+   */
+  sk-card {
+    --sk-card-border: CanvasText;
+    --sk-card-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  /* `bare` means "grouped, not bounded", so under forced colors its stroke goes
+     too. Leaving it would make `bare` visibly different from what it means. */
+  sk-card[variant="bare"] {
+    --sk-card-border: Canvas;
+  }
+
+  /* The footer's separator is not left to the forced palette: a border collapsed
+     to the same color as the surface is a divider that stopped dividing. */
+  sk-card .sk-card__footer {
+    border-block-start-color: CanvasText;
+  }
+}
+
+/*
+ * A card does not animate, so there is nothing to reduce here. The block is
+ * deliberate: a card that later gains a hover or press treatment must add its own
+ * reduced-motion handling rather than assuming the global override covers a
+ * transform, which it does not.
+ */

@@ -9,6 +9,8 @@ export type {
 export { IconButton } from "./icon-button.js"
 export { Badge } from "./badge.js"
 export type { BadgeProps, BadgeVariant, BadgeSize, DotBadgeProps, SkBadgeElement } from "./badge.js"
+export { Card } from "./card.js"
+export type { CardProps, SkCardElement } from "./card.js"
 export { Link } from "./link.js"
 export type { LinkProps, SkLinkElement } from "./link.js"
 export { Input } from "./input.js"

@@ -91,7 +91,15 @@ test.describe("API conventions (static)", () => {
    * record. A new unprefixed presentation boolean then fails, which is the
    * point: the decision is already being made component by component, and this
    * makes it deliberate rather than inherited.
+   *
+   * `NO_BOOLEAN_PROPS` below holds components that are deliberately stateless
+   * surfaces. A card owns no state and takes no interaction, so every boolean it
+   * could carry would be decoration — and this guard would otherwise push
+   * exactly the kind of prop ADR-013 exists to prevent.
    */
+  const NO_BOOLEAN_PROPS = new Set(["sk-card"])
+
+  /** The props ADR-013 records as deliberately unprefixed presentation booleans. */
   const OPEN_IN_ADR_013: Record<string, Set<string>> = {
     "sk-link": new Set(["external", "subtle"]),
     "sk-badge": new Set(["dot"]),
@@ -99,13 +107,25 @@ test.describe("API conventions (static)", () => {
 
   test("every boolean prop is an ARIA state, is/has/can prefixed, or on the ADR-013 record", () => {
     const unrecorded: string[] = []
+    const scanned: string[] = []
 
     for (const tag of COMPONENTS) {
       const source = readFileSync(resolve(componentsDir, tag, `${tag}.tsx`), "utf8")
       const booleans = [
         ...source.matchAll(/@Prop\([^)]*\)\s*(\w+)\s*(?::\s*boolean)?\s*=\s*false/g),
       ]
-      expect(booleans.length, `${tag} should declare at least one boolean prop`).toBeGreaterThan(0)
+
+      // The point of this assertion is to prove the regex above is not vacuous
+      // and silently passing on every component. It cannot be applied to a
+      // component that genuinely has no booleans, so those are excluded — and
+      // the exclusion is checked below, so it cannot grow unnoticed.
+      if (!NO_BOOLEAN_PROPS.has(tag)) {
+        expect(booleans.length, `${tag} should declare at least one boolean prop`).toBeGreaterThan(
+          0,
+        )
+      }
+
+      if (booleans.length > 0) scanned.push(tag)
 
       for (const [, prop] of booleans) {
         const name = prop as string
@@ -119,6 +139,13 @@ test.describe("API conventions (static)", () => {
     }
 
     expect(unrecorded).toEqual([])
+
+    // If every component were exempted, the loop above would check nothing at
+    // all. This is the assertion that the exemption list stayed small.
+    expect(scanned.length).toBeGreaterThan(0)
+    for (const tag of NO_BOOLEAN_PROPS) {
+      expect(COMPONENTS, `${tag} is exempted but does not exist`).toContain(tag)
+    }
   })
 
   test("every prop ADR-013 lists as an open question still exists", () => {

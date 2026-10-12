@@ -163,6 +163,40 @@
         ></sk-textarea>
       </section>
 
+      <section aria-labelledby="card-heading" class="sk-stack">
+        <h2 id="card-heading" style="font-size: var(--sk-text-lg-size)">Card</h2>
+        <div class="sk-cluster" style="align-items: stretch">
+          <!--
+            The title here is a real <h2 slot="header">, not the `title` prop: the
+            card does not know its level in this document's outline, so a hard-coded
+            heading inside it would contradict the section heading above.
+          -->
+          <sk-card style="min-inline-size: 16rem">
+            <h2 slot="header">Deployment</h2>
+            <p>Build 4821 shipped to production at 14:02 UTC.</p>
+            <sk-badge slot="footer" variant="success">Live</sk-badge>
+            <sk-button slot="footer" variant="secondary">View logs</sk-button>
+          </sk-card>
+
+          <sk-card
+            variant="outlined"
+            title="Queued"
+            subtitle="Waiting on a runner"
+            style="min-inline-size: 16rem"
+          >
+            <p>
+              Nothing here is deployed yet. This card has no fill, for a card inside another
+              surface.
+            </p>
+          </sk-card>
+
+          <sk-card variant="bare" padding="none" style="min-inline-size: 16rem">
+            <strong>Bare, no padding</strong>
+            <p class="sk-text-muted">Grouped, not elevated. No fill, no shadow.</p>
+          </sk-card>
+        </div>
+      </section>
+
       <section aria-labelledby="materials-heading" class="sk-stack">
         <h2 id="materials-heading" style="font-size: var(--sk-text-lg-size)">Materials</h2>
         <div class="sk-cluster" style="align-items: stretch">
@@ -170,18 +204,13 @@
             <strong>Glass overlay</strong>
             <p class="sk-text-muted">Frosted panel. Floating layers only.</p>
           </div>
-          <div
-            class="sk-surface-raised"
-            style="
-              padding: var(--sk-space-6);
-              min-inline-size: 16rem;
-              border: var(--sk-border-thick) solid var(--sk-color-border-strong);
-              box-shadow: var(--sk-shadow-brutal) var(--sk-color-shadow);
-            "
+          <sk-card
+            title="Brutalist chrome"
+            subtitle="The Card component"
+            style="min-inline-size: 16rem"
           >
-            <strong>Brutalist chrome</strong>
             <p class="sk-text-muted">Hard edges. Everything you press.</p>
-          </div>
+          </sk-card>
         </div>
       </section>
 

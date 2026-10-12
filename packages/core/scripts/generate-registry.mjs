@@ -329,6 +329,57 @@ const COMPONENTS = [
       ],
     },
   },
+  {
+    name: "card",
+    tag: "sk-card",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-border-width",
+      "--sk-color-border",
+      "--sk-color-border-strong",
+      "--sk-color-shadow",
+      "--sk-color-surface-raised",
+      "--sk-color-text",
+      "--sk-color-text-muted",
+      "--sk-font-sans",
+      "--sk-shadow-brutal",
+      "--sk-shadow-brutal-none",
+      "--sk-space-1",
+      "--sk-space-2",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-space-5",
+      "--sk-space-6",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-text-xl-line-height",
+      "--sk-text-xl-size",
+      "--sk-text-xl-weight",
+    ],
+    ai: {
+      summary:
+        "A hard-edged surface that groups related content, with optional header, body, and footer.",
+      whenToUse: [
+        "A group of related facts, settings, or actions needs a boundary of its own",
+        "Content sits inside another surface and needs a raised panel to read against it",
+        "A record needs a title, a body, and a row of actions below a rule",
+      ],
+      whenNotToUse: [
+        "The whole card is one action — use a Button or a Link with card styling",
+        "You are nesting it inside another card to group further — two competing fills and shadows read as noise",
+        "The separation is a list of peers — use a plain list or a Separator",
+      ],
+      accessibility:
+        'A card is a surface, not a control: it exposes no role, is not focusable, and has no interaction props, because a clickable card is a link or a button wearing a card\'s styling and adding a click handler here would produce something neither keyboard-reachable nor announced. `heading` renders as a `<span>`, not a heading, because the card does not know its level in the document outline — pass a real `<h2 slot="header">` when you need one. Slots are optional and each renders nothing when empty, so a card without a header carries no empty bordered band.',
+      example:
+        '<sk-card heading="Deployment" subtitle="Build 4821"><p>Shipped to production.</p></sk-card>',
+      knownLimitations: [
+        "There is no `size` prop: a card has no intrinsic height to scale, so `padding` is the axis it varies on",
+        "There is no click handler, by design — a card that navigates should be a Link, and one that acts should be a Button",
+      ],
+    },
+  },
 ]
 
 for (const component of COMPONENTS) {

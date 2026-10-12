@@ -7,11 +7,11 @@ what exists today. Every claim below is checked against the repository.
 ## Summary
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
-package are real, tested, and green; the React package now covers all four
+package are real, tested, and green; the React package now covers all seven
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **306 tests pass.** All six
+`pnpm run verify` exits 0 from a cold cache. **321 tests pass.** All seven
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -29,7 +29,7 @@ packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Six universal custom elements, each with browser tests against real Chromium:
+Seven universal custom elements, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -39,16 +39,17 @@ Six universal custom elements, each with browser tests against real Chromium:
 | `sk-badge` | variant fills from tokens (not `color-mix`), dot label for WCAG 1.4.1 |
 | `sk-input` | FACE submission, all three form callbacks, native validation, label and error wiring |
 | `sk-textarea` | the same contract as Input over a shared base, plus `rows` sizing and vertical resize |
+| `sk-card` | a surface, not a control: no role, no focus, no click handler |
 
-**95 Playwright tests.** All six carry the brutalist treatment — 3px stroke,
+**105 Playwright tests.** All seven carry the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, `Badge`, `Input`, `Textarea`, plus `ThemeScript` /
-`useTheme`. **70 tests.** Two requirements are enforced in the type system
+`Button`, `IconButton`, `Link`, `Badge`, `Card`, `Input`, `Textarea`, plus `ThemeScript` /
+`useTheme`. **78 tests.** Two requirements are enforced in the type system
 rather than left to review: `<Badge dot />` does not compile without
 `statusLabel`, and `Input` generates its id with `useId()` so the id stays
 stable across re-renders.
@@ -69,6 +70,24 @@ The extraction is not cosmetic: the base reads and writes the component through
 **accessors**, because an earlier snapshot-shaped state object looked simpler and
 silently broke value propagation — the base wrote to a copy the component never
 saw, and the field stopped submitting.
+
+### Scoped mode removes the `<slot>` element
+
+ADR-011 puts these components in **scoped**, not shadow, encapsulation. Scoped
+mode strips the `<slot>` element from the light DOM and relocates the assigned
+nodes into its place. A selector of `slot[name="footer"]` therefore matches
+nothing, and its rules **silently never apply** — no error, no warning, just a
+style that was never drawn. The first version of `sk-card.css` styled its
+footer separator that way.
+
+Everything that must be styled has to hang off a real wrapper element.
+`e2e/card.e2e.ts` asserts no `sk-card slot` exists in the light DOM, so the next
+author to reach for a slot selector finds out immediately.
+
+Related: an optional slot still needs a guard. Rendering the footer wrapper
+unconditionally draws a rule across an empty band on every headerless card.
+`:empty` handles it — CSS ignores the comment nodes scoped mode leaves behind —
+and the test verifies that rather than assuming it.
 
 ### Distribution
 
@@ -96,8 +115,8 @@ open), 014 (browser baseline), 017 (token values and design direction).
 
 ### Blocking Tier 1
 
-- **Card, Typography, Separator, Spinner, Skeleton, Label** —
-  six of the twelve Tier 1 components do not exist. Textarea landed most recently.
+- **Typography, Separator, Spinner, Skeleton, Label** —
+  five of the twelve Tier 1 components do not exist. Card landed most recently.
 - **No Storybook.** Section 10's workshop; nothing in the repo references it.
 
 ### Blocking Stable

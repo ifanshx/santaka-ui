@@ -92,6 +92,18 @@ that consumers already know.
 - **State is exposed as `data-*` attributes.** `data-state`, `data-disabled`,
   `data-loading` are public API; a class would couple consumers to the
   stylesheet's internals.
+- **A prop may not shadow a standardized `HTMLElement` member.** `title` is the
+  example: a `@Prop() title` on a custom element shadows the prototype property,
+  so the browser renders the value as a hover tooltip over the whole element.
+  `sk-card`'s heading prop is `heading` for this reason — the card is not titled,
+  it is headed, and a tooltip reading the heading would duplicate it invisibly.
+  Stencil warns on reserved names; the convention here is to rename rather than
+  suppress.
+- **A surface component may have no boolean props at all.** `sk-card` is one, and
+  the conformance test exempts it by name rather than requiring a decorative
+  boolean to satisfy its vacuity guard. The exemption is guarded in the other
+  direction too: if every component were exempted, the test would check nothing,
+  and a test that checks nothing is worse than no test.
 - **The `sk-` prefix is fixed on every class.** Stencil's own `hydrated` marker is
   excluded by name: it is framework bookkeeping, not a class the library ships or
   documents. The exclusion is by explicit name so it cannot silently widen.

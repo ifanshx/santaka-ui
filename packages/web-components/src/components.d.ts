@@ -82,6 +82,42 @@ export namespace Components {
          */
         "variant": ButtonVariant;
     }
+    /**
+     * Card — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A card is a surface, not a control. It owns no state, exposes no role, and is
+     * not focusable — a clickable card is a link or a button with a card's styling
+     * on it, and pretending otherwise produces a thing that is neither reachable by
+     * keyboard nor announced. The registry entry for this component says so, and it
+     * is the reason this component has no interaction props at all.
+     * Composition follows §4: Web Components use named slots. So the parts are
+     * `header`, the default slot for the body, and `footer`, each optional, and each
+     * rendered only when the consumer actually filled it — an empty bordered header
+     * is worse than no header.
+     */
+    interface SkCard {
+        /**
+          * Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead.
+          * @default ""
+         */
+        "heading": string;
+        /**
+          * The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on.
+          * @default "md"
+         */
+        "padding": "none" | "sm" | "md" | "lg";
+        /**
+          * Supporting text under the heading.
+          * @default ""
+         */
+        "subtitle": string;
+        /**
+          * Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated.
+          * @default "default"
+         */
+        "variant": "default" | "outlined" | "bare";
+    }
     interface SkIconButton {
         /**
           * Disables interaction. Mirrors the ARIA name.
@@ -374,6 +410,26 @@ declare global {
         prototype: HTMLSkButtonElement;
         new (): HTMLSkButtonElement;
     };
+    /**
+     * Card — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A card is a surface, not a control. It owns no state, exposes no role, and is
+     * not focusable — a clickable card is a link or a button with a card's styling
+     * on it, and pretending otherwise produces a thing that is neither reachable by
+     * keyboard nor announced. The registry entry for this component says so, and it
+     * is the reason this component has no interaction props at all.
+     * Composition follows §4: Web Components use named slots. So the parts are
+     * `header`, the default slot for the body, and `footer`, each optional, and each
+     * rendered only when the consumer actually filled it — an empty bordered header
+     * is worse than no header.
+     */
+    interface HTMLSkCardElement extends Components.SkCard, HTMLStencilElement {
+    }
+    var HTMLSkCardElement: {
+        prototype: HTMLSkCardElement;
+        new (): HTMLSkCardElement;
+    };
     interface HTMLSkIconButtonElement extends Components.SkIconButton, HTMLStencilElement {
     }
     var HTMLSkIconButtonElement: {
@@ -432,6 +488,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
+        "sk-card": HTMLSkCardElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
         "sk-link": HTMLSkLinkElement;
@@ -518,6 +575,42 @@ declare namespace LocalJSX {
           * @default "primary"
          */
         "variant"?: ButtonVariant;
+    }
+    /**
+     * Card — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A card is a surface, not a control. It owns no state, exposes no role, and is
+     * not focusable — a clickable card is a link or a button with a card's styling
+     * on it, and pretending otherwise produces a thing that is neither reachable by
+     * keyboard nor announced. The registry entry for this component says so, and it
+     * is the reason this component has no interaction props at all.
+     * Composition follows §4: Web Components use named slots. So the parts are
+     * `header`, the default slot for the body, and `footer`, each optional, and each
+     * rendered only when the consumer actually filled it — an empty bordered header
+     * is worse than no header.
+     */
+    interface SkCard {
+        /**
+          * Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead.
+          * @default ""
+         */
+        "heading"?: string;
+        /**
+          * The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on.
+          * @default "md"
+         */
+        "padding"?: "none" | "sm" | "md" | "lg";
+        /**
+          * Supporting text under the heading.
+          * @default ""
+         */
+        "subtitle"?: string;
+        /**
+          * Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated.
+          * @default "default"
+         */
+        "variant"?: "default" | "outlined" | "bare";
     }
     interface SkIconButton {
         /**
@@ -804,6 +897,12 @@ declare namespace LocalJSX {
         "loading": boolean;
         "type": ButtonType;
     }
+    interface SkCardAttributes {
+        "variant": "default" | "outlined" | "bare";
+        "padding": "none" | "sm" | "md" | "lg";
+        "heading": string;
+        "subtitle": string;
+    }
     interface SkIconButtonAttributes {
         "label": string;
         "variant": ButtonVariant;
@@ -862,6 +961,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
+        "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
@@ -897,6 +997,21 @@ declare module "@stencil/core" {
              * `shared/button-base.ts`, shared with `sk-icon-button`.
              */
             "sk-button": LocalJSX.IntrinsicElements["sk-button"] & JSXBase.HTMLAttributes<HTMLSkButtonElement>;
+            /**
+             * Card — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * A card is a surface, not a control. It owns no state, exposes no role, and is
+             * not focusable — a clickable card is a link or a button with a card's styling
+             * on it, and pretending otherwise produces a thing that is neither reachable by
+             * keyboard nor announced. The registry entry for this component says so, and it
+             * is the reason this component has no interaction props at all.
+             * Composition follows §4: Web Components use named slots. So the parts are
+             * `header`, the default slot for the body, and `footer`, each optional, and each
+             * rendered only when the consumer actually filled it — an empty bordered header
+             * is worse than no header.
+             */
+            "sk-card": LocalJSX.IntrinsicElements["sk-card"] & JSXBase.HTMLAttributes<HTMLSkCardElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
             "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
             /**

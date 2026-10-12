@@ -15,6 +15,7 @@
  */
 export { SkBadge } from "./components/sk-badge/sk-badge.js"
 export { SkButton } from "./components/sk-button/sk-button.js"
+export { SkCard } from "./components/sk-card/sk-card.js"
 export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
@@ -25,6 +26,7 @@ export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/
 export const COMPONENTS = [
   "sk-badge",
   "sk-button",
+  "sk-card",
   "sk-icon-button",
   "sk-input",
   "sk-link",

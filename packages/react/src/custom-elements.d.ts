@@ -87,6 +87,13 @@ type TextareaElement = HTMLElement & {
   maxLength?: number
 }
 
+type CardElement = HTMLElement & {
+  variant: "default" | "outlined" | "bare"
+  padding: "none" | "sm" | "md" | "lg"
+  heading: string
+  subtitle: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -147,6 +154,13 @@ declare module "react" {
         placeholder?: string
         form?: string
         "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
+      }
+
+      "sk-card": BaseCustomElement<CardElement> & {
+        variant?: "default" | "outlined" | "bare"
+        padding?: "none" | "sm" | "md" | "lg"
+        heading?: string
+        subtitle?: string
       }
     }
   }
