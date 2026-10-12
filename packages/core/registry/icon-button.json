@@ -1,0 +1,70 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "icon-button",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-icon-button/sk-icon-button.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-cc00806bf838c07288bada27a2748a82700414aef8c67fa8a269b1ce604e44ef"
+    },
+    {
+      "path": "src/components/sk-icon-button/sk-icon-button.css",
+      "type": "registry:style",
+      "checksum": "sha256-0b499057a8c5d300e14584a17d043e0340b035389570a58af984b8d30159fc28"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-primary",
+    "--sk-color-primary-hover",
+    "--sk-color-primary-fg",
+    "--sk-color-text",
+    "--sk-color-surface-raised",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-icon-sm",
+    "--sk-icon-md",
+    "--sk-icon-lg",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A square, icon-only control for actions that need no label, such as edit or delete.",
+    "whenToUse": [
+      "The action is unambiguous from a well-known icon",
+      "Space is tight, such as a toolbar or a table row",
+      "The control sits next to a labelled control that implies the group"
+    ],
+    "whenNotToUse": [
+      "The action is not obvious from the icon alone — use a Button with a label",
+      "It is the primary or most common action on the page — use a Button",
+      "It performs navigation — use a Link instead"
+    ],
+    "accessibility": "Button role with an explicit accessible name from the required `label` prop. The slotted icon is aria-hidden because it carries no information the name does not. A missing label warns in development.",
+    "example": "<sk-icon-button label=\"Delete item\"><svg><!-- trash icon --></svg></sk-icon-button>",
+    "knownLimitations": [
+      "The `label` prop is required in the React types but only warns in plain HTML"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

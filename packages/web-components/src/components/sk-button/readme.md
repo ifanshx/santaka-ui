@@ -18,6 +18,9 @@ Conventions enforced here, per section 4:
   - State is exposed as `data-*` attributes for CSS and tests.
   - Styling hooks are `data-slot`, not utility classes.
 
+Keyboard, activation-blocking, and form participation live in
+`shared/button-base.ts`, shared with `sk-icon-button`.
+
 ## Properties
 
 | Property   | Attribute  | Description                                                                                                                                    | Type                                                           | Default     |

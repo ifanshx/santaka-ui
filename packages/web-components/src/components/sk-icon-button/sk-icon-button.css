@@ -1,0 +1,178 @@
+/*
+ * Icon Button styles.
+ *
+ * The control is square: equal inline and block size, sized by the same
+ * `--sk-touch-min` floor as every other interactive element, so an icon-only
+ * button is never smaller to hit than a labelled one. Size variants change the
+ * icon, not the target.
+ */
+
+sk-icon-button {
+  --sk-icon-button-bg: transparent;
+  --sk-icon-button-fg: var(--sk-color-text, #17141c);
+  --sk-icon-button-border: transparent;
+  --sk-icon-button-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sk-space-2, 0.5rem);
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  min-inline-size: var(--sk-touch-min, 2.75rem);
+  padding-inline: var(--sk-space-2, 0.5rem);
+  border: var(--sk-border-width, 1px) solid var(--sk-icon-button-border);
+  border-radius: var(--sk-radius-md, 0.375rem);
+  background-color: var(--sk-icon-button-bg);
+  color: var(--sk-icon-button-fg);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--sk-duration-fast, 120ms)
+      var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    color var(--sk-duration-fast, 120ms) var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Sizes change the icon and the density, never the 44px target. */
+sk-icon-button[size="sm"] {
+  padding-inline: var(--sk-space-1, 0.25rem);
+  border-radius: var(--sk-radius-sm, 0.25rem);
+}
+
+sk-icon-button[size="sm"] .sk-icon-button__icon {
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+sk-icon-button[size="lg"] {
+  padding-inline: var(--sk-space-3, 0.75rem);
+  border-radius: var(--sk-radius-lg, 0.5rem);
+}
+
+sk-icon-button[size="lg"] .sk-icon-button__icon {
+  inline-size: var(--sk-icon-lg, 1.5rem);
+  block-size: var(--sk-icon-lg, 1.5rem);
+}
+
+sk-icon-button .sk-icon-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--sk-icon-md, 1.25rem);
+  block-size: var(--sk-icon-md, 1.25rem);
+}
+
+sk-icon-button .sk-icon-button__icon > svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* Variants */
+sk-icon-button[variant="primary"] {
+  --sk-icon-button-bg: var(--sk-color-primary, #6d28d9);
+  --sk-icon-button-fg: var(--sk-color-primary-fg, #ffffff);
+  --sk-icon-button-border: transparent;
+}
+
+sk-icon-button[variant="primary"]:hover:not([data-disabled]) {
+  --sk-icon-button-bg: var(--sk-color-primary-hover, #5b21b6);
+}
+
+sk-icon-button[variant="secondary"] {
+  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-icon-button-fg: var(--sk-color-text, #17141c);
+  --sk-icon-button-border: var(--sk-color-border-strong, #8b85a0);
+}
+
+sk-icon-button[variant="secondary"]:hover:not([data-disabled]) {
+  --sk-icon-button-bg: var(--sk-color-surface-sunken, #f1eef8);
+}
+
+sk-icon-button[variant="outline"] {
+  --sk-icon-button-bg: transparent;
+  --sk-icon-button-fg: var(--sk-color-text, #17141c);
+  --sk-icon-button-border: var(--sk-color-border-strong, #8b85a0);
+}
+
+sk-icon-button[variant="outline"]:hover:not([data-disabled]) {
+  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+}
+
+sk-icon-button[variant="ghost"] {
+  --sk-icon-button-bg: transparent;
+  --sk-icon-button-fg: var(--sk-color-text, #17141c);
+  --sk-icon-button-border: transparent;
+}
+
+sk-icon-button[variant="ghost"]:hover:not([data-disabled]) {
+  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+}
+
+sk-icon-button[variant="danger"] {
+  --sk-icon-button-bg: transparent;
+  --sk-icon-button-fg: var(--sk-color-danger, #dc2626);
+  --sk-icon-button-border: transparent;
+}
+
+sk-icon-button[variant="danger"]:hover:not([data-disabled]) {
+  --sk-icon-button-bg: var(--sk-color-surface-raised, #f7f5fb);
+}
+
+sk-icon-button[data-disabled],
+sk-icon-button[data-loading] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+sk-icon-button[data-loading] {
+  cursor: progress;
+}
+
+sk-icon-button:focus-visible {
+  outline: var(--sk-ring-width, 2px) solid var(--sk-icon-button-ring);
+  outline-offset: var(--sk-ring-offset, 2px);
+}
+
+sk-icon-button .sk-icon-button__spinner {
+  inline-size: var(--sk-icon-md, 1.25rem);
+  block-size: var(--sk-icon-md, 1.25rem);
+  border: 2px solid currentcolor;
+  border-block-start-color: transparent;
+  border-radius: var(--sk-radius-full, 9999px);
+  animation: sk-icon-button-spin var(--sk-duration-slow, 320ms) linear infinite;
+}
+
+@keyframes sk-icon-button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/*
+ * Reduced motion is implemented once as a token override (section 6), but a
+ * spinning affordance that persists for the whole operation is worse than a
+ * fading one, so the animation stops rather than merely shortening.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-icon-button .sk-icon-button__spinner {
+    animation: none;
+    border-block-start-color: currentcolor;
+    opacity: 0.7;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-icon-button {
+    border-color: ButtonBorder;
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+
+  sk-icon-button:focus-visible {
+    outline-color: Highlight;
+  }
+}

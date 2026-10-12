@@ -28,7 +28,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs && node scripts/generate-registry.mjs",
     "clean": "rimraf dist schema",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

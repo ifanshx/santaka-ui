@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
+export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 export namespace Components {
     /**
      * Button — Tier 1 foundation component.
@@ -15,6 +17,8 @@ export namespace Components {
      *   - `disabled` and `loading` are ARIA names, not `isDisabled`.
      *   - State is exposed as `data-*` attributes for CSS and tests.
      *   - Styling hooks are `data-slot`, not utility classes.
+     * Keyboard, activation-blocking, and form participation live in
+     * `shared/button-base.ts`, shared with `sk-icon-button`.
      */
     interface SkButton {
         /**
@@ -31,17 +35,87 @@ export namespace Components {
           * Control height.
           * @default "md"
          */
-        "size": "sm" | "md" | "lg";
+        "size": ButtonSize;
         /**
           * `submit`, `reset`, or `button`. Native semantics, so a Button inside a form behaves like the `<button>` a consumer would have written by hand.
           * @default "button"
          */
-        "type": "button" | "submit" | "reset";
+        "type": ButtonType;
         /**
           * Visual emphasis.
           * @default "primary"
          */
-        "variant": "primary" | "secondary" | "outline" | "ghost" | "danger";
+        "variant": ButtonVariant;
+    }
+    interface SkIconButton {
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The accessible name. An icon-only control with no name is announced as just "button", which tells a screen-reader user nothing.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Shows a busy state and blocks interaction.
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size": ButtonSize;
+        /**
+          * Native form semantics.
+          * @default "button"
+         */
+        "type": ButtonType;
+        /**
+          * Visual emphasis.
+          * @default "ghost"
+         */
+        "variant": ButtonVariant;
+    }
+    /**
+     * Link — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A link is an anchor. This component exists for two reasons, not for
+     * decoration:
+     *  1. The underline and focus treatment are the part every design system gets
+     *     subtly wrong, and they are stated once here.
+     *  2. It documents the one rule a component cannot enforce: an action is a
+     *     button, a navigation is a link. `sk-button` exists for the former.
+     * Because it is a real `<a>` under the hood, middle-click, "open in new tab",
+     * and copying the URL all work — the things a `div` with a click handler breaks.
+     */
+    interface SkLink {
+        "download"?: string;
+        /**
+          * `external` marks a link that leaves the application: it adds the external icon, sets `target="_blank"`, and adds `rel="noopener noreferrer"`. Left off by default because most links do not leave.
+          * @default false
+         */
+        "external": boolean;
+        /**
+          * The destination. A link that navigates.
+          * @default ""
+         */
+        "href": string;
+        /**
+          * Forwarded to the underlying anchor.
+         */
+        "rel"?: string;
+        /**
+          * Suppresses the underline until hover or focus.
+          * @default false
+         */
+        "subtle": boolean;
+        /**
+          * Opens in a new tab without the external treatment.
+         */
+        "target"?: string;
     }
 }
 declare global {
@@ -54,6 +128,8 @@ declare global {
      *   - `disabled` and `loading` are ARIA names, not `isDisabled`.
      *   - State is exposed as `data-*` attributes for CSS and tests.
      *   - Styling hooks are `data-slot`, not utility classes.
+     * Keyboard, activation-blocking, and form participation live in
+     * `shared/button-base.ts`, shared with `sk-icon-button`.
      */
     interface HTMLSkButtonElement extends Components.SkButton, HTMLStencilElement {
     }
@@ -61,8 +137,34 @@ declare global {
         prototype: HTMLSkButtonElement;
         new (): HTMLSkButtonElement;
     };
+    interface HTMLSkIconButtonElement extends Components.SkIconButton, HTMLStencilElement {
+    }
+    var HTMLSkIconButtonElement: {
+        prototype: HTMLSkIconButtonElement;
+        new (): HTMLSkIconButtonElement;
+    };
+    /**
+     * Link — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A link is an anchor. This component exists for two reasons, not for
+     * decoration:
+     *  1. The underline and focus treatment are the part every design system gets
+     *     subtly wrong, and they are stated once here.
+     *  2. It documents the one rule a component cannot enforce: an action is a
+     *     button, a navigation is a link. `sk-button` exists for the former.
+     * Because it is a real `<a>` under the hood, middle-click, "open in new tab",
+     * and copying the URL all work — the things a `div` with a click handler breaks.
+     */
+    interface HTMLSkLinkElement extends Components.SkLink, HTMLStencilElement {
+    }
+    var HTMLSkLinkElement: {
+        prototype: HTMLSkLinkElement;
+        new (): HTMLSkLinkElement;
+    };
     interface HTMLElementTagNameMap {
         "sk-button": HTMLSkButtonElement;
+        "sk-icon-button": HTMLSkIconButtonElement;
+        "sk-link": HTMLSkLinkElement;
     }
 }
 declare namespace LocalJSX {
@@ -75,6 +177,8 @@ declare namespace LocalJSX {
      *   - `disabled` and `loading` are ARIA names, not `isDisabled`.
      *   - State is exposed as `data-*` attributes for CSS and tests.
      *   - Styling hooks are `data-slot`, not utility classes.
+     * Keyboard, activation-blocking, and form participation live in
+     * `shared/button-base.ts`, shared with `sk-icon-button`.
      */
     interface SkButton {
         /**
@@ -99,29 +203,125 @@ declare namespace LocalJSX {
           * Control height.
           * @default "md"
          */
-        "size"?: "sm" | "md" | "lg";
+        "size"?: ButtonSize;
         /**
           * `submit`, `reset`, or `button`. Native semantics, so a Button inside a form behaves like the `<button>` a consumer would have written by hand.
           * @default "button"
          */
-        "type"?: "button" | "submit" | "reset";
+        "type"?: ButtonType;
         /**
           * Visual emphasis.
           * @default "primary"
          */
-        "variant"?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+        "variant"?: ButtonVariant;
+    }
+    interface SkIconButton {
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * The accessible name. An icon-only control with no name is announced as just "button", which tells a screen-reader user nothing.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Shows a busy state and blocks interaction.
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size"?: ButtonSize;
+        /**
+          * Native form semantics.
+          * @default "button"
+         */
+        "type"?: ButtonType;
+        /**
+          * Visual emphasis.
+          * @default "ghost"
+         */
+        "variant"?: ButtonVariant;
+    }
+    /**
+     * Link — Tier 1 foundation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A link is an anchor. This component exists for two reasons, not for
+     * decoration:
+     *  1. The underline and focus treatment are the part every design system gets
+     *     subtly wrong, and they are stated once here.
+     *  2. It documents the one rule a component cannot enforce: an action is a
+     *     button, a navigation is a link. `sk-button` exists for the former.
+     * Because it is a real `<a>` under the hood, middle-click, "open in new tab",
+     * and copying the URL all work — the things a `div` with a click handler breaks.
+     */
+    interface SkLink {
+        "download"?: string;
+        /**
+          * `external` marks a link that leaves the application: it adds the external icon, sets `target="_blank"`, and adds `rel="noopener noreferrer"`. Left off by default because most links do not leave.
+          * @default false
+         */
+        "external"?: boolean;
+        /**
+          * The destination. A link that navigates.
+          * @default ""
+         */
+        "href"?: string;
+        /**
+          * Forwarded to the underlying anchor.
+         */
+        "rel"?: string;
+        /**
+          * Suppresses the underline until hover or focus.
+          * @default false
+         */
+        "subtle"?: boolean;
+        /**
+          * Opens in a new tab without the external treatment.
+         */
+        "target"?: string;
     }
 
     interface SkButtonAttributes {
-        "variant": "primary" | "secondary" | "outline" | "ghost" | "danger";
-        "size": "sm" | "md" | "lg";
+        "variant": ButtonVariant;
+        "size": ButtonSize;
         "disabled": boolean;
         "loading": boolean;
-        "type": "button" | "submit" | "reset";
+        "type": ButtonType;
+    }
+    interface SkIconButtonAttributes {
+        "label": string;
+        "variant": ButtonVariant;
+        "size": ButtonSize;
+        "disabled": boolean;
+        "loading": boolean;
+        "type": ButtonType;
+    }
+    interface SkLinkAttributes {
+        "href": string;
+        "external": boolean;
+        "subtle": boolean;
+        "target": string;
+        "rel": string;
+        "download": string;
     }
 
     interface IntrinsicElements {
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
+        "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
+        "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -137,8 +337,24 @@ declare module "@stencil/core" {
              *   - `disabled` and `loading` are ARIA names, not `isDisabled`.
              *   - State is exposed as `data-*` attributes for CSS and tests.
              *   - Styling hooks are `data-slot`, not utility classes.
+             * Keyboard, activation-blocking, and form participation live in
+             * `shared/button-base.ts`, shared with `sk-icon-button`.
              */
             "sk-button": LocalJSX.IntrinsicElements["sk-button"] & JSXBase.HTMLAttributes<HTMLSkButtonElement>;
+            "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
+            /**
+             * Link — Tier 1 foundation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A link is an anchor. This component exists for two reasons, not for
+             * decoration:
+             *  1. The underline and focus treatment are the part every design system gets
+             *     subtly wrong, and they are stated once here.
+             *  2. It documents the one rule a component cannot enforce: an action is a
+             *     button, a navigation is a link. `sk-button` exists for the former.
+             * Because it is a real `<a>` under the hood, middle-click, "open in new tab",
+             * and copying the URL all work — the things a `div` with a click handler breaks.
+             */
+            "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
         }
     }
 }

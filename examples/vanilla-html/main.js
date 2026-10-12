@@ -11,11 +11,20 @@ form?.addEventListener("submit", (event) => {
   result.textContent = `submitted at ${new Date().toISOString().slice(11, 19)}`
 })
 
-// Prove the click path reaches the page: a disabled or loading element must
-// not produce an activation here.
+// Prove the click path reaches the page: a disabled or loading element must not
+// produce an activation here.
+//
+// `closest` rather than `matches`: a click on an icon inside an icon button
+// reports the `<svg>` as its target, so matching the target directly would miss
+// every activation that lands on the slotted content.
 document.addEventListener("click", (event) => {
   const target = event.target
-  if (target instanceof HTMLElement && target.matches("sk-button")) {
-    log.textContent = `clicked: ${target.getAttribute("variant") ?? "primary"}`
-  }
+  if (!(target instanceof Element)) return
+
+  const control = target.closest("sk-button, sk-icon-button")
+  if (!control) return
+  if (control.getAttribute("data-disabled") !== null) return
+  if (control.getAttribute("data-loading") !== null) return
+
+  log.textContent = `clicked: ${control.getAttribute("variant") ?? "default"}`
 })

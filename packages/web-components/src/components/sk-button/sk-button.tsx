@@ -1,4 +1,11 @@
 import { Component, Element, h, Host, Prop } from "@stencil/core"
+import {
+  setupButtonLike,
+  syncButtonState,
+  type ButtonSize,
+  type ButtonType,
+  type ButtonVariant,
+} from "../shared/button-base.js"
 
 /**
  * Button — Tier 1 foundation component.
@@ -11,6 +18,9 @@ import { Component, Element, h, Host, Prop } from "@stencil/core"
  *   - `disabled` and `loading` are ARIA names, not `isDisabled`.
  *   - State is exposed as `data-*` attributes for CSS and tests.
  *   - Styling hooks are `data-slot`, not utility classes.
+ *
+ * Keyboard, activation-blocking, and form participation live in
+ * `shared/button-base.ts`, shared with `sk-icon-button`.
  */
 @Component({
   tag: "sk-button",
@@ -22,11 +32,10 @@ import { Component, Element, h, Host, Prop } from "@stencil/core"
 })
 export class SkButton {
   /** Visual emphasis. */
-  @Prop({ reflect: true }) variant: "primary" | "secondary" | "outline" | "ghost" | "danger" =
-    "primary"
+  @Prop({ reflect: true }) variant: ButtonVariant = "primary"
 
   /** Control height. */
-  @Prop({ reflect: true }) size: "sm" | "md" | "lg" = "md"
+  @Prop({ reflect: true }) size: ButtonSize = "md"
 
   /** Disables interaction. Mirrors the ARIA name. */
   @Prop({ reflect: true }) disabled = false
@@ -38,64 +47,13 @@ export class SkButton {
    * `submit`, `reset`, or `button`. Native semantics, so a Button inside a form
    * behaves like the `<button>` a consumer would have written by hand.
    */
-  @Prop({ reflect: true }) type: "button" | "submit" | "reset" = "button"
+  @Prop({ reflect: true }) type: ButtonType = "button"
 
-  @Element() private host!: HTMLElement
+  /** The custom element itself. Public so the shared button base can drive it. */
+  @Element() host!: HTMLElement
 
   private internals?: ElementInternals
-
-  private onClick = (event: MouseEvent) => {
-    if (this.disabled || this.loading) {
-      event.preventDefault()
-      event.stopImmediatePropagation()
-      return
-    }
-    if (this.type !== "button") {
-      event.preventDefault()
-      this.submitForm()
-    }
-  }
-
-  /**
-   * Form-associated custom elements do not get implicit submission from
-   * `type="submit"`: the element is not a native button, so the browser has
-   * nothing to submit. A FACE has to request submission explicitly, which is
-   * what `form.requestSubmit()` does — it still runs validation and still
-   * fires the `submit` event, so this is the closest match to a native
-   * `<button type="submit">`.
-   */
-  private submitForm() {
-    const form = this.internals?.form
-    if (!form) return
-    if (this.type === "reset") {
-      form.reset()
-      return
-    }
-    form.requestSubmit()
-  }
-
-  private onKeyDown = (event: KeyboardEvent) => {
-    if (this.disabled || this.loading) return
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault()
-      this.host.click()
-    }
-  }
-
-  /**
-   * A loading button is `aria-busy`, not `disabled`: assistive technology must
-   * still be able to read the button's name and position.
-   */
-  private syncState() {
-    const blocked = this.disabled || this.loading
-    this.host.setAttribute("aria-busy", this.loading ? "true" : "false")
-    if (blocked) {
-      this.host.setAttribute("tabindex", "-1")
-      this.internals?.setFormValue(null)
-    } else if (this.host.getAttribute("tabindex") === "-1") {
-      this.host.setAttribute("tabindex", "0")
-    }
-  }
+  private teardown?: () => void
 
   componentWillLoad() {
     // `attachInternals()` runs here, not in a field initializer: Stencil
@@ -104,20 +62,18 @@ export class SkButton {
     // for form-associated custom elements.
     this.internals = this.host.attachInternals()
 
-    this.host.addEventListener("click", this.onClick)
-    this.host.addEventListener("keydown", this.onKeyDown)
+    this.teardown = setupButtonLike(this, this.internals)
     if (!this.host.hasAttribute("role")) this.host.setAttribute("role", "button")
     if (!this.host.hasAttribute("tabindex")) this.host.setAttribute("tabindex", "0")
-    this.syncState()
+    syncButtonState(this, this.internals)
   }
 
   disconnectedCallback() {
-    this.host.removeEventListener("click", this.onClick)
-    this.host.removeEventListener("keydown", this.onKeyDown)
+    this.teardown?.()
   }
 
   componentDidRender() {
-    this.syncState()
+    syncButtonState(this, this.internals)
   }
 
   render() {

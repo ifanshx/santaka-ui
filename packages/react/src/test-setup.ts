@@ -1,15 +1,15 @@
 /**
  * jsdom has no custom-element registry of its own, so this file provides the
- * minimum the adapter tests need: a registry, `ElementInternals`, and a stub
- * `sk-button`.
+ * minimum the adapter tests need: a registry, `ElementInternals`, and stubs for
+ * the tags the adapters render.
  *
- * The stub matters more than it looks. Without a definition, React 19 treats
- * `<sk-button>` as an unknown element and writes every prop as an attribute,
- * which would let the adapter tests pass while the upgraded path is untested.
- * With it, React assigns real properties, which is what happens in a browser.
+ * The stubs matter more than they look. Without a definition, React 19 treats an
+ * unknown tag as a plain element and writes every prop as an attribute, which
+ * would let the adapter tests pass while the upgraded path — the one a browser
+ * actually takes — goes untested.
  *
- * The stub implements no behavior. Real behavior — form submission, focus,
- * ARIA — is owned by `@santaka-ui/web-components` and proven in Chromium there.
+ * The stubs implement no behavior. Form submission, focus, and ARIA are owned by
+ * `@santaka-ui/web-components` and proven in Chromium in that package's suite.
  */
 import { beforeAll } from "vitest"
 
@@ -48,6 +48,37 @@ beforeAll(() => {
         connectedCallback() {
           this.setAttribute("role", "button")
         }
+      },
+    )
+  }
+
+  if (!customElements.get("sk-icon-button")) {
+    customElements.define(
+      "sk-icon-button",
+      class extends HTMLElement {
+        label = ""
+        variant = "ghost"
+        size = "md"
+        disabled = false
+        loading = false
+        type = "button"
+        connectedCallback() {
+          this.setAttribute("role", "button")
+        }
+      },
+    )
+  }
+
+  if (!customElements.get("sk-link")) {
+    customElements.define(
+      "sk-link",
+      class extends HTMLElement {
+        href = ""
+        external = false
+        subtle = false
+        target?: string
+        rel?: string
+        download?: string
       },
     )
   }

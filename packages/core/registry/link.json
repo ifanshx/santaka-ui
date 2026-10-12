@@ -1,0 +1,63 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "link",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-link/sk-link.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-cc820584caa3614fa69017f341ddf1e3edee9f6a200fde52613d12eb15fecd33"
+    },
+    {
+      "path": "src/components/sk-link/sk-link.css",
+      "type": "registry:style",
+      "checksum": "sha256-019791a824dac3222b9023dc6233fea46450bdf640de0c80b46921740d565000"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-primary",
+    "--sk-color-primary-hover",
+    "--sk-color-focus-ring",
+    "--sk-color-text-muted"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "Navigates to another URL, in place or in a new tab.",
+    "whenToUse": [
+      "It changes the URL",
+      "The destination is a document or page",
+      "It can be opened in a new tab or copied by the reader"
+    ],
+    "whenNotToUse": [
+      "It performs an action without changing the URL — use a Button instead",
+      "It downloads a file rather than navigating — pass `download`",
+      "It triggers a dialog or menu — use a Button"
+    ],
+    "accessibility": "Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `external` sets target=_blank with rel=noopener noreferrer and renders a decorative indicator.",
+    "example": "<sk-link href=\"/docs\">Read the docs</sk-link>",
+    "knownLimitations": [
+      "An empty `href` renders as visibly disabled rather than failing at build time"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

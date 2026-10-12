@@ -1,0 +1,67 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "button",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-button/sk-button.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-0f3fd8e812e3cb9eb6cfff59eedacbb3b78b4079ace3ce349b13facd17a8dce1"
+    },
+    {
+      "path": "src/components/sk-button/sk-button.css",
+      "type": "registry:style",
+      "checksum": "sha256-2e4cd2439efa5c3ee81deac82fcb7a6d51120d58d772d5a0f473040d66998294"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-primary",
+    "--sk-color-primary-hover",
+    "--sk-color-primary-fg",
+    "--sk-color-text",
+    "--sk-color-surface-raised",
+    "--sk-color-surface-sunken",
+    "--sk-color-border-strong",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "Triggers an action: submit a form, open a dialog, save a change.",
+    "whenToUse": [
+      "The control performs an action on the current page",
+      "It submits or resets a form",
+      "It opens a panel, dialog, or menu"
+    ],
+    "whenNotToUse": [
+      "It navigates somewhere — use a Link instead",
+      "It toggles a value on its own, with no action — use a Checkbox or Switch",
+      "It is the only option in a set — use a Radio Group"
+    ],
+    "accessibility": "Button role. Activates on Enter and Space. A loading button is aria-busy rather than disabled, so it keeps its accessible name and position in the tab order.",
+    "example": "<sk-button variant=\"primary\">Save changes</sk-button>",
+    "knownLimitations": [
+      "As a form-associated custom element, `type=\"submit\"` calls form.requestSubmit() explicitly; native implicit submission does not apply"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -14,6 +14,9 @@
  * hydration from upgrading tags the server already produced.
  */
 export { SkButton } from "./components/sk-button/sk-button.js"
+export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
+export { SkLink } from "./components/sk-link/sk-link.js"
+export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js"
 
 /** Custom element tags this package defines. */
-export const COMPONENTS = ["sk-button"]
+export const COMPONENTS = ["sk-button", "sk-icon-button", "sk-link"]

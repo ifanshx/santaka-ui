@@ -1,0 +1,94 @@
+/*
+ * Link styles.
+ *
+ * The focus treatment matters more than the color: a link is the most common
+ * keyboard target on a page, so its focus ring is never suppressed and never
+ * overlapped by the underline.
+ */
+
+sk-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+sk-link .sk-link__anchor {
+  color: var(--sk-color-primary, #6d28d9);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  border-radius: var(--sk-radius-sm, 0.25rem);
+  transition: color var(--sk-duration-fast, 120ms)
+    var(--sk-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+sk-link .sk-link__anchor:hover {
+  color: var(--sk-color-primary-hover, #5b21b6);
+}
+
+/* `subtle` removes the underline until the link is hovered or focused, which
+   suits a dense list of navigation links. */
+sk-link[data-subtle] .sk-link__anchor {
+  text-decoration: none;
+}
+
+sk-link[data-subtle] .sk-link__anchor:hover,
+sk-link[data-subtle] .sk-link__anchor:focus-visible {
+  text-decoration: underline;
+}
+
+sk-link .sk-link__anchor:focus-visible {
+  outline: var(--sk-ring-width, 2px) solid var(--sk-color-focus-ring, #6d28d9);
+  outline-offset: var(--sk-ring-offset, 2px);
+}
+
+/*
+ * A link with no destination is a mistake, not a disabled control: it is not
+ * focusable and does not show a pointer, so it cannot be activated by accident.
+ * The muted color makes the mistake visible in review.
+ */
+sk-link[data-disabled] .sk-link__anchor {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+/*
+ * The external-link glyph is a CSS-drawn box with an arrow, so the package ships
+ * no extra asset and the icon inherits the link's color and size.
+ */
+sk-link .sk-link__external {
+  display: inline-block;
+  inline-size: 0.75em;
+  block-size: 0.75em;
+  flex: none;
+  align-self: center;
+  border: 1px solid currentcolor;
+  border-block-start-color: transparent;
+  border-inline-start-color: transparent;
+  border-radius: 1px;
+  transform: translateY(-0.05em);
+  opacity: 0.75;
+}
+
+sk-link .sk-link__external::after {
+  content: "";
+  position: absolute;
+  inline-size: 0.45em;
+  block-size: 1px;
+  background-color: currentcolor;
+  transform-origin: left center;
+}
+
+@media (forced-colors: active) {
+  sk-link .sk-link__anchor {
+    color: LinkText;
+  }
+
+  sk-link .sk-link__anchor:focus-visible {
+    outline-color: Highlight;
+  }
+}

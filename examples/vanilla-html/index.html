@@ -24,7 +24,7 @@
   </head>
 
   <body>
-    <main class="sk-stack" style="max-inline-size: 40rem; margin-inline: auto; padding: 2rem">
+    <main class="sk-stack" style="max-inline-size: 44rem; margin-inline: auto; padding: 2rem">
       <h1 style="font-size: var(--sk-text-2xl-size)">Santaka UI — universal elements</h1>
 
       <section class="sk-cluster" aria-label="Variants">
@@ -44,6 +44,47 @@
       <section class="sk-cluster" aria-label="States">
         <sk-button disabled>Disabled</sk-button>
         <sk-button loading>Loading</sk-button>
+      </section>
+
+      <section aria-labelledby="icon-heading" class="sk-stack">
+        <h2 id="icon-heading" style="font-size: var(--sk-text-lg-size)">Icon buttons</h2>
+        <div class="sk-cluster">
+          <sk-icon-button label="Add item" variant="ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </sk-icon-button>
+          <sk-icon-button label="Edit" variant="ghost" size="sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          </sk-icon-button>
+          <sk-icon-button label="Delete" variant="danger" size="lg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+            </svg>
+          </sk-icon-button>
+          <sk-icon-button label="Busy" loading>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 6v6l4 2" />
+            </svg>
+          </sk-icon-button>
+          <sk-icon-button label="Unavailable" disabled variant="ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </sk-icon-button>
+        </div>
+      </section>
+
+      <section aria-labelledby="link-heading" class="sk-stack">
+        <h2 id="link-heading" style="font-size: var(--sk-text-lg-size)">Links</h2>
+        <p>
+          Read the <sk-link href="#variants">full documentation</sk-link> or check the
+          <sk-link href="https://stenciljs.com" external>Stencil docs</sk-link>. A
+          <sk-link subtle href="#icons">subtle link</sk-link> underlines on hover.
+        </p>
+        <p><sk-link href="" data-slot="link">A link with no destination</sk-link></p>
       </section>
 
       <form id="probe" class="sk-cluster">
