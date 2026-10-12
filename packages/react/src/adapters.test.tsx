@@ -3,7 +3,7 @@ import { render } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { IconButton, type SkIconButtonElement } from "./icon-button.js"
 import { Link, type SkLinkElement } from "./link.js"
-
+import { Badge, type SkBadgeElement } from "./badge.js"
 /**
  * Adapter contract tests: prop mapping, `className` merge, and ref forwarding.
  * Behavior is owned by the custom element and proven in Chromium there.
@@ -128,5 +128,51 @@ describe("Link adapter", () => {
   it("renders children as the anchor's text", () => {
     const container = rendered(<Link href="/docs">Read the docs</Link>)
     expect(container.querySelector("sk-link")!.textContent).toBe("Read the docs")
+  })
+})
+
+describe("Badge adapter", () => {
+  it("renders the custom element", () => {
+    const container = rendered(<Badge variant="success">Active</Badge>)
+    const element = container.querySelector("sk-badge")
+    expect(element).not.toBeNull()
+    expect(element!.textContent).toBe("Active")
+  })
+
+  it("maps variant and size through to the element", () => {
+    const container = rendered(
+      <Badge variant="danger" size="sm">
+        Failed
+      </Badge>,
+    )
+    const element = container.querySelector("sk-badge") as SkBadgeElement
+    expect(element.variant).toBe("danger")
+    expect(element.size).toBe("sm")
+  })
+
+  it("defaults to the neutral variant, because a badge with no emphasis is the common case", () => {
+    const container = rendered(<Badge>Draft</Badge>)
+    expect((container.querySelector("sk-badge") as SkBadgeElement).variant).toBe("neutral")
+  })
+
+  it("passes statusLabel through for the dot variant", () => {
+    // The dot conveys state by color alone, which WCAG 1.4.1 forbids, so the
+    // label is what makes it announced. The adapter's job is to carry it; the
+    // element renders it visually hidden.
+    const container = rendered(<Badge dot statusLabel="Active" />)
+    const element = container.querySelector("sk-badge") as SkBadgeElement
+    expect(element.dot).toBe(true)
+    expect(element.statusLabel).toBe("Active")
+  })
+
+  it("forwards the ref", () => {
+    const ref = createRef<SkBadgeElement>()
+    render(<Badge ref={ref}>Active</Badge>)
+    expect(ref.current?.tagName).toBe("SK-BADGE")
+  })
+
+  it("merges the consumer className", () => {
+    const container = rendered(<Badge className="status-chip">Active</Badge>)
+    expect(container.querySelector("sk-badge")!.getAttribute("class")).toBe("status-chip")
   })
 })

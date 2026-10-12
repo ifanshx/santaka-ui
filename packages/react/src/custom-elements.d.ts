@@ -45,6 +45,13 @@ type LinkElement = HTMLElement & {
   download?: string
 }
 
+type BadgeElement = HTMLElement & {
+  variant: string
+  size: string
+  dot: boolean
+  statusLabel: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -57,6 +64,12 @@ declare module "react" {
         target?: string
         rel?: string
         download?: string
+      }
+      "sk-badge": BaseCustomElement<BadgeElement> & {
+        variant?: string
+        size?: string
+        dot?: boolean
+        "status-label"?: string
       }
     }
   }

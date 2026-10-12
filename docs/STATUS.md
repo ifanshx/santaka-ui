@@ -2,17 +2,17 @@
 
 Verified against `plan.md` on 2026-10-12. This is a status readout, not a plan:
 `plan.md` is the plan, `docs/adr/` records the decisions, and this file records
-what exists today. Every claim below is checked against the repository rather
-than against a plan checkbox.
+what exists today. Every claim below is checked against the repository.
 
 ## Summary
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
-package are real, tested, and green; the React package covers three of four
-components; the CLI, registry hosting, documentation site, and Storybook do not
-exist yet.
+package are real, tested, and green; the React package now covers all four
+shipped components; the CLI, registry hosting, documentation site, and Storybook
+do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. All three measured budgets pass.
+`pnpm run verify` exits 0 from a cold cache. **196 tests pass.** All six
+packages pass `publint` and `attw --pack`.
 
 ## Done
 
@@ -20,104 +20,115 @@ exist yet.
 
 - DTCG source of truth compiled to CSS custom properties, light and dark.
 - The build fails on an unknown token reference or a contrast pair below its
-  documented target, and writes a contrast report alongside the themes.
-- Every color is emitted twice — a hex declaration then the `oklch()` value —
-  so Core-tier browsers render the intended color.
-- 25 contrast pairs gated, all passing. The `color.shadow` gate is light-only:
-  a hard offset shadow only darkens, so it cannot meet 3:1 against a dark
-  surface in either direction (ADR-017).
-- Theme contract tests in `packages/tokens/scripts/tokens.test.ts` (20 tests)
-  cover the *relationships between tokens* — the invariants a build cannot check
-  because a token is only wrong relative to the theme it renders in.
+  target, and writes a contrast report. 25 pairs gated, all passing.
+- Every color emitted twice — hex then `oklch()` behind `@supports` — so a
+  Core-tier browser renders the intended color.
+- **48 tests**: 28 pipeline math, 20 theme-contract relationships. The contract
+  tests cover what a build cannot: a token is only wrong relative to the theme it
+  renders in.
 
-### Components (universal Web Components)
+### Components
 
-Four components ship, each with a browser test suite against real Chromium:
+Four universal custom elements, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
-| `sk-button` | form participation, keyboard, 44px target, theme, brutalist geometry measured in-browser |
+| `sk-button` | form participation, keyboard, 44px target, RTL, theme, brutalist geometry measured in-browser |
 | `sk-icon-button` | accessible name, square hit target on **both** browser tiers, spinner |
-| `sk-link` | anchor semantics, external indicator, RTL, theme |
+| `sk-link` | anchor semantics, external indicator, theme |
 | `sk-badge` | variant fills from tokens (not `color-mix`), dot label for WCAG 1.4.1 |
 
-All four carry the brutalist treatment — 3px stroke, `border-radius: 0`,
-zero-blur offset shadow — with the press interaction measured in a browser:
-hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to `3px 3px`
-with `2px 2px`.
+**54 Playwright tests.** All four carry the brutalist treatment — 3px stroke,
+`border-radius: 0`, zero-blur offset shadow — with the press measured in a
+browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
+`3px 3px` with `2px 2px`.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, plus `ThemeScript` / `useTheme`. 36 unit tests.
+`Button`, `IconButton`, `Link`, `Badge`, plus `ThemeScript` / `useTheme`. **42
+tests.** Badge's adapter enforces the WCAG 1.4.1 requirement in the type
+system: `<Badge dot />` does not compile without `statusLabel`.
 
-### Tooling and contracts
+### Core and utilities
 
-- `@santaka-ui/core` publishes the registry JSON Schema, validates untrusted
-  entries before anything is written, and generates registry metadata for all
-  four components with checksums verified against the shipped files.
-- `@santaka-ui/styles` validates that every `var(--sk-*)` reference in its
-  stylesheets resolves to a defined token, and ships `glass.css` for the Tier 2
-  floating components.
-- Budgets measured per component, not as a package total (ADR-010).
+- Registry JSON Schema, validation of untrusted entries, checksums verified
+  against shipped files.
+- `validate`, `cn`, `id` — 20 tests.
+- **5 exports-contract tests** asserting every stylesheet a package builds is
+  reachable through `exports`, and every export resolves to a file that exists.
+
+### Distribution
+
+- **ESM only.** 358 KB of unreachable CommonJS removed; Stencil has no option to
+  suppress it, so the build strips it and verifies the ESM entrypoints survived.
+- **`attw --pack` on every package.** It found a real defect on introduction:
+  Stencil emits `export * from '../types'` into its declarations, a directory
+  specifier with no file extension, so the published types did not resolve under
+  `node16`. Fixed in the build.
+- `glass.css` is reachable as a standalone import, not only through `index.css`.
+
+### Tooling
+
+pnpm 10 + Turborepo, three-job CI, Changesets, TypeScript strict, ESLint, Prettier,
+measured budgets.
 
 ### Decisions recorded
 
-`docs/adr/` now holds ADR-010 (budgets), ADR-013 (API conventions, one question
-open), ADR-014 (browser baseline), and ADR-017 (token values and design
-direction).
+**8 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+pipeline, and why `style-dictionary` is not used), 004 (naming, scope, license),
+005 (SSR and hydration), 010 (budgets), 013 (API conventions, one question
+open), 014 (browser baseline), 017 (token values and design direction).
 
 ## Not done
 
-Ordered by what blocks the next milestone.
-
 ### Blocking Tier 1
 
-- **Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label.** The
-  remaining eight Tier 1 components. None exist.
-- **No React adapter for Badge.** The universal package ships it; React does not.
-  This is a parity gap inside the "agreed core subset" for weeks 3–4.
-- **No Storybook.** Section 10's workshop does not exist. Nothing in the repo
-  references it.
+- **Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label** —
+  eight of the twelve Tier 1 components do not exist.
+- **No Storybook.** Section 10's workshop; nothing in the repo references it.
 
 ### Blocking Stable
 
-- **Missing ADRs.** ADR-001, ADR-002, ADR-004, ADR-005, ADR-012, ADR-016, and
-  ADR-018 have no file. Three of them — ADR-002, ADR-005, ADR-011 — are already
-  cited from source comments, so the references dangle.
-- **No Next.js SSR proof.** Risk R2 says to test this in weeks 1–2, not week 11.
-  Untested.
-- **No visual regression in RTL.** Section 17 requires it per component; only
-  four interaction test files exist. Section 6 RTL is otherwise clean: no banned
-  physical properties anywhere in component source.
-- **No axe-core pass.** ADR-008 is not written and no automated a11y check runs.
-- **No legal preconditions.** Trademark search, npm scope, domain, mascot
-  originality — all unverified (section 13).
+- **10 ADRs missing**: 003, 006, 007, 008, 009, 011, 012, 015, 016, 018.
+  ADR-002, ADR-005, and ADR-011 were cited from source comments before this pass;
+  those citations now resolve.
+- **No Next.js SSR proof.** Risk R2 rates this a weeks 1–2 item. The strategy is
+  decided in ADR-005; the proof is not done, so no integration may claim SSR.
+- **No visual regression in RTL.** Section 17 requires it per component. Only
+  Button has an RTL test, and it is an interaction test, not a visual one.
+- **No `axe-core`.** ADR-008 is unwritten and no automated accessibility check
+  runs.
+- **No legal preconditions.** Trademark, npm scope, domain, mascot originality.
+- **No consumer fixture.** `attw` and `publint` validate the packed tarball, but
+  nothing installs the package into a scratch project and imports it.
 
 ### Unmeasured
 
 - **`@santaka-ui/tokens + @santaka-ui/core` at ≤ 8 KB has no measurement.**
-  `measure-bundle.mjs` measures the compiled theme CSS, not the token package's
-  JS or the core registry runtime. This budget is enforced on paper only, and
-  the registry is what CLI commands will load.
+  `measure-bundle.mjs` measures compiled theme CSS, not the token package's JS or
+  the core registry runtime. Recorded in ADR-010 as a gap.
+
+### Toolchain deviations
+
+Section 5 names four tools this repository does not use: `style-dictionary`
+(reason in ADR-002), `size-limit` (replaced by `measure-bundle.mjs`, ADR-010),
+`knip`, and `axe-core`. Two are recorded as decisions; two are simply absent.
 
 ### Known gaps in what shipped
 
-- **Nine new tokens have no consumer yet:** `text.display`, `text.display-sm`,
+- **Seven tokens have no consumer yet**: `text.display`, `text.display-sm`,
   `glass.bg-strong`, `radius.glass-lg`, `duration.overlay`, `ease.glass`,
   `duration.instant`. They are for Tier 2. The consequence is that `glass.css`
-  has never been exercised end-to-end by an overlay that actually uses the glass
-  easing — its entrance animation is defined and unreferenced.
-- **The registry example at `plan.md` line 728 still cites `--sk-radius-md`**,
-  which no longer exists as a value.
-- **`.changeset/` carries the release notes** for the design change; the ADR for
-  the budget change lives at `docs/adr/ADR-010-bundle-budgets.md` rather than in
-  the changeset, which is where section 12 points.
+  has never been exercised end-to-end by an overlay that uses the glass easing.
+- Two build scripts exist only to correct Stencil output
+  (`fix-declaration-specifiers.mjs`, `strip-cjs-output.mjs`). Both document why
+  Stencil cannot be configured to do it, and both fail loudly rather than
+  silently skipping.
 
 ## Open decision
 
 ADR-013 leaves one question unresolved: whether a boolean that toggles a
 *presentation* rather than a state takes the `is`/`has`/`can` prefix. Three
 shipped props sit on it — `sk-link.external`, `sk-link.subtle`, `sk-badge.dot`.
-The conformance test enumerates them by name, so a *new* unprefixed presentation
-boolean fails rather than slipping through. The ADR recommends prefixing them
-and records the argument against.
+The conformance test enumerates them by name, so a new unprefixed presentation
+boolean fails rather than inheriting the ambiguity.

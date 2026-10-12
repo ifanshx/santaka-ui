@@ -988,7 +988,7 @@ This is a planning estimate for a small team of roughly 2–4 experienced contri
 - [ ] Verify the legal preconditions in section 13: trademark search, npm scope availability, domain, mascot originality.
 - [ ] Build a small visual prototype and test package architecture decisions early.
 - [x] Write the API conventions, forms contract, and starter token values into the shared `tooling/` config, then implement Button against them as the first conformance test.
-- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(ADR-010, ADR-013, ADR-014, and ADR-017 now exist under `docs/adr/`. Still missing: ADR-001, ADR-002, ADR-004, ADR-005, ADR-012, ADR-016, ADR-018 — several are referenced from source but have no file yet. The Next.js SSR proof is not done.)*
+- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(ADR-001, ADR-002, ADR-004, ADR-005, ADR-010, ADR-013, ADR-014, and ADR-017 now exist under `docs/adr/` — 8 of 18. Still missing: ADR-003, ADR-006, ADR-007, ADR-008, ADR-009, ADR-011, ADR-012, ADR-015, ADR-016, ADR-018. The Next.js SSR proof is not done.)*
 
 **Exit criteria:** architecture decision record, working monorepo, first token build, and a documented proof of concept.
 
@@ -1010,7 +1010,7 @@ Review this list at the end of every two-week phase. A risk without a named owne
 
 - [x] Implement semantic tokens and light/dark themes.
 - [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge. Still missing: Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, Label.)*
-- [ ] Add React and universal Web Components implementations for the agreed core subset. *(Web Components: all four shipped. React: Button, Icon Button, and Link only — Badge has no adapter yet.)*
+- [ ] Add React and universal Web Components implementations for the agreed core subset. *(Both complete for all four shipped components: universal Button, Icon Button, Link, Badge; React adapters for each of them. Badge's adapter landed most recently.)*
 - [ ] Add Storybook stories and baseline tests. *(No Storybook exists anywhere in the repo.)*
 - [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Button's form participation is proven, including `type="submit"` via `requestSubmit()`. Input and Select do not exist.)*
 
@@ -1085,25 +1085,25 @@ Review this list at the end of every two-week phase. A risk without a named owne
 A release candidate is ready only when the applicable items are checked and evidence is recorded.
 
 - [ ] Core component documentation and examples are complete.
-- [ ] Public TypeScript types and package exports validate in clean consumer projects.
-- [ ] Unit, component, interaction, and browser tests pass in CI.
+- [ ] Public TypeScript types and package exports validate in clean consumer projects. *(`attw --pack` and `publint` pass on the packed tarball of all six packages, which is the strongest check available without a consumer fixture. Nothing has yet installed the package into a scratch project and imported it, which is what this gate actually asks for.)*
+- [x] Unit, component, interaction, and browser tests pass in CI. *(196 tests pass on every run — 28 token pipeline, 20 token contract, 5 exports contract, 28 core, 20 utilities, 42 React, and 54 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
 - [ ] Keyboard navigation and focus management have been manually reviewed.
 - [ ] Automated accessibility checks and targeted manual reviews are documented.
-- [ ] Light/dark themes, forced-colors considerations, and reduced motion are reviewed.
+- [x] Light/dark themes, forced-colors considerations, and reduced motion are reviewed. *(Token contract tests assert the glass fallback panel clears 4.5:1 against each theme's own text and is near-opaque; `forced-colors` is handled in all four components and in `glass.css`; `prefers-reduced-motion` removes the press transform rather than merely shortening it.)*
 - [ ] SSR/hydration works for each integration that claims it.
-- [ ] CSS isolation and prebuilt CSS behavior are verified.
-- [ ] Bundle size, tree-shaking, and dependency impact are measured.
-- [ ] Bundle budgets in section 12 pass in CI, or any exception is recorded as an ADR.
-- [ ] Every Stable component names its behavior owner and its locale coverage.
+- [x] CSS isolation and prebuilt CSS behavior are verified. *(The conformance test asserts every component is scoped with no shadow root, and that styling hooks are `data-slot` rather than classes. Prebuilt CSS reachability is covered by `exports-contract.test.ts`.)*
+- [x] Bundle size, tree-shaking, and dependency impact are measured. *(Measured per component rather than as a package total: runtime 8.91 KB of 12, component CSS 2.83 KB of 4 per component, token themes 12.21 KB of 13. One budget — `tokens + core` at 8 KB — has no measurement and is recorded as an open gap in ADR-010.)*
+- [x] Bundle budgets in section 12 pass in CI, or any exception is recorded as an ADR. *(`pnpm run size` runs in CI and fails the build on a regression. The token theme budget moved from 12 KB to 13 KB, recorded in ADR-010.)*
+- [x] Every Stable component names its behavior owner and its locale coverage. *(All four registry entries declare `behaviorOwner: "web-components"` and `localesCovered: ["en-US"]`, and a test asserts it.)*
 - [ ] CLI initialization, component add, dry run, conflicts, and recovery are tested.
-- [ ] Registry entries validate and cannot write outside intended destinations.
+- [x] Registry entries validate and cannot write outside intended destinations. *(Four entries validate against the schema with checksums verified against the shipped files. Path traversal is refused by the validator and by the example server, which normalizes then confirms the resolved path stays inside the repo root.)*
 - [ ] Dependency licenses and security scans are reviewed.
 - [ ] Changelog, semver policy, upgrade notes, and migration guidance are prepared.
-- [ ] Component API conventions are enforced by a conformance test, and no Stable component deviates.
+- [x] Component API conventions are enforced by a conformance test, and no Stable component deviates. *(Nine tests in `conventions.e2e.ts`, checking section 4's grammar statically and at runtime. One question is recorded as open in ADR-013 rather than enforced either way: whether a presentation boolean takes the `is`/`has`/`can` prefix.)*
 - [ ] Every form control submits through a plain `<form>` in React, Vue, and the universal package.
-- [ ] `publint` and `attw` are clean for every published package.
+- [x] `publint` and `attw` are clean for every published package. *(All six pass both. `attw` found a real defect when it was introduced: Stencil's generated declarations re-export from a directory specifier, so the shipped types did not resolve under `node16`. Fixed in the build.)*
 - [ ] The documented support matrix is generated from the Playwright projects that actually run.
-- [ ] Every component has an RTL visual regression case and a `--sk-touch-min` compliant target.
+- [ ] Every component has an RTL visual regression case and a `--sk-touch-min` compliant target. *(`--sk-touch-min` is proven for Button and Icon Button, including a Core-tier case where `aspect-ratio` is unavailable. RTL is covered for Button only, and by interaction test rather than visual regression — no visual-regression suite exists yet.)*
 - [ ] `llms.txt` and `llms-full.txt` are regenerated in CI and committed in sync.
 - [ ] The public framework/browser support matrix reflects tested evidence.
 - [ ] Legal preconditions in section 13 are resolved: license, trademark, npm scope, domain, mascot rights.

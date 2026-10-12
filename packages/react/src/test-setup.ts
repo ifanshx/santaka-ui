@@ -82,4 +82,28 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-badge")) {
+    customElements.define(
+      "sk-badge",
+      class extends HTMLElement {
+        variant = "neutral"
+        size = "md"
+        dot = false
+        statusLabel = ""
+
+        // Stencil maps a camelCase prop to its kebab-case attribute, so
+        // `status-label="Active"` becomes `statusLabel` on a defined element.
+        // The stub has to do the same, or an adapter test would pass while the
+        // upgraded path in a browser silently dropped the accessible label.
+        static get observedAttributes() {
+          return ["status-label"]
+        }
+
+        attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+          if (name === "status-label") this.statusLabel = value ?? ""
+        }
+      },
+    )
+  }
 })
