@@ -8,6 +8,11 @@
     "mono": {
       "$value": "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
       "$type": "fontFamily"
+    },
+    "display": {
+      "$value": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      "$type": "fontFamily",
+      "$description": "Display and heading face. The declared stack is the platform fallback: no webfont ships in the default path, so a consumer replaces the whole stack in one line with a geometric or techno sans (Space Grotesk, Chakra Petch) by setting `--sk-font-display`. The arcade character comes from the weight and tracking on the display steps regardless of family."
     }
   },
   "text": {
@@ -51,6 +56,16 @@
       "$value": "2.25rem / 2.5rem",
       "$description": "Display headings.",
       "$extensions": { "sk.fontWeight": "700", "sk.letterSpacing": "-0.02em" }
+    },
+    "display": {
+      "$value": "2.5rem / 3rem",
+      "$description": "Display headings. Heavy weight, tight tracking.",
+      "$extensions": { "sk.fontWeight": "800", "sk.letterSpacing": "-0.03em" }
+    },
+    "display-sm": {
+      "$value": "1.75rem / 2.25rem",
+      "$description": "Section display headings.",
+      "$extensions": { "sk.fontWeight": "800", "sk.letterSpacing": "-0.02em" }
     }
   },
   "space": {
@@ -87,40 +102,66 @@
     }
   },
   "radius": {
-    "$description": "Corner radii.",
-    "sm": { "$value": "0.25rem" },
-    "md": { "$value": "0.375rem" },
-    "lg": { "$value": "0.5rem" },
-    "xl": { "$value": "0.75rem" },
-    "full": { "$value": "9999px" }
+    "$description": "Corner radii. Chrome is square: neo-brutalism has no rounding. `full` is a shape, not a style, for the badge dot and spinner. Glass overlays get their own large radii so they read as a distinct material.",
+    "sm": { "$value": "0" },
+    "md": { "$value": "0" },
+    "lg": { "$value": "0" },
+    "xl": { "$value": "0" },
+    "full": { "$value": "9999px" },
+    "glass": {
+      "$value": "1.25rem",
+      "$description": "Floating overlays: dialog, popover, toast, tooltip, palette."
+    },
+    "glass-lg": {
+      "$value": "1.75rem",
+      "$description": "Largest floating surface, such as the command palette."
+    }
   },
   "border": {
-    "width": { "$value": "1px" }
+    "$description": "Two weights only. `width` is the hairline for separators and input fields; `thick` carries all brutalist chrome.",
+    "width": { "$value": "1px" },
+    "thick": { "$value": "3px" }
   },
   "ring": {
-    "$description": "Focus ring geometry.",
-    "width": { "$value": "2px" },
-    "offset": { "$value": "2px" }
+    "$description": "Focus ring geometry. A hard 3px stroke at 3px offset, not a soft glow.",
+    "width": { "$value": "3px" },
+    "offset": { "$value": "3px" }
   },
   "shadow": {
-    "$description": "Elevation. Light-theme alphas; the dark theme raises alpha to 0.24 / 0.32 / 0.40 / 0.56.",
-    "xs": { "$value": "0 1px 2px rgb(23 20 28 / 0.06)" },
-    "sm": { "$value": "0 1px 3px rgb(23 20 28 / 0.10), 0 1px 2px rgb(23 20 28 / 0.06)" },
-    "md": { "$value": "0 4px 12px rgb(23 20 28 / 0.12)" },
-    "lg": { "$value": "0 12px 32px rgb(23 20 28 / 0.16)" }
+    "$description": "Hard offsets with zero blur. The color comes from `--sk-color-shadow`, so one ladder serves both themes.",
+    "xs": { "$value": "2px 2px 0 0" },
+    "sm": { "$value": "3px 3px 0 0" },
+    "md": { "$value": "4px 4px 0 0" },
+    "lg": { "$value": "6px 6px 0 0" },
+    "brutal": { "$value": "5px 5px 0 0", "$description": "Default chrome elevation." },
+    "brutal-hover": { "$value": "7px 7px 0 0", "$description": "Pressed-lift state." },
+    "brutal-active": { "$value": "2px 2px 0 0", "$description": "Pressed-down state." },
+    "brutal-none": { "$value": "none" }
+  },
+  "glass": {
+    "$description": "The only alpha values in the system, which is what makes glass read as a distinct material. Theme-dependent roles are overridden per theme; `blur`, `saturate`, and `fallback` are not.",
+    "blur": { "$value": "24px" },
+    "saturate": { "$value": "180%" },
+    "fallback": {
+      "$value": "rgb(247 245 251 / 0.98)",
+      "$description": "Solid surface when `backdrop-filter` is unsupported; near-opaque so text stays legible."
+    }
   },
   "duration": {
-    "$description": "Motion durations. The reduced-motion override in themes/index.tokens.json collapses these to 1ms.",
+    "$description": "Motion durations, split by layer. Interactive controls use short arcade timing; floating overlays use longer float timing. The reduced-motion override in styles/reset.css collapses these.",
     "instant": { "$value": "0ms" },
-    "fast": { "$value": "120ms" },
-    "normal": { "$value": "200ms" },
-    "slow": { "$value": "320ms" }
+    "control-fast": { "$value": "90ms" },
+    "control": { "$value": "140ms" },
+    "control-slow": { "$value": "180ms" },
+    "overlay": { "$value": "280ms" },
+    "overlay-slow": { "$value": "420ms" }
   },
   "ease": {
-    "$description": "Easing curves.",
-    "standard": { "$value": "cubic-bezier(0.2, 0, 0, 1)" },
-    "exit": { "$value": "cubic-bezier(0.4, 0, 1, 1)" },
-    "emphasized": { "$value": "cubic-bezier(0.34, 1.4, 0.64, 1)" }
+    "$description": "Easing curves, split by layer. `arcade` overshoots so the press visibly springs back; `glass` starts fast and settles long.",
+    "arcade": { "$value": "cubic-bezier(0.34, 1.56, 0.64, 1)" },
+    "arcade-exit": { "$value": "cubic-bezier(0.4, 0, 0.6, 1)" },
+    "glass": { "$value": "cubic-bezier(0.32, 0.72, 0, 1)" },
+    "glass-exit": { "$value": "cubic-bezier(0.4, 0, 1, 1)" }
   },
   "z": {
     "$description": "Layer tokens. Components read these instead of hard-coding z-index.",

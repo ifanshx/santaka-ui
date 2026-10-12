@@ -1,0 +1,64 @@
+/*
+ * Glass overlay surface.
+ *
+ * Glass is for floating layers only — dialog, popover, toast, tooltip, command
+ * palette. Chrome you press and read (buttons, inputs, cards, badges) is
+ * brutalist, and the glass reads as genuinely floating precisely because
+ * everything around it is hard-edged.
+ *
+ * Feature-detected: without `backdrop-filter` the panel falls back to a solid
+ * near-opaque surface rather than rendering text over unblurred content
+ * (section 4, CSS). The `-webkit-` prefix is required for Safari 16.4, which is
+ * inside the Baseline tier.
+ */
+.sk-glass {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--sk-glass-fallback);
+  border: var(--sk-border-width, 1px) solid var(--sk-glass-border);
+  border-radius: var(--sk-radius-glass, 1.25rem);
+  box-shadow: var(--sk-shadow-lg);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sk-glass {
+    background-color: var(--sk-glass-bg);
+    -webkit-backdrop-filter: blur(var(--sk-glass-blur)) saturate(var(--sk-glass-saturate));
+    backdrop-filter: blur(var(--sk-glass-blur)) saturate(var(--sk-glass-saturate));
+  }
+
+  /* The specular top edge is what reads as iOS rather than as a translucent box. */
+  .sk-glass::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: var(--sk-space-4, 1rem);
+    block-size: 1px;
+    background-color: var(--sk-glass-highlight);
+    pointer-events: none;
+  }
+}
+
+/* Overlay entrance, referenced by the Tier 2 floating components when they
+   land: a short scale-up with a blur crossfade rather than a hard cut. */
+@keyframes sk-glass-enter {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/*
+ * A 1ms entrance is still an entrance — the panel would pop rather than fade —
+ * so reduced motion removes the animation instead of shortening it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .sk-glass {
+    animation: none;
+  }
+}

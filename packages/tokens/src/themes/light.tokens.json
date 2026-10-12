@@ -69,6 +69,22 @@
       "$value": "{color.amber.800}",
       "$description": "Warning text and icons on light surfaces."
     },
+    "success-subtle": {
+      "$value": "#E9F6ED",
+      "$description": "Tinted fill for badges and soft state chips. Success foreground on it is 6.41:1."
+    },
+    "warning-subtle": {
+      "$value": "#FCF3E4",
+      "$description": "Tinted fill for badges and soft state chips. Warning foreground on it is 6.44:1."
+    },
+    "danger-subtle": {
+      "$value": "#FDEDED",
+      "$description": "Tinted fill for badges and soft state chips. Danger foreground on it is 5.70:1."
+    },
+    "primary-subtle": {
+      "$value": "#F1EBFD",
+      "$description": "Tinted fill for badges and soft state chips. Primary foreground on it is 7.72:1."
+    },
     "accent-coral": {
       "$value": "{color.coral.400}",
       "$description": "Decoration and data-viz accent. Never the sole carrier of state."
@@ -80,6 +96,23 @@
     "focus-ring": {
       "$value": "{color.violet.700}",
       "$description": "Focus indicator. 7.10:1 vs surface; 3:1 against adjacent colors."
+    },
+    "shadow": {
+      "$value": "#17141C",
+      "$description": "Hard offset shadow color for brutalist chrome. 16.34:1 vs surface; gated at 3:1, the same standard as color.focus-ring, because a shadow is not text."
+    }
+  },
+  "glass": {
+    "$description": "Glass overlay roles. The only alpha values in the system; blur, saturate, and fallback are theme-independent and declared in dimensions.tokens.json.",
+    "bg": { "$value": "rgb(255 255 255 / 0.72)" },
+    "bg-strong": {
+      "$value": "rgb(255 255 255 / 0.86)",
+      "$description": "Panels that sit over busy content and still need to carry text."
+    },
+    "border": { "$value": "rgb(255 255 255 / 0.60)" },
+    "highlight": {
+      "$value": "rgb(255 255 255 / 0.55)",
+      "$description": "Top-edge specular line; what reads as iOS rather than a translucent box."
     }
   }
 }

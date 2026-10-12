@@ -18,7 +18,7 @@ const pkgRoot = resolve(here, "..")
 const srcDir = join(pkgRoot, "src")
 const outDir = join(pkgRoot, "dist")
 
-const SOURCES = ["reset.css", "base.css", "primitives.css"]
+const SOURCES = ["reset.css", "base.css", "primitives.css", "glass.css"]
 const checkOnly = process.argv.includes("--check")
 
 /** Defined tokens come from the compiled themes, not from a hand-kept list. */

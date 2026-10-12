@@ -51,6 +51,10 @@ const CONTRAST_GATES = [
   { token: "color.danger", against: "color.surface", min: 3 },
   { token: "color.success", against: "color.surface", min: 3 },
   { token: "color.warning", against: "color.surface", min: 3 },
+  // A hard offset shadow darkens whatever sits under it, so it can only be
+  // gated against a light surface. In the dark theme the visible chrome stroke
+  // is `color.border-strong`, gated above.
+  { token: "color.shadow", against: "color.surface", min: 3, theme: "light" },
 ]
 
 const read = (relativePath) => readFileSync(join(srcDir, relativePath), "utf8")
@@ -59,8 +63,9 @@ const read = (relativePath) => readFileSync(join(srcDir, relativePath), "utf8")
  * Resolve one theme.
  *
  * Primitives live under `color.<ramp>` and semantic roles under `color.<role>`,
- * so their keys never collide. Dimensions are theme-independent except shadow
- * alpha, which is applied at emit time.
+ * so their keys never collide. Dimensions are theme-independent except the glass
+ * group, whose theme-dependent roles are declared in each theme file and merge
+ * over the shared blur/saturate/fallback values.
  */
 function buildTheme(theme) {
   const primitives = flatten(JSON.parse(read("color.primitives.json")))
@@ -77,15 +82,6 @@ function buildTheme(theme) {
   // Primitive ramps are internal; the semantic roles are the published contract.
   for (const path of Object.keys(primitives)) delete resolved[path]
   return { theme, flat: resolved }
-}
-
-/** Dark-theme shadows need more alpha to read against a dark surface. */
-function shadowFor(theme, value) {
-  if (theme !== "dark") return value
-  return value.replace(/rgb\(([^)]+)\/\s*([\d.]+)\)/g, (_match, rgb, alpha) => {
-    const bumped = Math.min(Number.parseFloat(alpha) * 1.6, 0.72).toFixed(2)
-    return `rgb(${rgb.trim()} / ${bumped})`
-  })
 }
 
 function toCss({ theme, flat }) {
@@ -117,7 +113,7 @@ function toCss({ theme, flat }) {
     }
 
     if (path.startsWith("shadow.")) {
-      lines.push(`  --sk-${kebab(path)}: ${shadowFor(theme, value)};`)
+      lines.push(`  --sk-${kebab(path)}: ${value};`)
       continue
     }
 
@@ -157,6 +153,7 @@ function main() {
   const report = []
   for (const { theme, flat } of built) {
     for (const gate of CONTRAST_GATES) {
+      if (gate.theme && gate.theme !== theme) continue
       const foreground = flat[gate.token]?.$value
       const background = flat[gate.against]?.$value
       if (!isColorLeaf(gate.token, foreground)) continue
