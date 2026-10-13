@@ -122,6 +122,13 @@ type SeparatorElement = HTMLElement & {
   decorative: boolean
 }
 
+type DialogElement = HTMLElement & {
+  open: boolean
+  modal: boolean
+  dismissible: boolean
+  label: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -214,6 +221,13 @@ declare module "react" {
         orientation?: "horizontal" | "vertical"
         decorative?: boolean
         label?: string
+      }
+      "sk-dialog": BaseCustomElement<DialogElement> & {
+        open?: boolean
+        modal?: boolean
+        dismissible?: boolean
+        label?: string
+        onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
       }
     }
   }

@@ -243,4 +243,16 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-dialog")) {
+    customElements.define(
+      "sk-dialog",
+      class extends HTMLElement {
+        open = false
+        modal = true
+        dismissible = false
+        label = ""
+      },
+    )
+  }
 })

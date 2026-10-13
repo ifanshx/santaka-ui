@@ -107,6 +107,7 @@ test.describe("API conventions (static)", () => {
     "sk-badge": new Set(["dot"]),
     "sk-text": new Set(["muted"]),
     "sk-separator": new Set(["decorative"]),
+    "sk-dialog": new Set(["modal", "dismissible"]),
   }
 
   test("every boolean prop is an ARIA state, is/has/can prefixed, or on the ADR-013 record", () => {

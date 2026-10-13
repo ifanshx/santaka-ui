@@ -27,5 +27,12 @@ export { Label } from "./label.js"
 export type { LabelProps, SkLabelElement } from "./label.js"
 export { Separator } from "./separator.js"
 export type { SeparatorProps, SkSeparatorElement } from "./separator.js"
+export { Dialog, DialogTrigger, DialogContent } from "./dialog.js"
+export type {
+  DialogProps,
+  DialogTriggerProps,
+  DialogContentProps,
+  SkDialogElement,
+} from "./dialog.js"
 export { ThemeScript, useTheme, THEME_STORAGE_KEY, THEME_INIT_SCRIPT } from "./theme.js"
 export type { ResolvedTheme, ThemePreference } from "./theme.js"

@@ -16,6 +16,7 @@
 export { SkBadge } from "./components/sk-badge/sk-badge.js"
 export { SkButton } from "./components/sk-button/sk-button.js"
 export { SkCard } from "./components/sk-card/sk-card.js"
+export { SkDialog } from "./components/sk-dialog/sk-dialog.js"
 export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkLabel } from "./components/sk-label/sk-label.js"
@@ -32,6 +33,7 @@ export const COMPONENTS = [
   "sk-badge",
   "sk-button",
   "sk-card",
+  "sk-dialog",
   "sk-icon-button",
   "sk-input",
   "sk-label",

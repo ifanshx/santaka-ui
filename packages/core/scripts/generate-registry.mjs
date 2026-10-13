@@ -579,6 +579,46 @@ const COMPONENTS = [
       ],
     },
   },
+  {
+    name: "dialog",
+    tag: "sk-dialog",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-width",
+      "--sk-color-border",
+      "--sk-color-shadow",
+      "--sk-color-text",
+      "--sk-font-sans",
+      "--sk-radius-glass",
+      "--sk-shadow-lg",
+      "--sk-space-2",
+      "--sk-space-4",
+      "--sk-space-6",
+      "--sk-z-modal",
+    ],
+    ai: {
+      summary:
+        "A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.",
+      whenToUse: [
+        "A decision must block the page until it is made — a confirmation, a discard warning",
+        "A short form needs the page's context hidden, not merely behind",
+        "Content must interrupt without navigating — use a page for anything that needs a URL",
+      ],
+      whenNotToUse: [
+        "Content is supplementary and the page should stay live — use a Popover or Toast",
+        "The flow has its own URL or needs deep linking — use a page",
+        "It is a non-blocking status update — use a Toast",
+      ],
+      accessibility:
+        "Renders the native `<dialog>` element: focus trapping, Escape, and inert background content are the browser's, not reimplemented. Focus returns to the invoker on close, so a keyboard user is not dropped at the top of the document. Label it with a real heading in the `title` slot — it is visible to everyone and doubles as the dialog's accessible name. One `sk-open-change` event reports every close path: trigger, Escape, backdrop, and a consumer setting the prop. The backdrop is translucent ink, not blur — the glass panel already blurs what is under it. `dismissible` is off by default: a dialog holding form input loses work to a stray click.",
+      example:
+        '<sk-dialog dismissible>\n  <sk-button slot="trigger">Open</sk-button>\n  <sk-text variant="lg" slot="title"><h3>Discard draft?</h3></sk-text>\n  <p>Your draft will be deleted.</p>\n</sk-dialog>',
+      knownLimitations: [
+        "The native `<dialog>` element is Baseline-tier: Core-tier browsers get the non-modal degradation, not the modal",
+        "Slotted content is moved into the panel once at upgrade — content added to the host after upgrade is not distributed",
+      ],
+    },
+  },
 ]
 
 for (const component of COMPONENTS) {

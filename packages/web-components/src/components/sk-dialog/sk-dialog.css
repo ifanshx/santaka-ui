@@ -1,0 +1,92 @@
+/*
+ * Dialog styles.
+ *
+ * The panel wears `.sk-glass` (styles package), which owns the material: the
+ * feature-detected blur, the specular edge, the entrance animation, the
+ * reduced-motion and forced-colors rulings. This file owns only what is
+ * specific to being a *dialog*: full-viewport framing, the native backdrop,
+ * and the internal layout of title / body / footer.
+ *
+ * The native `<dialog>` element is a Baseline-tier dependency; `::backdrop`
+ * comes with it and is styled here rather than reimplemented.
+ */
+
+sk-dialog {
+  display: contents;
+}
+
+sk-dialog[data-state="open"] {
+  display: contents;
+}
+
+sk-dialog .sk-dialog__panel {
+  /* Chrome's UA stylesheet centers dialogs; the explicit grid keeps the layout
+     independent of that default so Firefox and Safari agree. */
+  margin: auto;
+  max-inline-size: min(28rem, calc(100vw - 2 * var(--sk-space-6, 1.5rem)));
+  max-block-size: calc(100dvh - 2 * var(--sk-space-6, 1.5rem));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4, 1rem);
+  padding: var(--sk-space-6, 1.5rem);
+  color: var(--sk-color-text, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  z-index: var(--sk-z-modal, 1700);
+}
+
+/*
+ * Two `[hidden]` rules, because two different things set that attribute.
+ *
+ * 1. When the dialog *closes*, `display: flex` above would outrank the UA's
+ *    `[hidden] { display: none }` and a closed panel would stay on screen —
+ *    caught by the Escape test waiting for a panel that had closed and would
+ *    not leave. The plain rule restores the platform's intent.
+ *
+ * 2. When the dialog *opens*, Stencil's scoped-mode slot manager also writes
+ *    `hidden` on elements it thinks are empty slot fallbacks — including this
+ *    one, since the panel hosts `<slot>` elements it built. An open dialog
+ *    with a stray `hidden` must still show, so the open attribute wins.
+ */
+sk-dialog .sk-dialog__panel[hidden] {
+  display: none;
+}
+
+sk-dialog .sk-dialog__panel[hidden][open] {
+  display: flex;
+}
+
+/* The scrim is the platform's ::backdrop. It is translucent ink, not blur:
+   the glass panel already blurs what is directly under it, and double-blurring
+   the whole page is expensive and looks like a bug. */
+sk-dialog .sk-dialog__panel::backdrop {
+  background-color: rgb(23 20 28 / 0.45);
+}
+
+/* Non-modal dialogs have no backdrop and must still read as floating panels,
+   which the glass shadow provides. */
+sk-dialog:not([modal]) .sk-dialog__panel:not([open]) {
+  display: none;
+}
+
+sk-dialog .sk-dialog__panel::slotted([slot="title"]) {
+  /* Slotted selectors do not exist in scoped mode (ADR-011 strips them), so
+     title styling is applied through the sk-text component in the example and
+     documented there. This rule exists to be deleted if scoped mode ever
+     supports ::slotted again. */
+}
+
+sk-dialog .sk-dialog__panel .sk-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sk-space-2, 0.5rem);
+  padding-block-start: var(--sk-space-2, 0.5rem);
+  border-block-start: var(--sk-border-width, 1px) solid var(--sk-color-border, #e2dff0);
+}
+
+@media (forced-colors: active) {
+  sk-dialog .sk-dialog__panel::backdrop {
+    background-color: transparent;
+  }
+}

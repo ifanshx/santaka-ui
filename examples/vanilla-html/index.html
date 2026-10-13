@@ -247,6 +247,34 @@
         </div>
       </section>
 
+      <section aria-labelledby="dialog-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="dialog-heading">Dialog</h2>
+        </sk-text>
+
+        <!--
+          The first glass overlay. Focus is trapped by the native <dialog>,
+          Escape closes it, and focus returns to the trigger. The title is a
+          real heading, slotted: it is visible to everyone and doubles as the
+          dialog's accessible name.
+        -->
+        <sk-dialog id="example-dialog" dismissible>
+          <sk-button slot="trigger" variant="primary">Open dialog</sk-button>
+          <sk-text variant="lg" family="display" slot="title">
+            <h3>Discard draft?</h3>
+          </sk-text>
+          <sk-text variant="sm" muted> Your draft will be deleted. This cannot be undone. </sk-text>
+          <div
+            class="sk-cluster"
+            style="justify-content: flex-end; padding-block-start: var(--sk-space-3)"
+          >
+            <sk-button id="dialog-cancel" variant="ghost">Keep editing</sk-button>
+            <sk-button id="dialog-confirm" variant="danger">Discard</sk-button>
+          </div>
+        </sk-dialog>
+        <output id="dialog-result" class="sk-text-muted" aria-live="polite"></output>
+      </section>
+
       <section aria-labelledby="structure-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="structure-heading">Structure</h2>

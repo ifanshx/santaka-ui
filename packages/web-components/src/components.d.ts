@@ -118,6 +118,48 @@ export namespace Components {
          */
         "variant": "default" | "outlined" | "bare";
     }
+    /**
+     * Dialog — Tier 2 floating overlay, and the first consumer of the glass
+     * material.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders the native `<dialog>` element, which is in the Baseline tier
+     * (Chrome 111 / Safari 16.4) and is therefore a dependency, not an enhancement:
+     * the browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content, and reimplementing any of those is how dialogs lose focus in exactly
+     * the case nobody tested. Core-tier browsers are not asked to fake it — they
+     * get the non-modal degradation below.
+     * State ownership follows §4 "Controlled and uncontrolled": open/closed is
+     * ephemeral state the component owns outright, so there is no `defaultOpen`.
+     * The caller observes `sk-open-change` and may set `open` back; the component
+     * never corrects the caller.
+     */
+    interface SkDialog {
+        "close": () => Promise<void>;
+        /**
+          * Closes when the backdrop is clicked. Off by default because a dialog holding form input loses work to a stray click; a confirmation prompt with nothing to lose wants it on.
+          * @default false
+         */
+        "dismissible": boolean;
+        /**
+          * The dialog's accessible name, applied to the panel when the consumer has not slotted a `<sk-text>` heading. Prefer the slot: a real heading is visible to everyone and doubles as the label.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Modal is the default and the usual case: the page behind is inert and the focus is trapped. Non-modal (Chrome/Edge/Firefox only — Safari has no `showModal`-independent backdrop) renders the panel inline without blocking the page, for tool-palette-style UIs.
+          * @default true
+         */
+        "modal": boolean;
+        /**
+          * Whether the dialog is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering.
+         */
+        "showModal": () => Promise<void>;
+    }
     interface SkIconButton {
         /**
           * Disables interaction. Mirrors the ARIA name.
@@ -590,6 +632,27 @@ declare global {
         prototype: HTMLSkCardElement;
         new (): HTMLSkCardElement;
     };
+    /**
+     * Dialog — Tier 2 floating overlay, and the first consumer of the glass
+     * material.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders the native `<dialog>` element, which is in the Baseline tier
+     * (Chrome 111 / Safari 16.4) and is therefore a dependency, not an enhancement:
+     * the browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content, and reimplementing any of those is how dialogs lose focus in exactly
+     * the case nobody tested. Core-tier browsers are not asked to fake it — they
+     * get the non-modal degradation below.
+     * State ownership follows §4 "Controlled and uncontrolled": open/closed is
+     * ephemeral state the component owns outright, so there is no `defaultOpen`.
+     * The caller observes `sk-open-change` and may set `open` back; the component
+     * never corrects the caller.
+     */
+    interface HTMLSkDialogElement extends Components.SkDialog, HTMLStencilElement {
+    }
+    var HTMLSkDialogElement: {
+        prototype: HTMLSkDialogElement;
+        new (): HTMLSkDialogElement;
+    };
     interface HTMLSkIconButtonElement extends Components.SkIconButton, HTMLStencilElement {
     }
     var HTMLSkIconButtonElement: {
@@ -759,6 +822,7 @@ declare global {
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-card": HTMLSkCardElement;
+        "sk-dialog": HTMLSkDialogElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
         "sk-label": HTMLSkLabelElement;
@@ -886,6 +950,43 @@ declare namespace LocalJSX {
           * @default "default"
          */
         "variant"?: "default" | "outlined" | "bare";
+    }
+    /**
+     * Dialog — Tier 2 floating overlay, and the first consumer of the glass
+     * material.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * It renders the native `<dialog>` element, which is in the Baseline tier
+     * (Chrome 111 / Safari 16.4) and is therefore a dependency, not an enhancement:
+     * the browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content, and reimplementing any of those is how dialogs lose focus in exactly
+     * the case nobody tested. Core-tier browsers are not asked to fake it — they
+     * get the non-modal degradation below.
+     * State ownership follows §4 "Controlled and uncontrolled": open/closed is
+     * ephemeral state the component owns outright, so there is no `defaultOpen`.
+     * The caller observes `sk-open-change` and may set `open` back; the component
+     * never corrects the caller.
+     */
+    interface SkDialog {
+        /**
+          * Closes when the backdrop is clicked. Off by default because a dialog holding form input loses work to a stray click; a confirmation prompt with nothing to lose wants it on.
+          * @default false
+         */
+        "dismissible"?: boolean;
+        /**
+          * The dialog's accessible name, applied to the panel when the consumer has not slotted a `<sk-text>` heading. Prefer the slot: a real heading is visible to everyone and doubles as the label.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Modal is the default and the usual case: the page behind is inert and the focus is trapped. Non-modal (Chrome/Edge/Firefox only — Safari has no `showModal`-independent backdrop) renders the panel inline without blocking the page, for tool-palette-style UIs.
+          * @default true
+         */
+        "modal"?: boolean;
+        /**
+          * Whether the dialog is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open"?: boolean;
     }
     interface SkIconButton {
         /**
@@ -1338,6 +1439,12 @@ declare namespace LocalJSX {
         "heading": string;
         "subtitle": string;
     }
+    interface SkDialogAttributes {
+        "open": boolean;
+        "modal": boolean;
+        "dismissible": boolean;
+        "label": string;
+    }
     interface SkIconButtonAttributes {
         "label": string;
         "variant": ButtonVariant;
@@ -1421,6 +1528,7 @@ declare namespace LocalJSX {
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
+        "sk-dialog": Omit<SkDialog, keyof SkDialogAttributes> & { [K in keyof SkDialog & keyof SkDialogAttributes]?: SkDialog[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `attr:${K}`]?: SkDialogAttributes[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `prop:${K}`]?: SkDialog[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
@@ -1476,6 +1584,22 @@ declare module "@stencil/core" {
              * is worse than no header.
              */
             "sk-card": LocalJSX.IntrinsicElements["sk-card"] & JSXBase.HTMLAttributes<HTMLSkCardElement>;
+            /**
+             * Dialog — Tier 2 floating overlay, and the first consumer of the glass
+             * material.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * It renders the native `<dialog>` element, which is in the Baseline tier
+             * (Chrome 111 / Safari 16.4) and is therefore a dependency, not an enhancement:
+             * the browser owns focus trapping, Escape, `::backdrop`, and inert background
+             * content, and reimplementing any of those is how dialogs lose focus in exactly
+             * the case nobody tested. Core-tier browsers are not asked to fake it — they
+             * get the non-modal degradation below.
+             * State ownership follows §4 "Controlled and uncontrolled": open/closed is
+             * ephemeral state the component owns outright, so there is no `defaultOpen`.
+             * The caller observes `sk-open-change` and may set `open` back; the component
+             * never corrects the caller.
+             */
+            "sk-dialog": LocalJSX.IntrinsicElements["sk-dialog"] & JSXBase.HTMLAttributes<HTMLSkDialogElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
             "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
             /**

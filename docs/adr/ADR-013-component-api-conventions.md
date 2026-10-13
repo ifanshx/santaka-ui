@@ -33,6 +33,8 @@ Read strictly, "all other boolean props" includes booleans that toggle a
 | `sk-badge` | `dot` | renders a circle instead of a pill |
 | `sk-text` | `muted` | sets the secondary text color |
 | `sk-separator` | `decorative` | removes a purely visual line from the accessibility tree |
+| `sk-dialog` | `modal` | renders blocking via `showModal()` instead of inline |
+| `sk-dialog` | `dismissible` | closes when the backdrop is clicked |
 
 Under a strict reading these must become `isExternal`, `isSubtle`, `isDot`.
 

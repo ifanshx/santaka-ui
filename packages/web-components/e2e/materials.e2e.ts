@@ -149,7 +149,11 @@ test("a disabled button does not respond to the press", async ({ page }) => {
 })
 
 test("glass is a separate material from chrome, and both are visible", async ({ page }) => {
-  const glass = page.locator(".sk-glass").first()
+  // `.sk-glass` alone matches the Dialog's panel too, and the Dialog's panel is
+  // `hidden` until opened — the first match would be an invisible dialog and
+  // the test would fail on a selector, not on the material. The materials
+  // showcase panel is scoped by its section.
+  const glass = page.locator('section[aria-labelledby="materials-heading"] .sk-glass')
   const card = page.locator("sk-card").first()
 
   await expect(glass).toBeVisible()
@@ -189,7 +193,7 @@ test("glass is opaque enough to stay readable without a backdrop blur", async ({
   // the blur and keeps this same alpha. If the fallback were weaker than the
   // glass fill, degradation would make text unreadable rather than plainer.
   const background = await page
-    .locator(".sk-glass")
+    .locator('section[aria-labelledby="materials-heading"] .sk-glass')
     .first()
     .evaluate((el) => getComputedStyle(el).backgroundColor)
 
@@ -201,7 +205,9 @@ test("glass is opaque enough to stay readable without a backdrop blur", async ({
 test("both materials follow the theme", async ({ page }) => {
   const read = () =>
     page.evaluate(() => ({
-      glass: getComputedStyle(document.querySelector(".sk-glass")!).backgroundColor,
+      glass: getComputedStyle(
+        document.querySelector('section[aria-labelledby="materials-heading"] .sk-glass')!,
+      ).backgroundColor,
       card: getComputedStyle(document.querySelector('sk-card[padding="md"]')!).backgroundColor,
     }))
 

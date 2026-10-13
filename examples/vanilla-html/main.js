@@ -6,6 +6,31 @@ const form = document.querySelector("#probe")
 const result = document.querySelector("#result")
 const log = document.querySelector("#log")
 
+// The Dialog owns its trigger: a click on any slotted [slot=trigger] opens it,
+// Escape and backdrop dismissal close it, and sk-open-change reports both. The
+// page only reacts to the outcome.
+const dialog = document.querySelector("#example-dialog")
+const dialogResult = document.querySelector("#dialog-result")
+dialog?.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return
+  if (event.target.closest("#dialog-confirm")) {
+    dialog.open = false
+    if (dialogResult) dialogResult.textContent = "draft discarded"
+  }
+  if (event.target.closest("#dialog-cancel")) {
+    dialog.open = false
+    if (dialogResult) dialogResult.textContent = "kept editing"
+  }
+})
+dialog?.addEventListener("sk-open-change", (event) => {
+  if (!(event instanceof CustomEvent)) return
+  if (event.detail.open === false && dialogResult && !dialogResult.textContent) {
+    // Escape and backdrop both land here; the copy distinguishes nothing, by
+    // design: the user's work was not lost, so the message stays neutral.
+    dialogResult.textContent = "dialog dismissed"
+  }
+})
+
 form?.addEventListener("submit", (event) => {
   event.preventDefault()
   result.textContent = `submitted at ${new Date().toISOString().slice(11, 19)}`

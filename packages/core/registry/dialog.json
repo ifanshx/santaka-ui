@@ -1,0 +1,71 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "dialog",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-dialog/sk-dialog.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-c155568656df0c235729145628ccd82e61cd1235c2f07fb7d85c6be9ae6cd1f5"
+    },
+    {
+      "path": "src/components/sk-dialog/sk-dialog.css",
+      "type": "registry:style",
+      "checksum": "sha256-0bb2ef987e74aa2675ba866533309816aaf72c14635837408ba522b30845f71b"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-width",
+    "--sk-color-border",
+    "--sk-color-shadow",
+    "--sk-color-text",
+    "--sk-font-sans",
+    "--sk-radius-glass",
+    "--sk-shadow-lg",
+    "--sk-space-2",
+    "--sk-space-4",
+    "--sk-space-6",
+    "--sk-z-modal"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.",
+    "whenToUse": [
+      "A decision must block the page until it is made — a confirmation, a discard warning",
+      "A short form needs the page's context hidden, not merely behind",
+      "Content must interrupt without navigating — use a page for anything that needs a URL"
+    ],
+    "whenNotToUse": [
+      "Content is supplementary and the page should stay live — use a Popover or Toast",
+      "The flow has its own URL or needs deep linking — use a page",
+      "It is a non-blocking status update — use a Toast"
+    ],
+    "accessibility": "Renders the native `<dialog>` element: focus trapping, Escape, and inert background content are the browser's, not reimplemented. Focus returns to the invoker on close, so a keyboard user is not dropped at the top of the document. Label it with a real heading in the `title` slot — it is visible to everyone and doubles as the dialog's accessible name. One `sk-open-change` event reports every close path: trigger, Escape, backdrop, and a consumer setting the prop. The backdrop is translucent ink, not blur — the glass panel already blurs what is under it. `dismissible` is off by default: a dialog holding form input loses work to a stray click.",
+    "example": "<sk-dialog dismissible>\n  <sk-button slot=\"trigger\">Open</sk-button>\n  <sk-text variant=\"lg\" slot=\"title\"><h3>Discard draft?</h3></sk-text>\n  <p>Your draft will be deleted.</p>\n</sk-dialog>",
+    "knownLimitations": [
+      "The native `<dialog>` element is Baseline-tier: Core-tier browsers get the non-modal degradation, not the modal",
+      "Slotted content is moved into the panel once at upgrade — content added to the host after upgrade is not distributed"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}
