@@ -1,0 +1,219 @@
+/*
+ * Checkbox styles.
+ *
+ * A checkbox is chrome, not a floating layer, so it carries the same brutalist
+ * treatment as every other control: a 3px stroke, no rounding, and a zero-blur
+ * offset shadow on the box.
+ *
+ * The rendered control is a real native `<input type="checkbox">`, visually
+ * restyled but never `display: none` — it stays in the tab order, keeps the
+ * platform's Space-to-toggle behavior, and remains the labelled element the
+ * form and assistive technology see.
+ */
+
+sk-checkbox {
+  --sk-checkbox-bg: var(--sk-color-surface, #ffffff);
+  --sk-checkbox-fg: var(--sk-color-text, #17141c);
+  --sk-checkbox-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-checkbox-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-checkbox-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-checkbox .sk-checkbox__label {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-3, 0.75rem);
+  /* The whole row is the touch target, so the box itself can stay square. */
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  color: var(--sk-checkbox-fg);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  cursor: pointer;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+sk-checkbox .sk-checkbox__control {
+  /* Visually restyled, never removed: the input stays focusable and keeps the
+     platform's keyboard behavior. `appearance: none` clears the native box so
+     the brutalist one below draws instead. */
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  margin: 0;
+  border: var(--sk-border-thick, 3px) solid var(--sk-checkbox-border);
+  border-radius: 0;
+  background-color: var(--sk-checkbox-bg);
+  box-shadow: var(--sk-checkbox-shadow) var(--sk-color-shadow, #17141c);
+  cursor: pointer;
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+/*
+ * The check is drawn, not an image: two borders of a rotated square read as a
+ * tick at any size and need no asset. The indeterminate bar is the same stroke
+ * language, horizontal.
+ */
+sk-checkbox .sk-checkbox__control:checked {
+  background-color: var(--sk-color-primary, #6d28d9);
+  border-color: var(--sk-color-shadow, #17141c);
+}
+
+sk-checkbox .sk-checkbox__control:checked::after {
+  content: "";
+  display: block;
+  inline-size: 0.375rem;
+  block-size: 0.625rem;
+  margin-block-start: 0.125rem;
+  margin-inline-start: 0.375rem;
+  border: solid var(--sk-color-primary-fg, #ffffff);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+sk-checkbox .sk-checkbox__control:indeterminate {
+  background-color: var(--sk-color-primary, #6d28d9);
+  border-color: var(--sk-color-shadow, #17141c);
+}
+
+sk-checkbox .sk-checkbox__control:indeterminate::after {
+  content: "";
+  display: block;
+  inline-size: 0.625rem;
+  block-size: 3px;
+  margin-block-start: 0.4375rem;
+  margin-inline-start: 0.1875rem;
+  background-color: var(--sk-color-primary-fg, #ffffff);
+}
+
+/* The focus ring is a hard 3px stroke at 3px offset, matching every control. */
+sk-checkbox .sk-checkbox__control:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-checkbox-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-checkbox .sk-checkbox__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-checkbox .sk-checkbox__label:has(.sk-checkbox__control:disabled) {
+  cursor: not-allowed;
+}
+
+sk-checkbox[data-invalid] {
+  --sk-checkbox-border: var(--sk-color-danger, #dc2626);
+}
+
+sk-checkbox .sk-checkbox__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+/* Sizes change the label text, never the 44px row target. */
+sk-checkbox[size="sm"] .sk-checkbox__label {
+  font-size: var(--sk-text-sm-size, 0.875rem);
+}
+
+sk-checkbox[size="lg"] .sk-checkbox__label {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+}
+
+/*
+ * `quiet` drops the shadow so a checkbox can sit inside a card without two
+ * competing hard edges. The stroke stays — the box's boundary is what makes
+ * it a checkbox.
+ */
+sk-checkbox[variant="quiet"] {
+  --sk-checkbox-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-checkbox .sk-checkbox__description {
+  margin: 0;
+  padding-inline-start: calc(1.5rem + var(--sk-space-3, 0.75rem));
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-checkbox .sk-checkbox__error {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-1, 0.25rem);
+  margin: 0;
+  padding-inline-start: calc(1.5rem + var(--sk-space-3, 0.75rem));
+  color: var(--sk-color-danger, #dc2626);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-checkbox .sk-checkbox__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+/*
+ * Forced colors: the browser's own palette replaces every author color, so the
+ * brutalist shadow disappears entirely and the stroke is the only boundary left.
+ */
+@media (forced-colors: active) {
+  sk-checkbox {
+    --sk-checkbox-border: CanvasText;
+    --sk-checkbox-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-checkbox[data-invalid] {
+    --sk-checkbox-border: LinkText;
+  }
+
+  sk-checkbox .sk-checkbox__control {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+  }
+
+  sk-checkbox .sk-checkbox__control:checked {
+    background-color: Canvas;
+  }
+
+  sk-checkbox .sk-checkbox__control:checked::after {
+    border-color: CanvasText;
+  }
+
+  sk-checkbox .sk-checkbox__control:indeterminate {
+    background-color: Canvas;
+  }
+
+  sk-checkbox .sk-checkbox__control:indeterminate::after {
+    background-color: CanvasText;
+  }
+
+  sk-checkbox .sk-checkbox__required {
+    color: LinkText;
+  }
+}
+
+/*
+ * Reduced motion removes the shadow transition rather than shortening it: a 1ms
+ * change is still a change, and the box's shadow does not need to move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-checkbox .sk-checkbox__control {
+    transition: none;
+  }
+}

@@ -170,6 +170,49 @@
           readonly
         ></sk-input>
         <sk-input id="example-disabled" name="legacy" label="Legacy field" disabled></sk-input>
+        <section aria-labelledby="checkbox-heading" class="sk-stack">
+          <sk-text variant="lg" family="display">
+            <h2 id="checkbox-heading">Checkboxes</h2>
+          </sk-text>
+          <sk-checkbox
+            id="example-agree"
+            name="agree"
+            label="I agree to the Terms of Service"
+            description="You must agree before continuing."
+            required
+          ></sk-checkbox>
+          <sk-checkbox
+            id="example-notify"
+            name="notify"
+            label="Email me about product updates"
+            checked
+          ></sk-checkbox>
+          <sk-checkbox
+            id="example-indeterminate"
+            name="parent"
+            label="Select all items"
+            indeterminate
+          ></sk-checkbox>
+          <sk-checkbox
+            id="example-quiet-checkbox"
+            name="quiet"
+            label="Quiet variant"
+            variant="quiet"
+          ></sk-checkbox>
+          <sk-checkbox
+            id="example-error-checkbox"
+            name="marketing"
+            label="Subscribe to marketing emails"
+            error="You must accept marketing emails to proceed."
+            invalid
+          ></sk-checkbox>
+          <sk-checkbox
+            id="example-disabled-checkbox"
+            name="legacy-opt"
+            label="Legacy option"
+            disabled
+          ></sk-checkbox>
+        </section>
       </section>
 
       <section aria-labelledby="textarea-heading" class="sk-stack">

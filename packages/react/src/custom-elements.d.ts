@@ -173,6 +173,22 @@ type TabElement = HTMLElement & {
 type TabPanelElement = HTMLElement & {
   hidden: boolean
 }
+
+type CheckboxElement = HTMLElement & {
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  required: boolean
+  form: string | undefined
+  checked: boolean
+  indeterminate: boolean
+  onValueChange: ((checked: boolean) => void) | undefined
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -234,7 +250,21 @@ declare module "react" {
         form?: string
         "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }
-
+      "sk-checkbox": BaseCustomElement<CheckboxElement> & {
+        variant?: "default" | "quiet"
+        size?: "sm" | "md" | "lg"
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        required?: boolean
+        form?: string
+        checked?: boolean
+        "default-checked"?: boolean
+        indeterminate?: boolean
+        "onsk-value-change"?: (event: CustomEvent<{ checked: boolean }>) => void
+      }
       "sk-card": BaseCustomElement<CardElement> & {
         variant?: "default" | "outlined" | "bare"
         padding?: "none" | "sm" | "md" | "lg"

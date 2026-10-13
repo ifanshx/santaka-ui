@@ -88,7 +88,7 @@ export function createFieldWiring(host: HTMLElement, prefix: string): FieldWirin
     },
     describedBy: (description, error) => {
       const ids: string[] = []
-      if (description) ids.push(descriptionId)
+      if (description && !error) ids.push(descriptionId)
       if (error) ids.push(errorId)
       return ids.length > 0 ? ids.join(" ") : undefined
     },
