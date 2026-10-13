@@ -55,6 +55,12 @@ const ARIA_BOOLEAN_PROPS = new Set([
   // attribute, and it means something `disabled` cannot — a read-only field is
   // still submitted and still focusable. §4's list omits it.
   "readOnly",
+  // ADR-013 (amended): `indeterminate` mirrors the `mixed` value of
+  // `aria-checked` — the tri-state a checkbox exposes when "some but not all"
+  // of its children are checked. It is also the native HTMLInputElement
+  // property name, so the ARIA-mirroring reading and the platform reading
+  // agree; prefixing it would divorce it from both.
+  "indeterminate",
 ])
 
 /**
@@ -138,6 +144,10 @@ test.describe("API conventions (static)", () => {
 
       for (const [, prop] of booleans) {
         const name = prop as string
+        // §4 controlled/uncontrolled: `default<Value>` is an uncontrolled
+        // initializer, not a state mirror — it is read once and never written
+        // back, so it is not a boolean the component exposes as state.
+        if (name.startsWith("default")) continue
         if (ARIA_BOOLEAN_PROPS.has(name)) continue
         if (/^(is|has|can)[A-Z]/.test(name)) continue
         if (OPEN_IN_ADR_013[tag]?.has(name)) continue

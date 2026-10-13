@@ -56,6 +56,10 @@ in a document titled "component API conventions".
    `invalid`, `open`, `checked`, `selected`, `expanded`, `required` — the
    conformance test treats this as an exhaustive list. A boolean mirroring an
    ARIA state that is not on this list is a violation.
+   *Amended when `sk-checkbox` shipped:* `indeterminate` joins the list. It
+   mirrors the `mixed` value of `aria-checked` (the tri-state for "some but
+   not all children") and is simultaneously the native `HTMLInputElement`
+   property name, so the ARIA reading and the platform reading agree.
 2. **`readOnly` joins that list.** §4's list omits it, but `readonly` is both an
    ARIA attribute and a native form-control attribute, and it means something
    `disabled` cannot: a read-only field is still submitted and still focusable. A
@@ -120,6 +124,12 @@ that consumers already know.
   deliberate: the failure is the visible record of an open question, and it will
   resolve either by renaming the props or by amending this ADR with the ruling.
   A test that passes while the question is open would hide it.
+- `sk-checkbox.indeterminate` was ruled ARIA-mirroring (decision 1, amended) and
+  `sk-checkbox.defaultChecked` is excluded from the boolean scan as a §4
+  uncontrolled initializer — `default<Value>` is read once and never written
+  back, so it is not state the component exposes. Both were added with the
+  checkbox, not smuggled in: the scan's `default*` skip is commented at the
+  exclusion site so it cannot silently widen to a general carve-out.
 
 ## What would reverse this
 
