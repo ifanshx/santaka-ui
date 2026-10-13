@@ -266,4 +266,15 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-toast")) {
+    customElements.define(
+      "sk-toast",
+      class extends HTMLElement {
+        open = false
+        duration = 5000
+        variant = "neutral"
+      },
+    )
+  }
 })

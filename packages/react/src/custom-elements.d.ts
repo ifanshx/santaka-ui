@@ -135,6 +135,12 @@ type AlertDialogElement = HTMLElement & {
   initialFocus: string
 }
 
+type ToastElement = HTMLElement & {
+  open: boolean
+  duration: number
+  variant: "neutral" | "success" | "warning" | "danger"
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -239,6 +245,12 @@ declare module "react" {
         open?: boolean
         label?: string
         "initial-focus"?: string
+        onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
+      }
+      "sk-toast": BaseCustomElement<ToastElement> & {
+        open?: boolean
+        duration?: number
+        variant?: "neutral" | "success" | "warning" | "danger"
         onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
       }
     }

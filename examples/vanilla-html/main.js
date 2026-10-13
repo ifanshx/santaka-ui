@@ -23,6 +23,30 @@ alert?.addEventListener("click", (event) => {
   }
 })
 
+// Toasts are created on demand and dropped into the page's region — the page
+// owns placement, the toast owns itself.
+const toastRegion = document.querySelector("#toast-region")
+function showToast(variant, message, duration = 5000) {
+  const toast = document.createElement("sk-toast")
+  toast.setAttribute("variant", variant)
+  toast.setAttribute("duration", String(duration))
+  toast.textContent = message
+  toast.addEventListener("sk-open-change", (event) => {
+    if (event.detail.open === false) toast.remove()
+  })
+  toastRegion?.appendChild(toast)
+  toast.open = true
+}
+document.querySelector("#toast-neutral")?.addEventListener("click", () => {
+  showToast("neutral", "Draft saved.")
+})
+document.querySelector("#toast-success")?.addEventListener("click", () => {
+  showToast("success", "Build 4821 deployed.", 8000)
+})
+document.querySelector("#toast-error")?.addEventListener("click", () => {
+  showToast("danger", "Deployment failed. Check the logs.", 0)
+})
+
 const form = document.querySelector("#probe")
 const result = document.querySelector("#result")
 const log = document.querySelector("#log")

@@ -580,6 +580,44 @@ const COMPONENTS = [
     },
   },
   {
+    name: "toast",
+    tag: "sk-toast",
+    stability: "stable",
+    cssVariables: [
+      "--sk-color-border-strong",
+      "--sk-color-danger",
+      "--sk-color-success",
+      "--sk-color-text",
+      "--sk-color-warning",
+      "--sk-font-sans",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-text-lg-size",
+      "--sk-z-toast",
+    ],
+    ai: {
+      summary:
+        "A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.",
+      whenToUse: [
+        "A background operation finished and the user was looking somewhere else",
+        "A state change should be acknowledged without interrupting work",
+        "An error needs time and a close button, not a decision",
+      ],
+      whenNotToUse: [
+        "The user must choose before the page continues — use an Alert Dialog",
+        "The message needs the page's context hidden — use a Dialog",
+        "The information is permanent UI, not an event — use a Card or a Badge",
+      ],
+      accessibility:
+        '`role="status"`, a polite live region: announced when it appears, never stealing focus — the user was looking somewhere else, and a toast that shouts is a dialog wearing a smaller skirt. Hover or focus pauses the auto-dismiss clock, because a message that disappears mid-read is an announcement that never happened. `duration=0` never expires: an error the user must act on deserves more than an expired apology. The close button carries a real `aria-label` — a bare × is a picture to a screen reader. Severity is a 3px left edge plus the message text, never color alone (WCAG 1.4.1).',
+      example: '<sk-toast variant="success" duration="5000">Build 4821 deployed.</sk-toast>',
+      knownLimitations: [
+        "It is a single toast — the consumer's region owns stacking and placement",
+        "It never takes focus, so keyboard users meet it only through announcement; an actionable toast needs a persistent surface",
+      ],
+    },
+  },
+  {
     name: "alert-dialog",
     tag: "sk-alert-dialog",
     stability: "stable",

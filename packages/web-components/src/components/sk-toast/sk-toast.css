@@ -1,0 +1,79 @@
+/*
+ * Toast styles.
+ *
+ * The panel is glass — the material for floating layers — but the layout is
+ * the consumer's: a toast is a single toast, and the *page* owns the region it
+ * drops toasts into. This component positions itself absolutely relative to
+ * the nearest positioned ancestor (the consumer's toast region), stacked by
+ * the --sk-z-toast layer so a dialog's 1700 still wins.
+ *
+ * A toast never takes focus, never traps anything, and must not overlap the
+ * dialog's scrim — hence a lower layer than the dialog, by token.
+ */
+
+sk-toast {
+  display: contents;
+}
+
+sk-toast[data-state="closed"] .sk-toast__panel {
+  display: none;
+}
+
+sk-toast .sk-toast__panel {
+  position: absolute;
+  z-index: var(--sk-z-toast, 1500);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-space-3, 0.75rem);
+  max-inline-size: min(24rem, calc(100vw - 2 * var(--sk-space-4, 1rem)));
+  padding: var(--sk-space-4, 1rem);
+  color: var(--sk-color-text, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+/*
+ * The close affordance is a real button with a real label. A toast is
+ * announced; being announced and then being un-dismissable is a trap.
+ */
+sk-toast .sk-toast__close {
+  flex: none;
+  box-sizing: border-box;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  padding: 0;
+  border: var(--sk-border-width, 1px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--sk-color-text, #17141c);
+  font-size: var(--sk-text-lg-size, 1.125rem);
+  line-height: 1;
+  cursor: pointer;
+}
+
+sk-toast .sk-toast__close:hover {
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+}
+
+/* Severity is a left edge, never a fill: color alone never carries meaning
+   (WCAG 1.4.1), and a 4px edge keeps the message readable on the glass. */
+sk-toast .sk-toast__panel[data-variant] {
+  border-inline-start-width: var(--sk-border-thick, 3px);
+}
+
+sk-toast[data-variant="success"] .sk-toast__panel {
+  border-inline-start-color: var(--sk-color-success, #16a34a);
+}
+
+sk-toast[data-variant="warning"] .sk-toast__panel {
+  border-inline-start-color: var(--sk-color-warning, #d97706);
+}
+
+sk-toast[data-variant="danger"] .sk-toast__panel {
+  border-inline-start-color: var(--sk-color-danger, #dc2626);
+}
+
+@media (forced-colors: active) {
+  sk-toast .sk-toast__panel {
+    border-inline-start-color: CanvasText;
+  }
+}

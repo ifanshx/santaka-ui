@@ -99,18 +99,20 @@ const componentCssFiles = componentDirs()
 const componentCount = componentCssFiles.length
 
 const BUDGETS = [
-  // Raised 12 → 13 when Label and Separator completed Tier 1, and 13 → 14 when
-  // Dialog opened Tier 2. The runtime bundles 13 components where the 12 KB
-  // figure covered eight; the Dialog is the most expensive addition yet because
-  // it wires focus management, event plumbing, and a light-DOM move, but the
-  // per-component CSS average has *fallen* every time — 2.45 → 2.02 KB — which
-  // is the number that says the additions are lean. Expect this row to move
-  // again as the remaining Tier 2 overlays (Popover, Toast, Tooltip) land; each
-  // raise is recorded here, never silent.
+  // Raised 12 → 13 when Label and Separator completed Tier 1, 13 → 14 when
+  // Dialog opened Tier 2, and 14 → 15 for Toast. The runtime bundles 15
+  // components where the 12 KB figure covered eight. The Dialog remains the
+  // most expensive single addition (focus management, event plumbing, a
+  // light-DOM move); Toast added the clock-pause machinery cheaply because it
+  // reuses the shared open-change plumbing. The per-component CSS average has
+  // *fallen* on every addition — now 1.86 KB — which is the number that says
+  // the additions are lean. Expect this row to move again for the remaining
+  // Tier 2 overlays (Popover, Tooltip) and Select; each raise is recorded
+  // here, never silent.
   {
     name: "web-components runtime",
     measure: () => measureJs(join(pkgRoot, "dist/components/index.js"), runtimeExports()),
-    budgetKb: 14,
+    budgetKb: 15,
   },
   {
     name: "component CSS, per component",

@@ -27,6 +27,7 @@ export { SkText } from "./components/sk-text/sk-text.js"
 export { SkSkeleton } from "./components/sk-skeleton/sk-skeleton.js"
 export { SkSpinner } from "./components/sk-spinner/sk-spinner.js"
 export { SkTextarea } from "./components/sk-textarea/sk-textarea.js"
+export { SkToast } from "./components/sk-toast/sk-toast.js"
 export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js"
 
 /** Custom element tags this package defines. */
@@ -45,4 +46,5 @@ export const COMPONENTS = [
   "sk-spinner",
   "sk-text",
   "sk-textarea",
+  "sk-toast",
 ]

@@ -7,11 +7,11 @@ what exists today. Every claim below is checked against the repository.
 ## Summary
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
-package are real, tested, and green; the React package now covers all fourteen
+package are real, tested, and green; the React package now covers all fifteen
 shipped components; the CLI, registry hosting, documentation site, and Storybook
 do not exist yet.
 
-`pnpm run verify` exits 0 from a cold cache. **443 tests pass.** All six
+`pnpm run verify` exits 0 from a cold cache. **466 tests pass.** All six
 packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -29,7 +29,7 @@ packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Fourteen universal custom elements — Tier 1 complete, Tier 2 open: Dialog and Alert Dialog, each with browser tests against real Chromium:
+Fifteen universal custom elements — Tier 1 complete; Tier 2 open: Dialog, Alert Dialog, Toast, each with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -47,8 +47,9 @@ Fourteen universal custom elements — Tier 1 complete, Tier 2 open: Dialog and 
 | `sk-separator` | a real <hr>: announces itself, or steps out when decorative |
 | `sk-dialog` | native <dialog>: focus trap, Escape, backdrop, focus return — all the browser's |
 | `sk-alert-dialog` | role=alertdialog, Escape refused, focus on the chosen default action |
+| `sk-toast` | role=status, clock pauses on hover, duration=0 never expires, never steals focus |
 
-**164 Playwright tests.** Chrome carries the brutalist treatment — 3px stroke,
+**172 Playwright tests.** Chrome carries the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
@@ -71,8 +72,8 @@ the 9.34 KB that was being reported.
 
 ### React package
 
-`Button`, `IconButton`, `Link`, `Badge`, `Card`, `Input`, `Textarea`, `Text`, `Spinner`, `Skeleton`, `Label`, `Separator`, `Dialog` + `DialogTrigger` + `DialogContent`, `AlertDialog` + `AlertDialogContent`, plus `ThemeScript` /
-`useTheme`. **113 tests.** Two requirements are enforced in the type system
+`Button`, `IconButton`, `Link`, `Badge`, `Card`, `Input`, `Textarea`, `Text`, `Spinner`, `Skeleton`, `Label`, `Separator`, `Dialog` + `DialogTrigger` + `DialogContent`, `AlertDialog` + `AlertDialogContent`, `Toast`, plus `ThemeScript` /
+`useTheme`. **118 tests.** Two requirements are enforced in the type system
 rather than left to review: `<Badge dot />` does not compile without
 `statusLabel`, and `Input` generates its id with `useId()` so the id stays
 stable across re-renders.

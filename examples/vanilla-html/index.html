@@ -247,6 +247,46 @@
         </div>
       </section>
 
+      <section aria-labelledby="toast-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="toast-heading">Toasts</h2>
+        </sk-text>
+
+        <!--
+          The region owns placement; the toast owns itself. role=status
+          announces the message politely; hover pauses the clock; duration=0
+          never expires.
+        -->
+        <!--
+          A static toast in the markup: the convention test requires every
+          registered element to appear and expose its data-slot hook, and
+          toasts created on demand start closed. This one is open with
+          duration=0 so it is visible and stable for the check.
+        -->
+        <sk-toast open duration="0" variant="success" style="position: relative">
+          Build 4821 deployed.
+        </sk-toast>
+
+        <div class="sk-cluster">
+          <sk-button id="toast-neutral" variant="secondary">Show neutral</sk-button>
+          <sk-button id="toast-success" variant="primary">Show success</sk-button>
+          <sk-button id="toast-error" variant="danger">Show error</sk-button>
+        </div>
+        <div
+          id="toast-region"
+          aria-label="Notifications"
+          style="
+            position: fixed;
+            inset-block-end: var(--sk-space-6);
+            inset-inline-end: var(--sk-space-6);
+            display: flex;
+            flex-direction: column;
+            gap: var(--sk-space-3);
+            z-index: var(--sk-z-toast);
+          "
+        ></div>
+      </section>
+
       <section aria-labelledby="alert-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="alert-heading">Alert dialog</h2>

@@ -616,6 +616,42 @@ export namespace Components {
          */
         "variant": "default" | "quiet";
     }
+    /**
+     * Toast — Tier 2, non-blocking glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A toast is the opposite of a dialog and the opposite of a Skeleton, in the
+     * same way those two are opposites of each other. A dialog interrupts; a toast
+     * must not. A skeleton hides from the accessibility tree; a toast must be
+     * announced — its whole job is to tell the user something happened while they
+     * were looking somewhere else.
+     * So: `role="status"` (a polite live region), not `alert`. The message is
+     * announced when it appears and never re-announced; a toast that shouts is a
+     * dialog wearing a smaller skirt. Duration is the consumer's decision, with a
+     * pause on hover and on focus — a live region that disappears mid-read is an
+     * announcement that never happened.
+     * Unlike the dialogs, the toast renders its own panel inline (no native
+     * `<dialog>`, no focus capture — it never takes focus at all) and stacks via
+     * the `--sk-z-toast` layer. Placement is the *page's* concern: the consumer
+     * positions a region and drops toasts into it, which is why this component is
+     * a single toast and not a toaster.
+     */
+    interface SkToast {
+        /**
+          * Milliseconds before auto-dismiss. `0` never auto-dismisses — for an error the user must act on, an expiring message is an expired apology.
+          * @default 5000
+         */
+        "duration": number;
+        /**
+          * Whether the toast is showing.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Visual severity, matching Badge's palette. Color is never the message.
+          * @default "neutral"
+         */
+        "variant": "neutral" | "success" | "warning" | "danger";
+    }
 }
 declare global {
     /**
@@ -889,6 +925,31 @@ declare global {
         prototype: HTMLSkTextareaElement;
         new (): HTMLSkTextareaElement;
     };
+    /**
+     * Toast — Tier 2, non-blocking glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A toast is the opposite of a dialog and the opposite of a Skeleton, in the
+     * same way those two are opposites of each other. A dialog interrupts; a toast
+     * must not. A skeleton hides from the accessibility tree; a toast must be
+     * announced — its whole job is to tell the user something happened while they
+     * were looking somewhere else.
+     * So: `role="status"` (a polite live region), not `alert`. The message is
+     * announced when it appears and never re-announced; a toast that shouts is a
+     * dialog wearing a smaller skirt. Duration is the consumer's decision, with a
+     * pause on hover and on focus — a live region that disappears mid-read is an
+     * announcement that never happened.
+     * Unlike the dialogs, the toast renders its own panel inline (no native
+     * `<dialog>`, no focus capture — it never takes focus at all) and stacks via
+     * the `--sk-z-toast` layer. Placement is the *page's* concern: the consumer
+     * positions a region and drops toasts into it, which is why this component is
+     * a single toast and not a toaster.
+     */
+    interface HTMLSkToastElement extends Components.SkToast, HTMLStencilElement {
+    }
+    var HTMLSkToastElement: {
+        prototype: HTMLSkToastElement;
+        new (): HTMLSkToastElement;
+    };
     interface HTMLElementTagNameMap {
         "sk-alert-dialog": HTMLSkAlertDialogElement;
         "sk-badge": HTMLSkBadgeElement;
@@ -904,6 +965,7 @@ declare global {
         "sk-spinner": HTMLSkSpinnerElement;
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
+        "sk-toast": HTMLSkToastElement;
     }
 }
 declare namespace LocalJSX {
@@ -1532,6 +1594,42 @@ declare namespace LocalJSX {
          */
         "variant"?: "default" | "quiet";
     }
+    /**
+     * Toast — Tier 2, non-blocking glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A toast is the opposite of a dialog and the opposite of a Skeleton, in the
+     * same way those two are opposites of each other. A dialog interrupts; a toast
+     * must not. A skeleton hides from the accessibility tree; a toast must be
+     * announced — its whole job is to tell the user something happened while they
+     * were looking somewhere else.
+     * So: `role="status"` (a polite live region), not `alert`. The message is
+     * announced when it appears and never re-announced; a toast that shouts is a
+     * dialog wearing a smaller skirt. Duration is the consumer's decision, with a
+     * pause on hover and on focus — a live region that disappears mid-read is an
+     * announcement that never happened.
+     * Unlike the dialogs, the toast renders its own panel inline (no native
+     * `<dialog>`, no focus capture — it never takes focus at all) and stacks via
+     * the `--sk-z-toast` layer. Placement is the *page's* concern: the consumer
+     * positions a region and drops toasts into it, which is why this component is
+     * a single toast and not a toaster.
+     */
+    interface SkToast {
+        /**
+          * Milliseconds before auto-dismiss. `0` never auto-dismisses — for an error the user must act on, an expiring message is an expired apology.
+          * @default 5000
+         */
+        "duration"?: number;
+        /**
+          * Whether the toast is showing.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Visual severity, matching Badge's palette. Color is never the message.
+          * @default "neutral"
+         */
+        "variant"?: "neutral" | "success" | "warning" | "danger";
+    }
 
     interface SkAlertDialogAttributes {
         "open": boolean;
@@ -1641,6 +1739,11 @@ declare namespace LocalJSX {
         "minLength": number;
         "maxLength": number;
     }
+    interface SkToastAttributes {
+        "open": boolean;
+        "duration": number;
+        "variant": "neutral" | "success" | "warning" | "danger";
+    }
 
     interface IntrinsicElements {
         "sk-alert-dialog": Omit<SkAlertDialog, keyof SkAlertDialogAttributes> & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes]?: SkAlertDialog[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `attr:${K}`]?: SkAlertDialogAttributes[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `prop:${K}`]?: SkAlertDialog[K] };
@@ -1657,6 +1760,7 @@ declare namespace LocalJSX {
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
+        "sk-toast": Omit<SkToast, keyof SkToastAttributes> & { [K in keyof SkToast & keyof SkToastAttributes]?: SkToast[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `attr:${K}`]?: SkToastAttributes[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `prop:${K}`]?: SkToast[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -1864,6 +1968,26 @@ declare module "@stencil/core" {
              *    ignored.
              */
             "sk-textarea": LocalJSX.IntrinsicElements["sk-textarea"] & JSXBase.HTMLAttributes<HTMLSkTextareaElement>;
+            /**
+             * Toast — Tier 2, non-blocking glass.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A toast is the opposite of a dialog and the opposite of a Skeleton, in the
+             * same way those two are opposites of each other. A dialog interrupts; a toast
+             * must not. A skeleton hides from the accessibility tree; a toast must be
+             * announced — its whole job is to tell the user something happened while they
+             * were looking somewhere else.
+             * So: `role="status"` (a polite live region), not `alert`. The message is
+             * announced when it appears and never re-announced; a toast that shouts is a
+             * dialog wearing a smaller skirt. Duration is the consumer's decision, with a
+             * pause on hover and on focus — a live region that disappears mid-read is an
+             * announcement that never happened.
+             * Unlike the dialogs, the toast renders its own panel inline (no native
+             * `<dialog>`, no focus capture — it never takes focus at all) and stacks via
+             * the `--sk-z-toast` layer. Placement is the *page's* concern: the consumer
+             * positions a region and drops toasts into it, which is why this component is
+             * a single toast and not a toaster.
+             */
+            "sk-toast": LocalJSX.IntrinsicElements["sk-toast"] & JSXBase.HTMLAttributes<HTMLSkToastElement>;
         }
     }
 }
