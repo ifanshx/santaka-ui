@@ -25,7 +25,7 @@ import { nextId } from "@santaka-ui/utilities"
  */
 
 /** The rendered control this base drives. `<textarea>` is a sibling of `<input>`. */
-export type TextControl = HTMLInputElement | HTMLTextAreaElement
+export type TextControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 
 /**
  * Accessors onto the component that owns the state.

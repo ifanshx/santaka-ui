@@ -20,6 +20,7 @@ export { SkCard } from "./components/sk-card/sk-card.js"
 export { SkDialog } from "./components/sk-dialog/sk-dialog.js"
 export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
+export { SkSelect } from "./components/sk-select/sk-select.js"
 export { SkLabel } from "./components/sk-label/sk-label.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
 export { SkSeparator } from "./components/sk-separator/sk-separator.js"
@@ -40,6 +41,7 @@ export const COMPONENTS = [
   "sk-dialog",
   "sk-icon-button",
   "sk-input",
+  "sk-select",
   "sk-label",
   "sk-link",
   "sk-separator",

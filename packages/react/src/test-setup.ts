@@ -288,4 +288,24 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-select")) {
+    customElements.define(
+      "sk-select",
+      class extends HTMLElement {
+        options: Array<{ value: string; label: string }> = []
+        variant = "default"
+        size = "md"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        required = false
+        placeholder = ""
+        value = ""
+        defaultValue = ""
+      },
+    )
+  }
 })

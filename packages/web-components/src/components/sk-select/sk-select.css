@@ -1,0 +1,197 @@
+/*
+ * Select styles.
+ *
+ * The field chrome is redeclared here rather than shared: scoped CSS (ADR-011)
+ * scopes rules to the host tag, so `sk-input .sk-input__control` cannot apply
+ * inside an `sk-select` host no matter what classes the inner control carries.
+ * The first draft pointed the select at Input's class names and the field
+ * rendered with a 1px UA border — the class was right and the selector never
+ * matched.
+ *
+ * What is redeclared is Input's record verbatim: a select is a field, and a
+ * field that looked different from the input beside it would read as two
+ * systems. The differences are only what a select actually is: an arrow, and
+ * no placeholder styling of its own (the browser grays an empty select's first
+ * option natively, and the component relies on that).
+ */
+
+sk-select {
+  --sk-select-bg: var(--sk-color-surface, #ffffff);
+  --sk-select-fg: var(--sk-color-text, #17141c);
+  --sk-select-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-select-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-select-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-select .sk-select__label {
+  color: var(--sk-select-fg);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-select .sk-select__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+sk-select .sk-select__control {
+  box-sizing: border-box;
+  width: 100%;
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  padding-inline: var(--sk-space-3, 0.75rem);
+  /* Room for the custom arrow. */
+  padding-inline-end: var(--sk-space-8, 2rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-select-border);
+  border-radius: 0;
+  background-color: var(--sk-select-bg);
+  color: var(--sk-select-fg);
+  box-shadow: var(--sk-select-shadow) var(--sk-color-shadow, #17141c);
+  font-family: inherit;
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  appearance: none;
+  cursor: pointer;
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    border-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+sk-select .sk-select__control:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-select-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-select .sk-select__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  /* A disabled field keeps its stroke: removing it would make the field's
+     boundary harder to see, not easier. */
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-select[data-invalid] .sk-select__control {
+  --sk-select-border: var(--sk-color-danger, #dc2626);
+}
+
+/* Sizes change the field's height, never its 44px target. */
+sk-select[size="sm"] .sk-select__control {
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  padding-inline: var(--sk-space-2, 0.5rem);
+  padding-inline-end: var(--sk-space-7, 1.75rem);
+}
+
+sk-select[size="lg"] .sk-select__control {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+  padding-inline: var(--sk-space-4, 1rem);
+  padding-inline-end: var(--sk-space-9, 2.25rem);
+}
+
+/*
+ * `quiet` drops the fill and the shadow so a field can sit inside a card
+ * without three competing hard edges. The stroke stays — the field's boundary
+ * is what makes it a field.
+ */
+sk-select[variant="quiet"] {
+  --sk-select-bg: transparent;
+  --sk-select-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-select .sk-select__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-select .sk-select__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger-fg, #b91c1c);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-select .sk-select__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+/* The arrow: a CSS-drawn chevron, because the native one cannot be styled and
+   an image would be an asset for six lines of CSS. */
+sk-select::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset-inline-end: var(--sk-space-3, 0.75rem);
+  inset-block-start: calc(50% + var(--sk-space-2, 0.5rem));
+  translate: 0 -50%;
+  rotate: 45deg;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-inline-end: 2px solid var(--sk-color-text, #17141c);
+  border-block-end: 2px solid var(--sk-color-text, #17141c);
+}
+
+sk-select[size="sm"]::after {
+  inset-inline-end: var(--sk-space-2, 0.5rem);
+}
+
+sk-select[size="lg"]::after {
+  inset-inline-end: var(--sk-space-4, 1rem);
+}
+
+sk-select[data-invalid]::after {
+  border-color: var(--sk-color-danger, #dc2626);
+}
+
+@media (forced-colors: active) {
+  sk-select {
+    --sk-select-border: CanvasText;
+    --sk-select-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-select[data-invalid] {
+    --sk-select-border: LinkText;
+  }
+
+  sk-select .sk-select__control {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  sk-select[data-invalid] .sk-select__control {
+    border: 2px solid LinkText;
+  }
+
+  sk-select .sk-select__required {
+    color: LinkText;
+  }
+
+  sk-select::after {
+    border-color: CanvasText;
+  }
+}
+
+/*
+ * Reduced motion removes the shadow transition rather than shortening it: a
+ * 1ms change is still a change, and the field's shadow does not need to move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-select .sk-select__control {
+    transition: none;
+  }
+}

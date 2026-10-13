@@ -147,6 +147,21 @@ type TooltipElement = HTMLElement & {
   delay: number
 }
 
+type SelectElement = HTMLElement & {
+  options: Array<{ value: string; label: string; disabled?: boolean }>
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  required: boolean
+  placeholder: string
+  value: string
+  defaultValue: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -263,6 +278,22 @@ declare module "react" {
         open?: boolean
         placement?: "top" | "bottom" | "left" | "right"
         delay?: number
+      }
+      "sk-select": BaseCustomElement<SelectElement> & {
+        options?: string
+        variant?: "default" | "quiet"
+        size?: "sm" | "md" | "lg"
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        required?: boolean
+        placeholder?: string
+        form?: string
+        value?: string
+        "default-value"?: string
+        "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }
     }
   }

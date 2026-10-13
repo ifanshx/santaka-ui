@@ -1010,9 +1010,9 @@ Review this list at the end of every two-week phase. A risk without a named owne
 
 - [x] Implement semantic tokens and light/dark themes.
 - [ ] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge, Card, Text, Spinner, Skeleton, Label, Separator, Input, Textarea — Tier 1 complete.)*
-- [x] Add React and universal Web Components implementations for the agreed core subset. *(Complete for all twelve shipped components, each with universal and React implementations.)*
+- [x] Add React and universal Web Components implementations for the agreed core subset. *(Complete for all seventeen shipped components, each with universal and React implementations.)*
 - [ ] Add Storybook stories and baseline tests. *(No Storybook exists anywhere in the repo.)*
-- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Input and Textarea are both proven in Chromium: submission through a plain form, `formResetCallback` restoring the initial value, `formDisabledCallback` withholding a disabled field, and `formStateRestoreCallback` on restore. Select does not exist, and React 19 form actions are untested.)*
+- [ ] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(Input, Textarea, and Select are all proven in Chromium: submission through a plain form, `formResetCallback` restoring the initial value, `formDisabledCallback` withholding a disabled field, and `formStateRestoreCallback` on restore. React 19 form actions are untested.)*
 
 **Exit criteria:** basic components work in React + Vite and plain HTML, with a repeatable build.
 
@@ -1086,7 +1086,7 @@ A release candidate is ready only when the applicable items are checked and evid
 
 - [ ] Core component documentation and examples are complete.
 - [ ] Public TypeScript types and package exports validate in clean consumer projects. *(`attw --pack` and `publint` pass on the packed tarball of all six packages, which is the strongest check available without a consumer fixture. Nothing has yet installed the package into a scratch project and imported it, which is what this gate actually asks for.)*
-- [x] Unit, component, interaction, and browser tests pass in CI. *(480 tests pass on every run — 48 token, 20 utilities, 108 core (registry schema, exports contract, validate), 123 React, and 181 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
+- [x] Unit, component, interaction, and browser tests pass in CI. *(497 tests pass on every run — 48 token, 20 utilities, 108 core (registry schema, exports contract, validate), 129 React, and 192 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
 - [ ] Keyboard navigation and focus management have been manually reviewed.
 - [ ] Automated accessibility checks and targeted manual reviews are documented.
 - [x] Light/dark themes, forced-colors considerations, and reduced motion are reviewed. *(Token contract tests assert the glass fallback panel clears 4.5:1 against each theme's own text and is near-opaque; `forced-colors` is handled in all four components and in `glass.css`; `prefers-reduced-motion` removes the press transform rather than merely shortening it.)*

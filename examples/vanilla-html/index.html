@@ -247,6 +247,35 @@
         </div>
       </section>
 
+      <section aria-labelledby="select-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="select-heading">Select</h2>
+        </sk-text>
+
+        <!--
+          A real native <select>, visibly: the popup is the browser's, so it
+          works on touch and validates natively. Options arrive as JSON because
+          slot distribution cannot move host children into the render tree
+          (the Dialog panel's lesson).
+        -->
+        <sk-select
+          name="environment"
+          label="Environment"
+          description="Where the build deploys."
+          required
+          placeholder="Choose an environment"
+          options='[{"value":"production","label":"Production"},{"value":"staging","label":"Staging"},{"value":"development","label":"Development"}]'
+        ></sk-select>
+        <sk-select
+          name="runner"
+          label="Runner"
+          variant="quiet"
+          size="sm"
+          value="linux"
+          options='[{"value":"linux","label":"Linux x64"},{"value":"macos","label":"macOS arm64"},{"value":"windows","label":"Windows x64"}]'
+        ></sk-select>
+      </section>
+
       <section aria-labelledby="tooltip-heading" class="sk-stack" style="position: relative">
         <sk-text variant="lg" family="display">
           <h2 id="tooltip-heading">Tooltip</h2>

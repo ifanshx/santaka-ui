@@ -7,8 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 import { InputType } from "./components/sk-input/sk-input";
+import { SelectOption } from "./components/sk-select/sk-select";
 export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 export { InputType } from "./components/sk-input/sk-input";
+export { SelectOption } from "./components/sk-select/sk-select";
 export namespace Components {
     /**
      * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
@@ -389,6 +391,72 @@ export namespace Components {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    interface SkSelect {
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue": string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Input.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * The choices. Serialized as JSON when written as an attribute.
+          * @default []
+         */
+        "options": SelectOption[];
+        /**
+          * Placeholder-style first choice, shown when the value is "".
+          * @default ""
+         */
+        "placeholder": string;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * The value. Uncontrolled by default.
+          * @default ""
+         */
+        "value": string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant": "default" | "quiet";
     }
     /**
      * Separator — Tier 1 foundation component.
@@ -845,6 +913,12 @@ declare global {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
     };
+    interface HTMLSkSelectElement extends Components.SkSelect, HTMLStencilElement {
+    }
+    var HTMLSkSelectElement: {
+        prototype: HTMLSkSelectElement;
+        new (): HTMLSkSelectElement;
+    };
     /**
      * Separator — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -1019,6 +1093,7 @@ declare global {
         "sk-input": HTMLSkInputElement;
         "sk-label": HTMLSkLabelElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-select": HTMLSkSelectElement;
         "sk-separator": HTMLSkSeparatorElement;
         "sk-skeleton": HTMLSkSkeletonElement;
         "sk-spinner": HTMLSkSpinnerElement;
@@ -1424,6 +1499,76 @@ declare namespace LocalJSX {
          */
         "target"?: string;
     }
+    interface SkSelect {
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue"?: string;
+        /**
+          * Persistent helper text below the field.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Input.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The control's own label text, rendered above the field.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * The choices. Serialized as JSON when written as an attribute.
+          * @default []
+         */
+        "options"?: SelectOption[];
+        /**
+          * Placeholder-style first choice, shown when the value is "".
+          * @default ""
+         */
+        "placeholder"?: string;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Control height.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * The value. Uncontrolled by default.
+          * @default ""
+         */
+        "value"?: string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant"?: "default" | "quiet";
+    }
     /**
      * Separator — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -1797,6 +1942,20 @@ declare namespace LocalJSX {
         "rel": string;
         "download": string;
     }
+    interface SkSelectAttributes {
+        "variant": "default" | "quiet";
+        "size": "sm" | "md" | "lg";
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "placeholder": string;
+        "form": string;
+        "value": string;
+        "defaultValue": string;
+    }
     interface SkSeparatorAttributes {
         "orientation": "horizontal" | "vertical";
         "decorative": boolean;
@@ -1855,6 +2014,7 @@ declare namespace LocalJSX {
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-select": Omit<SkSelect, keyof SkSelectAttributes> & { [K in keyof SkSelect & keyof SkSelectAttributes]?: SkSelect[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `attr:${K}`]?: SkSelectAttributes[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `prop:${K}`]?: SkSelect[K] };
         "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
         "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
@@ -1979,6 +2139,7 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            "sk-select": LocalJSX.IntrinsicElements["sk-select"] & JSXBase.HTMLAttributes<HTMLSkSelectElement>;
             /**
              * Separator — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
