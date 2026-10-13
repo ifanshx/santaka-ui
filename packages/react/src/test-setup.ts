@@ -277,4 +277,15 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-tooltip")) {
+    customElements.define(
+      "sk-tooltip",
+      class extends HTMLElement {
+        open = false
+        placement = "top"
+        delay = 300
+      },
+    )
+  }
 })

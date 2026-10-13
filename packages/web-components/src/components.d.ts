@@ -652,6 +652,41 @@ export namespace Components {
          */
         "variant": "neutral" | "success" | "warning" | "danger";
     }
+    /**
+     * Tooltip — Tier 2, the quietest glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A tooltip is a *description of something the user can already see and use*,
+     * never a place where information lives. That definition drives every rule:
+     *  - It is named through `aria-describedby` pointing at the tooltip's content,
+     *    so a screen reader reads it on demand — a tooltip that grabs focus is a
+     *    popup wearing a tiny hat.
+     *  - It shows on hover and on keyboard focus, and hides on Escape. The
+     *    keyboard path is the reason this is a component and not a `title`
+     *    attribute: `title` never shows for keyboard users at all.
+     *  - It takes **no** pointer events itself, so hovering the tooltip never
+     *    flickers it away; only leaving the trigger does.
+     *  - It is explicitly excluded from the forms contract (§4): it cannot be
+     *    form-associated, and it says so.
+     * Placement is a hint, not a guarantee: the consumer picks the side and the
+     * component flips at the viewport edge rather than rendering off-screen.
+     */
+    interface SkTooltip {
+        /**
+          * Milliseconds of hover before showing. A tooltip that fires instantly is a strobe.
+          * @default 300
+         */
+        "delay": number;
+        /**
+          * Whether the tooltip is showing. Driven by hover/focus; also settable.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Preferred side. Flips at the viewport edge rather than clipping.
+          * @default "top"
+         */
+        "placement": "top" | "bottom" | "left" | "right";
+    }
 }
 declare global {
     /**
@@ -950,6 +985,30 @@ declare global {
         prototype: HTMLSkToastElement;
         new (): HTMLSkToastElement;
     };
+    /**
+     * Tooltip — Tier 2, the quietest glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A tooltip is a *description of something the user can already see and use*,
+     * never a place where information lives. That definition drives every rule:
+     *  - It is named through `aria-describedby` pointing at the tooltip's content,
+     *    so a screen reader reads it on demand — a tooltip that grabs focus is a
+     *    popup wearing a tiny hat.
+     *  - It shows on hover and on keyboard focus, and hides on Escape. The
+     *    keyboard path is the reason this is a component and not a `title`
+     *    attribute: `title` never shows for keyboard users at all.
+     *  - It takes **no** pointer events itself, so hovering the tooltip never
+     *    flickers it away; only leaving the trigger does.
+     *  - It is explicitly excluded from the forms contract (§4): it cannot be
+     *    form-associated, and it says so.
+     * Placement is a hint, not a guarantee: the consumer picks the side and the
+     * component flips at the viewport edge rather than rendering off-screen.
+     */
+    interface HTMLSkTooltipElement extends Components.SkTooltip, HTMLStencilElement {
+    }
+    var HTMLSkTooltipElement: {
+        prototype: HTMLSkTooltipElement;
+        new (): HTMLSkTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "sk-alert-dialog": HTMLSkAlertDialogElement;
         "sk-badge": HTMLSkBadgeElement;
@@ -966,6 +1025,7 @@ declare global {
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
         "sk-toast": HTMLSkToastElement;
+        "sk-tooltip": HTMLSkTooltipElement;
     }
 }
 declare namespace LocalJSX {
@@ -1630,6 +1690,41 @@ declare namespace LocalJSX {
          */
         "variant"?: "neutral" | "success" | "warning" | "danger";
     }
+    /**
+     * Tooltip — Tier 2, the quietest glass.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A tooltip is a *description of something the user can already see and use*,
+     * never a place where information lives. That definition drives every rule:
+     *  - It is named through `aria-describedby` pointing at the tooltip's content,
+     *    so a screen reader reads it on demand — a tooltip that grabs focus is a
+     *    popup wearing a tiny hat.
+     *  - It shows on hover and on keyboard focus, and hides on Escape. The
+     *    keyboard path is the reason this is a component and not a `title`
+     *    attribute: `title` never shows for keyboard users at all.
+     *  - It takes **no** pointer events itself, so hovering the tooltip never
+     *    flickers it away; only leaving the trigger does.
+     *  - It is explicitly excluded from the forms contract (§4): it cannot be
+     *    form-associated, and it says so.
+     * Placement is a hint, not a guarantee: the consumer picks the side and the
+     * component flips at the viewport edge rather than rendering off-screen.
+     */
+    interface SkTooltip {
+        /**
+          * Milliseconds of hover before showing. A tooltip that fires instantly is a strobe.
+          * @default 300
+         */
+        "delay"?: number;
+        /**
+          * Whether the tooltip is showing. Driven by hover/focus; also settable.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Preferred side. Flips at the viewport edge rather than clipping.
+          * @default "top"
+         */
+        "placement"?: "top" | "bottom" | "left" | "right";
+    }
 
     interface SkAlertDialogAttributes {
         "open": boolean;
@@ -1744,6 +1839,11 @@ declare namespace LocalJSX {
         "duration": number;
         "variant": "neutral" | "success" | "warning" | "danger";
     }
+    interface SkTooltipAttributes {
+        "open": boolean;
+        "placement": "top" | "bottom" | "left" | "right";
+        "delay": number;
+    }
 
     interface IntrinsicElements {
         "sk-alert-dialog": Omit<SkAlertDialog, keyof SkAlertDialogAttributes> & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes]?: SkAlertDialog[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `attr:${K}`]?: SkAlertDialogAttributes[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `prop:${K}`]?: SkAlertDialog[K] };
@@ -1761,6 +1861,7 @@ declare namespace LocalJSX {
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
         "sk-toast": Omit<SkToast, keyof SkToastAttributes> & { [K in keyof SkToast & keyof SkToastAttributes]?: SkToast[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `attr:${K}`]?: SkToastAttributes[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `prop:${K}`]?: SkToast[K] };
+        "sk-tooltip": Omit<SkTooltip, keyof SkTooltipAttributes> & { [K in keyof SkTooltip & keyof SkTooltipAttributes]?: SkTooltip[K] } & { [K in keyof SkTooltip & keyof SkTooltipAttributes as `attr:${K}`]?: SkTooltipAttributes[K] } & { [K in keyof SkTooltip & keyof SkTooltipAttributes as `prop:${K}`]?: SkTooltip[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -1988,6 +2089,25 @@ declare module "@stencil/core" {
              * a single toast and not a toaster.
              */
             "sk-toast": LocalJSX.IntrinsicElements["sk-toast"] & JSXBase.HTMLAttributes<HTMLSkToastElement>;
+            /**
+             * Tooltip — Tier 2, the quietest glass.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A tooltip is a *description of something the user can already see and use*,
+             * never a place where information lives. That definition drives every rule:
+             *  - It is named through `aria-describedby` pointing at the tooltip's content,
+             *    so a screen reader reads it on demand — a tooltip that grabs focus is a
+             *    popup wearing a tiny hat.
+             *  - It shows on hover and on keyboard focus, and hides on Escape. The
+             *    keyboard path is the reason this is a component and not a `title`
+             *    attribute: `title` never shows for keyboard users at all.
+             *  - It takes **no** pointer events itself, so hovering the tooltip never
+             *    flickers it away; only leaving the trigger does.
+             *  - It is explicitly excluded from the forms contract (§4): it cannot be
+             *    form-associated, and it says so.
+             * Placement is a hint, not a guarantee: the consumer picks the side and the
+             * component flips at the viewport edge rather than rendering off-screen.
+             */
+            "sk-tooltip": LocalJSX.IntrinsicElements["sk-tooltip"] & JSXBase.HTMLAttributes<HTMLSkTooltipElement>;
         }
     }
 }

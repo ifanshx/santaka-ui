@@ -580,6 +580,44 @@ const COMPONENTS = [
     },
   },
   {
+    name: "tooltip",
+    tag: "sk-tooltip",
+    stability: "stable",
+    cssVariables: [
+      "--sk-color-text",
+      "--sk-font-sans",
+      "--sk-space-2",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-z-tooltip",
+    ],
+    ai: {
+      summary:
+        "A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.",
+      whenToUse: [
+        "An icon-only control needs its name spelled out",
+        "A jargon term or abbreviation needs one sentence of context",
+        "A control is disabled and the reason helps",
+      ],
+      whenNotToUse: [
+        "The information is essential — put it in the page; a tooltip hides it from touch and from anyone not hovering",
+        "The content is interactive or long — use a Popover",
+        "It is the control's name — use a Label or aria-label; a tooltip is a description, not the name",
+      ],
+      accessibility:
+        "Named through `aria-describedby` pointing at the panel, so a screen reader reads it on demand — a tooltip that grabs focus is a popup wearing a tiny hat. Shows on hover after a delay (a tooltip that fires instantly is a strobe) and immediately on keyboard focus, because a tabbing user asked for it explicitly and a 300ms penance on every tab is hostile. Escape hides it. The panel takes no pointer events (`pointer-events: none`), so hovering the tooltip never flickers it away. Explicitly excluded from the forms contract (section 4): it cannot be form-associated.",
+      example:
+        '<sk-tooltip placement="top">\n  <sk-button slot="trigger">Deploy</sk-button>\n  Ships the current build to production.\n</sk-tooltip>',
+      knownLimitations: [
+        "Placement is a hint, not a viewport-aware computation — the panel anchors to the trigger and can clip at edges",
+        "Touch has no hover: a tooltip is invisible on touch until the control is focused",
+        "The trigger must be a focusable element — a non-interactive span gives keyboard users nothing to describe",
+      ],
+    },
+  },
+  {
     name: "toast",
     tag: "sk-toast",
     stability: "stable",

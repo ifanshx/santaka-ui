@@ -1,0 +1,70 @@
+/*
+ * Tooltip styles.
+ *
+ * Glass, at the quietest setting: the panel is small, the shadow is the
+ * material's own, and the layer (1600) sits above toast (1500) — a tooltip
+ * describes what the pointer is on, so it outranks a notification — but below
+ * the modal layer (1700), because a dialog's scrim covers everything.
+ *
+ * Positioning is the consumer's job at the layout level: the panel is
+ * absolutely positioned relative to the nearest positioned ancestor, and the
+ * placement attribute provides the offset direction via logical properties.
+ * Flipping at the viewport edge is the component's job (it toggles the
+ * attribute), not the CSS's.
+ */
+
+sk-tooltip {
+  display: contents;
+}
+
+sk-tooltip .sk-tooltip__panel {
+  position: absolute;
+  z-index: var(--sk-z-tooltip, 1600);
+  max-inline-size: min(18rem, calc(100vw - 2 * var(--sk-space-4, 1rem)));
+  padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
+  color: var(--sk-color-text, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  /* A tooltip must never catch the pointer: hovering it would flicker it
+     away, and its content is not interactive by definition. */
+  pointer-events: none;
+}
+
+sk-tooltip[data-state="closed"] .sk-tooltip__panel {
+  display: none;
+}
+
+/* Stencil's scoped-mode slot manager writes `hidden` on elements it thinks
+   are empty slot fallbacks — including this panel, which hosts a `<slot>` it
+   built. An open tooltip with the stray attribute must still show; the state
+   attribute, not the manager's bookkeeping, is the source of truth. */
+sk-tooltip[data-state="open"] .sk-tooltip__panel[hidden] {
+  display: block;
+}
+
+/* Offset the panel away from the trigger by half the glass radius, using
+   logical properties so the physical sides follow the writing direction. */
+sk-tooltip[placement="top"] .sk-tooltip__panel {
+  inset-block-end: calc(100% + var(--sk-space-2, 0.5rem));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+
+sk-tooltip[placement="bottom"] .sk-tooltip__panel {
+  inset-block-start: calc(100% + var(--sk-space-2, 0.5rem));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+
+sk-tooltip[placement="left"] .sk-tooltip__panel {
+  inset-inline-end: calc(100% + var(--sk-space-2, 0.5rem));
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+
+sk-tooltip[placement="right"] .sk-tooltip__panel {
+  inset-inline-start: calc(100% + var(--sk-space-2, 0.5rem));
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}

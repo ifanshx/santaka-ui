@@ -44,3 +44,5 @@ export type {
 } from "./alert-dialog.js"
 export { Toast } from "./toast.js"
 export type { ToastProps, SkToastElement } from "./toast.js"
+export { Tooltip, TooltipTrigger } from "./tooltip.js"
+export type { TooltipProps, TooltipTriggerProps, SkTooltipElement } from "./tooltip.js"

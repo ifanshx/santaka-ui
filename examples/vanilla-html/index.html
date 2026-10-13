@@ -247,6 +247,33 @@
         </div>
       </section>
 
+      <section aria-labelledby="tooltip-heading" class="sk-stack" style="position: relative">
+        <sk-text variant="lg" family="display">
+          <h2 id="tooltip-heading">Tooltip</h2>
+        </sk-text>
+
+        <!--
+          aria-describedby is wired by the component; hover shows with a delay,
+          keyboard focus shows immediately, Escape hides. The section is the
+          positioned ancestor, so the panel anchors to the trigger's cell.
+        -->
+        <div class="sk-cluster" style="padding-block: var(--sk-space-8)">
+          <sk-tooltip placement="top">
+            <sk-button slot="trigger" variant="secondary">Deploy</sk-button>
+            Ships the current build to production.
+          </sk-tooltip>
+          <sk-tooltip placement="bottom" delay="0">
+            <sk-icon-button slot="trigger" label="Settings" variant="primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2" />
+              </svg>
+            </sk-icon-button>
+            Configure runners, secrets, and retention.
+          </sk-tooltip>
+        </div>
+      </section>
+
       <section aria-labelledby="toast-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="toast-heading">Toasts</h2>

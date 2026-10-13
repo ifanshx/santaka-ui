@@ -141,6 +141,12 @@ type ToastElement = HTMLElement & {
   variant: "neutral" | "success" | "warning" | "danger"
 }
 
+type TooltipElement = HTMLElement & {
+  open: boolean
+  placement: "top" | "bottom" | "left" | "right"
+  delay: number
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -252,6 +258,11 @@ declare module "react" {
         duration?: number
         variant?: "neutral" | "success" | "warning" | "danger"
         onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
+      }
+      "sk-tooltip": BaseCustomElement<TooltipElement> & {
+        open?: boolean
+        placement?: "top" | "bottom" | "left" | "right"
+        delay?: number
       }
     }
   }
