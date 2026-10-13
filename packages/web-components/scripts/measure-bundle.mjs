@@ -111,7 +111,7 @@ const BUDGETS = [
   {
     name: "web-components runtime",
     measure: () => measureJs(join(pkgRoot, "dist/components/index.js"), runtimeExports()),
-    budgetKb: 16,
+    budgetKb: 17,
   },
   {
     name: "component CSS, per component",

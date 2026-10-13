@@ -1,0 +1,81 @@
+/*
+ * Tabs styles.
+ *
+ * The tablist is the brutalist rule: a hard bottom border, tabs that sit *on*
+ * it, and the active tab's own border swallowing the rule beneath it — the
+ * classic connected-tab look, drawn with 3px strokes because chrome is chrome.
+ *
+ * Arrow keys belong to the widget (roving tabindex), so no tab is a second tab
+ * stop and the panel's `tabindex=0` lets keyboard users reach panel content
+ * after the last tab.
+ */
+
+sk-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4, 1rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+/* The tablist must be exposed to CSS even though `display: contents` would
+   flatten it: focus and event delegation need a real box. */
+sk-tabs [data-slot="tablist"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sk-space-2, 0.5rem);
+  border-block-end: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+}
+
+sk-tab [data-slot="tab-button"] {
+  box-sizing: border-box;
+  padding: var(--sk-space-2, 0.5rem) var(--sk-space-4, 1rem);
+  border: var(--sk-border-thick, 3px) solid transparent;
+  border-block-end: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-family: inherit;
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  cursor: pointer;
+  /* The active tab's border must reach down to swallow the tablist rule; a
+     margin would break the connection. */
+  margin-block-end: -3px;
+}
+
+sk-tab [data-slot="tab-button"]:hover {
+  color: var(--sk-color-text, #17141c);
+}
+
+sk-tab[data-state="active"] [data-slot="tab-button"] {
+  border-color: var(--sk-color-border-strong, #8b85a0);
+  background-color: var(--sk-color-surface, #ffffff);
+  color: var(--sk-color-text, #17141c);
+  font-weight: var(--sk-text-lg-weight, 400);
+  /* Active is emphasis, not decoration: no shadow, because a tab is not a
+     pressable control in the brutalist sense — it is a position marker. */
+}
+
+sk-tab [data-slot="tab-button"]:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-color-focus-ring, #6d28d9);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-tab-panel[data-slot="panel"] {
+  padding-block-start: var(--sk-space-2, 0.5rem);
+  color: var(--sk-color-text, #17141c);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+}
+
+@media (forced-colors: active) {
+  sk-tabs [data-slot="tablist"] {
+    border-block-end-color: CanvasText;
+  }
+
+  sk-tab[data-state="active"] [data-slot="tab-button"] {
+    border-color: CanvasText;
+    background-color: Canvas;
+  }
+}

@@ -549,6 +549,63 @@ export namespace Components {
         "status": string;
     }
     /**
+     * Tab — one selectable header inside an `sk-tabs` widget.
+     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
+     * activated, not navigated to), and a real button brings the platform's
+     * keyboard and activation behavior for free.
+     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
+     * `tabindex`, and `data-state` during its sync pass. This component is the
+     * authored shape; the widget is the behavior.
+     */
+    interface SkTab {
+        /**
+          * The tab's label. A consumer may instead slot rich content.
+          * @default ""
+         */
+        "label": string;
+    }
+    /**
+     * TabPanel — the content one tab reveals.
+     * `hidden` is written by `sk-tabs` during its sync pass; the panel owns no
+     * state. It renders a real `<div>` with `role="tabpanel"`, labelled by its
+     * tab through the widget's `aria-labelledby` wiring.
+     */
+    interface SkTabPanel {
+        /**
+          * Panels start hidden; the widget reveals the active one.
+          * @default true
+         */
+        "hidden": boolean;
+    }
+    /**
+     * Tabs — Tier 2, and the last v1.0 component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * The ARIA tabs pattern has one hard rule this component is built around:
+     * **the tablist owns the keyboard**. Only the active tab is in the tab order
+     * (roving `tabindex`); arrow keys move activation; Home/End jump to the
+     * ends. A tablist whose tabs are all tab stops makes the user press Tab once
+     * per tab to get past the widget — which is exactly the experience the pattern
+     * exists to prevent.
+     * Arrow semantics invert under RTL (§4): the direction is read from
+     * `getComputedStyle` at interaction time, never from a build flag, so a
+     * document with `dir="rtl"` gets Arrow-Right meaning *previous* for free.
+     * Activation is automatic (follow focus), the ARIA Authoring Practices
+     * default: an arrow key both moves and activates, so there is no second key
+     * press between reading a tab and seeing its panel.
+     * The parts communicate through DOM relationships the component computes and
+     * writes — `aria-controls` on each tab pointing at its panel's id,
+     * `aria-labelledby` on each panel pointing back — because tabs and panels are
+     * separately slotted and cannot see each other at authoring time.
+     */
+    interface SkTabs {
+        /**
+          * The active tab's index. Zero-based, over the tabs in DOM order.
+          * @default 0
+         */
+        "active": number;
+    }
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -982,6 +1039,60 @@ declare global {
         new (): HTMLSkSpinnerElement;
     };
     /**
+     * Tab — one selectable header inside an `sk-tabs` widget.
+     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
+     * activated, not navigated to), and a real button brings the platform's
+     * keyboard and activation behavior for free.
+     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
+     * `tabindex`, and `data-state` during its sync pass. This component is the
+     * authored shape; the widget is the behavior.
+     */
+    interface HTMLSkTabElement extends Components.SkTab, HTMLStencilElement {
+    }
+    var HTMLSkTabElement: {
+        prototype: HTMLSkTabElement;
+        new (): HTMLSkTabElement;
+    };
+    /**
+     * TabPanel — the content one tab reveals.
+     * `hidden` is written by `sk-tabs` during its sync pass; the panel owns no
+     * state. It renders a real `<div>` with `role="tabpanel"`, labelled by its
+     * tab through the widget's `aria-labelledby` wiring.
+     */
+    interface HTMLSkTabPanelElement extends Components.SkTabPanel, HTMLStencilElement {
+    }
+    var HTMLSkTabPanelElement: {
+        prototype: HTMLSkTabPanelElement;
+        new (): HTMLSkTabPanelElement;
+    };
+    /**
+     * Tabs — Tier 2, and the last v1.0 component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * The ARIA tabs pattern has one hard rule this component is built around:
+     * **the tablist owns the keyboard**. Only the active tab is in the tab order
+     * (roving `tabindex`); arrow keys move activation; Home/End jump to the
+     * ends. A tablist whose tabs are all tab stops makes the user press Tab once
+     * per tab to get past the widget — which is exactly the experience the pattern
+     * exists to prevent.
+     * Arrow semantics invert under RTL (§4): the direction is read from
+     * `getComputedStyle` at interaction time, never from a build flag, so a
+     * document with `dir="rtl"` gets Arrow-Right meaning *previous* for free.
+     * Activation is automatic (follow focus), the ARIA Authoring Practices
+     * default: an arrow key both moves and activates, so there is no second key
+     * press between reading a tab and seeing its panel.
+     * The parts communicate through DOM relationships the component computes and
+     * writes — `aria-controls` on each tab pointing at its panel's id,
+     * `aria-labelledby` on each panel pointing back — because tabs and panels are
+     * separately slotted and cannot see each other at authoring time.
+     */
+    interface HTMLSkTabsElement extends Components.SkTabs, HTMLStencilElement {
+    }
+    var HTMLSkTabsElement: {
+        prototype: HTMLSkTabsElement;
+        new (): HTMLSkTabsElement;
+    };
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -1097,6 +1208,9 @@ declare global {
         "sk-separator": HTMLSkSeparatorElement;
         "sk-skeleton": HTMLSkSkeletonElement;
         "sk-spinner": HTMLSkSpinnerElement;
+        "sk-tab": HTMLSkTabElement;
+        "sk-tab-panel": HTMLSkTabPanelElement;
+        "sk-tabs": HTMLSkTabsElement;
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
         "sk-toast": HTMLSkToastElement;
@@ -1660,6 +1774,63 @@ declare namespace LocalJSX {
         "status"?: string;
     }
     /**
+     * Tab — one selectable header inside an `sk-tabs` widget.
+     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
+     * activated, not navigated to), and a real button brings the platform's
+     * keyboard and activation behavior for free.
+     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
+     * `tabindex`, and `data-state` during its sync pass. This component is the
+     * authored shape; the widget is the behavior.
+     */
+    interface SkTab {
+        /**
+          * The tab's label. A consumer may instead slot rich content.
+          * @default ""
+         */
+        "label"?: string;
+    }
+    /**
+     * TabPanel — the content one tab reveals.
+     * `hidden` is written by `sk-tabs` during its sync pass; the panel owns no
+     * state. It renders a real `<div>` with `role="tabpanel"`, labelled by its
+     * tab through the widget's `aria-labelledby` wiring.
+     */
+    interface SkTabPanel {
+        /**
+          * Panels start hidden; the widget reveals the active one.
+          * @default true
+         */
+        "hidden"?: boolean;
+    }
+    /**
+     * Tabs — Tier 2, and the last v1.0 component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * The ARIA tabs pattern has one hard rule this component is built around:
+     * **the tablist owns the keyboard**. Only the active tab is in the tab order
+     * (roving `tabindex`); arrow keys move activation; Home/End jump to the
+     * ends. A tablist whose tabs are all tab stops makes the user press Tab once
+     * per tab to get past the widget — which is exactly the experience the pattern
+     * exists to prevent.
+     * Arrow semantics invert under RTL (§4): the direction is read from
+     * `getComputedStyle` at interaction time, never from a build flag, so a
+     * document with `dir="rtl"` gets Arrow-Right meaning *previous* for free.
+     * Activation is automatic (follow focus), the ARIA Authoring Practices
+     * default: an arrow key both moves and activates, so there is no second key
+     * press between reading a tab and seeing its panel.
+     * The parts communicate through DOM relationships the component computes and
+     * writes — `aria-controls` on each tab pointing at its panel's id,
+     * `aria-labelledby` on each panel pointing back — because tabs and panels are
+     * separately slotted and cannot see each other at authoring time.
+     */
+    interface SkTabs {
+        /**
+          * The active tab's index. Zero-based, over the tabs in DOM order.
+          * @default 0
+         */
+        "active"?: number;
+    }
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -1970,6 +2141,15 @@ declare namespace LocalJSX {
         "label": string;
         "status": string;
     }
+    interface SkTabAttributes {
+        "label": string;
+    }
+    interface SkTabPanelAttributes {
+        "hidden": boolean;
+    }
+    interface SkTabsAttributes {
+        "active": number;
+    }
     interface SkTextAttributes {
         "variant": "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display";
         "family": "inherit" | "sans" | "display" | "mono";
@@ -2018,6 +2198,9 @@ declare namespace LocalJSX {
         "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
         "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
+        "sk-tab": Omit<SkTab, keyof SkTabAttributes> & { [K in keyof SkTab & keyof SkTabAttributes]?: SkTab[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `attr:${K}`]?: SkTabAttributes[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `prop:${K}`]?: SkTab[K] };
+        "sk-tab-panel": Omit<SkTabPanel, keyof SkTabPanelAttributes> & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes]?: SkTabPanel[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `attr:${K}`]?: SkTabPanelAttributes[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `prop:${K}`]?: SkTabPanel[K] };
+        "sk-tabs": Omit<SkTabs, keyof SkTabsAttributes> & { [K in keyof SkTabs & keyof SkTabsAttributes]?: SkTabs[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `attr:${K}`]?: SkTabsAttributes[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `prop:${K}`]?: SkTabs[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
         "sk-toast": Omit<SkToast, keyof SkToastAttributes> & { [K in keyof SkToast & keyof SkToastAttributes]?: SkToast[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `attr:${K}`]?: SkToastAttributes[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `prop:${K}`]?: SkToast[K] };
@@ -2187,6 +2370,45 @@ declare module "@stencil/core" {
              *    choice the consumer has to make, not an accident.
              */
             "sk-spinner": LocalJSX.IntrinsicElements["sk-spinner"] & JSXBase.HTMLAttributes<HTMLSkSpinnerElement>;
+            /**
+             * Tab — one selectable header inside an `sk-tabs` widget.
+             * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
+             * activated, not navigated to), and a real button brings the platform's
+             * keyboard and activation behavior for free.
+             * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
+             * `tabindex`, and `data-state` during its sync pass. This component is the
+             * authored shape; the widget is the behavior.
+             */
+            "sk-tab": LocalJSX.IntrinsicElements["sk-tab"] & JSXBase.HTMLAttributes<HTMLSkTabElement>;
+            /**
+             * TabPanel — the content one tab reveals.
+             * `hidden` is written by `sk-tabs` during its sync pass; the panel owns no
+             * state. It renders a real `<div>` with `role="tabpanel"`, labelled by its
+             * tab through the widget's `aria-labelledby` wiring.
+             */
+            "sk-tab-panel": LocalJSX.IntrinsicElements["sk-tab-panel"] & JSXBase.HTMLAttributes<HTMLSkTabPanelElement>;
+            /**
+             * Tabs — Tier 2, and the last v1.0 component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * The ARIA tabs pattern has one hard rule this component is built around:
+             * **the tablist owns the keyboard**. Only the active tab is in the tab order
+             * (roving `tabindex`); arrow keys move activation; Home/End jump to the
+             * ends. A tablist whose tabs are all tab stops makes the user press Tab once
+             * per tab to get past the widget — which is exactly the experience the pattern
+             * exists to prevent.
+             * Arrow semantics invert under RTL (§4): the direction is read from
+             * `getComputedStyle` at interaction time, never from a build flag, so a
+             * document with `dir="rtl"` gets Arrow-Right meaning *previous* for free.
+             * Activation is automatic (follow focus), the ARIA Authoring Practices
+             * default: an arrow key both moves and activates, so there is no second key
+             * press between reading a tab and seeing its panel.
+             * The parts communicate through DOM relationships the component computes and
+             * writes — `aria-controls` on each tab pointing at its panel's id,
+             * `aria-labelledby` on each panel pointing back — because tabs and panels are
+             * separately slotted and cannot see each other at authoring time.
+             */
+            "sk-tabs": LocalJSX.IntrinsicElements["sk-tabs"] & JSXBase.HTMLAttributes<HTMLSkTabsElement>;
             /**
              * Text — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

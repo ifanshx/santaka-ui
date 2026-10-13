@@ -162,6 +162,17 @@ type SelectElement = HTMLElement & {
   defaultValue: string
 }
 
+type TabsElement = HTMLElement & {
+  active: number
+}
+
+type TabElement = HTMLElement & {
+  label: string
+}
+
+type TabPanelElement = HTMLElement & {
+  hidden: boolean
+}
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -295,6 +306,13 @@ declare module "react" {
         "default-value"?: string
         "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }
+      "sk-tabs": BaseCustomElement<TabsElement> & {
+        active?: number
+      }
+      "sk-tab": BaseCustomElement<TabElement> & {
+        label?: string
+      }
+      "sk-tab-panel": BaseCustomElement<TabPanelElement> & {}
     }
   }
 }

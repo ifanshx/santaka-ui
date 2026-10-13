@@ -28,6 +28,9 @@ export { SkText } from "./components/sk-text/sk-text.js"
 export { SkSkeleton } from "./components/sk-skeleton/sk-skeleton.js"
 export { SkSpinner } from "./components/sk-spinner/sk-spinner.js"
 export { SkTextarea } from "./components/sk-textarea/sk-textarea.js"
+export { SkTabs } from "./components/sk-tabs/sk-tabs.js"
+export { SkTab } from "./components/sk-tabs/sk-tab.js"
+export { SkTabPanel } from "./components/sk-tabs/sk-tab-panel.js"
 export { SkToast } from "./components/sk-toast/sk-toast.js"
 export { SkTooltip } from "./components/sk-tooltip/sk-tooltip.js"
 export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js"
@@ -47,6 +50,9 @@ export const COMPONENTS = [
   "sk-separator",
   "sk-skeleton",
   "sk-spinner",
+  "sk-tab",
+  "sk-tab-panel",
+  "sk-tabs",
   "sk-text",
   "sk-textarea",
   "sk-toast",

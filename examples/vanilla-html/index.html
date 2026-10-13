@@ -343,6 +343,28 @@
         ></div>
       </section>
 
+      <section aria-labelledby="tabs-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="tabs-heading">Tabs</h2>
+        </sk-text>
+
+        <!--
+          The tablist owns the keyboard: roving tabindex, arrows move and
+          activate, Home/End jump. The widget writes every ARIA relationship
+          itself, because tabs and panels are separately slotted.
+        -->
+        <sk-tabs>
+          <div slot="tablist" data-slot="tablist">
+            <sk-tab label="Account"></sk-tab>
+            <sk-tab label="Billing"></sk-tab>
+            <sk-tab label="Team"></sk-tab>
+          </div>
+          <sk-tab-panel><p>Account settings live here.</p></sk-tab-panel>
+          <sk-tab-panel><p>Billing history lives here.</p></sk-tab-panel>
+          <sk-tab-panel><p>Team members live here.</p></sk-tab-panel>
+        </sk-tabs>
+      </section>
+
       <section aria-labelledby="alert-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="alert-heading">Alert dialog</h2>

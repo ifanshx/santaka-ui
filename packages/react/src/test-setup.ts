@@ -308,4 +308,26 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-tabs")) {
+    customElements.define(
+      "sk-tabs",
+      class extends HTMLElement {
+        active = 0
+      },
+    )
+  }
+
+  if (!customElements.get("sk-tab")) {
+    customElements.define(
+      "sk-tab",
+      class extends HTMLElement {
+        label = ""
+      },
+    )
+  }
+
+  if (!customElements.get("sk-tab-panel")) {
+    customElements.define("sk-tab-panel", class extends HTMLElement {})
+  }
 })

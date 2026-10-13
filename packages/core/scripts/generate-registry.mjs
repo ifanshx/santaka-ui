@@ -642,6 +642,53 @@ const COMPONENTS = [
     },
   },
   {
+    name: "tabs",
+    tag: "sk-tabs",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-color-border",
+      "--sk-color-border-strong",
+      "--sk-color-focus-ring",
+      "--sk-color-surface",
+      "--sk-color-text",
+      "--sk-color-text-muted",
+      "--sk-font-sans",
+      "--sk-ring-offset",
+      "--sk-ring-width",
+      "--sk-space-2",
+      "--sk-space-4",
+      "--sk-text-base-line-height",
+      "--sk-text-base-size",
+      "--sk-text-lg-weight",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-text-sm-weight",
+    ],
+    ai: {
+      summary:
+        "Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.",
+      whenToUse: [
+        "Related content shares one surface and only one view matters at a time",
+        "The views are peers — Settings-style sections, editor panes",
+        "Switching should feel like moving, not navigating",
+      ],
+      whenNotToUse: [
+        "Each view is a destination — use navigation, not tabs",
+        "The views must be compared side by side — show them all",
+        "Content must stay mounted across switches — this component unmounts inactive panels",
+      ],
+      accessibility:
+        'The ARIA tabs pattern\'s hard rule is enforced: only the active tab is in the tab order, arrow keys move and activate (automatic activation), Home and End jump to the ends, and activation wraps. Tabs are real `<button>`s. `aria-selected` / `aria-controls` / `aria-labelledby` are computed and written by the widget, because tabs and panels are separately slotted. Arrow semantics derive from `getComputedStyle().direction` at interaction time, so `dir="rtl"` inverts Left and Right with no build flag (§4). The active panel carries `tabindex=0` so keyboard users reach its content after the last tab.',
+      example:
+        '<sk-tabs>\n  <div slot="tablist" data-slot="tablist">\n    <sk-tab label="Account"></sk-tab>\n    <sk-tab label="Billing"></sk-tab>\n  </div>\n  <sk-tab-panel><p>Account settings.</p></sk-tab-panel>\n  <sk-tab-panel><p>Billing history.</p></sk-tab-panel>\n</sk-tabs>',
+      knownLimitations: [
+        "Inactive panels are hidden, not kept alive — state inside a panel is lost on switch, unless the application holds it",
+        'The tablist slot must carry `data-slot="tablist"` and each part its `data-slot` — the wiring contract is structural',
+      ],
+    },
+  },
+  {
     name: "tooltip",
     tag: "sk-tooltip",
     stability: "stable",

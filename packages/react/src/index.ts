@@ -48,3 +48,13 @@ export { Toast } from "./toast.js"
 export type { ToastProps, SkToastElement } from "./toast.js"
 export { Tooltip, TooltipTrigger } from "./tooltip.js"
 export type { TooltipProps, TooltipTriggerProps, SkTooltipElement } from "./tooltip.js"
+export { Tabs, TabsList, Tab, TabPanel } from "./tabs.js"
+export type {
+  TabsProps,
+  TabsListProps,
+  TabProps,
+  TabPanelProps,
+  SkTabsElement,
+  SkTabElement,
+  SkTabPanelElement,
+} from "./tabs.js"

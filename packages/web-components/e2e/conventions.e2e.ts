@@ -99,7 +99,11 @@ test.describe("API conventions (static)", () => {
    * join it for the same reason: one announces a wait, the other is scaffolding,
    * and neither has a state to toggle.
    */
-  const NO_BOOLEAN_PROPS = new Set(["sk-card", "sk-spinner", "sk-skeleton"])
+  // sk-tabs is the fourth: its state is an index, not a flag. A tab is not
+  // on or off — it is first, second, or third — so there is no boolean to
+  // declare, and inventing one (e.g. a decorative flag) to satisfy the
+  // regex would be the vacuous pass this assertion exists to prevent.
+  const NO_BOOLEAN_PROPS = new Set(["sk-card", "sk-spinner", "sk-skeleton", "sk-tabs"])
 
   /** The props ADR-013 records as deliberately unprefixed presentation booleans. */
   const OPEN_IN_ADR_013: Record<string, Set<string>> = {
