@@ -36,3 +36,9 @@ export type {
 } from "./dialog.js"
 export { ThemeScript, useTheme, THEME_STORAGE_KEY, THEME_INIT_SCRIPT } from "./theme.js"
 export type { ResolvedTheme, ThemePreference } from "./theme.js"
+export { AlertDialog, AlertDialogContent } from "./alert-dialog.js"
+export type {
+  AlertDialogProps,
+  AlertDialogContentProps,
+  SkAlertDialogElement,
+} from "./alert-dialog.js"

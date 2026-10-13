@@ -24,6 +24,11 @@ ephemeral state the component owns outright, so there is no `defaultOpen`.
 The caller observes `sk-open-change` and may set `open` back; the component
 never corrects the caller.
 
+The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+mixin, so a base class of decorated props would be invisible — and the
+public API of each component is documented on the component, not in the base.
+
 ## Properties
 
 | Property      | Attribute     | Description                                                                                                                                                                                                                                                       | Type      | Default |

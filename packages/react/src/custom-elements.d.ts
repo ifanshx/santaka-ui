@@ -129,6 +129,12 @@ type DialogElement = HTMLElement & {
   label: string
 }
 
+type AlertDialogElement = HTMLElement & {
+  open: boolean
+  label: string
+  initialFocus: string
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -227,6 +233,12 @@ declare module "react" {
         modal?: boolean
         dismissible?: boolean
         label?: string
+        onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
+      }
+      "sk-alert-dialog": BaseCustomElement<AlertDialogElement> & {
+        open?: boolean
+        label?: string
+        "initial-focus"?: string
         onskOpenChange?: (event: CustomEvent<{ open: boolean }>) => void
       }
     }

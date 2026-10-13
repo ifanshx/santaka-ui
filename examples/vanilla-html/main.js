@@ -2,6 +2,27 @@
 // documents (ADR-001, eager registration path).
 import "/packages/web-components/dist/components/index.js"
 
+// The alert dialog has no trigger slot — the app raises it in response to
+// something. Here, the danger button. The alert refuses Escape and backdrop
+// clicks; the only way out is an action.
+const alert = document.querySelector("#example-alert")
+const alertResult = document.querySelector("#alert-result")
+document.querySelector("#alert-open")?.addEventListener("click", () => {
+  if (alert) alert.open = true
+  if (alertResult) alertResult.textContent = ""
+})
+alert?.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return
+  if (event.target.closest("#alert-cancel")) {
+    alert.open = false
+    if (alertResult) alertResult.textContent = "repository kept"
+  }
+  if (event.target.closest("#alert-confirm")) {
+    alert.open = false
+    if (alertResult) alertResult.textContent = "repository deleted"
+  }
+})
+
 const form = document.querySelector("#probe")
 const result = document.querySelector("#result")
 const log = document.querySelector("#log")

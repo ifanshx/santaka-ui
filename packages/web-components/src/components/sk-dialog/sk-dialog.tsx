@@ -1,4 +1,13 @@
 import { Component, Element, h, Host, Listen, Method, Prop, State, Watch } from "@stencil/core"
+import {
+  createDialogPanel,
+  emitOpenChange,
+  handleDialogClick,
+  hideDialog,
+  moveChildrenIntoPanel,
+  showDialog,
+  type DialogState,
+} from "../shared/dialog-base.js"
 
 /**
  * Dialog — Tier 2 floating overlay, and the first consumer of the glass
@@ -17,6 +26,11 @@ import { Component, Element, h, Host, Listen, Method, Prop, State, Watch } from 
  * ephemeral state the component owns outright, so there is no `defaultOpen`.
  * The caller observes `sk-open-change` and may set `open` back; the component
  * never corrects the caller.
+ *
+ * The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+ * The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+ * mixin, so a base class of decorated props would be invisible — and the
+ * public API of each component is documented on the component, not in the base.
  */
 @Component({
   tag: "sk-dialog",
@@ -51,93 +65,42 @@ export class SkDialog {
    */
   @Prop() label = ""
 
-  @State() private returnFocusTo: HTMLElement | null = null
-
-  private dialog: HTMLDialogElement | null = null
+  @State() private state!: DialogState
 
   componentWillLoad() {
     // Stencil prerenders the light DOM; the native element must exist before
     // any open prop is honored on upgrade.
-    this.dialog = document.createElement("dialog")
-    this.dialog.className = "sk-glass sk-dialog__panel"
-    this.dialog.setAttribute("data-slot", "panel")
-    this.renderPanelContent()
-    this.host.appendChild(this.dialog)
+    const dialog = createDialogPanel(this.host, "dialog")
+    this.state = {
+      host: this.host,
+      dialog,
+      open: this.open,
+      modal: this.modal,
+      dismissible: this.dismissible,
+      returnFocusTo: null,
+    }
   }
 
   componentDidLoad() {
-    // The consumer's children were parsed as children of the host, but the
-    // trigger is the only one the host's own slot tree wants. Everything else
-    // belongs in the panel: light-DOM <slot> distribution does not cross from
-    // a host child into a programmatically-built subtree on its own, so the
-    // children are moved, once, and the panel owns them from then on. A
-    // MutationObserver would fight Stencil's render; a one-time move at
-    // upgrade is deterministic.
-    if (!this.dialog) return
-    for (const child of Array.from(this.host.childNodes)) {
-      if (child.nodeType === Node.ELEMENT_NODE) {
-        if ((child as Element).getAttribute("slot") === "trigger") continue
-        if (child === this.dialog) continue
-      } else if (child.nodeType === Node.TEXT_NODE && !child.textContent?.trim()) {
-        continue
-      }
-      this.dialog.appendChild(child)
-    }
-    if (this.open) this.show()
+    moveChildrenIntoPanel(this.host, this.state.dialog!)
+    if (this.open) showDialog(this.state)
   }
 
   disconnectedCallback() {
-    this.dialog?.close()
-  }
-
-  /**
-   * The panel content lives in light DOM (scoped, not shadowed), so slotted
-   * consumer markup reaches the CSS. Called once at upgrade; slotted content is
-   * owned by the consumer and never re-rendered by this component.
-   */
-  private renderPanelContent() {
-    if (!this.dialog) return
-    const title = document.createElement("slot")
-    title.setAttribute("name", "title")
-    const body = document.createElement("slot")
-    const footer = document.createElement("slot")
-    footer.setAttribute("name", "footer")
-    for (const el of [title, body, footer]) this.dialog.appendChild(el)
+    this.state.dialog?.close()
   }
 
   @Watch("open")
   openChanged(next: boolean) {
+    this.state.open = next
+    this.state.modal = this.modal
+    this.state.dismissible = this.dismissible
     // The prop is the single source of truth for *intent*; the DOM methods are
     // the only thing that can act on it. Calling show()/close() inside the
     // watcher means a consumer setting `open` programmatically gets the same
     // focus and event treatment as clicking the trigger.
-    if (next) this.show()
-    else this.hide()
-  }
-
-  private show() {
-    if (!this.dialog) return
-    this.returnFocusTo = document.activeElement as HTMLElement | null
-    if (this.modal && typeof this.dialog.showModal === "function") {
-      this.dialog.showModal()
-    } else {
-      this.dialog.show()
-    }
-    // Initial focus goes to the first focusable inside, or the panel itself —
-    // the platform does not choose for us, and focusing nothing leaves the
-    // keyboard nowhere.
-    const first = this.dialog.querySelector<HTMLElement>(
-      "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
-    )
-    ;(first ?? this.dialog).focus()
-  }
-
-  private hide() {
-    // Focus returns to the invoker before the panel closes, so a keyboard user
-    // is not dropped at the top of the document.
-    this.returnFocusTo?.focus()
-    this.returnFocusTo = null
-    this.dialog?.close()
+    if (next) showDialog(this.state)
+    else hideDialog(this.state)
   }
 
   /**
@@ -162,7 +125,7 @@ export class SkDialog {
     // consumer's listener sees the same story the DOM tells.
     event.preventDefault()
     this.open = false
-    this.emitChange(false)
+    emitOpenChange(this.state, false)
   }
 
   @Listen("close", { capture: true })
@@ -171,39 +134,18 @@ export class SkDialog {
     // to update the reflected prop.
     if (this.open) {
       this.open = false
-      this.emitChange(false)
+      emitOpenChange(this.state, false)
     }
   }
 
   @Listen("click", { capture: true })
   handleDelegate(event: Event) {
-    // `instanceof Element` narrows in a DOM lib build; Stencil's is stricter,
-    // so the guard is repeated through a local of the narrowed type.
-    const target = event.target as Element | null
-    if (!target || typeof target.closest !== "function") return
-
-    // The trigger is slotted page chrome, so the component owns the click that
-    // opens itself — the consumer writes no wiring for the common case.
-    if (target.closest("[slot='trigger']")) {
-      this.open = true
-      // The watcher fires the DOM methods, but the event is this handler's to
-      // send: without it, a trigger-open is the one path the consumer cannot
-      // observe.
-      this.emitChange(true)
-      return
-    }
-
-    // Backdrop dismissal: a click on the <dialog> element itself is a click on
-    // the padding area behind the panel, which is how the native element
-    // distinguishes it from a click on the panel's content.
-    if (this.dismissible && this.open && target === this.dialog) {
-      this.open = false
-      this.emitChange(false)
-    }
-  }
-
-  private emitChange(open: boolean) {
-    this.host.dispatchEvent(new CustomEvent("sk-open-change", { detail: { open }, bubbles: true }))
+    this.state.open = this.open
+    this.state.modal = this.modal
+    this.state.dismissible = this.dismissible
+    handleDialogClick(this.state, event, (open) => {
+      this.open = open
+    })
   }
 
   render() {

@@ -1,0 +1,24 @@
+/*
+ * Alert dialog styles.
+ *
+ * The panel is the same glass dialog panel — this component *is* a dialog, and
+ * sharing the material is the point. What distinguishes an alert visually is
+ * the danger stroke on the panel's top edge: an interruption should look like
+ * one before a single word is read.
+ *
+ * There is no reduced-motion block here: the entrance animation's reduced
+ * ruling lives in glass.css, which this panel wears.
+ */
+
+sk-alert-dialog .sk-dialog__panel {
+  border-block-start: var(--sk-border-thick, 3px) solid var(--sk-color-danger, #dc2626);
+}
+
+sk-alert-dialog .sk-dialog__panel .sk-alert-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sk-space-2, 0.5rem);
+  padding-block-start: var(--sk-space-3, 0.75rem);
+}

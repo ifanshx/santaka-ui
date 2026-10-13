@@ -255,4 +255,15 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-alert-dialog")) {
+    customElements.define(
+      "sk-alert-dialog",
+      class extends HTMLElement {
+        open = false
+        label = ""
+        initialFocus = ""
+      },
+    )
+  }
 })

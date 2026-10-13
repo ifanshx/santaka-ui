@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-dialog/sk-dialog.tsx",
       "type": "registry:component",
-      "checksum": "sha256-c155568656df0c235729145628ccd82e61cd1235c2f07fb7d85c6be9ae6cd1f5"
+      "checksum": "sha256-b118f34213f589144441e5f9cf442a460b6916c8ba91329e7df99e69e3aa0fd2"
     },
     {
       "path": "src/components/sk-dialog/sk-dialog.css",

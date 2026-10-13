@@ -13,6 +13,7 @@
  * `defineCustomElements(window)` from client code (ADR-005), which keeps
  * hydration from upgrading tags the server already produced.
  */
+export { SkAlertDialog } from "./components/sk-alert-dialog/sk-alert-dialog.js"
 export { SkBadge } from "./components/sk-badge/sk-badge.js"
 export { SkButton } from "./components/sk-button/sk-button.js"
 export { SkCard } from "./components/sk-card/sk-card.js"
@@ -30,6 +31,7 @@ export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/
 
 /** Custom element tags this package defines. */
 export const COMPONENTS = [
+  "sk-alert-dialog",
   "sk-badge",
   "sk-button",
   "sk-card",

@@ -11,6 +11,43 @@ export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/butto
 export { InputType } from "./components/sk-input/sk-input";
 export namespace Components {
     /**
+     * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
+     * rather than copied.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An alert dialog is a dialog that asks a question the page cannot continue
+     * without: the decision is forced, and interruption is the *point*. Three
+     * properties follow from that definition, and each one is a removal from
+     * `sk-dialog`:
+     *  - `role="alertdialog"`, so assistive technology announces it as an
+     *    interruption rather than as a window.
+     *  - **No dismissal**: no `dismissible` prop, no backdrop click, and Escape is
+     *    refused. A user cannot decline to answer — they must choose an action.
+     *    This is the ARIA APG's requirement for the role, not a style choice.
+     *  - **No trigger slot.** An alert is raised by the application in response to
+     *    something, never opened by the user browsing; a "click to see the
+     *    warning" control is a contradiction.
+     * Focus goes to the **first action button**, not the first focusable — the
+     * decision's default belongs to the consumer, and `initialFocus` lets them
+     * pick it explicitly.
+     */
+    interface SkAlertDialog {
+        /**
+          * Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel.
+          * @default ""
+         */
+        "initialFocus": string;
+        /**
+          * Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Whether the alert is showing.
+          * @default false
+         */
+        "open": boolean;
+    }
+    /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A badge is a static label, not an interactive element. That is stated here
@@ -132,6 +169,10 @@ export namespace Components {
      * ephemeral state the component owns outright, so there is no `defaultOpen`.
      * The caller observes `sk-open-change` and may set `open` back; the component
      * never corrects the caller.
+     * The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+     * The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+     * mixin, so a base class of decorated props would be invisible — and the
+     * public API of each component is documented on the component, not in the base.
      */
     interface SkDialog {
         "close": () => Promise<void>;
@@ -578,6 +619,32 @@ export namespace Components {
 }
 declare global {
     /**
+     * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
+     * rather than copied.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An alert dialog is a dialog that asks a question the page cannot continue
+     * without: the decision is forced, and interruption is the *point*. Three
+     * properties follow from that definition, and each one is a removal from
+     * `sk-dialog`:
+     *  - `role="alertdialog"`, so assistive technology announces it as an
+     *    interruption rather than as a window.
+     *  - **No dismissal**: no `dismissible` prop, no backdrop click, and Escape is
+     *    refused. A user cannot decline to answer — they must choose an action.
+     *    This is the ARIA APG's requirement for the role, not a style choice.
+     *  - **No trigger slot.** An alert is raised by the application in response to
+     *    something, never opened by the user browsing; a "click to see the
+     *    warning" control is a contradiction.
+     * Focus goes to the **first action button**, not the first focusable — the
+     * decision's default belongs to the consumer, and `initialFocus` lets them
+     * pick it explicitly.
+     */
+    interface HTMLSkAlertDialogElement extends Components.SkAlertDialog, HTMLStencilElement {
+    }
+    var HTMLSkAlertDialogElement: {
+        prototype: HTMLSkAlertDialogElement;
+        new (): HTMLSkAlertDialogElement;
+    };
+    /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A badge is a static label, not an interactive element. That is stated here
@@ -646,6 +713,10 @@ declare global {
      * ephemeral state the component owns outright, so there is no `defaultOpen`.
      * The caller observes `sk-open-change` and may set `open` back; the component
      * never corrects the caller.
+     * The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+     * The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+     * mixin, so a base class of decorated props would be invisible — and the
+     * public API of each component is documented on the component, not in the base.
      */
     interface HTMLSkDialogElement extends Components.SkDialog, HTMLStencilElement {
     }
@@ -819,6 +890,7 @@ declare global {
         new (): HTMLSkTextareaElement;
     };
     interface HTMLElementTagNameMap {
+        "sk-alert-dialog": HTMLSkAlertDialogElement;
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-card": HTMLSkCardElement;
@@ -835,6 +907,43 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    /**
+     * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
+     * rather than copied.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An alert dialog is a dialog that asks a question the page cannot continue
+     * without: the decision is forced, and interruption is the *point*. Three
+     * properties follow from that definition, and each one is a removal from
+     * `sk-dialog`:
+     *  - `role="alertdialog"`, so assistive technology announces it as an
+     *    interruption rather than as a window.
+     *  - **No dismissal**: no `dismissible` prop, no backdrop click, and Escape is
+     *    refused. A user cannot decline to answer — they must choose an action.
+     *    This is the ARIA APG's requirement for the role, not a style choice.
+     *  - **No trigger slot.** An alert is raised by the application in response to
+     *    something, never opened by the user browsing; a "click to see the
+     *    warning" control is a contradiction.
+     * Focus goes to the **first action button**, not the first focusable — the
+     * decision's default belongs to the consumer, and `initialFocus` lets them
+     * pick it explicitly.
+     */
+    interface SkAlertDialog {
+        /**
+          * Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel.
+          * @default ""
+         */
+        "initialFocus"?: string;
+        /**
+          * Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Whether the alert is showing.
+          * @default false
+         */
+        "open"?: boolean;
+    }
     /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -965,6 +1074,10 @@ declare namespace LocalJSX {
      * ephemeral state the component owns outright, so there is no `defaultOpen`.
      * The caller observes `sk-open-change` and may set `open` back; the component
      * never corrects the caller.
+     * The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+     * The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+     * mixin, so a base class of decorated props would be invisible — and the
+     * public API of each component is documented on the component, not in the base.
      */
     interface SkDialog {
         /**
@@ -1420,6 +1533,11 @@ declare namespace LocalJSX {
         "variant"?: "default" | "quiet";
     }
 
+    interface SkAlertDialogAttributes {
+        "open": boolean;
+        "label": string;
+        "initialFocus": string;
+    }
     interface SkBadgeAttributes {
         "variant": "neutral" | "primary" | "success" | "warning" | "danger";
         "size": "sm" | "md";
@@ -1525,6 +1643,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "sk-alert-dialog": Omit<SkAlertDialog, keyof SkAlertDialogAttributes> & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes]?: SkAlertDialog[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `attr:${K}`]?: SkAlertDialogAttributes[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `prop:${K}`]?: SkAlertDialog[K] };
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
@@ -1544,6 +1663,27 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
+             * rather than copied.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * An alert dialog is a dialog that asks a question the page cannot continue
+             * without: the decision is forced, and interruption is the *point*. Three
+             * properties follow from that definition, and each one is a removal from
+             * `sk-dialog`:
+             *  - `role="alertdialog"`, so assistive technology announces it as an
+             *    interruption rather than as a window.
+             *  - **No dismissal**: no `dismissible` prop, no backdrop click, and Escape is
+             *    refused. A user cannot decline to answer — they must choose an action.
+             *    This is the ARIA APG's requirement for the role, not a style choice.
+             *  - **No trigger slot.** An alert is raised by the application in response to
+             *    something, never opened by the user browsing; a "click to see the
+             *    warning" control is a contradiction.
+             * Focus goes to the **first action button**, not the first focusable — the
+             * decision's default belongs to the consumer, and `initialFocus` lets them
+             * pick it explicitly.
+             */
+            "sk-alert-dialog": LocalJSX.IntrinsicElements["sk-alert-dialog"] & JSXBase.HTMLAttributes<HTMLSkAlertDialogElement>;
             /**
              * Badge — Tier 1 display component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -1598,6 +1738,10 @@ declare module "@stencil/core" {
              * ephemeral state the component owns outright, so there is no `defaultOpen`.
              * The caller observes `sk-open-change` and may set `open` back; the component
              * never corrects the caller.
+             * The mechanics live in `shared/dialog-base.ts`, shared with `sk-alert-dialog`.
+             * The decorators stay here on purpose: Stencil's compiler cannot see a runtime
+             * mixin, so a base class of decorated props would be invisible — and the
+             * public API of each component is documented on the component, not in the base.
              */
             "sk-dialog": LocalJSX.IntrinsicElements["sk-dialog"] & JSXBase.HTMLAttributes<HTMLSkDialogElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;

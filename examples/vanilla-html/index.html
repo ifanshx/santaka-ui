@@ -247,6 +247,40 @@
         </div>
       </section>
 
+      <section aria-labelledby="alert-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="alert-heading">Alert dialog</h2>
+        </sk-text>
+
+        <!--
+          role=alertdialog: the decision is forced. No backdrop click, no
+          Escape -- the user must choose an action, which is the ARIA APG's
+          requirement for the role. Focus lands on the safe action.
+
+          The raise button is page chrome, NOT a child of the alert: an alert
+          is raised by the application, and anything inside the element is
+          moved into the panel (which is hidden until raised). The panel
+          content below is a sibling, not a child.
+        -->
+        <sk-button id="alert-open" variant="danger">Delete repository</sk-button>
+        <sk-alert-dialog id="example-alert" initial-focus="#alert-cancel">
+          <sk-text variant="lg" family="display" slot="title">
+            <h3>Delete this repository?</h3>
+          </sk-text>
+          <sk-text variant="sm" muted>
+            All builds, logs, and settings will be removed. This cannot be undone.
+          </sk-text>
+          <div
+            class="sk-cluster"
+            style="justify-content: flex-end; padding-block-start: var(--sk-space-3)"
+          >
+            <sk-button id="alert-cancel" variant="secondary">Cancel</sk-button>
+            <sk-button id="alert-confirm" variant="danger">Delete forever</sk-button>
+          </div>
+        </sk-alert-dialog>
+        <output id="alert-result" class="sk-text-muted" aria-live="polite"></output>
+      </section>
+
       <section aria-labelledby="dialog-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="dialog-heading">Dialog</h2>

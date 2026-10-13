@@ -1086,7 +1086,7 @@ A release candidate is ready only when the applicable items are checked and evid
 
 - [ ] Core component documentation and examples are complete.
 - [ ] Public TypeScript types and package exports validate in clean consumer projects. *(`attw --pack` and `publint` pass on the packed tarball of all six packages, which is the strongest check available without a consumer fixture. Nothing has yet installed the package into a scratch project and imported it, which is what this gate actually asks for.)*
-- [x] Unit, component, interaction, and browser tests pass in CI. *(429 tests pass on every run — 48 token, 20 utilities, 98 core (registry schema, exports contract, validate), 108 React, and 155 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
+- [x] Unit, component, interaction, and browser tests pass in CI. *(443 tests pass on every run — 48 token, 20 utilities, 98 core (registry schema, exports contract, validate), 113 React, and 164 Playwright — and `pnpm run verify` exits 0 from a cold cache. Note that "component tests" here means browser tests: there is no separate jsdom component-test layer yet.)*
 - [ ] Keyboard navigation and focus management have been manually reviewed.
 - [ ] Automated accessibility checks and targeted manual reviews are documented.
 - [x] Light/dark themes, forced-colors considerations, and reduced motion are reviewed. *(Token contract tests assert the glass fallback panel clears 4.5:1 against each theme's own text and is near-opaque; `forced-colors` is handled in all four components and in `glass.css`; `prefers-reduced-motion` removes the press transform rather than merely shortening it.)*
