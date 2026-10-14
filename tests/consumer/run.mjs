@@ -29,8 +29,10 @@
  */
 import { spawnSync } from "node:child_process"
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import { createServer } from "node:http"
 import { tmpdir } from "node:os"
 import { dirname, join, resolve } from "node:path"
+import { pathToFileURL } from "node:url"
 import { fileURLToPath } from "node:url"
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -456,6 +458,11 @@ export function App() {
 `,
   )
 
+  writeFileSync(
+    join(scratch, "index.html"),
+    '<!doctype html>\n<html lang="en" data-sk-theme="light">\n  <head>\n    <meta charset="utf-8" />\n    <link rel="stylesheet" href="/node_modules/@santaka-ui/tokens/dist/css/light.css" />\n    <link rel="stylesheet" href="/node_modules/@santaka-ui/styles/dist/index.css" />\n    <link rel="stylesheet" href="/node_modules/@santaka-ui/web-components/dist/santaka.css" />\n    <script type="module">\n      import "/node_modules/@santaka-ui/web-components/dist/components/index.js"\n    </script>\n  </head>\n  <body>\n    <sk-button variant="primary">Save changes</sk-button>\n  </body>\n</html>\n',
+  )
+
   const tsc = join(repoRoot, "node_modules", "typescript", "bin", "tsc")
   run(process.execPath, [tsc, "-p", join(scratch, "tsconfig.json")])
 })
@@ -508,6 +515,84 @@ export { entry, hash, safety, server, applyWrites }
   run(process.execPath, [tsc, "-p", join(scratch, "tsconfig.node.json")])
 })
 
+check("the elements upgrade in a real browser, served from the tarball", async () => {
+  // The one check a Node-only fixture cannot make. Everything above runs in
+  // Node: resolution, imports, types, server rendering. None of it proves the
+  // custom elements *upgrade* when a browser loads them from the tarball — that
+  // the ESM bundle is valid in a browser context, that the scoped CSS applies,
+  // and that `customElements.define` actually ran.
+  //
+  // Playwright is resolved from the workspace because the fixture is a test
+  // harness, not a consumer; what is under test is the tarball on disk, which is
+  // served from `node_modules` in the scratch project.
+  const { chromium } = await import(
+    pathToFileURL(join(repoRoot, "packages/web-components/node_modules/@playwright/test/index.mjs"))
+      .href
+  )
+
+  const server = createServer((request, response) => {
+    const url = new URL(request.url ?? "/", "http://127.0.0.1")
+    let file = join(scratch, decodeURIComponent(url.pathname))
+    if (url.pathname === "/") file = join(scratch, "index.html")
+    try {
+      const body = readFileSync(file)
+      const type = file.endsWith(".css")
+        ? "text/css"
+        : file.endsWith(".js")
+          ? "text/javascript"
+          : "text/html"
+      response.writeHead(200, { "content-type": type })
+      response.end(body)
+    } catch {
+      response.writeHead(404)
+      response.end("not found")
+    }
+  })
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve))
+  const port = server.address().port
+
+  // `launch()` is inside the try, not before it: if Chromium is missing, the
+  // throw must still reach the `finally` that closes the HTTP server, or the
+  // process hangs on an open handle instead of reporting the real problem.
+  let browser
+  try {
+    browser = await chromium.launch()
+    const page = await browser.newPage()
+    const failures = []
+    page.on("pageerror", (error) => failures.push(`pageerror: ${error.message}`))
+    page.on("requestfailed", (request) => failures.push(`requestfailed: ${request.url()}`))
+
+    await page.goto(`http://127.0.0.1:${port}/`)
+    // The upgrade is asynchronous: the module loads, then defines the elements.
+    await page.waitForFunction(() => Boolean(customElements.get("sk-button")), null, {
+      timeout: 15_000,
+    })
+
+    const state = await page.evaluate(() => {
+      const button = document.querySelector("sk-button")
+      const style = button ? getComputedStyle(button) : null
+      return {
+        defined: Boolean(customElements.get("sk-button")),
+        upgraded: button?.classList.contains("hydrated") ?? false,
+        borderWidth: style?.borderTopWidth ?? null,
+        radius: style?.borderTopLeftRadius ?? null,
+      }
+    })
+
+    if (!state.defined) failures.push("sk-button was never defined")
+    if (!state.upgraded) failures.push("sk-button did not upgrade (no .hydrated)")
+    // The brutalist chrome is the token + CSS pipeline end to end: if the
+    // stylesheet did not load or the tokens did not apply, this is 0px and 1px.
+    if (state.borderWidth !== "3px") failures.push(`border is ${state.borderWidth}, expected 3px`)
+    if (state.radius !== "0px") failures.push(`radius is ${state.radius}, expected 0px`)
+
+    if (failures.length > 0) throw new Error(failures.join("; "))
+  } finally {
+    await browser?.close()
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
 check("the React adapter renders the element it wraps, in a real DOM", () => {
   const script = `
     import { createElement } from "react"
@@ -553,7 +638,11 @@ async function main() {
   let failed = 0
   for (const { name, fn } of checks) {
     try {
-      fn()
+      // `await`, because the browser check is async. Without it the promise
+      // escapes the try/catch: a timeout would print `ok` first and then crash
+      // the process with an unhandled rejection, which is exactly what happened
+      // the first time this check was added.
+      await fn()
       console.log(`  ok   ${name}`)
     } catch (error) {
       failed++

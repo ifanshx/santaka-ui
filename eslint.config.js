@@ -92,9 +92,14 @@ export default tseslint.config(
     // use `process`, `console`, and `node:*` directly. They are `.mjs`, which the
     // TypeScript block above does not cover, so they would otherwise be linted as
     // browser scripts and fail on `process` being undefined.
+    //
+    // Browser globals are also allowed here because the consumer fixture drives a
+    // real page: `page.evaluate(() => getComputedStyle(…))` is a callback that
+    // runs in the browser, so `document`, `customElements`, and
+    // `getComputedStyle` are correct there even though the file itself is Node.
     files: ["**/e2e/**/*.mjs", "tests/**/*.mjs"],
     languageOptions: {
-      globals: { ...globals.node },
+      globals: { ...globals.node, ...globals.browser },
     },
   },
   prettier,
