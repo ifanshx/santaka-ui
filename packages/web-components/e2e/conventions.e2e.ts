@@ -212,6 +212,44 @@ test.describe("API conventions (static)", () => {
       expect(tag.startsWith("sk-")).toBe(true)
     }
   })
+
+  test("component CSS uses logical properties, never physical ones", () => {
+    // ADR-016, and §4's RTL section: "Authored CSS uses logical properties
+    // exclusively ... Banned in component source: `left`, `right`,
+    // `margin-left`, `padding-right`, `text-align: left/right`,
+    // `border-top-left-radius`."
+    //
+    // The ban is what makes RTL a Definition of Done item rather than a
+    // retrofit across twenty components, and until this test existed nothing
+    // enforced it: a component could write `margin-left` and look fine in a
+    // left-to-right review. Comments are stripped first, because a rule that
+    // *explains* the ban must not trip it.
+    const physical = [
+      /\b(?:margin|padding|border|inset)-(?:left|right)\b/,
+      /\btext-align\s*:\s*(?:left|right)\b/,
+      /\bborder-(?:top|bottom)-(?:left|right)-radius\b/,
+      /(?:^|[;{\s])(?:left|right)\s*:/m,
+      /\bfloat\s*:\s*(?:left|right)\b/,
+    ]
+
+    for (const tag of COMPONENTS) {
+      const cssPath = resolve(componentsDir, tag, `${tag}.css`)
+      let css: string
+      try {
+        css = readFileSync(cssPath, "utf8")
+      } catch {
+        continue // A component with no stylesheet has nothing to check.
+      }
+      const code = css.replace(/\/\*[\s\S]*?\*\//g, "")
+      for (const pattern of physical) {
+        const match = code.match(pattern)
+        expect(
+          match,
+          `${tag}.css uses the physical property ${JSON.stringify(match?.[0])}; ADR-016 requires the logical equivalent`,
+        ).toBeNull()
+      }
+    }
+  })
 })
 
 test.describe("API conventions (runtime)", () => {

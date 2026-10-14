@@ -139,10 +139,21 @@ measured budgets.
 
 ### Decisions recorded
 
-**8 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
-pipeline, and why `style-dictionary` is not used), 004 (naming, scope, license),
-005 (SSR and hydration), 010 (budgets), 013 (API conventions, one question
-open), 014 (browser baseline), 017 (token values and design direction).
+**14 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+pipeline, and why `style-dictionary` is not used), 003 (behavior ownership:
+Web Components owns every component, React adapts, no Radix), 004 (naming,
+scope, license), 005 (SSR and hydration), 008 (accessibility testing stack),
+010 (budgets), 011 (scoped styles, never a shadow root), 012 (ESM-only
+distribution contract and the two defects it caught), 013 (API conventions, one
+question open), 014 (browser baseline), 016 (RTL: logical properties, now
+enforced by a conformance test, and direction-derived keyboard behavior), 017
+(token values and design direction), 018 (toolchain defaults, with every
+deviation from §5 named), plus 019 (visual regression). The four still missing
+(006, 007, 009, 015) are all deadlines for work that has not started.
+
+ADR-003, 011, 012, 016, and 018 were cited from source — README, CONTRIBUTING,
+`stencil.config.ts`, `eslint.config.js`, and the components — while the
+documents did not exist. Those citations now resolve.
 
 ## Not done
 
@@ -153,9 +164,11 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- **10 ADRs missing**: 003, 006, 007, 008, 009, 011, 012, 015, 016, 018.
-  ADR-002, ADR-005, and ADR-011 were cited from source comments before this pass;
-  those citations now resolve.
+- **4 ADRs missing**: 006 (docs site framework and search), 007 (registry
+  hosting model), 009 (source-mode upgrade path), 015 (AI metadata, llms.txt, MCP
+  packaging). Each is a deadline that has not arrived: the docs site, the CLI,
+  and the MCP server are all unbuilt, so those decisions have nothing to bind
+  yet. The ADRs that *were* overdue are now written — see "Decisions recorded".
 - ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
   ADR-005's consequences): server-rendered tags with public attributes, no
   `customElements.define` in any server chunk, clean hydration through the lazy
