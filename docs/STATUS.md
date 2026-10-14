@@ -155,6 +155,21 @@ ADR-003, 011, 012, 016, and 018 were cited from source — README, CONTRIBUTING,
 `stencil.config.ts`, `eslint.config.js`, and the components — while the
 documents did not exist. Those citations now resolve.
 
+### Browser support matrix
+
+`docs/browser-support.md` is **generated, not written**: a script reads the
+projects out of `playwright.config.ts` and each engine's revision from the
+browser Playwright will actually launch, so a browser appears in the document
+only if a project launches it. A CI job fails when the document and the config
+disagree, which is the only way they can drift.
+
+The three engines were run to produce it, and this is the first time the suite
+has been exercised outside Chromium: **261 tests pass on Chromium, 260 + 1 flaky
+on Firefox, 261 on WebKit.** The flake is `a11y.e2e.ts` in the dark theme on
+Firefox — an axe scan that passed on retry, not a behavior difference. That is a
+real datapoint the matrix's predecessors could not have offered, because the
+matrix did not exist and Firefox/WebKit ran only in CI.
+
 ## Not done
 
 ### Blocking Tier 1

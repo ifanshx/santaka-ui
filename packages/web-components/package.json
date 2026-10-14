@@ -50,6 +50,9 @@
     "test": "playwright test",
     "test:unit": "vitest run --root ../.. tests",
     "test:visual": "node scripts/run-visual.mjs",
+    "test:support-matrix": "node scripts/test-support-matrix.mjs",
+    "support-matrix": "node scripts/generate-support-matrix.mjs",
+    "support-matrix:check": "node scripts/generate-support-matrix.mjs --check",
     "size": "node scripts/measure-bundle.mjs",
     "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },

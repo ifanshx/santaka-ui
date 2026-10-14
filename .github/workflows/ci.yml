@@ -103,3 +103,29 @@ jobs:
 
       - name: Check changeset status
         run: pnpm exec changeset status --since origin/main
+
+  support-matrix:
+    name: support matrix is in sync with the Playwright config
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The check reads each browser's revision from its executable path, so all
+      # three must be installed before it can reproduce the document.
+      - run: pnpm --filter @santaka-ui/web-components exec playwright install chromium firefox webkit
+
+      # `plan.md` section 4: adding a browser to the documentation without a test job
+      # is a release blocker. This fails when the document and the Playwright
+      # projects disagree, which is the only way the two can drift.
+      - name: Check the generated support matrix
+        run: pnpm --filter @santaka-ui/web-components support-matrix:check

@@ -89,7 +89,11 @@ export default function App() {
 - **Contrast is a build gate.** The token build fails if any documented pair
   drops below its WCAG target, and writes a contrast report you can read.
 - **Browser support is tested, not claimed.** The published matrix comes from the
-  Playwright projects that actually run.
+  Playwright projects that actually run. It is generated, not written by hand:
+  `pnpm --filter @santaka-ui/web-components test:support-matrix` runs the suite on
+  each engine and writes `docs/browser-support.md`, so a browser appears in the
+  document only if a project launches it and passes. Adding a browser to the docs
+  without a test job is a release blocker (`plan.md` §4).
 
 ## License
 

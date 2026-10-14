@@ -16,6 +16,18 @@ const firstTooltip = 'sk-tooltip[placement="top"]'
 const firstTrigger = `${firstTooltip} [slot='trigger']`
 const firstPanel = `${firstTooltip} [data-slot='panel']`
 
+/**
+ * How long to wait for the panel after hovering.
+ *
+ * The default delay is 300ms. This bound is deliberately generous rather than
+ * tight: what proves the delay is real is the *negative* assertion below (the
+ * panel is still hidden at 120ms), not a narrow ceiling on the positive one.
+ * Pinning the ceiling near the delay made the test fail under parallel load,
+ * which measured the scheduler rather than the component — the suite passed
+ * 9/9 on three consecutive isolated runs while failing once in a full-suite run.
+ */
+const HOVER_SHOW_TIMEOUT = 2000
+
 test("hover shows it, after the delay", async ({ page }) => {
   const trigger = page.locator(firstTrigger)
   await trigger.hover()
@@ -24,13 +36,13 @@ test("hover shows it, after the delay", async ({ page }) => {
   await page.waitForTimeout(120)
   await expect(page.locator(firstPanel)).toBeHidden()
 
-  await expect(page.locator(firstPanel)).toBeVisible({ timeout: 1000 })
+  await expect(page.locator(firstPanel)).toBeVisible({ timeout: HOVER_SHOW_TIMEOUT })
 })
 
 test("leaving the trigger hides it", async ({ page }) => {
   const trigger = page.locator(firstTrigger)
   await trigger.hover()
-  await expect(page.locator(firstPanel)).toBeVisible({ timeout: 1000 })
+  await expect(page.locator(firstPanel)).toBeVisible({ timeout: HOVER_SHOW_TIMEOUT })
 
   await page.locator("#toast-heading").hover()
   await expect(page.locator(firstPanel)).toBeHidden()
@@ -107,7 +119,7 @@ test("placement offsets in the requested direction", async ({ page }) => {
   const trigger = page.locator(firstTrigger)
   const triggerBox = await trigger.boundingBox()
   await trigger.hover()
-  await expect(page.locator(firstPanel)).toBeVisible({ timeout: 1000 })
+  await expect(page.locator(firstPanel)).toBeVisible({ timeout: HOVER_SHOW_TIMEOUT })
   const panelBox = await page.locator(firstPanel).boundingBox()
 
   if (triggerBox && panelBox) {
