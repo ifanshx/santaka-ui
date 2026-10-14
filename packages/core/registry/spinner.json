@@ -41,6 +41,27 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"Loading\"",
+      "description": "What the wait is, announced to screen readers in place of the silent ring. \"Loading\" is the honest default; \"Saving draft…\" is the better one."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Ring diameter, from the icon-size tokens so the spinner matches the icon beside it. Not the `size` prop's height scale: a spinner is a circle, and a circle's size is its diameter."
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Announces progress when it is known, e.g. \"Uploading 60%\"."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.",
     "whenToUse": [

@@ -65,6 +65,89 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Initial value for the uncontrolled case."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text below the group."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "Associates the control with a form it is not nested inside."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid, with the same independence from `error` as Input."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The group's own label text, rendered above the options."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The submitted name. Every radio in the group carries it."
+    },
+    {
+      "name": "options",
+      "type": "RadioOption[]",
+      "default": "[]",
+      "description": "The choices. Serialized as JSON when written as an attribute."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Native constraint validation still applies and is never suppressed."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Label text size. The row target stays 44px at every size."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The value. Uncontrolled by default; \"\" means nothing selected."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"quiet\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
   "ai": {
     "summary": "An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.",
     "whenToUse": [

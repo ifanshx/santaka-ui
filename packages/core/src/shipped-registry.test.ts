@@ -17,7 +17,12 @@ const here = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(here, "..", "..", "..")
 const registryDir = join(repoRoot, "packages", "core", "registry")
 
-const entryFiles = readdirSync(registryDir).filter((name) => name.endsWith(".json"))
+// `index.json` is the generated aggregate of these entries, not an entry: it is
+// validated by its own contract test, and asserting per-component fields
+// against it would fail on every one.
+const entryFiles = readdirSync(registryDir).filter(
+  (name) => name.endsWith(".json") && name !== "index.json",
+)
 const entries = entryFiles.map((name) => ({
   name,
   raw: readFileSync(join(registryDir, name), "utf8"),
@@ -95,6 +100,66 @@ describe("shipped registry entries", () => {
     for (const entry of entries) {
       expect(entry.parsed.dependencies).toEqual({})
       expect(entry.parsed.peerDependencies).toEqual({})
+    }
+  })
+
+  it("reports the props and events the component actually has", () => {
+    // The public surface the MCP server's `get_component` reports (section 11).
+    // Derived from the committed type declarations and component sources, so a
+    // rename in either is a test failure here rather than a stale document.
+    for (const entry of entries) {
+      const { props, events } = entry.parsed
+      expect(Array.isArray(props), `${entry.name} props`).toBe(true)
+      expect(Array.isArray(events), `${entry.name} events`).toBe(true)
+      for (const prop of props) {
+        expect(typeof prop.name, `${entry.name} prop name`).toBe("string")
+        expect(typeof prop.type, `${entry.name} prop type`).toBe("string")
+      }
+      for (const event of events) {
+        expect(event.startsWith("sk-"), `${entry.name} event ${event}`).toBe(true)
+      }
+    }
+  })
+
+  it("marks a form control as emitting sk-value-change", () => {
+    // A spot-check that the derivation reaches the shared base: Input emits
+    // `sk-value-change` from `setupFormControl()`, not from its own source, so
+    // a naive per-file scan reports nothing.
+    const formControls = ["input", "textarea", "select", "checkbox", "switch", "radio-group"]
+    for (const name of formControls) {
+      const entry = entries.find((candidate) => candidate.parsed.name === name)
+      expect(entry?.parsed.events, `${name} events`).toContain("sk-value-change")
+    }
+  })
+})
+
+describe("the generated registry index", () => {
+  const indexPath = join(registryDir, "index.json")
+  const index = JSON.parse(readFileSync(indexPath, "utf8"))
+
+  it("contains every per-component entry, and nothing else", () => {
+    const indexed = index.items.map((item: { name: string }) => item.name).sort()
+    const onDisk = entries.map((entry) => entry.parsed.name).sort()
+    expect(indexed).toEqual(onDisk)
+  })
+
+  it("agrees with the per-component files byte for byte", () => {
+    // The index is generated from the same pass as the entries, so a divergence
+    // means someone edited one and not the other.
+    for (const entry of entries) {
+      const indexed = index.items.find((item: { name: string }) => item.name === entry.parsed.name)
+      expect(indexed, `${entry.name} in the index`).toEqual(entry.parsed)
+    }
+  })
+
+  it("validates every item against the schema", () => {
+    for (const item of index.items) {
+      const result = validateRegistryItem(item)
+      if (!result.ok) {
+        const detail = result.errors.map((e) => `${e.pointer} ${e.message}`).join("\n")
+        throw new Error(`${item.name} is invalid:\n${detail}`)
+      }
+      expect(result.ok).toBe(true)
     }
   })
 })

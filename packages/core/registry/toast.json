@@ -45,6 +45,29 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "default": "5000",
+      "description": "Milliseconds before auto-dismiss. `0` never auto-dismisses — for an error the user must act on, an expiring message is an expired apology."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the toast is showing."
+    },
+    {
+      "name": "variant",
+      "type": "\"neutral\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "\"neutral\"",
+      "description": "Visual severity, matching Badge's palette. Color is never the message."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
   "ai": {
     "summary": "A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.",
     "whenToUse": [

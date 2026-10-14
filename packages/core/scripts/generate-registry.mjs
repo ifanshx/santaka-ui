@@ -13,6 +13,12 @@ import { createHash } from "node:crypto"
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+import {
+  eventsFor,
+  propsFor,
+  readComponentTypes,
+  readEventMetadata,
+} from "./lib/component-types.mjs"
 
 const here = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(here, "..", "..", "..")
@@ -24,6 +30,12 @@ const version = JSON.parse(readFileSync(join(wcRoot, "package.json"), "utf8")).v
 const sha256 = (path) => `sha256-${createHash("sha256").update(readFileSync(path)).digest("hex")}`
 
 const wcFile = (tag, extension) => join(wcRoot, "src", "components", tag, `${tag}.${extension}`)
+
+// The public surface — props and events — is read from the committed type
+// declarations and component sources rather than authored per entry, so it
+// cannot drift from the components. `get_component` (section 11) reports it.
+const componentTypes = readComponentTypes(join(wcRoot, "src", "components.d.ts"))
+const eventMetadata = readEventMetadata(join(wcRoot, "src", "components", "shared"))
 
 /**
  * The component set. Everything mechanical — files, checksums, CSS variables —
@@ -1034,6 +1046,8 @@ for (const component of COMPONENTS) {
     cssVariables: component.cssVariables,
     localesCovered: ["en-US"],
     license: "MIT",
+    props: propsFor(componentTypes, component.name),
+    events: eventsFor(readFileSync(wcFile(component.tag, "tsx"), "utf8"), eventMetadata),
     ai: { ...component.ai, localesCovered: ["en-US"] },
   }
 

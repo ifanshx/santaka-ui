@@ -43,6 +43,27 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "delay",
+      "type": "number",
+      "default": "300",
+      "description": "Milliseconds of hover before showing. A tooltip that fires instantly is a strobe."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the tooltip is showing. Driven by hover/focus; also settable."
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+      "default": "\"top\"",
+      "description": "Preferred side. Flips at the viewport edge rather than clipping."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.",
     "whenToUse": [

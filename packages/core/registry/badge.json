@@ -55,6 +55,33 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "dot",
+      "type": "boolean",
+      "default": "false",
+      "description": "Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "statusLabel",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Screen-reader text for the dot variant. Required when `dot` is set."
+    },
+    {
+      "name": "variant",
+      "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "\"neutral\"",
+      "description": "Visual emphasis."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A static label for status, category, or count. It is not interactive.",
     "whenToUse": [

@@ -10,6 +10,7 @@
   },
   "files": [
     "dist",
+    "registry",
     "schema"
   ],
   "exports": {
@@ -21,14 +22,17 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./schema/registry-item-v1.json": "./schema/registry-item-v1.json"
+    "./schema/registry-item-v1.json": "./schema/registry-item-v1.json",
+    "./registry": "./registry/index.json",
+    "./registry/*.json": "./registry/*.json",
+    "./schema/registry-index-v1.json": "./schema/registry-index-v1.json"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs && node scripts/generate-registry.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs && node scripts/generate-registry.mjs && node scripts/build-registry-index.mjs",
     "clean": "rimraf dist schema",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

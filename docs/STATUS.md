@@ -13,7 +13,7 @@ and Storybook do not exist yet.
 
 `pnpm run verify` exits 0 from a cold cache. **626 tests pass** (48 token, 20
 utilities, 138 core, 159 React, 261 Playwright and barrel across the universal
-package). All six packages pass `publint` and `attw --pack`.
+package, plus the MCP server). All seven packages pass `publint` and `attw --pack`.
 
 ## Done
 
@@ -139,17 +139,19 @@ measured budgets.
 
 ### Decisions recorded
 
-**14 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+**15 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
 pipeline, and why `style-dictionary` is not used), 003 (behavior ownership:
 Web Components owns every component, React adapts, no Radix), 004 (naming,
 scope, license), 005 (SSR and hydration), 008 (accessibility testing stack),
 010 (budgets), 011 (scoped styles, never a shadow root), 012 (ESM-only
 distribution contract and the two defects it caught), 013 (API conventions, one
-question open), 014 (browser baseline), 016 (RTL: logical properties, now
-enforced by a conformance test, and direction-derived keyboard behavior), 017
-(token values and design direction), 018 (toolchain defaults, with every
-deviation from §5 named), plus 019 (visual regression). The four still missing
-(006, 007, 009, 015) are all deadlines for work that has not started.
+question open), 014 (browser baseline), 015 (AI metadata schema, llms.txt, and
+MCP packaging — including why the public surface is derived rather than
+authored), 016 (RTL: logical properties, now enforced by a conformance test, and
+direction-derived keyboard behavior), 017 (token values and design direction),
+018 (toolchain defaults, with every deviation from §5 named), plus 019 (visual
+regression). The three still missing (006, 007, 009) are deadlines for the docs
+site and the CLI, neither of which exists.
 
 ADR-003, 011, 012, 016, and 018 were cited from source — README, CONTRIBUTING,
 `stencil.config.ts`, `eslint.config.js`, and the components — while the
@@ -179,9 +181,22 @@ limitations) are generated from the registry `ai` blocks and the committed
 `components.d.ts`, so neither can drift from the components. An `llms` CI job
 regenerates and fails on a diff.
 
-The MCP server (`packages/mcp`) does not exist, and ADR-015 — which governs its
-schema and packaging — is unwritten. The `ai` metadata it would serve is already
-complete for all twenty-one components.
+`@santaka-ui/mcp` is a seventh publishable package: a stdio MCP server over the
+same metadata, with the four tools §11 names — `search_components`,
+`get_component`, `get_tokens`, `get_usage`. No model is called and no network is
+reached; the only I/O is reading the registry and the compiled token CSS at
+startup. **19 unit tests** cover tool behavior, and a CI job smoke-tests the
+server by driving a real MCP client over the SDK's in-memory transport pair —
+which covers tool registration, input schemas, and serialization, not just the
+functions.
+
+`get_component` reports props and events that are **derived, not authored**:
+props from the committed `components.d.ts`, events from the component sources
+with the shared-base dispatch resolved. That second one matters — Input,
+Textarea, and Select emit `sk-value-change` from `setupFormControl()`, not from
+their own code, so a per-file scan reports nothing for all three.
+
+The decisions are recorded in ADR-015.
 
 ## Not done
 
@@ -192,11 +207,11 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- **4 ADRs missing**: 006 (docs site framework and search), 007 (registry
-  hosting model), 009 (source-mode upgrade path), 015 (AI metadata, llms.txt, MCP
-  packaging). Each is a deadline that has not arrived: the docs site, the CLI,
-  and the MCP server are all unbuilt, so those decisions have nothing to bind
-  yet. The ADRs that *were* overdue are now written — see "Decisions recorded".
+- **3 ADRs missing**: 006 (docs site framework and search), 007 (registry
+  hosting model), 009 (source-mode upgrade path). Each is a deadline that has
+  not arrived: the docs site and the CLI are both unbuilt, so those decisions
+  have nothing to bind yet. The ADRs that *were* overdue are now written — see
+  "Decisions recorded".
 - ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
   ADR-005's consequences): server-rendered tags with public attributes, no
   `customElements.define` in any server chunk, clean hydration through the lazy

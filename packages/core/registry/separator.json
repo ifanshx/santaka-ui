@@ -37,6 +37,27 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "decorative",
+      "type": "boolean",
+      "default": "false",
+      "description": "Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Label for a meaningful separator, e.g. \"or\" between two actions. Announced only when the separator is not decorative, because a name on a `role=\"none\"` element is a contradiction."
+    },
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
+      "default": "\"horizontal\"",
+      "description": "Axis of the line. Vertical separators need a sized parent."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A hairline between content: a real <hr> that announces itself unless it is purely visual.",
     "whenToUse": [

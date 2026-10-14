@@ -46,6 +46,47 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "close",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": ""
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "default": "false",
+      "description": "Closes when the backdrop is clicked. Off by default because a dialog holding form input loses work to a stray click; a confirmation prompt with nothing to lose wants it on."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The dialog's accessible name, applied to the panel when the consumer has not slotted a `<sk-text>` heading. Prefer the slot: a real heading is visible to everyone and doubles as the label."
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "default": "true",
+      "description": "Modal is the default and the usual case: the page behind is inert and the focus is trapped. Non-modal (Chrome/Edge/Firefox only — Safari has no `showModal`-independent backdrop) renders the panel inline without blocking the page, for tool-palette-style UIs."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the dialog is showing. Reflects so page CSS can target it."
+    },
+    {
+      "name": "showModal",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": "Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
   "ai": {
     "summary": "A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.",
     "whenToUse": [

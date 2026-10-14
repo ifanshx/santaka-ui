@@ -39,6 +39,45 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "download",
+      "type": "string",
+      "default": null,
+      "description": ""
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "default": "false",
+      "description": "`external` marks a link that leaves the application: it adds the external icon, sets `target=\"_blank\"`, and adds `rel=\"noopener noreferrer\"`. Left off by default because most links do not leave."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The destination. A link that navigates."
+    },
+    {
+      "name": "rel",
+      "type": "string",
+      "default": null,
+      "description": "Forwarded to the underlying anchor."
+    },
+    {
+      "name": "subtle",
+      "type": "boolean",
+      "default": "false",
+      "description": "Suppresses the underline until hover or focus."
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "default": null,
+      "description": "Opens in a new tab without the external treatment."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "Navigates to another URL, in place or in a new tab.",
     "whenToUse": [

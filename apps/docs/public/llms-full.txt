@@ -9,6 +9,7 @@ packages are adapters over the same element.
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-open-change`
 
 A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.
 
@@ -189,6 +190,7 @@ A card is a surface, not a control: it exposes no role, is not focusable, and ha
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.
 
@@ -243,6 +245,7 @@ Renders a real native `<input type="checkbox">`, so the browser supplies constra
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-open-change`
 
 A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.
 
@@ -340,6 +343,7 @@ Button role with an explicit accessible name from the required `label` prop. The
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.
 
@@ -489,6 +493,7 @@ Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `exter
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.
 
@@ -542,6 +547,7 @@ Renders real native `<input type="radio">` elements in a `role="radiogroup"` con
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.
 
@@ -720,6 +726,7 @@ Carries `role="status"` so screen readers announce it as a live region. The visi
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 An on/off control that acts immediately, rendered as a native checkbox carrying role=switch so the browser keeps validation and form submission.
 
@@ -772,6 +779,7 @@ Renders a real native `<input type="checkbox">` carrying `role="switch"`, so the
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-tab-change`
 
 Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.
 
@@ -863,6 +871,7 @@ Renders no wrapper and no role: the element the consumer chose keeps its semanti
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-value-change`
 
 A multi-line text field that participates in a plain HTML form, for text too long to type on one line.
 
@@ -920,6 +929,7 @@ Renders a real native `<textarea>`, so the browser supplies constraint validatio
 - Stability: stable
 - Framework packages: react, vue, svelte, angular, web-components
 - Locales covered: en-US
+- Events: `sk-open-change`
 
 A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.
 

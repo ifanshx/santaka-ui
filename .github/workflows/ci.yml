@@ -154,3 +154,30 @@ jobs:
 
       - name: Check llms.txt is in sync
         run: pnpm --filter @santaka-ui/core llms:check
+
+  mcp:
+    name: MCP server smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @santaka-ui/core build
+      - run: pnpm --filter @santaka-ui/tokens build
+      - run: pnpm --filter @santaka-ui/mcp build
+
+      # `plan.md` section 11: the server is smoke-tested by launching it and asserting
+      # one response shape per tool. The test drives a real MCP client over an
+      # in-memory transport pair, so it covers registration, input schemas, and
+      # serialization rather than only the tool functions.
+      - name: Smoke test every tool
+        run: pnpm --filter @santaka-ui/mcp test:smoke

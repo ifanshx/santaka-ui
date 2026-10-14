@@ -49,7 +49,23 @@ export type RegistryItem = {
   cssVariables: string[]
   localesCovered: string[]
   license: string
+  /**
+   * The public surface, derived at build time from the component's type
+   * declarations and source (section 11's `get_component` reports it). Optional
+   * because a future non-component entry — a block, a theme — has no props, and
+   * an empty array would say something the type does not.
+   */
+  props?: RegistryProp[]
+  events?: string[]
   ai: AiMetadata
+}
+
+/** One prop of a component's public API, as read from its declarations. */
+export type RegistryProp = {
+  name: string
+  type: string
+  default: string | null
+  description: string
 }
 
 /** Runtime shape used by the MCP server, which has no DOM dependency. */

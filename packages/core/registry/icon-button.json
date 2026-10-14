@@ -60,6 +60,57 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name. An icon-only control with no name is announced as just \"button\", which tells a screen-reader user nothing."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "false",
+      "description": "Shows a busy state and blocks interaction."
+    },
+    {
+      "name": "size",
+      "type": "ButtonSize",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "type",
+      "type": "ButtonType",
+      "default": "\"button\"",
+      "description": "Native form semantics."
+    },
+    {
+      "name": "variant",
+      "type": "ButtonVariant",
+      "default": "\"ghost\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "The `id` of a `<form>` element to associate this element with."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A square, icon-only control for actions that need no label, such as edit or delete.",
     "whenToUse": [

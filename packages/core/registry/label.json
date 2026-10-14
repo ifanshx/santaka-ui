@@ -41,6 +41,27 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "forId",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The `id` of the control this label names. Required for the same reason Link's `href` is: a label with no `for` is a mistake the compiler catches, and passing `\"\"` explicitly is the visible way to say \"decorative label\".  Named `for`, not `htmlFor`. Stencil maps a camelCase prop to its kebab attribute (`htmlFor` → `html-for`), so a consumer writing the HTML attribute `for` — the only spelling that exists in plain markup — would set nothing, and the label would silently associate with nothing. The first build proved it: `for=\"standalone-email\"` in the page, `for=\"\"` in the DOM. The native `for` attribute name is also what `Element.prototype` reserves, so a prop named `for` would collide with it — hence `for` as the *attribute* via `@Prop({ attribute: \"for\" })` on a differently-named field."
+    },
+    {
+      "name": "marker",
+      "type": "\"after\" | \"before\"",
+      "default": "\"after\"",
+      "description": "Where the marker sits. `before` reads naturally for checkboxes and switches, where the control leads the sentence."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the labeled control as required and renders the marker.  This sets `aria-required` on **this** element, not the control — the consumer sets `required` on the control itself, and the label marking the control on its behalf would be a second component reaching into another's DOM, which §4 forbids."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.",
     "whenToUse": [

@@ -39,6 +39,29 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "initialFocus",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the alert is showing."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
   "ai": {
     "summary": "A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.",
     "whenToUse": [

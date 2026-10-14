@@ -1,0 +1,2653 @@
+{
+  "$schema": "./index.schema.json",
+  "schemaVersion": 1,
+  "generatedFrom": [
+    "alert-dialog.json",
+    "badge.json",
+    "button.json",
+    "card.json",
+    "checkbox.json",
+    "dialog.json",
+    "icon-button.json",
+    "input.json",
+    "label.json",
+    "link.json",
+    "radio-group.json",
+    "select.json",
+    "separator.json",
+    "skeleton.json",
+    "spinner.json",
+    "switch.json",
+    "tabs.json",
+    "text.json",
+    "textarea.json",
+    "toast.json",
+    "tooltip.json"
+  ],
+  "items": [
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "alert-dialog",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-alert-dialog/sk-alert-dialog.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-3f2756779ef607f8b551d89158677c118794173f7f952863d8fea94db0ffc98c"
+        },
+        {
+          "path": "src/components/sk-alert-dialog/sk-alert-dialog.css",
+          "type": "registry:style",
+          "checksum": "sha256-743c63205113304cffcb149a66c66377fa944ec50ac7ec3d4edbbf80f8572fc8"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-danger",
+        "--sk-space-2",
+        "--sk-space-3"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "initialFocus",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the alert is showing."
+        }
+      ],
+      "events": [
+        "sk-open-change"
+      ],
+      "ai": {
+        "summary": "A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.",
+        "whenToUse": [
+          "The action is destructive and irreversible — a delete, a revoke, a permanent change",
+          "The page cannot continue until the question is answered",
+          "The interruption must be announced as an interruption, not as a window"
+        ],
+        "whenNotToUse": [
+          "The user may reasonably decline without answering — use a Dialog, which allows Escape and optional backdrop dismissal",
+          "The message is informational and needs no decision — use a Toast or Alert",
+          "The action has a URL or needs deep linking — use a page"
+        ],
+        "accessibility": "`role=\"alertdialog\"`, so assistive technology announces an interruption rather than a window. Escape is *refused* and the backdrop does not dismiss: a dialog that lets Escape answer its question did not need to be asked — this is the ARIA APG's requirement for the role, not a style choice. Focus lands on `initialFocus` (the consumer's chosen default action) rather than the first focusable, because in a delete confirmation the wrong default is a destructive one. Label it with a real heading in the `title` slot. The panel wears the danger stroke: an interruption should look like one before a single word is read.",
+        "example": "<sk-alert-dialog initial-focus=\"#cancel\">\n  <sk-text variant=\"lg\" slot=\"title\"><h3>Delete this repository?</h3></sk-text>\n  <p>This cannot be undone.</p>\n  <sk-button id=\"cancel\" variant=\"secondary\">Cancel</sk-button>\n</sk-alert-dialog>",
+        "knownLimitations": [
+          "There is no trigger slot: the application raises it in response to something, never the user browsing",
+          "There is no imperative `close()` without a decision — the only exit is an action"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "badge",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-badge/sk-badge.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-7288da3483932e1e181c4d0f57eb44033dd38dbde7a403c5e7c91f114081f1d7"
+        },
+        {
+          "path": "src/components/sk-badge/sk-badge.css",
+          "type": "registry:style",
+          "checksum": "sha256-3226b3c0018aa251d9ac3aa5ce08810d12e693ffc045eb6d9c76aa0d1d8201b6"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-danger-fg",
+        "--sk-color-danger-subtle",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-success",
+        "--sk-color-success-fg",
+        "--sk-color-success-subtle",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-color-warning",
+        "--sk-color-warning-fg",
+        "--sk-color-warning-subtle",
+        "--sk-radius-full",
+        "--sk-shadow-sm"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "dot",
+          "type": "boolean",
+          "default": "false",
+          "description": "Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\"",
+          "default": "\"md\"",
+          "description": "Control height."
+        },
+        {
+          "name": "statusLabel",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Screen-reader text for the dot variant. Required when `dot` is set."
+        },
+        {
+          "name": "variant",
+          "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+          "default": "\"neutral\"",
+          "description": "Visual emphasis."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A static label for status, category, or count. It is not interactive.",
+        "whenToUse": [
+          "It marks a record's state, such as Active, Pending, or Failed",
+          "It labels a category or count that must stand out from body copy",
+          "It marks an item in a dense list where state has to stay scannable"
+        ],
+        "whenNotToUse": [
+          "It is clickable — use a Button, because a badge has no interaction",
+          "It navigates — use a Link instead",
+          "It carries a value the reader selects — use a Checkbox or Switch instead"
+        ],
+        "accessibility": "Static text, so it exposes no role and no tab stop. Each variant sets a foreground and a background measured together, so the label clears 4.5:1 against its own fill rather than only against the page. The dot variant would otherwise convey state by color alone, which WCAG 1.4.1 forbids, so it renders the consumer-supplied `statusLabel` visually hidden instead.",
+        "example": "<sk-badge variant=\"success\">Active</sk-badge>",
+        "knownLimitations": [
+          "The `statusLabel` prop is required in the React types for the `dot` variant but only warns in plain HTML"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "button",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-button/sk-button.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-0f3fd8e812e3cb9eb6cfff59eedacbb3b78b4079ace3ce349b13facd17a8dce1"
+        },
+        {
+          "path": "src/components/sk-button/sk-button.css",
+          "type": "registry:style",
+          "checksum": "sha256-0b8dc6be396bd143cf41f977b255d0218152453ee49dc21af6e4b078515cc9db"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-surface-raised",
+        "--sk-color-text",
+        "--sk-touch-min",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-hover",
+        "--sk-shadow-brutal-none"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Shows a busy state and blocks interaction."
+        },
+        {
+          "name": "size",
+          "type": "ButtonSize",
+          "default": "\"md\"",
+          "description": "Control height."
+        },
+        {
+          "name": "type",
+          "type": "ButtonType",
+          "default": "\"button\"",
+          "description": "`submit`, `reset`, or `button`. Native semantics, so a Button inside a form behaves like the `<button>` a consumer would have written by hand."
+        },
+        {
+          "name": "variant",
+          "type": "ButtonVariant",
+          "default": "\"primary\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "The `id` of a `<form>` element to associate this element with."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Triggers an action: submit a form, open a dialog, save a change.",
+        "whenToUse": [
+          "The control performs an action on the current page",
+          "It submits or resets a form",
+          "It opens a panel, dialog, or menu"
+        ],
+        "whenNotToUse": [
+          "It navigates somewhere — use a Link instead",
+          "It toggles a value on its own, with no action — use a Checkbox or Switch",
+          "It is the only option in a set — use a Radio Group"
+        ],
+        "accessibility": "Button role. Activates on Enter and Space. A loading button is aria-busy rather than disabled, so it keeps its accessible name and position in the tab order.",
+        "example": "<sk-button variant=\"primary\">Save changes</sk-button>",
+        "knownLimitations": [
+          "As a form-associated custom element, `type=\"submit\"` calls form.requestSubmit() explicitly; native implicit submission does not apply"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "card",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-card/sk-card.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-96d32039e8cd1890377bc4d7685db72a1ab76e338f3bc5378059e810963fd488"
+        },
+        {
+          "path": "src/components/sk-card/sk-card.css",
+          "type": "registry:style",
+          "checksum": "sha256-fe181d029cc6546666c4669755d31713b89938a611e524d852c3fcf0ad5ac66d"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-border-width",
+        "--sk-color-border",
+        "--sk-color-border-strong",
+        "--sk-color-shadow",
+        "--sk-color-surface-raised",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-space-5",
+        "--sk-space-6",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-xl-line-height",
+        "--sk-text-xl-size",
+        "--sk-text-xl-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead."
+        },
+        {
+          "name": "padding",
+          "type": "\"none\" | \"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on."
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Supporting text under the heading."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"outlined\" | \"bare\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A hard-edged surface that groups related content, with optional header, body, and footer.",
+        "whenToUse": [
+          "A group of related facts, settings, or actions needs a boundary of its own",
+          "Content sits inside another surface and needs a raised panel to read against it",
+          "A record needs a title, a body, and a row of actions below a rule"
+        ],
+        "whenNotToUse": [
+          "The whole card is one action — use a Button or a Link with card styling",
+          "You are nesting it inside another card to group further — two competing fills and shadows read as noise",
+          "The separation is a list of peers — use a plain list or a Separator"
+        ],
+        "accessibility": "A card is a surface, not a control: it exposes no role, is not focusable, and has no interaction props, because a clickable card is a link or a button wearing a card's styling and adding a click handler here would produce something neither keyboard-reachable nor announced. `heading` renders as a `<span>`, not a heading, because the card does not know its level in the document outline — pass a real `<h2 slot=\"header\">` when you need one. Slots are optional and each renders nothing when empty, so a card without a header carries no empty bordered band.",
+        "example": "<sk-card heading=\"Deployment\" subtitle=\"Build 4821\"><p>Shipped to production.</p></sk-card>",
+        "knownLimitations": [
+          "There is no `size` prop: a card has no intrinsic height to scale, so `padding` is the axis it varies on",
+          "There is no click handler, by design — a card that navigates should be a Link, and one that acts should be a Button"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "checkbox",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-checkbox/sk-checkbox.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-43df2e82506ed2e3e81f1ad0c0a434506e404a391f85142c4c67f58f0a051ccb"
+        },
+        {
+          "path": "src/components/sk-checkbox/sk-checkbox.css",
+          "type": "registry:style",
+          "checksum": "sha256-4b1064c46fca19e2ed85290cbd0e12ee4d5469118cd100f93a26ac099a593bb0"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-3",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-lg-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the box is checked. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isChecked`, not `value`."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Initial state for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the row."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": "false",
+          "description": "Visual \"some children\" state. Property-only on the platform — there is no `indeterminate` attribute — so this prop writes the DOM node after render and never reaches the form: an indeterminate box submits as unchecked."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid, with the same independence from `error` as Input."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The label text, rendered beside the box. Wraps the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Label text size. The row target stays 44px at every size."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"on\"",
+          "description": "The submitted value when checked. `\"on\"` is the platform default, kept so a plain form reads exactly what a native checkbox would send."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.",
+        "whenToUse": [
+          "The value is a single yes/no choice that submits with a form",
+          "It must work without JavaScript: plain HTML form submission",
+          "The browser's native constraint validation is wanted — required means required"
+        ],
+        "whenNotToUse": [
+          "The choice is one of several exclusive options — use a Radio Group",
+          "It represents an on/off state that acts immediately without form submission — use a Switch",
+          "The value is text — use an Input or Textarea"
+        ],
+        "accessibility": "Renders a real native `<input type=\"checkbox\">`, so the browser supplies constraint validation, Space-to-toggle, and autofill rather than this component reimplementing them. The label wraps the input, making the whole row the activation target with no click handler. `label`, `description`, and `error` are wired through the wrapping label and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `indeterminate` is visual only (`aria-checked=\"mixed\"`), and submits as unchecked. Implements the FACE contract: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+        "example": "<sk-checkbox name=\"agree\" label=\"I agree to the terms\" required></sk-checkbox>",
+        "knownLimitations": [
+          "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
+          "`indeterminate` is a property, not an attribute — it cannot be set in declarative HTML and resets on re-render if not re-applied"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "dialog",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-dialog/sk-dialog.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-b118f34213f589144441e5f9cf442a460b6916c8ba91329e7df99e69e3aa0fd2"
+        },
+        {
+          "path": "src/components/sk-dialog/sk-dialog.css",
+          "type": "registry:style",
+          "checksum": "sha256-0bb2ef987e74aa2675ba866533309816aaf72c14635837408ba522b30845f71b"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-width",
+        "--sk-color-border",
+        "--sk-color-shadow",
+        "--sk-color-text",
+        "--sk-font-sans",
+        "--sk-radius-glass",
+        "--sk-shadow-lg",
+        "--sk-space-2",
+        "--sk-space-4",
+        "--sk-space-6",
+        "--sk-z-modal"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "close",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": ""
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "default": "false",
+          "description": "Closes when the backdrop is clicked. Off by default because a dialog holding form input loses work to a stray click; a confirmation prompt with nothing to lose wants it on."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The dialog's accessible name, applied to the panel when the consumer has not slotted a `<sk-text>` heading. Prefer the slot: a real heading is visible to everyone and doubles as the label."
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "default": "true",
+          "description": "Modal is the default and the usual case: the page behind is inert and the focus is trapped. Non-modal (Chrome/Edge/Firefox only — Safari has no `showModal`-independent backdrop) renders the panel inline without blocking the page, for tool-palette-style UIs."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the dialog is showing. Reflects so page CSS can target it."
+        },
+        {
+          "name": "showModal",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": "Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering."
+        }
+      ],
+      "events": [
+        "sk-open-change"
+      ],
+      "ai": {
+        "summary": "A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.",
+        "whenToUse": [
+          "A decision must block the page until it is made — a confirmation, a discard warning",
+          "A short form needs the page's context hidden, not merely behind",
+          "Content must interrupt without navigating — use a page for anything that needs a URL"
+        ],
+        "whenNotToUse": [
+          "Content is supplementary and the page should stay live — use a Popover or Toast",
+          "The flow has its own URL or needs deep linking — use a page",
+          "It is a non-blocking status update — use a Toast"
+        ],
+        "accessibility": "Renders the native `<dialog>` element: focus trapping, Escape, and inert background content are the browser's, not reimplemented. Focus returns to the invoker on close, so a keyboard user is not dropped at the top of the document. Label it with a real heading in the `title` slot — it is visible to everyone and doubles as the dialog's accessible name. One `sk-open-change` event reports every close path: trigger, Escape, backdrop, and a consumer setting the prop. The backdrop is translucent ink, not blur — the glass panel already blurs what is under it. `dismissible` is off by default: a dialog holding form input loses work to a stray click.",
+        "example": "<sk-dialog dismissible>\n  <sk-button slot=\"trigger\">Open</sk-button>\n  <sk-text variant=\"lg\" slot=\"title\"><h3>Discard draft?</h3></sk-text>\n  <p>Your draft will be deleted.</p>\n</sk-dialog>",
+        "knownLimitations": [
+          "The native `<dialog>` element is Baseline-tier: Core-tier browsers get the non-modal degradation, not the modal",
+          "Slotted content is moved into the panel once at upgrade — content added to the host after upgrade is not distributed"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "icon-button",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-icon-button/sk-icon-button.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-cc00806bf838c07288bada27a2748a82700414aef8c67fa8a269b1ce604e44ef"
+        },
+        {
+          "path": "src/components/sk-icon-button/sk-icon-button.css",
+          "type": "registry:style",
+          "checksum": "sha256-61bcc51fbee2d0579b1688f9611b3d982c615e3680e2ca93da995cb8fad8531c"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-surface-raised",
+        "--sk-color-text",
+        "--sk-touch-min",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-duration-control-slow",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-icon-sm",
+        "--sk-icon-md",
+        "--sk-icon-lg",
+        "--sk-radius-full",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-hover",
+        "--sk-shadow-brutal-none"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The accessible name. An icon-only control with no name is announced as just \"button\", which tells a screen-reader user nothing."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Shows a busy state and blocks interaction."
+        },
+        {
+          "name": "size",
+          "type": "ButtonSize",
+          "default": "\"md\"",
+          "description": "Control height."
+        },
+        {
+          "name": "type",
+          "type": "ButtonType",
+          "default": "\"button\"",
+          "description": "Native form semantics."
+        },
+        {
+          "name": "variant",
+          "type": "ButtonVariant",
+          "default": "\"ghost\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "The `id` of a `<form>` element to associate this element with."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A square, icon-only control for actions that need no label, such as edit or delete.",
+        "whenToUse": [
+          "The action is unambiguous from a well-known icon",
+          "Space is tight, such as a toolbar or a table row",
+          "The control sits next to a labelled control that implies the group"
+        ],
+        "whenNotToUse": [
+          "The action is not obvious from the icon alone — use a Button with a label",
+          "It is the primary or most common action on the page — use a Button",
+          "It performs navigation — use a Link instead"
+        ],
+        "accessibility": "Button role with an explicit accessible name from the required `label` prop. The slotted icon is aria-hidden because it carries no information the name does not. A missing label warns in development.",
+        "example": "<sk-icon-button label=\"Delete item\"><svg><!-- trash icon --></svg></sk-icon-button>",
+        "knownLimitations": [
+          "The `label` prop is required in the React types but only warns in plain HTML"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "input",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-input/sk-input.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-ed26c2d8e35aa7e39d76c7ee147aa17cfa50d763f00300042c4b2bd5dd3d1c21"
+        },
+        {
+          "path": "src/components/sk-input/sk-input.css",
+          "type": "registry:style",
+          "checksum": "sha256-e7f8009ac2683698991be29304ddac82351bd35092bce65c1d66385794a45c66"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-danger-fg",
+        "--sk-color-focus-ring",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-icon-sm",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-lg-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "autocomplete",
+          "type": "string",
+          "default": null,
+          "description": "Autocomplete hint for the browser and password managers."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Initial value for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the field."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary listing several fields."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The control's own label text, rendered above the field."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "default": null,
+          "description": "Maximum accepted length, enforced natively."
+        },
+        {
+          "name": "minLength",
+          "type": "number",
+          "default": null,
+          "description": "Minimum accepted length, enforced natively."
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Regular expression the value must match, enforced natively."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Placeholder text. Never a substitute for a label."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the field non-editable but still submitted and focusable.  Attribute-observed, unlike `disabled`: the HTML attribute name is `readonly` in every case, so Stencil's camelCase-to-kebab mapping cannot be relied on to match it, and a consumer writing `<sk-input readonly>` in plain HTML was silently getting an editable field."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Control height."
+        },
+        {
+          "name": "type",
+          "type": "InputType",
+          "default": "\"text\"",
+          "description": "Native input type. Visual configuration stays `variant`/`size` only."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The value. Uncontrolled by default: typed value only if set."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.",
+        "whenToUse": [
+          "The value is a short string: a name, an email, a handle, a search term",
+          "It must submit through a plain `<form>` with no JavaScript state",
+          "The browser's own constraint validation is wanted rather than a bespoke rules engine"
+        ],
+        "whenNotToUse": [
+          "The value is long-form text — use a Textarea",
+          "The value is one of a fixed set — use a Select or Radio Group",
+          "It only toggles a boolean — use a Checkbox or Switch"
+        ],
+        "accessibility": "Renders a real native `<input>`, so the browser supplies constraint validation, password managers, autofill, and IME composition rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error also sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `readOnly` keeps the value submitted and focusable, which is what distinguishes it from `disabled`.",
+        "example": "<sk-input name=\"email\" type=\"email\" label=\"Email\" required></sk-input>",
+        "knownLimitations": [
+          "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
+          "The `pattern` prop takes a string, not a RegExp, because it becomes a native attribute"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "label",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-label/sk-label.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-689277eddf0f2a5d61a9fcdb8df0df0ff3351d3b69fd2844a5b9e5603f2a45a4"
+        },
+        {
+          "path": "src/components/sk-label/sk-label.css",
+          "type": "registry:style",
+          "checksum": "sha256-3f831651199e5507eadbb8df511e56358f0931e6b293a42142b7ee2921a2c95f"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-danger",
+        "--sk-color-text",
+        "--sk-space-1",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "forId",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The `id` of the control this label names. Required for the same reason Link's `href` is: a label with no `for` is a mistake the compiler catches, and passing `\"\"` explicitly is the visible way to say \"decorative label\".  Named `for`, not `htmlFor`. Stencil maps a camelCase prop to its kebab attribute (`htmlFor` → `html-for`), so a consumer writing the HTML attribute `for` — the only spelling that exists in plain markup — would set nothing, and the label would silently associate with nothing. The first build proved it: `for=\"standalone-email\"` in the page, `for=\"\"` in the DOM. The native `for` attribute name is also what `Element.prototype` reserves, so a prop named `for` would collide with it — hence `for` as the *attribute* via `@Prop({ attribute: \"for\" })` on a differently-named field."
+        },
+        {
+          "name": "marker",
+          "type": "\"after\" | \"before\"",
+          "default": "\"after\"",
+          "description": "Where the marker sits. `before` reads naturally for checkboxes and switches, where the control leads the sentence."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the labeled control as required and renders the marker.  This sets `aria-required` on **this** element, not the control — the consumer sets `required` on the control itself, and the label marking the control on its behalf would be a second component reaching into another's DOM, which §4 forbids."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.",
+        "whenToUse": [
+          "A control was built without its own label and needs one that is actually associated",
+          "A checkbox or switch needs its marker before the text, where the control leads the sentence",
+          "A custom field needs the same label record Input's built-in label uses"
+        ],
+        "whenNotToUse": [
+          "The control already has a label prop — Input and Textarea wire their own; two labels for one control is a bug",
+          "It would label nothing — `for` is required; a label with no control is a span with ambition, use plain text",
+          "The text describes a group of controls — use a Fieldset or a heading, not a label"
+        ],
+        "accessibility": "Associates through `htmlFor` pointing at the control's id, so clicking the label focuses the control via the browser's own activation — no click handler here, because the platform's is better and reimplementing it means reimplementing its edge cases. The required marker is `aria-hidden`: the control's own `required` attribute carries the semantics, the asterisk is for the sighted, and color alone never carries it (WCAG 1.4.1). `required` here does not set anything on the control — a label reaching into another component's DOM is exactly what section 4 forbids.",
+        "example": "<sk-label for=\"newsletter-email\">Email address</sk-label>\n<input id=\"newsletter-email\" type=\"email\">",
+        "knownLimitations": [
+          "Field components render their control with the id `${hostId}-control`, so `for` must carry that suffix — a cross-component id contract is tracked as open",
+          "It cannot label a control rendered inside a shadow root it cannot see — `for` must match a light-DOM id",
+          "It does not generate ids; pair it with the control's own id or React's `useId()`"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "link",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-link/sk-link.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-cc820584caa3614fa69017f341ddf1e3edee9f6a200fde52613d12eb15fecd33"
+        },
+        {
+          "path": "src/components/sk-link/sk-link.css",
+          "type": "registry:style",
+          "checksum": "sha256-20a9cc3d17d60ae953a19ec91f2db5ef076f05673ac0ed1f7357a327bda98306"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-primary",
+        "--sk-color-primary-hover",
+        "--sk-color-focus-ring",
+        "--sk-color-text-muted"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "download",
+          "type": "string",
+          "default": null,
+          "description": ""
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "default": "false",
+          "description": "`external` marks a link that leaves the application: it adds the external icon, sets `target=\"_blank\"`, and adds `rel=\"noopener noreferrer\"`. Left off by default because most links do not leave."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The destination. A link that navigates."
+        },
+        {
+          "name": "rel",
+          "type": "string",
+          "default": null,
+          "description": "Forwarded to the underlying anchor."
+        },
+        {
+          "name": "subtle",
+          "type": "boolean",
+          "default": "false",
+          "description": "Suppresses the underline until hover or focus."
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "default": null,
+          "description": "Opens in a new tab without the external treatment."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Navigates to another URL, in place or in a new tab.",
+        "whenToUse": [
+          "It changes the URL",
+          "The destination is a document or page",
+          "It can be opened in a new tab or copied by the reader"
+        ],
+        "whenNotToUse": [
+          "It performs an action without changing the URL — use a Button instead",
+          "It downloads a file rather than navigating — pass `download`",
+          "It triggers a dialog or menu — use a Button"
+        ],
+        "accessibility": "Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `external` sets target=_blank with rel=noopener noreferrer and renders a decorative indicator.",
+        "example": "<sk-link href=\"/docs\">Read the docs</sk-link>",
+        "knownLimitations": [
+          "An empty `href` renders as visibly disabled rather than failing at build time"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "radio-group",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-radio-group/sk-radio-group.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-819ae86e6bdc913c4a5d7d74be4ca7c89e75311da022f041259c7a9bd97e0b69"
+        },
+        {
+          "path": "src/components/sk-radio-group/sk-radio-group.css",
+          "type": "registry:style",
+          "checksum": "sha256-3fcf70aa7334d6a62fc309b11894c4a60b422fb839305d00f80c0c95eff4fabc"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-3",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-base-weight",
+        "--sk-text-lg-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Initial value for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the group."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid, with the same independence from `error` as Input."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The group's own label text, rendered above the options."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The submitted name. Every radio in the group carries it."
+        },
+        {
+          "name": "options",
+          "type": "RadioOption[]",
+          "default": "[]",
+          "description": "The choices. Serialized as JSON when written as an attribute."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Label text size. The row target stays 44px at every size."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The value. Uncontrolled by default; \"\" means nothing selected."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.",
+        "whenToUse": [
+          "Exactly one choice from 2–7 known options",
+          "The options are short enough to read at a glance — longer lists want a Select",
+          "It must submit through a plain `<form>` with no JavaScript state"
+        ],
+        "whenNotToUse": [
+          "More than roughly 7 options — use a Select, which scrolls and filters",
+          "Several choices at once — use a Checkbox per option",
+          "A single on/off setting that acts immediately — use a Switch"
+        ],
+        "accessibility": "Renders real native `<input type=\"radio\">` elements in a `role=\"radiogroup\"` container, so the browser owns arrow-key navigation within the group, the single tab stop, and constraint validation (\"please select one of these options\" is the browser's message, not a reimplementation). The group label names the container through `aria-labelledby`; each option is labelled by its wrapping label. An error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract on the group: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+        "example": "<sk-radio-group name=\"env\" label=\"Environment\" required options='[{\"value\":\"production\",\"label\":\"Production\"},{\"value\":\"staging\",\"label\":\"Staging\"}]'></sk-radio-group>",
+        "knownLimitations": [
+          "Options arrive as JSON, like Select — they cannot be slotted as children, because scoped encapsulation cannot distribute host children into the render tree",
+          "The generated `id` for the group label differs from React's `useId()`, so an SSR consumer must pass an explicit `id` (section 4, forms contract)"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "select",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-select/sk-select.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-9da194759666131a5a2d04888ddce3f50db81c1819175857c2d9f322c39d2f9a"
+        },
+        {
+          "path": "src/components/sk-select/sk-select.css",
+          "type": "registry:style",
+          "checksum": "sha256-234fc536408bcc04bbedc0667e47ffce8cf247a361b4c830681fb04ab5b5b5e8"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-lg-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Initial value for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the field."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid, with the same independence from `error` as Input."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The control's own label text, rendered above the field."
+        },
+        {
+          "name": "options",
+          "type": "SelectOption[]",
+          "default": "[]",
+          "description": "The choices. Serialized as JSON when written as an attribute."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Placeholder-style first choice, shown when the value is \"\"."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Control height."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The value. Uncontrolled by default."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.",
+        "whenToUse": [
+          "The value is one of a fixed set of choices",
+          "The form must submit through plain HTML with no component state reading",
+          "The list is long enough that radio buttons would be a wall"
+        ],
+        "whenNotToUse": [
+          "The choice is between two options — use a Switch or two Radio Buttons; a select hides the answer",
+          "The options depend on typing — use a Combobox",
+          "There are fewer than five options and the page has room — Radio Group shows every answer at once"
+        ],
+        "accessibility": "Renders a real native `<select>`, visibly — §4's hidden-native path was rejected deliberately, so the popup is the browser's: touch, wheel, typeahead, and native validation all work without a listbox reimplementing them. FACE with all three form callbacks; `required` is enforced by the browser and never suppressed; the label is associated through `for`, and an error sets `aria-invalid` with an icon beside its text, never color alone (WCAG 1.4.1). `sk-value-change` fires only for user-initiated changes. Options are JSON, because slot distribution cannot move host children into the render tree.",
+        "example": "<sk-select name=\"environment\" label=\"Environment\" required placeholder=\"Choose an environment\" options='[{\"value\":\"production\",\"label\":\"Production\"}]'></sk-select>",
+        "knownLimitations": [
+          "The popup cannot be styled — that is the trade the visible-native decision makes, and it is why the popup works everywhere",
+          "Options are JSON, not slotted markup — slot distribution cannot reach the render tree",
+          "SSR consumers must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "separator",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-separator/sk-separator.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-e48bdddc55f5f2411559c83a59e439255860b0e1b15c9e00fbe521dfa703d181"
+        },
+        {
+          "path": "src/components/sk-separator/sk-separator.css",
+          "type": "registry:style",
+          "checksum": "sha256-b94d6f3f90924aeedd063418bdb60d45c8a3530b4fbd8702a0d53fd39ce922c5"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-width",
+        "--sk-color-border"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "default": "false",
+          "description": "Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Label for a meaningful separator, e.g. \"or\" between two actions. Announced only when the separator is not decorative, because a name on a `role=\"none\"` element is a contradiction."
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "description": "Axis of the line. Vertical separators need a sized parent."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A hairline between content: a real <hr> that announces itself unless it is purely visual.",
+        "whenToUse": [
+          "Two groups of content need a thematic break between them",
+          "A form's sections need dividing without a heading",
+          "A vertical rule splits two columns"
+        ],
+        "whenNotToUse": [
+          "The break is already communicated by a heading or Card boundary — mark it `decorative` or skip it",
+          "You are separating items in a list — use spacing or a list style; it is the honest tool",
+          "Two routes branch at a choice — use Tabs or a Radio Group to express the choice; \"or\" between buttons is not a widget"
+        ],
+        "accessibility": "Renders a real `<hr>`, announced as a separator by screen readers. `decorative` flips it to `role=\"none\"` for lines that exist only for the eye. A `label` (e.g. \"or\" between two actions) is announced only when the separator is meaningful — a name on a `role=\"none\"` element is a contradiction. The line is the 1px hairline token, not the 3px chrome stroke: a separator divides content, and a 3px stroke between paragraphs reads as a wall.",
+        "example": "<sk-separator label=\"or\"></sk-separator>",
+        "knownLimitations": [
+          "Vertical separators need a sized parent — `align-self: stretch` is the default, not a guarantee",
+          "No motion, no chrome, by design — the one component where the hairline is the point"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "skeleton",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-skeleton/sk-skeleton.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-b276b39939daa1d8d49fbef93945a3cc6257c58716e35fc1c9af8b3c06c69f0a"
+        },
+        {
+          "path": "src/components/sk-skeleton/sk-skeleton.css",
+          "type": "registry:style",
+          "checksum": "sha256-b36f71282cc247967fe471bac7e1a71f1758f6aebbad6ae7c9fb6b1730e164c0"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-duration-overlay-slow",
+        "--sk-height-md",
+        "--sk-icon-lg",
+        "--sk-radius-full",
+        "--sk-text-base-line-height"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "direction",
+          "type": "\"ltr\" | \"rtl\"",
+          "default": "\"ltr\"",
+          "description": "The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale."
+        },
+        {
+          "name": "variant",
+          "type": "\"text\" | \"rect\" | \"circle\"",
+          "default": "\"text\"",
+          "description": "The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.",
+        "whenToUse": [
+          "Content is loading into a known layout and the space must be held",
+          "A list, table, or card grid is fetching and the shape of what arrives is already known"
+        ],
+        "whenNotToUse": [
+          "An operation's duration matters — use a Spinner or Progress",
+          "The placeholder would be on screen more than a moment or two — show a real empty state instead"
+        ],
+        "accessibility": "`aria-hidden` by design: a skeleton is scaffolding, not content, and announcing five grey rectangles before a table loads is noise. There is no `label` prop on purpose — if a region needs announcing while it loads, that is a live region and the consumer owns it. Real content announces itself when it arrives. Dimensions are the feature: every variant sets a default size the consumer overrides, because a skeleton that guesses the content's height causes the very layout shift it exists to prevent. Under reduced motion the shimmer is removed entirely rather than slowed — a slower shimmer is still motion, and the grey shape is the whole message.",
+        "example": "<sk-skeleton variant=\"text\" style=\"inline-size: 60%\"></sk-skeleton>",
+        "knownLimitations": [
+          "No slot by design: real content replaces the element, not its children",
+          "`direction` is a prop, not auto-detected — the component does not know its locale"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "spinner",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-spinner/sk-spinner.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-d08781c2854bd499ab798683036b7b7fbc3c61f0723e8cea21064990d7847868"
+        },
+        {
+          "path": "src/components/sk-spinner/sk-spinner.css",
+          "type": "registry:style",
+          "checksum": "sha256-bcb15dc052034f65d79da4cfc271591a7a85591d34a39b8982db450b4fd1fedc"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-text",
+        "--sk-duration-control-slow",
+        "--sk-icon-lg",
+        "--sk-icon-md",
+        "--sk-icon-sm",
+        "--sk-radius-full"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"Loading\"",
+          "description": "What the wait is, announced to screen readers in place of the silent ring. \"Loading\" is the honest default; \"Saving draft…\" is the better one."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Ring diameter, from the icon-size tokens so the spinner matches the icon beside it. Not the `size` prop's height scale: a spinner is a circle, and a circle's size is its diameter."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Announces progress when it is known, e.g. \"Uploading 60%\"."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.",
+        "whenToUse": [
+          "An operation is running and the interface cannot say how far along it is",
+          "A button or icon button is in its loading state and needs an inline indicator"
+        ],
+        "whenNotToUse": [
+          "Progress is measurable — use a Progress bar; a spinner cannot say 60%",
+          "Content is loading into a known layout — use a Skeleton, which promises the layout instead of motion"
+        ],
+        "accessibility": "Carries `role=\"status\"` so screen readers announce it as a live region. The visible ring is `aria-hidden` — it is a picture of waiting, and `label` (default \"Loading\") is what gets announced; `status` replaces it when progress is known. Under `prefers-reduced-motion` the spin stops rather than slows: a slow spinner still implies movement it cannot show, so the ring freezes solid and the label carries the whole story. Same ruling as Icon Button's loading state — if one changes, both must.",
+        "example": "<sk-spinner label=\"Saving draft\"></sk-spinner>",
+        "knownLimitations": [
+          "It cannot express progress fraction — that is a Progress bar's job, not a faster spin"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "switch",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-switch/sk-switch.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-cabc793adcf6263118441f7178115bc47084ea647dcb7aa65695986a88778cbd"
+        },
+        {
+          "path": "src/components/sk-switch/sk-switch.css",
+          "type": "registry:style",
+          "checksum": "sha256-d627d2f16c2577c33e0970c1026e77b2cf67605b9a349a7bc82f8dc8205492d6"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-3",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-lg-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the switch is on. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isOn`."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Initial state for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the row."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid, with the same independence from `error` as Checkbox."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The label text, rendered beside the track. Wraps the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Label text size. The row target stays 44px at every size."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"on\"",
+          "description": "The submitted value when on. `\"on\"` is the platform default, kept so a plain form reads exactly what a native checkbox-role=switch would send."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "An on/off control that acts immediately, rendered as a native checkbox carrying role=switch so the browser keeps validation and form submission.",
+        "whenToUse": [
+          "The setting applies the moment it is toggled — a preference, a visibility toggle",
+          "The state is genuinely binary: on or off, with no third state",
+          "It must submit through a plain `<form>` with no JavaScript state"
+        ],
+        "whenNotToUse": [
+          "The choice is collected for a later submit — use a Checkbox",
+          "The choice is one of several exclusive options — use a Radio Group",
+          "The action triggers something rather than setting a state — use a Button"
+        ],
+        "accessibility": "Renders a real native `<input type=\"checkbox\">` carrying `role=\"switch\"`, so the browser supplies constraint validation, Space-to-toggle, and autofill while assistive technology reads the state as on/off. The label wraps the input, making the whole row the activation target with no click handler. `label`, `description`, and `error` are wired through the wrapping label and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+        "example": "<sk-switch name=\"dark\" label=\"Dark mode\"></sk-switch>",
+        "knownLimitations": [
+          "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "tabs",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-tabs/sk-tabs.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-6023bfdc13c76980f1988d1c427b715910e9b8e818c8a8586f0ff307f00589e4"
+        },
+        {
+          "path": "src/components/sk-tabs/sk-tabs.css",
+          "type": "registry:style",
+          "checksum": "sha256-407b3baa0eca3bca37e83976dd0fa4450428e2c7bf71476496efda9148c3fb45"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border",
+        "--sk-color-border-strong",
+        "--sk-color-focus-ring",
+        "--sk-color-surface",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-space-2",
+        "--sk-space-4",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-lg-weight",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "active",
+          "type": "number",
+          "default": "0",
+          "description": "The active tab's index. Zero-based, over the tabs in DOM order."
+        }
+      ],
+      "events": [
+        "sk-tab-change"
+      ],
+      "ai": {
+        "summary": "Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.",
+        "whenToUse": [
+          "Related content shares one surface and only one view matters at a time",
+          "The views are peers — Settings-style sections, editor panes",
+          "Switching should feel like moving, not navigating"
+        ],
+        "whenNotToUse": [
+          "Each view is a destination — use navigation, not tabs",
+          "The views must be compared side by side — show them all",
+          "Content must stay mounted across switches — this component unmounts inactive panels"
+        ],
+        "accessibility": "The ARIA tabs pattern's hard rule is enforced: only the active tab is in the tab order, arrow keys move and activate (automatic activation), Home and End jump to the ends, and activation wraps. Tabs are real `<button>`s. `aria-selected` / `aria-controls` / `aria-labelledby` are computed and written by the widget, because tabs and panels are separately slotted. Arrow semantics derive from `getComputedStyle().direction` at interaction time, so `dir=\"rtl\"` inverts Left and Right with no build flag (§4). The active panel carries `tabindex=0` so keyboard users reach its content after the last tab.",
+        "example": "<sk-tabs>\n  <div slot=\"tablist\" data-slot=\"tablist\">\n    <sk-tab label=\"Account\"></sk-tab>\n    <sk-tab label=\"Billing\"></sk-tab>\n  </div>\n  <sk-tab-panel><p>Account settings.</p></sk-tab-panel>\n  <sk-tab-panel><p>Billing history.</p></sk-tab-panel>\n</sk-tabs>",
+        "knownLimitations": [
+          "Inactive panels are hidden, not kept alive — state inside a panel is lost on switch, unless the application holds it",
+          "The tablist slot must carry `data-slot=\"tablist\"` and each part its `data-slot` — the wiring contract is structural"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "text",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-text/sk-text.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-0ff2cfa8312118af4bbc80e8adefbc2a24e9f1d2a4d981f6531ddb66422dae14"
+        },
+        {
+          "path": "src/components/sk-text/sk-text.css",
+          "type": "registry:style",
+          "checksum": "sha256-a44dcb44283f5a71184faa93b13613f51219f31bb3f6aeb065911245f3a7259e"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-text-muted",
+        "--sk-font-display",
+        "--sk-font-mono",
+        "--sk-font-sans",
+        "--sk-text-2xl-line-height",
+        "--sk-text-2xl-size",
+        "--sk-text-2xl-tracking",
+        "--sk-text-2xl-weight",
+        "--sk-text-3xl-line-height",
+        "--sk-text-3xl-size",
+        "--sk-text-3xl-tracking",
+        "--sk-text-3xl-weight",
+        "--sk-text-4xl-line-height",
+        "--sk-text-4xl-size",
+        "--sk-text-4xl-tracking",
+        "--sk-text-4xl-weight",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-base-tracking",
+        "--sk-text-base-weight",
+        "--sk-text-display-line-height",
+        "--sk-text-display-size",
+        "--sk-text-display-sm-line-height",
+        "--sk-text-display-sm-size",
+        "--sk-text-display-sm-tracking",
+        "--sk-text-display-sm-weight",
+        "--sk-text-display-tracking",
+        "--sk-text-display-weight",
+        "--sk-text-lg-line-height",
+        "--sk-text-lg-size",
+        "--sk-text-lg-tracking",
+        "--sk-text-lg-weight",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-tracking",
+        "--sk-text-sm-weight",
+        "--sk-text-xl-line-height",
+        "--sk-text-xl-size",
+        "--sk-text-xl-tracking",
+        "--sk-text-xl-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-tracking",
+        "--sk-text-xs-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "family",
+          "type": "\"inherit\" | \"sans\" | \"display\" | \"mono\"",
+          "default": "\"inherit\"",
+          "description": "Which family to set. The default leaves `font-family` untouched, because body copy inherits the platform stack and re-declaring it per-element would fight any consumer who changes `--sk-font-body`."
+        },
+        {
+          "name": "muted",
+          "type": "boolean",
+          "default": "false",
+          "description": "Muted text. The one color decision a text component owns, because secondary text is a *typographic* role in this system — it exists as `.sk-text-muted` today, and this is where that class retires to."
+        },
+        {
+          "name": "variant",
+          "type": "\"xs\" | \"sm\" | \"base\" | \"lg\" | \"xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"display-sm\" | \"display\"",
+          "default": "\"base\"",
+          "description": "The type step to apply, named exactly as the token is.  This is the `variant` slot of the §4 two-prop rule — the axis a text component varies on. `size` is not used for it, because `size` is the height scale every other component uses and a text element has no height of its own to scale."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Applies one whole type step — size, line-height, weight, and tracking together — to any element.",
+        "whenToUse": [
+          "A heading, paragraph, or label must match the type scale without hand-assembling four tokens",
+          "The consumer's markup chooses the element; the look must come from the system",
+          "Display-face headings at weight 800, or muted secondary text"
+        ],
+        "whenNotToUse": [
+          "Text inside a Button or Card heading slot — those components already apply their own steps",
+          "You want to choose the element with a prop — pick the element in markup instead; an `as` prop is how heading levels end up contradicting the outline",
+          "Text that is a control — a link is a Link, not styled text"
+        ],
+        "accessibility": "Renders no wrapper and no role: the element the consumer chose keeps its semantics, and the component only sets typography. There is no `as` prop by design — an element-choosing prop invites `<h3 as=\"h2\">`-style fixes that contradict the document outline. `muted` sets color only; the muted pair passes the contrast gates in both themes (6.64:1 light).",
+        "example": "<sk-text variant=\"2xl\" family=\"display\"><h1>Title</h1></sk-text>",
+        "knownLimitations": [
+          "There is no `size` prop: `size` is the height scale other components use, and text has no intrinsic height — `variant` names the type step instead",
+          "It does not truncate, clamp, or balance lines — layout concerns stay with the consumer"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "textarea",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-textarea/sk-textarea.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-f921792991a29ef6f8678b9f45a5f5f87dd0ac8a855963b8b190bd3212d3787a"
+        },
+        {
+          "path": "src/components/sk-textarea/sk-textarea.css",
+          "type": "registry:style",
+          "checksum": "sha256-9e54a84dd75f57d6b3fef6f792749fedac16c480d30b18bf4d508053625d7bba"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-focus-ring",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-duration-control",
+        "--sk-duration-control-fast",
+        "--sk-ease-arcade",
+        "--sk-ease-arcade-exit",
+        "--sk-font-sans",
+        "--sk-icon-sm",
+        "--sk-ring-offset",
+        "--sk-ring-width",
+        "--sk-shadow-brutal",
+        "--sk-shadow-brutal-active",
+        "--sk-shadow-brutal-none",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight",
+        "--sk-touch-min"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "cols",
+          "type": "number",
+          "default": null,
+          "description": "Visible columns, for the few cases where it matters."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Initial value for the uncontrolled case."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text below the field."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables interaction. Mirrors the ARIA name."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": null,
+          "description": "Associates the control with a form it is not nested inside."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid independently of any error text."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The control's own label text, rendered above the field."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "default": null,
+          "description": "Maximum accepted length, enforced natively. Same attribute-name reason."
+        },
+        {
+          "name": "minLength",
+          "type": "number",
+          "default": null,
+          "description": "Minimum accepted length, enforced natively.  Attribute-observed because Stencil's camelCase-to-kebab mapping produces `min-length`, not the native `minlength`, so `<sk-textarea minlength=\"2\">` was silently ignored — the same class of defect `readonly` had."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Placeholder text. Never a substitute for a label."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the field non-editable but still submitted and focusable.  Attribute-observed, for the same reason as `sk-input`: Stencil's camelCase-to-kebab mapping produces `read-only`, not the native `readonly`."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Native constraint validation still applies and is never suppressed."
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "default": "4",
+          "description": "Visible rows. The browser's own sizing, not a pixel value."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The value. Uncontrolled by default: typed value only if set."
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"quiet\"",
+          "default": "\"default\"",
+          "description": "Visual emphasis."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": null,
+          "description": "The name of the element, used when submitting an HTML form."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "A multi-line text field that participates in a plain HTML form, for text too long to type on one line.",
+        "whenToUse": [
+          "The value runs to several lines: a bio, a comment, release notes, an address",
+          "The consumer wants the browser to size the field by line count",
+          "It must submit through a plain `<form>` with no JavaScript state"
+        ],
+        "whenNotToUse": [
+          "The value is a single short string — use an Input",
+          "The value is one of a fixed set — use a Select or Radio Group",
+          "It only toggles a boolean — use a Checkbox or Switch"
+        ],
+        "accessibility": "Renders a real native `<textarea>`, so the browser supplies constraint validation and the error bubble rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). The field resizes vertically by default, because long-form text is edited rather than typed in one line. Shares its form contract with Input.",
+        "example": "<sk-textarea name=\"bio\" label=\"Bio\" rows=\"4\"></sk-textarea>",
+        "knownLimitations": [
+          "There is no `pattern` prop: a textarea has no single-line grammar for a pattern to constrain",
+          "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "toast",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-toast/sk-toast.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-18859a6d32354f79e04f0dade9b1e0c3d1e18a1cf18e160fb0ef19ea87714c0c"
+        },
+        {
+          "path": "src/components/sk-toast/sk-toast.css",
+          "type": "registry:style",
+          "checksum": "sha256-0c82a2e39d7eb82672e7c1e3dbc0f28dcabe25d3532b0bf51779bb01e58ee5a5"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-success",
+        "--sk-color-text",
+        "--sk-color-warning",
+        "--sk-font-sans",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-text-lg-size",
+        "--sk-z-toast"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "duration",
+          "type": "number",
+          "default": "5000",
+          "description": "Milliseconds before auto-dismiss. `0` never auto-dismisses — for an error the user must act on, an expiring message is an expired apology."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the toast is showing."
+        },
+        {
+          "name": "variant",
+          "type": "\"neutral\" | \"success\" | \"warning\" | \"danger\"",
+          "default": "\"neutral\"",
+          "description": "Visual severity, matching Badge's palette. Color is never the message."
+        }
+      ],
+      "events": [
+        "sk-open-change"
+      ],
+      "ai": {
+        "summary": "A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.",
+        "whenToUse": [
+          "A background operation finished and the user was looking somewhere else",
+          "A state change should be acknowledged without interrupting work",
+          "An error needs time and a close button, not a decision"
+        ],
+        "whenNotToUse": [
+          "The user must choose before the page continues — use an Alert Dialog",
+          "The message needs the page's context hidden — use a Dialog",
+          "The information is permanent UI, not an event — use a Card or a Badge"
+        ],
+        "accessibility": "`role=\"status\"`, a polite live region: announced when it appears, never stealing focus — the user was looking somewhere else, and a toast that shouts is a dialog wearing a smaller skirt. Hover or focus pauses the auto-dismiss clock, because a message that disappears mid-read is an announcement that never happened. `duration=0` never expires: an error the user must act on deserves more than an expired apology. The close button carries a real `aria-label` — a bare × is a picture to a screen reader. Severity is a 3px left edge plus the message text, never color alone (WCAG 1.4.1).",
+        "example": "<sk-toast variant=\"success\" duration=\"5000\">Build 4821 deployed.</sk-toast>",
+        "knownLimitations": [
+          "It is a single toast — the consumer's region owns stacking and placement",
+          "It never takes focus, so keyboard users meet it only through announcement; an actionable toast needs a persistent surface"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "tooltip",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-tooltip/sk-tooltip.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-6644f81caa1ec992480a86402fa1b2b23787f1d1793ffd52e7127ebb6f2feaf6"
+        },
+        {
+          "path": "src/components/sk-tooltip/sk-tooltip.css",
+          "type": "registry:style",
+          "checksum": "sha256-43bc365571f6d61526140767c6f608a8b54b1a19ef0eec47f8e3193906211f29"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-text",
+        "--sk-font-sans",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-z-tooltip"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "delay",
+          "type": "number",
+          "default": "300",
+          "description": "Milliseconds of hover before showing. A tooltip that fires instantly is a strobe."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the tooltip is showing. Driven by hover/focus; also settable."
+        },
+        {
+          "name": "placement",
+          "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+          "default": "\"top\"",
+          "description": "Preferred side. Flips at the viewport edge rather than clipping."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.",
+        "whenToUse": [
+          "An icon-only control needs its name spelled out",
+          "A jargon term or abbreviation needs one sentence of context",
+          "A control is disabled and the reason helps"
+        ],
+        "whenNotToUse": [
+          "The information is essential — put it in the page; a tooltip hides it from touch and from anyone not hovering",
+          "The content is interactive or long — use a Popover",
+          "It is the control's name — use a Label or aria-label; a tooltip is a description, not the name"
+        ],
+        "accessibility": "Named through `aria-describedby` pointing at the panel, so a screen reader reads it on demand — a tooltip that grabs focus is a popup wearing a tiny hat. Shows on hover after a delay (a tooltip that fires instantly is a strobe) and immediately on keyboard focus, because a tabbing user asked for it explicitly and a 300ms penance on every tab is hostile. Escape hides it. The panel takes no pointer events (`pointer-events: none`), so hovering the tooltip never flickers it away. Explicitly excluded from the forms contract (section 4): it cannot be form-associated.",
+        "example": "<sk-tooltip placement=\"top\">\n  <sk-button slot=\"trigger\">Deploy</sk-button>\n  Ships the current build to production.\n</sk-tooltip>",
+        "knownLimitations": [
+          "Placement is a hint, not a viewport-aware computation — the panel anchors to the trigger and can clip at edges",
+          "Touch has no hover: a tooltip is invisible on touch until the control is focused",
+          "The trigger must be a focusable element — a non-interactive span gives keyboard users nothing to describe"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    }
+  ]
+}

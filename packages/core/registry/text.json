@@ -79,6 +79,27 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "family",
+      "type": "\"inherit\" | \"sans\" | \"display\" | \"mono\"",
+      "default": "\"inherit\"",
+      "description": "Which family to set. The default leaves `font-family` untouched, because body copy inherits the platform stack and re-declaring it per-element would fight any consumer who changes `--sk-font-body`."
+    },
+    {
+      "name": "muted",
+      "type": "boolean",
+      "default": "false",
+      "description": "Muted text. The one color decision a text component owns, because secondary text is a *typographic* role in this system — it exists as `.sk-text-muted` today, and this is where that class retires to."
+    },
+    {
+      "name": "variant",
+      "type": "\"xs\" | \"sm\" | \"base\" | \"lg\" | \"xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"display-sm\" | \"display\"",
+      "default": "\"base\"",
+      "description": "The type step to apply, named exactly as the token is.  This is the `variant` slot of the §4 two-prop rule — the axis a text component varies on. `size` is not used for it, because `size` is the height scale every other component uses and a text element has no height of its own to scale."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "Applies one whole type step — size, line-height, weight, and tracking together — to any element.",
     "whenToUse": [

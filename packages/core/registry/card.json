@@ -57,6 +57,33 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead."
+    },
+    {
+      "name": "padding",
+      "type": "\"none\" | \"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Supporting text under the heading."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"outlined\" | \"bare\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated."
+    }
+  ],
+  "events": [],
   "ai": {
     "summary": "A hard-edged surface that groups related content, with optional header, body, and footer.",
     "whenToUse": [

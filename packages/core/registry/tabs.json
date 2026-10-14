@@ -53,6 +53,17 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "active",
+      "type": "number",
+      "default": "0",
+      "description": "The active tab's index. Zero-based, over the tabs in DOM order."
+    }
+  ],
+  "events": [
+    "sk-tab-change"
+  ],
   "ai": {
     "summary": "Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.",
     "whenToUse": [

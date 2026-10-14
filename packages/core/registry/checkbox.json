@@ -64,6 +64,95 @@
     "en-US"
   ],
   "license": "MIT",
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the box is checked. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isChecked`, not `value`."
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "default": "false",
+      "description": "Initial state for the uncontrolled case."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text below the row."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "Associates the control with a form it is not nested inside."
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "default": "false",
+      "description": "Visual \"some children\" state. Property-only on the platform — there is no `indeterminate` attribute — so this prop writes the DOM node after render and never reaches the form: an indeterminate box submits as unchecked."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid, with the same independence from `error` as Input."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The label text, rendered beside the box. Wraps the control."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Native constraint validation still applies and is never suppressed."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Label text size. The row target stays 44px at every size."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"on\"",
+      "description": "The submitted value when checked. `\"on\"` is the platform default, kept so a plain form reads exactly what a native checkbox would send."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"quiet\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
   "ai": {
     "summary": "A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.",
     "whenToUse": [

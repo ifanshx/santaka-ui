@@ -80,6 +80,28 @@ export const registryItemSchema = {
     },
     localesCovered: { ...stringArray, minItems: 1 },
     license: { type: "string", minLength: 1 },
+    // The public surface, derived from the component's type declarations and
+    // source. Optional because a future non-component entry (a block, a theme)
+    // has no props, and requiring it would force an empty array that says
+    // nothing.
+    props: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["name", "type"],
+        properties: {
+          name: { type: "string", minLength: 1 },
+          type: { type: "string", minLength: 1 },
+          default: { anyOf: [{ type: "string" }, { type: "null" }] },
+          description: { type: "string" },
+        },
+      },
+    },
+    events: {
+      type: "array",
+      items: { type: "string", pattern: "^sk-[a-z0-9-]+$" },
+    },
     ai: {
       type: "object",
       additionalProperties: false,

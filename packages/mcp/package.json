@@ -1,0 +1,50 @@
+{
+  "name": "@santaka-ui/mcp",
+  "version": "0.1.0",
+  "description": "Deterministic MCP server over Santaka UI registry metadata. No model, no network.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "bin": {
+    "santaka-mcp": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/mark-cli-executable.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:smoke": "node scripts/smoke.mjs",
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@santaka-ui/core": "workspace:^",
+    "@santaka-ui/tokens": "workspace:^",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

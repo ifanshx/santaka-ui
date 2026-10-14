@@ -11,5 +11,6 @@ export type {
   RegistryFile,
   RegistryItem,
   RegistryItemType,
+  RegistryProp,
   Stability,
 } from "./types.js"
