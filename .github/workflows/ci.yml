@@ -129,3 +129,28 @@ jobs:
       # projects disagree, which is the only way the two can drift.
       - name: Check the generated support matrix
         run: pnpm --filter @santaka-ui/web-components support-matrix:check
+
+  llms:
+    name: llms.txt and llms-full.txt are in sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # `plan.md` section 11: regenerate and verify in CI so the files cannot go
+      # stale. The generator reads the registry metadata and the committed
+      # components.d.ts, but the token-group counts come from the compiled CSS,
+      # so the tokens package is built first.
+      - run: pnpm --filter @santaka-ui/tokens build
+
+      - name: Check llms.txt is in sync
+        run: pnpm --filter @santaka-ui/core llms:check

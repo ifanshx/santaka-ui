@@ -1,0 +1,1006 @@
+# Santaka UI — full component reference
+
+Generated from the registry metadata and the component type declarations.
+Every component below is a custom element; the React/Vue/Svelte/Angular
+packages are adapters over the same element.
+
+## sk-alert-dialog
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.
+
+**When to use**
+
+- The action is destructive and irreversible — a delete, a revoke, a permanent change
+- The page cannot continue until the question is answered
+- The interruption must be announced as an interruption, not as a window
+
+**When not to use**
+
+- The user may reasonably decline without answering — use a Dialog, which allows Escape and optional backdrop dismissal
+- The message is informational and needs no decision — use a Toast or Alert
+- The action has a URL or needs deep linking — use a page
+
+**Accessibility**
+
+`role="alertdialog"`, so assistive technology announces an interruption rather than a window. Escape is *refused* and the backdrop does not dismiss: a dialog that lets Escape answer its question did not need to be asked — this is the ARIA APG's requirement for the role, not a style choice. Focus lands on `initialFocus` (the consumer's chosen default action) rather than the first focusable, because in a delete confirmation the wrong default is a destructive one. Label it with a real heading in the `title` slot. The panel wears the danger stroke: an interruption should look like one before a single word is read.
+
+**Example**
+
+```html
+<sk-alert-dialog initial-focus="#cancel">
+  <sk-text variant="lg" slot="title"><h3>Delete this repository?</h3></sk-text>
+  <p>This cannot be undone.</p>
+  <sk-button id="cancel" variant="secondary">Cancel</sk-button>
+</sk-alert-dialog>
+```
+
+**Known limitations**
+
+- There is no trigger slot: the application raises it in response to something, never the user browsing
+- There is no imperative `close()` without a decision — the only exit is an action
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `initialFocus` | `string` | `""` | Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel. |
+| `label` | `string` | `""` | Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot. |
+| `open` | `boolean` | `false` | Whether the alert is showing. |
+
+## sk-badge
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A static label for status, category, or count. It is not interactive.
+
+**When to use**
+
+- It marks a record's state, such as Active, Pending, or Failed
+- It labels a category or count that must stand out from body copy
+- It marks an item in a dense list where state has to stay scannable
+
+**When not to use**
+
+- It is clickable — use a Button, because a badge has no interaction
+- It navigates — use a Link instead
+- It carries a value the reader selects — use a Checkbox or Switch instead
+
+**Accessibility**
+
+Static text, so it exposes no role and no tab stop. Each variant sets a foreground and a background measured together, so the label clears 4.5:1 against its own fill rather than only against the page. The dot variant would otherwise convey state by color alone, which WCAG 1.4.1 forbids, so it renders the consumer-supplied `statusLabel` visually hidden instead.
+
+**Example**
+
+```html
+<sk-badge variant="success">Active</sk-badge>
+```
+
+**Known limitations**
+
+- The `statusLabel` prop is required in the React types for the `dot` variant but only warns in plain HTML
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `dot` | `boolean` | `false` | Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color. |
+| `size` | `"sm" \| "md"` | `"md"` | Control height. |
+| `statusLabel` | `string` | `""` | Screen-reader text for the dot variant. Required when `dot` is set. |
+| `variant` | `"neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis. |
+
+## sk-button
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Triggers an action: submit a form, open a dialog, save a change.
+
+**When to use**
+
+- The control performs an action on the current page
+- It submits or resets a form
+- It opens a panel, dialog, or menu
+
+**When not to use**
+
+- It navigates somewhere — use a Link instead
+- It toggles a value on its own, with no action — use a Checkbox or Switch
+- It is the only option in a set — use a Radio Group
+
+**Accessibility**
+
+Button role. Activates on Enter and Space. A loading button is aria-busy rather than disabled, so it keeps its accessible name and position in the tab order.
+
+**Example**
+
+```html
+<sk-button variant="primary">Save changes</sk-button>
+```
+
+**Known limitations**
+
+- As a form-associated custom element, `type="submit"` calls form.requestSubmit() explicitly; native implicit submission does not apply
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `loading` | `boolean` | `false` | Shows a busy state and blocks interaction. |
+| `size` | `ButtonSize` | `"md"` | Control height. |
+| `type` | `ButtonType` | `"button"` | `submit`, `reset`, or `button`. Native semantics, so a Button inside a form behaves like the `<button>` a consumer would have written by hand. |
+| `variant` | `ButtonVariant` | `"primary"` | Visual emphasis. |
+| `form` | `string` | — | The `id` of a `<form>` element to associate this element with. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-card
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A hard-edged surface that groups related content, with optional header, body, and footer.
+
+**When to use**
+
+- A group of related facts, settings, or actions needs a boundary of its own
+- Content sits inside another surface and needs a raised panel to read against it
+- A record needs a title, a body, and a row of actions below a rule
+
+**When not to use**
+
+- The whole card is one action — use a Button or a Link with card styling
+- You are nesting it inside another card to group further — two competing fills and shadows read as noise
+- The separation is a list of peers — use a plain list or a Separator
+
+**Accessibility**
+
+A card is a surface, not a control: it exposes no role, is not focusable, and has no interaction props, because a clickable card is a link or a button wearing a card's styling and adding a click handler here would produce something neither keyboard-reachable nor announced. `heading` renders as a `<span>`, not a heading, because the card does not know its level in the document outline — pass a real `<h2 slot="header">` when you need one. Slots are optional and each renders nothing when empty, so a card without a header carries no empty bordered band.
+
+**Example**
+
+```html
+<sk-card heading="Deployment" subtitle="Build 4821"><p>Shipped to production.</p></sk-card>
+```
+
+**Known limitations**
+
+- There is no `size` prop: a card has no intrinsic height to scale, so `padding` is the axis it varies on
+- There is no click handler, by design — a card that navigates should be a Link, and one that acts should be a Button
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `heading` | `string` | `""` | Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead. |
+| `padding` | `"none" \| "sm" \| "md" \| "lg"` | `"md"` | The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on. |
+| `subtitle` | `string` | `""` | Supporting text under the heading. |
+| `variant` | `"default" \| "outlined" \| "bare"` | `"default"` | Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated. |
+
+## sk-checkbox
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.
+
+**When to use**
+
+- The value is a single yes/no choice that submits with a form
+- It must work without JavaScript: plain HTML form submission
+- The browser's native constraint validation is wanted — required means required
+
+**When not to use**
+
+- The choice is one of several exclusive options — use a Radio Group
+- It represents an on/off state that acts immediately without form submission — use a Switch
+- The value is text — use an Input or Textarea
+
+**Accessibility**
+
+Renders a real native `<input type="checkbox">`, so the browser supplies constraint validation, Space-to-toggle, and autofill rather than this component reimplementing them. The label wraps the input, making the whole row the activation target with no click handler. `label`, `description`, and `error` are wired through the wrapping label and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `indeterminate` is visual only (`aria-checked="mixed"`), and submits as unchecked. Implements the FACE contract: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.
+
+**Example**
+
+```html
+<sk-checkbox name="agree" label="I agree to the terms" required></sk-checkbox>
+```
+
+**Known limitations**
+
+- The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)
+- `indeterminate` is a property, not an attribute — it cannot be set in declarative HTML and resets on re-render if not re-applied
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `checked` | `boolean` | `false` | Whether the box is checked. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isChecked`, not `value`. |
+| `defaultChecked` | `boolean` | `false` | Initial state for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the row. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `indeterminate` | `boolean` | `false` | Visual "some children" state. Property-only on the platform — there is no `indeterminate` attribute — so this prop writes the DOM node after render and never reaches the form: an indeterminate box submits as unchecked. |
+| `invalid` | `boolean` | `false` | Marks the field invalid, with the same independence from `error` as Input. |
+| `label` | `string` | `""` | The label text, rendered beside the box. Wraps the control. |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Label text size. The row target stays 44px at every size. |
+| `value` | `string` | `"on"` | The submitted value when checked. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox would send. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-dialog
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.
+
+**When to use**
+
+- A decision must block the page until it is made — a confirmation, a discard warning
+- A short form needs the page's context hidden, not merely behind
+- Content must interrupt without navigating — use a page for anything that needs a URL
+
+**When not to use**
+
+- Content is supplementary and the page should stay live — use a Popover or Toast
+- The flow has its own URL or needs deep linking — use a page
+- It is a non-blocking status update — use a Toast
+
+**Accessibility**
+
+Renders the native `<dialog>` element: focus trapping, Escape, and inert background content are the browser's, not reimplemented. Focus returns to the invoker on close, so a keyboard user is not dropped at the top of the document. Label it with a real heading in the `title` slot — it is visible to everyone and doubles as the dialog's accessible name. One `sk-open-change` event reports every close path: trigger, Escape, backdrop, and a consumer setting the prop. The backdrop is translucent ink, not blur — the glass panel already blurs what is under it. `dismissible` is off by default: a dialog holding form input loses work to a stray click.
+
+**Example**
+
+```html
+<sk-dialog dismissible>
+  <sk-button slot="trigger">Open</sk-button>
+  <sk-text variant="lg" slot="title"><h3>Discard draft?</h3></sk-text>
+  <p>Your draft will be deleted.</p>
+</sk-dialog>
+```
+
+**Known limitations**
+
+- The native `<dialog>` element is Baseline-tier: Core-tier browsers get the non-modal degradation, not the modal
+- Slotted content is moved into the panel once at upgrade — content added to the host after upgrade is not distributed
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `close` | `() => Promise<void>` | — | — |
+| `dismissible` | `boolean` | `false` | Closes when the backdrop is clicked. Off by default because a dialog holding form input loses work to a stray click; a confirmation prompt with nothing to lose wants it on. |
+| `label` | `string` | `""` | The dialog's accessible name, applied to the panel when the consumer has not slotted a `<sk-text>` heading. Prefer the slot: a real heading is visible to everyone and doubles as the label. |
+| `modal` | `boolean` | `true` | Modal is the default and the usual case: the page behind is inert and the focus is trapped. Non-modal (Chrome/Edge/Firefox only — Safari has no `showModal`-independent backdrop) renders the panel inline without blocking the page, for tool-palette-style UIs. |
+| `open` | `boolean` | `false` | Whether the dialog is showing. Reflects so page CSS can target it. |
+| `showModal` | `() => Promise<void>` | — | Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering. |
+
+## sk-icon-button
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A square, icon-only control for actions that need no label, such as edit or delete.
+
+**When to use**
+
+- The action is unambiguous from a well-known icon
+- Space is tight, such as a toolbar or a table row
+- The control sits next to a labelled control that implies the group
+
+**When not to use**
+
+- The action is not obvious from the icon alone — use a Button with a label
+- It is the primary or most common action on the page — use a Button
+- It performs navigation — use a Link instead
+
+**Accessibility**
+
+Button role with an explicit accessible name from the required `label` prop. The slotted icon is aria-hidden because it carries no information the name does not. A missing label warns in development.
+
+**Example**
+
+```html
+<sk-icon-button label="Delete item"><svg><!-- trash icon --></svg></sk-icon-button>
+```
+
+**Known limitations**
+
+- The `label` prop is required in the React types but only warns in plain HTML
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `label` | `string` | `""` | The accessible name. An icon-only control with no name is announced as just "button", which tells a screen-reader user nothing. |
+| `loading` | `boolean` | `false` | Shows a busy state and blocks interaction. |
+| `size` | `ButtonSize` | `"md"` | Control height. |
+| `type` | `ButtonType` | `"button"` | Native form semantics. |
+| `variant` | `ButtonVariant` | `"ghost"` | Visual emphasis. |
+| `form` | `string` | — | The `id` of a `<form>` element to associate this element with. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-input
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.
+
+**When to use**
+
+- The value is a short string: a name, an email, a handle, a search term
+- It must submit through a plain `<form>` with no JavaScript state
+- The browser's own constraint validation is wanted rather than a bespoke rules engine
+
+**When not to use**
+
+- The value is long-form text — use a Textarea
+- The value is one of a fixed set — use a Select or Radio Group
+- It only toggles a boolean — use a Checkbox or Switch
+
+**Accessibility**
+
+Renders a real native `<input>`, so the browser supplies constraint validation, password managers, autofill, and IME composition rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error also sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `readOnly` keeps the value submitted and focusable, which is what distinguishes it from `disabled`.
+
+**Example**
+
+```html
+<sk-input name="email" type="email" label="Email" required></sk-input>
+```
+
+**Known limitations**
+
+- The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)
+- The `pattern` prop takes a string, not a RegExp, because it becomes a native attribute
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `autocomplete` | `string` | — | Autocomplete hint for the browser and password managers. |
+| `defaultValue` | `string` | `""` | Initial value for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the field. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `invalid` | `boolean` | `false` | Marks the field invalid.  Separate from `error` on purpose: a field can be invalid before the consumer knows why, and an error message can be present without the field being in an error state — for example a form-level summary listing several fields. |
+| `label` | `string` | `""` | The control's own label text, rendered above the field. |
+| `maxLength` | `number` | — | Maximum accepted length, enforced natively. |
+| `minLength` | `number` | — | Minimum accepted length, enforced natively. |
+| `pattern` | `string` | `""` | Regular expression the value must match, enforced natively. |
+| `placeholder` | `string` | `""` | Placeholder text. Never a substitute for a label. |
+| `readOnly` | `boolean` | `false` | Makes the field non-editable but still submitted and focusable.  Attribute-observed, unlike `disabled`: the HTML attribute name is `readonly` in every case, so Stencil's camelCase-to-kebab mapping cannot be relied on to match it, and a consumer writing `<sk-input readonly>` in plain HTML was silently getting an editable field. |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Control height. |
+| `type` | `InputType` | `"text"` | Native input type. Visual configuration stays `variant`/`size` only. |
+| `value` | `string` | `""` | The value. Uncontrolled by default: typed value only if set. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-label
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.
+
+**When to use**
+
+- A control was built without its own label and needs one that is actually associated
+- A checkbox or switch needs its marker before the text, where the control leads the sentence
+- A custom field needs the same label record Input's built-in label uses
+
+**When not to use**
+
+- The control already has a label prop — Input and Textarea wire their own; two labels for one control is a bug
+- It would label nothing — `for` is required; a label with no control is a span with ambition, use plain text
+- The text describes a group of controls — use a Fieldset or a heading, not a label
+
+**Accessibility**
+
+Associates through `htmlFor` pointing at the control's id, so clicking the label focuses the control via the browser's own activation — no click handler here, because the platform's is better and reimplementing it means reimplementing its edge cases. The required marker is `aria-hidden`: the control's own `required` attribute carries the semantics, the asterisk is for the sighted, and color alone never carries it (WCAG 1.4.1). `required` here does not set anything on the control — a label reaching into another component's DOM is exactly what section 4 forbids.
+
+**Example**
+
+```html
+<sk-label for="newsletter-email">Email address</sk-label>
+<input id="newsletter-email" type="email">
+```
+
+**Known limitations**
+
+- Field components render their control with the id `${hostId}-control`, so `for` must carry that suffix — a cross-component id contract is tracked as open
+- It cannot label a control rendered inside a shadow root it cannot see — `for` must match a light-DOM id
+- It does not generate ids; pair it with the control's own id or React's `useId()`
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `forId` | `string` | `""` | The `id` of the control this label names. Required for the same reason Link's `href` is: a label with no `for` is a mistake the compiler catches, and passing `""` explicitly is the visible way to say "decorative label".  Named `for`, not `htmlFor`. Stencil maps a camelCase prop to its kebab attribute (`htmlFor` → `html-for`), so a consumer writing the HTML attribute `for` — the only spelling that exists in plain markup — would set nothing, and the label would silently associate with nothing. The first build proved it: `for="standalone-email"` in the page, `for=""` in the DOM. The native `for` attribute name is also what `Element.prototype` reserves, so a prop named `for` would collide with it — hence `for` as the *attribute* via `@Prop({ attribute: "for" })` on a differently-named field. |
+| `marker` | `"after" \| "before"` | `"after"` | Where the marker sits. `before` reads naturally for checkboxes and switches, where the control leads the sentence. |
+| `required` | `boolean` | `false` | Marks the labeled control as required and renders the marker.  This sets `aria-required` on **this** element, not the control — the consumer sets `required` on the control itself, and the label marking the control on its behalf would be a second component reaching into another's DOM, which §4 forbids. |
+
+## sk-link
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Navigates to another URL, in place or in a new tab.
+
+**When to use**
+
+- It changes the URL
+- The destination is a document or page
+- It can be opened in a new tab or copied by the reader
+
+**When not to use**
+
+- It performs an action without changing the URL — use a Button instead
+- It downloads a file rather than navigating — pass `download`
+- It triggers a dialog or menu — use a Button
+
+**Accessibility**
+
+Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `external` sets target=_blank with rel=noopener noreferrer and renders a decorative indicator.
+
+**Example**
+
+```html
+<sk-link href="/docs">Read the docs</sk-link>
+```
+
+**Known limitations**
+
+- An empty `href` renders as visibly disabled rather than failing at build time
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `download` | `string` | — | — |
+| `external` | `boolean` | `false` | `external` marks a link that leaves the application: it adds the external icon, sets `target="_blank"`, and adds `rel="noopener noreferrer"`. Left off by default because most links do not leave. |
+| `href` | `string` | `""` | The destination. A link that navigates. |
+| `rel` | `string` | — | Forwarded to the underlying anchor. |
+| `subtle` | `boolean` | `false` | Suppresses the underline until hover or focus. |
+| `target` | `string` | — | Opens in a new tab without the external treatment. |
+
+## sk-radio-group
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.
+
+**When to use**
+
+- Exactly one choice from 2–7 known options
+- The options are short enough to read at a glance — longer lists want a Select
+- It must submit through a plain `<form>` with no JavaScript state
+
+**When not to use**
+
+- More than roughly 7 options — use a Select, which scrolls and filters
+- Several choices at once — use a Checkbox per option
+- A single on/off setting that acts immediately — use a Switch
+
+**Accessibility**
+
+Renders real native `<input type="radio">` elements in a `role="radiogroup"` container, so the browser owns arrow-key navigation within the group, the single tab stop, and constraint validation ("please select one of these options" is the browser's message, not a reimplementation). The group label names the container through `aria-labelledby`; each option is labelled by its wrapping label. An error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract on the group: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.
+
+**Example**
+
+```html
+<sk-radio-group name="env" label="Environment" required options='[{"value":"production","label":"Production"},{"value":"staging","label":"Staging"}]'></sk-radio-group>
+```
+
+**Known limitations**
+
+- Options arrive as JSON, like Select — they cannot be slotted as children, because scoped encapsulation cannot distribute host children into the render tree
+- The generated `id` for the group label differs from React's `useId()`, so an SSR consumer must pass an explicit `id` (section 4, forms contract)
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `defaultValue` | `string` | `""` | Initial value for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the group. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `invalid` | `boolean` | `false` | Marks the field invalid, with the same independence from `error` as Input. |
+| `label` | `string` | `""` | The group's own label text, rendered above the options. |
+| `name` | `string` | `""` | The submitted name. Every radio in the group carries it. |
+| `options` | `RadioOption[]` | `[]` | The choices. Serialized as JSON when written as an attribute. |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Label text size. The row target stays 44px at every size. |
+| `value` | `string` | `""` | The value. Uncontrolled by default; "" means nothing selected. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+
+## sk-select
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.
+
+**When to use**
+
+- The value is one of a fixed set of choices
+- The form must submit through plain HTML with no component state reading
+- The list is long enough that radio buttons would be a wall
+
+**When not to use**
+
+- The choice is between two options — use a Switch or two Radio Buttons; a select hides the answer
+- The options depend on typing — use a Combobox
+- There are fewer than five options and the page has room — Radio Group shows every answer at once
+
+**Accessibility**
+
+Renders a real native `<select>`, visibly — §4's hidden-native path was rejected deliberately, so the popup is the browser's: touch, wheel, typeahead, and native validation all work without a listbox reimplementing them. FACE with all three form callbacks; `required` is enforced by the browser and never suppressed; the label is associated through `for`, and an error sets `aria-invalid` with an icon beside its text, never color alone (WCAG 1.4.1). `sk-value-change` fires only for user-initiated changes. Options are JSON, because slot distribution cannot move host children into the render tree.
+
+**Example**
+
+```html
+<sk-select name="environment" label="Environment" required placeholder="Choose an environment" options='[{"value":"production","label":"Production"}]'></sk-select>
+```
+
+**Known limitations**
+
+- The popup cannot be styled — that is the trade the visible-native decision makes, and it is why the popup works everywhere
+- Options are JSON, not slotted markup — slot distribution cannot reach the render tree
+- SSR consumers must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `defaultValue` | `string` | `""` | Initial value for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the field. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `invalid` | `boolean` | `false` | Marks the field invalid, with the same independence from `error` as Input. |
+| `label` | `string` | `""` | The control's own label text, rendered above the field. |
+| `options` | `SelectOption[]` | `[]` | The choices. Serialized as JSON when written as an attribute. |
+| `placeholder` | `string` | `""` | Placeholder-style first choice, shown when the value is "". |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Control height. |
+| `value` | `string` | `""` | The value. Uncontrolled by default. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-separator
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A hairline between content: a real <hr> that announces itself unless it is purely visual.
+
+**When to use**
+
+- Two groups of content need a thematic break between them
+- A form's sections need dividing without a heading
+- A vertical rule splits two columns
+
+**When not to use**
+
+- The break is already communicated by a heading or Card boundary — mark it `decorative` or skip it
+- You are separating items in a list — use spacing or a list style; it is the honest tool
+- Two routes branch at a choice — use Tabs or a Radio Group to express the choice; "or" between buttons is not a widget
+
+**Accessibility**
+
+Renders a real `<hr>`, announced as a separator by screen readers. `decorative` flips it to `role="none"` for lines that exist only for the eye. A `label` (e.g. "or" between two actions) is announced only when the separator is meaningful — a name on a `role="none"` element is a contradiction. The line is the 1px hairline token, not the 3px chrome stroke: a separator divides content, and a 3px stroke between paragraphs reads as a wall.
+
+**Example**
+
+```html
+<sk-separator label="or"></sk-separator>
+```
+
+**Known limitations**
+
+- Vertical separators need a sized parent — `align-self: stretch` is the default, not a guarantee
+- No motion, no chrome, by design — the one component where the hairline is the point
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `decorative` | `boolean` | `false` | Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break. |
+| `label` | `string` | `""` | Label for a meaningful separator, e.g. "or" between two actions. Announced only when the separator is not decorative, because a name on a `role="none"` element is a contradiction. |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Axis of the line. Vertical separators need a sized parent. |
+
+## sk-skeleton
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.
+
+**When to use**
+
+- Content is loading into a known layout and the space must be held
+- A list, table, or card grid is fetching and the shape of what arrives is already known
+
+**When not to use**
+
+- An operation's duration matters — use a Spinner or Progress
+- The placeholder would be on screen more than a moment or two — show a real empty state instead
+
+**Accessibility**
+
+`aria-hidden` by design: a skeleton is scaffolding, not content, and announcing five grey rectangles before a table loads is noise. There is no `label` prop on purpose — if a region needs announcing while it loads, that is a live region and the consumer owns it. Real content announces itself when it arrives. Dimensions are the feature: every variant sets a default size the consumer overrides, because a skeleton that guesses the content's height causes the very layout shift it exists to prevent. Under reduced motion the shimmer is removed entirely rather than slowed — a slower shimmer is still motion, and the grey shape is the whole message.
+
+**Example**
+
+```html
+<sk-skeleton variant="text" style="inline-size: 60%"></sk-skeleton>
+```
+
+**Known limitations**
+
+- No slot by design: real content replaces the element, not its children
+- `direction` is a prop, not auto-detected — the component does not know its locale
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `direction` | `"ltr" \| "rtl"` | `"ltr"` | The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale. |
+| `variant` | `"text" \| "rect" \| "circle"` | `"text"` | The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes. |
+
+## sk-spinner
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.
+
+**When to use**
+
+- An operation is running and the interface cannot say how far along it is
+- A button or icon button is in its loading state and needs an inline indicator
+
+**When not to use**
+
+- Progress is measurable — use a Progress bar; a spinner cannot say 60%
+- Content is loading into a known layout — use a Skeleton, which promises the layout instead of motion
+
+**Accessibility**
+
+Carries `role="status"` so screen readers announce it as a live region. The visible ring is `aria-hidden` — it is a picture of waiting, and `label` (default "Loading") is what gets announced; `status` replaces it when progress is known. Under `prefers-reduced-motion` the spin stops rather than slows: a slow spinner still implies movement it cannot show, so the ring freezes solid and the label carries the whole story. Same ruling as Icon Button's loading state — if one changes, both must.
+
+**Example**
+
+```html
+<sk-spinner label="Saving draft"></sk-spinner>
+```
+
+**Known limitations**
+
+- It cannot express progress fraction — that is a Progress bar's job, not a faster spin
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `"Loading"` | What the wait is, announced to screen readers in place of the silent ring. "Loading" is the honest default; "Saving draft…" is the better one. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Ring diameter, from the icon-size tokens so the spinner matches the icon beside it. Not the `size` prop's height scale: a spinner is a circle, and a circle's size is its diameter. |
+| `status` | `string` | `""` | Announces progress when it is known, e.g. "Uploading 60%". |
+
+## sk-switch
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+An on/off control that acts immediately, rendered as a native checkbox carrying role=switch so the browser keeps validation and form submission.
+
+**When to use**
+
+- The setting applies the moment it is toggled — a preference, a visibility toggle
+- The state is genuinely binary: on or off, with no third state
+- It must submit through a plain `<form>` with no JavaScript state
+
+**When not to use**
+
+- The choice is collected for a later submit — use a Checkbox
+- The choice is one of several exclusive options — use a Radio Group
+- The action triggers something rather than setting a state — use a Button
+
+**Accessibility**
+
+Renders a real native `<input type="checkbox">` carrying `role="switch"`, so the browser supplies constraint validation, Space-to-toggle, and autofill while assistive technology reads the state as on/off. The label wraps the input, making the whole row the activation target with no click handler. `label`, `description`, and `error` are wired through the wrapping label and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.
+
+**Example**
+
+```html
+<sk-switch name="dark" label="Dark mode"></sk-switch>
+```
+
+**Known limitations**
+
+- The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `checked` | `boolean` | `false` | Whether the switch is on. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isOn`. |
+| `defaultChecked` | `boolean` | `false` | Initial state for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the row. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `invalid` | `boolean` | `false` | Marks the field invalid, with the same independence from `error` as Checkbox. |
+| `label` | `string` | `""` | The label text, rendered beside the track. Wraps the control. |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Label text size. The row target stays 44px at every size. |
+| `value` | `string` | `"on"` | The submitted value when on. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox-role=switch would send. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-tabs
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.
+
+**When to use**
+
+- Related content shares one surface and only one view matters at a time
+- The views are peers — Settings-style sections, editor panes
+- Switching should feel like moving, not navigating
+
+**When not to use**
+
+- Each view is a destination — use navigation, not tabs
+- The views must be compared side by side — show them all
+- Content must stay mounted across switches — this component unmounts inactive panels
+
+**Accessibility**
+
+The ARIA tabs pattern's hard rule is enforced: only the active tab is in the tab order, arrow keys move and activate (automatic activation), Home and End jump to the ends, and activation wraps. Tabs are real `<button>`s. `aria-selected` / `aria-controls` / `aria-labelledby` are computed and written by the widget, because tabs and panels are separately slotted. Arrow semantics derive from `getComputedStyle().direction` at interaction time, so `dir="rtl"` inverts Left and Right with no build flag (§4). The active panel carries `tabindex=0` so keyboard users reach its content after the last tab.
+
+**Example**
+
+```html
+<sk-tabs>
+  <div slot="tablist" data-slot="tablist">
+    <sk-tab label="Account"></sk-tab>
+    <sk-tab label="Billing"></sk-tab>
+  </div>
+  <sk-tab-panel><p>Account settings.</p></sk-tab-panel>
+  <sk-tab-panel><p>Billing history.</p></sk-tab-panel>
+</sk-tabs>
+```
+
+**Known limitations**
+
+- Inactive panels are hidden, not kept alive — state inside a panel is lost on switch, unless the application holds it
+- The tablist slot must carry `data-slot="tablist"` and each part its `data-slot` — the wiring contract is structural
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `active` | `number` | `0` | The active tab's index. Zero-based, over the tabs in DOM order. |
+
+## sk-text
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Applies one whole type step — size, line-height, weight, and tracking together — to any element.
+
+**When to use**
+
+- A heading, paragraph, or label must match the type scale without hand-assembling four tokens
+- The consumer's markup chooses the element; the look must come from the system
+- Display-face headings at weight 800, or muted secondary text
+
+**When not to use**
+
+- Text inside a Button or Card heading slot — those components already apply their own steps
+- You want to choose the element with a prop — pick the element in markup instead; an `as` prop is how heading levels end up contradicting the outline
+- Text that is a control — a link is a Link, not styled text
+
+**Accessibility**
+
+Renders no wrapper and no role: the element the consumer chose keeps its semantics, and the component only sets typography. There is no `as` prop by design — an element-choosing prop invites `<h3 as="h2">`-style fixes that contradict the document outline. `muted` sets color only; the muted pair passes the contrast gates in both themes (6.64:1 light).
+
+**Example**
+
+```html
+<sk-text variant="2xl" family="display"><h1>Title</h1></sk-text>
+```
+
+**Known limitations**
+
+- There is no `size` prop: `size` is the height scale other components use, and text has no intrinsic height — `variant` names the type step instead
+- It does not truncate, clamp, or balance lines — layout concerns stay with the consumer
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `family` | `"inherit" \| "sans" \| "display" \| "mono"` | `"inherit"` | Which family to set. The default leaves `font-family` untouched, because body copy inherits the platform stack and re-declaring it per-element would fight any consumer who changes `--sk-font-body`. |
+| `muted` | `boolean` | `false` | Muted text. The one color decision a text component owns, because secondary text is a *typographic* role in this system — it exists as `.sk-text-muted` today, and this is where that class retires to. |
+| `variant` | `"xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "4xl" \| "display-sm" \| "display"` | `"base"` | The type step to apply, named exactly as the token is.  This is the `variant` slot of the §4 two-prop rule — the axis a text component varies on. `size` is not used for it, because `size` is the height scale every other component uses and a text element has no height of its own to scale. |
+
+## sk-textarea
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A multi-line text field that participates in a plain HTML form, for text too long to type on one line.
+
+**When to use**
+
+- The value runs to several lines: a bio, a comment, release notes, an address
+- The consumer wants the browser to size the field by line count
+- It must submit through a plain `<form>` with no JavaScript state
+
+**When not to use**
+
+- The value is a single short string — use an Input
+- The value is one of a fixed set — use a Select or Radio Group
+- It only toggles a boolean — use a Checkbox or Switch
+
+**Accessibility**
+
+Renders a real native `<textarea>`, so the browser supplies constraint validation and the error bubble rather than this component reimplementing them. `label`, `description`, and `error` are wired through `<label for>` and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). The field resizes vertically by default, because long-form text is edited rather than typed in one line. Shares its form contract with Input.
+
+**Example**
+
+```html
+<sk-textarea name="bio" label="Bio" rows="4"></sk-textarea>
+```
+
+**Known limitations**
+
+- There is no `pattern` prop: a textarea has no single-line grammar for a pattern to constrain
+- The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `cols` | `number` | — | Visible columns, for the few cases where it matters. |
+| `defaultValue` | `string` | `""` | Initial value for the uncontrolled case. |
+| `description` | `string` | `""` | Persistent helper text below the field. |
+| `disabled` | `boolean` | `false` | Disables interaction. Mirrors the ARIA name. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `form` | `string` | — | Associates the control with a form it is not nested inside. |
+| `invalid` | `boolean` | `false` | Marks the field invalid independently of any error text. |
+| `label` | `string` | `""` | The control's own label text, rendered above the field. |
+| `maxLength` | `number` | — | Maximum accepted length, enforced natively. Same attribute-name reason. |
+| `minLength` | `number` | — | Minimum accepted length, enforced natively.  Attribute-observed because Stencil's camelCase-to-kebab mapping produces `min-length`, not the native `minlength`, so `<sk-textarea minlength="2">` was silently ignored — the same class of defect `readonly` had. |
+| `placeholder` | `string` | `""` | Placeholder text. Never a substitute for a label. |
+| `readOnly` | `boolean` | `false` | Makes the field non-editable but still submitted and focusable.  Attribute-observed, for the same reason as `sk-input`: Stencil's camelCase-to-kebab mapping produces `read-only`, not the native `readonly`. |
+| `required` | `boolean` | `false` | Native constraint validation still applies and is never suppressed. |
+| `rows` | `number` | `4` | Visible rows. The browser's own sizing, not a pixel value. |
+| `value` | `string` | `""` | The value. Uncontrolled by default: typed value only if set. |
+| `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
+| `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-toast
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.
+
+**When to use**
+
+- A background operation finished and the user was looking somewhere else
+- A state change should be acknowledged without interrupting work
+- An error needs time and a close button, not a decision
+
+**When not to use**
+
+- The user must choose before the page continues — use an Alert Dialog
+- The message needs the page's context hidden — use a Dialog
+- The information is permanent UI, not an event — use a Card or a Badge
+
+**Accessibility**
+
+`role="status"`, a polite live region: announced when it appears, never stealing focus — the user was looking somewhere else, and a toast that shouts is a dialog wearing a smaller skirt. Hover or focus pauses the auto-dismiss clock, because a message that disappears mid-read is an announcement that never happened. `duration=0` never expires: an error the user must act on deserves more than an expired apology. The close button carries a real `aria-label` — a bare × is a picture to a screen reader. Severity is a 3px left edge plus the message text, never color alone (WCAG 1.4.1).
+
+**Example**
+
+```html
+<sk-toast variant="success" duration="5000">Build 4821 deployed.</sk-toast>
+```
+
+**Known limitations**
+
+- It is a single toast — the consumer's region owns stacking and placement
+- It never takes focus, so keyboard users meet it only through announcement; an actionable toast needs a persistent surface
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `duration` | `number` | `5000` | Milliseconds before auto-dismiss. `0` never auto-dismisses — for an error the user must act on, an expiring message is an expired apology. |
+| `open` | `boolean` | `false` | Whether the toast is showing. |
+| `variant` | `"neutral" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual severity, matching Badge's palette. Color is never the message. |
+
+## sk-tooltip
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.
+
+**When to use**
+
+- An icon-only control needs its name spelled out
+- A jargon term or abbreviation needs one sentence of context
+- A control is disabled and the reason helps
+
+**When not to use**
+
+- The information is essential — put it in the page; a tooltip hides it from touch and from anyone not hovering
+- The content is interactive or long — use a Popover
+- It is the control's name — use a Label or aria-label; a tooltip is a description, not the name
+
+**Accessibility**
+
+Named through `aria-describedby` pointing at the panel, so a screen reader reads it on demand — a tooltip that grabs focus is a popup wearing a tiny hat. Shows on hover after a delay (a tooltip that fires instantly is a strobe) and immediately on keyboard focus, because a tabbing user asked for it explicitly and a 300ms penance on every tab is hostile. Escape hides it. The panel takes no pointer events (`pointer-events: none`), so hovering the tooltip never flickers it away. Explicitly excluded from the forms contract (section 4): it cannot be form-associated.
+
+**Example**
+
+```html
+<sk-tooltip placement="top">
+  <sk-button slot="trigger">Deploy</sk-button>
+  Ships the current build to production.
+</sk-tooltip>
+```
+
+**Known limitations**
+
+- Placement is a hint, not a viewport-aware computation — the panel anchors to the trigger and can clip at edges
+- Touch has no hover: a tooltip is invisible on touch until the control is focused
+- The trigger must be a focusable element — a non-interactive span gives keyboard users nothing to describe
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `delay` | `number` | `300` | Milliseconds of hover before showing. A tooltip that fires instantly is a strobe. |
+| `open` | `boolean` | `false` | Whether the tooltip is showing. Driven by hover/focus; also settable. |
+| `placement` | `"top" \| "bottom" \| "left" \| "right"` | `"top"` | Preferred side. Flips at the viewport edge rather than clipping. |

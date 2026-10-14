@@ -1,0 +1,100 @@
+# Santaka UI
+
+> One design system for every framework. Design tokens, accessible Web
+> Components, and thin React/Vue/Svelte/Angular adapters. Framework-agnostic:
+> the universal custom elements own behavior, adapters only adapt.
+
+## What this is
+
+Santaka ships a token layer and a set of accessible custom elements. The
+universal package (`@santaka-ui/web-components`) is the source of truth for
+behavior; framework packages are adapters over the same elements. There is one
+implementation of every interaction, not one per framework.
+
+## Install
+
+```bash
+pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka-ui/styles
+```
+
+```js
+import "@santaka-ui/tokens/css"
+import "@santaka-ui/styles/index.css"
+import "@santaka-ui/web-components"
+import "@santaka-ui/web-components/santaka.css"
+```
+
+React: `import { Button } from "@santaka-ui/react"`. The elements are the same
+ones; the adapter forwards props and events.
+
+## Token contract
+
+Tokens are DTCG source compiled to CSS custom properties, light and dark. The
+custom properties are the public contract:
+
+```css
+:root                     { /* light theme */ }
+[data-sk-theme="dark"]    { /* dark theme  */ }
+```
+
+There are 158 custom properties in each theme. The groups are:
+
+- `--sk-color-*` — 52 tokens
+- `--sk-text-*` — 40 tokens
+- `--sk-space-*` — 12 tokens
+- `--sk-shadow-*` — 8 tokens
+- `--sk-z-*` — 8 tokens
+- `--sk-glass-*` — 7 tokens
+- `--sk-radius-*` — 7 tokens
+- `--sk-duration-*` — 6 tokens
+- `--sk-ease-*` — 4 tokens
+- `--sk-font-*` — 3 tokens
+- `--sk-height-*` — 3 tokens
+- `--sk-icon-*` — 3 tokens
+- `--sk-border-*` — 2 tokens
+- `--sk-ring-*` — 2 tokens
+- `--sk-touch-*` — 1 tokens
+
+Set `data-sk-theme="dark"` on any ancestor to switch themes. Direction comes
+from `dir="rtl"` on any ancestor; there is no RTL build and no second
+stylesheet.
+
+## Components
+
+- **sk-alert-dialog** (stable) — A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.
+- **sk-badge** (stable) — A static label for status, category, or count. It is not interactive.
+- **sk-button** (stable) — Triggers an action: submit a form, open a dialog, save a change.
+- **sk-card** (stable) — A hard-edged surface that groups related content, with optional header, body, and footer.
+- **sk-checkbox** (stable) — A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.
+- **sk-dialog** (stable) — A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.
+- **sk-icon-button** (stable) — A square, icon-only control for actions that need no label, such as edit or delete.
+- **sk-input** (stable) — A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.
+- **sk-label** (stable) — A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.
+- **sk-link** (stable) — Navigates to another URL, in place or in a new tab.
+- **sk-radio-group** (stable) — An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.
+- **sk-select** (stable) — A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.
+- **sk-separator** (stable) — A hairline between content: a real <hr> that announces itself unless it is purely visual.
+- **sk-skeleton** (stable) — A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.
+- **sk-spinner** (stable) — A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.
+- **sk-switch** (stable) — An on/off control that acts immediately, rendered as a native checkbox carrying role=switch so the browser keeps validation and form submission.
+- **sk-tabs** (stable) — Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.
+- **sk-text** (stable) — Applies one whole type step — size, line-height, weight, and tracking together — to any element.
+- **sk-textarea** (stable) — A multi-line text field that participates in a plain HTML form, for text too long to type on one line.
+- **sk-toast** (stable) — A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.
+- **sk-tooltip** (stable) — A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.
+
+## Full reference
+
+- [llms-full.txt](./llms-full.txt) — every component's props, variants,
+  accessibility notes, and example, in one file.
+
+## Key conventions
+
+- Styling hooks are `data-slot` attributes; components use scoped CSS, never a
+  shadow root, so consumer CSS and utility classes reach internals.
+- Booleans that mirror an ARIA state use the ARIA name verbatim (`checked`,
+  `open`, `disabled`).
+- `variant` and `size` are the only visual-configuration props; everything
+  else is state.
+- Form controls are form-associated custom elements: they submit through a
+  plain `<form>` with no JavaScript state.

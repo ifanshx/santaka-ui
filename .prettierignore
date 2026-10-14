@@ -20,6 +20,10 @@ packages/core/registry/
 # Shell scripts have no Prettier parser; the container entrypoint is reviewed as
 # the bash it is (scripts/visual-baseline-entrypoint.sh).
 *.sh
+# Generated AI-surface text: no Prettier parser, and the content is produced by
+# scripts/generate-llms.mjs, which `llms:check` verifies byte-for-byte.
+apps/docs/public/llms.txt
+apps/docs/public/llms-full.txt
 # Next.js build output: generated, never formatted.
 examples/nextjs/.next
 examples/nextjs/next-env.d.ts

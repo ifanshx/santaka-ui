@@ -170,6 +170,19 @@ Firefox — an axe scan that passed on retry, not a behavior difference. That is
 real datapoint the matrix's predecessors could not have offered, because the
 matrix did not exist and Firefox/WebKit ran only in CI.
 
+### AI surface
+
+`apps/docs/public/llms.txt` (a curated index: what the system is, the token
+contract with per-group counts, the component list) and `llms-full.txt` (every
+component's props with types and defaults, accessibility notes, examples, and
+limitations) are generated from the registry `ai` blocks and the committed
+`components.d.ts`, so neither can drift from the components. An `llms` CI job
+regenerates and fails on a diff.
+
+The MCP server (`packages/mcp`) does not exist, and ADR-015 — which governs its
+schema and packaging — is unwritten. The `ai` metadata it would serve is already
+complete for all twenty-one components.
+
 ## Not done
 
 ### Blocking Tier 1

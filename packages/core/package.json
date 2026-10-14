@@ -33,7 +33,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm",
+    "generate:llms": "node scripts/generate-llms.mjs",
+    "llms:check": "node scripts/generate-llms.mjs --check"
   },
   "dependencies": {
     "ajv": "8.20.0"
