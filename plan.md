@@ -988,7 +988,7 @@ This is a planning estimate for a small team of roughly 2–4 experienced contri
 - [ ] Verify the legal preconditions in section 13: trademark search, npm scope availability, domain, mascot originality.
 - [ ] Build a small visual prototype and test package architecture decisions early.
 - [x] Write the API conventions, forms contract, and starter token values into the shared `tooling/` config, then implement Button against them as the first conformance test.
-- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(ADR-001, ADR-002, ADR-004, ADR-005, ADR-010, ADR-013, ADR-014, and ADR-017 now exist under `docs/adr/` — 8 of 18. Still missing: ADR-003, ADR-006, ADR-007, ADR-008, ADR-009, ADR-011, ADR-012, ADR-015, ADR-016, ADR-018. The Next.js SSR proof is not done.)*
+- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(All six of those ADRs now exist, and 14 of 18 total: 001–005, 008, 010–014, 016–019. Still missing are 006, 007, 009, and 015, whose deadlines are for work that has not started. The Next.js SSR proof is done — `examples/nextjs` builds, renders every tag on the server, defines nothing server-side, and hydrates cleanly; evidence in ADR-005.)*
 
 **Exit criteria:** architecture decision record, working monorepo, first token build, and a documented proof of concept.
 
