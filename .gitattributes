@@ -1,0 +1,8 @@
+# Shell scripts run in Linux containers (scripts/visual-baseline-entrypoint.sh
+# is invoked inside the pinned Playwright image), so they must keep LF endings
+# regardless of the checkout's `core.autocrlf`. Without this rule a Windows
+# clone writes CRLF and bash fails on the first line with a stray `\r`.
+*.sh text eol=lf
+
+# PNG baselines are binary; never let Git touch their bytes.
+*.png binary

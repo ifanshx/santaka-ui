@@ -1103,7 +1103,7 @@ A release candidate is ready only when the applicable items are checked and evid
 - [ ] Every form control submits through a plain `<form>` in React, Vue, and the universal package. *(Proven for Input, Textarea, and Select in the universal package — submission through a plain form read via `FormData` is asserted in Chromium for all three. The `formResetCallback` / `formDisabledCallback` / `formStateRestoreCallback` paths have no e2e coverage yet. The React path forwards to the same element, and Vue does not exist.)*
 - [x] `publint` and `attw` are clean for every published package. *(All six pass both. `attw` found a real defect when it was introduced: Stencil's generated declarations re-export from a directory specifier, so the shipped types did not resolve under `node16`. Fixed in the build.)*
 - [ ] The documented support matrix is generated from the Playwright projects that actually run.
-- [ ] Every component has an RTL visual regression case and a `--sk-touch-min` compliant target. *(`--sk-touch-min` is proven for Button and Icon Button, including a Core-tier case where `aspect-ratio` is unavailable. RTL is covered for Button only, and by interaction test rather than visual regression — no visual-regression suite exists yet.)*
+- [ ] Every component has an RTL visual regression case and a `--sk-touch-min` compliant target. *(`--sk-touch-min` is proven for Button and Icon Button, including a Core-tier case where `aspect-ratio` is unavailable. RTL visual coverage now exists for every component: the `visual` Playwright project photographs each example-page section in light/ltr, light/rtl, and dark/ltr — 57 baselines, ADR-019. It is not a CI gate yet, deliberately, because a screenshot diff needs a reviewer.)*
 - [ ] `llms.txt` and `llms-full.txt` are regenerated in CI and committed in sync.
 - [ ] The public framework/browser support matrix reflects tested evidence.
 - [ ] Legal preconditions in section 13 are resolved: license, trademark, npm scope, domain, mascot rights.
@@ -1132,6 +1132,7 @@ The following decisions must be recorded as ADRs under `docs/adr/` before depend
 | ADR-016 | RTL strategy: logical properties, direction-derived keyboard behavior | End of weeks 3–4 |
 | ADR-017 | Starter token values, type scale, and motion values | End of weeks 1–2 |
 | ADR-018 | Toolchain defaults table | End of weeks 1–2 |
+| ADR-019 | Visual-regression baselines and the environment that owns them | End of weeks 11–12 |
 
 ## 19. First Implementation Tasks
 

@@ -17,6 +17,9 @@ packages/core/registry/
 
 # Prose documents are checked by review, not by a formatter.
 *.md
+# Shell scripts have no Prettier parser; the container entrypoint is reviewed as
+# the bash it is (scripts/visual-baseline-entrypoint.sh).
+*.sh
 # Next.js build output: generated, never formatted.
 examples/nextjs/.next
 examples/nextjs/next-env.d.ts

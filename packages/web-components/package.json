@@ -49,6 +49,7 @@
     "lint": "eslint .",
     "test": "playwright test",
     "test:unit": "vitest run --root ../.. tests",
+    "test:visual": "node scripts/run-visual.mjs",
     "size": "node scripts/measure-bundle.mjs",
     "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },

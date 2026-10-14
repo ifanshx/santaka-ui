@@ -162,8 +162,14 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   loader, scoped styles applied. The fixture also forced the React JSX
   declarations to actually ship (`@santaka-ui/react/jsx`) and caught `name`
   missing from three of them.
-- **No visual regression in RTL.** Section 17 requires it per component. Only
-  Button has an RTL test, and it is an interaction test, not a visual one.
+- ~~**No visual regression in RTL.**~~ **Done** — ADR-019; a dedicated `visual`
+  Playwright project photographs every example-page section in light/ltr,
+  light/rtl, and dark/ltr (57 baselines), so §17's per-component RTL case is a
+  property of the spec rather than a per-file promise. It is deliberately not a
+  CI gate: a screenshot diff needs a reviewer, not a red build, and the
+  baselines are owned by the pinned Playwright image
+  (`scripts/visual-baseline-docker.mjs`), not by whoever ran
+  `--update-snapshots` last.
 - ~~**No `axe-core`.**~~ **Done** — ADR-008 written; axe scans the example page
   in light, dark, and invalid-submit states on every run (WCAG 2.0/2.1 A+AA,
   nothing disabled). The first run found four real defect classes, all fixed
