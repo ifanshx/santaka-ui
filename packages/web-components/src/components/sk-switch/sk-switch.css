@@ -126,7 +126,7 @@ sk-switch[data-invalid] {
 }
 
 sk-switch .sk-switch__required {
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   margin-inline-start: var(--sk-space-1, 0.25rem);
 }
 
@@ -162,7 +162,7 @@ sk-switch .sk-switch__error {
   gap: var(--sk-space-1, 0.25rem);
   margin: 0;
   padding-inline-start: calc(3rem + var(--sk-space-3, 0.75rem));
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   font-size: var(--sk-text-sm-size, 0.875rem);
   line-height: var(--sk-text-sm-line-height, 1.25rem);
 }

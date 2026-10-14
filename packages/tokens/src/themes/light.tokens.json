@@ -33,6 +33,10 @@
       "$value": "{color.violet.700}",
       "$description": "Primary action surface. White text 7.10:1."
     },
+    "primary-text": {
+      "$value": "{color.violet.700}",
+      "$description": "Primary-colored TEXT on the surface — ghost button labels, links. Light: identical to `primary` (7.10:1 vs surface). The token exists so the dark theme can diverge, where primary-as-surface is not text-usable."
+    },
     "primary-hover": {
       "$value": "{color.violet.800}",
       "$description": "White text 8.98:1."

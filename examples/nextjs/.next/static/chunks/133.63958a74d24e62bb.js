@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[133],{4133:(e,t,a)=>{a.r(t),a.d(t,{sk_skeleton:()=>s});var r=a(8250);let s=class{render(){return(0,r.h)(r.H,{key:"42dbdea13b06a3b98de4da8a8bb6488ea5a54e0e","data-slot":"skeleton","aria-hidden":"true"})}constructor(e){this.variant="text",this.direction="ltr",(0,r.r)(this,e)}}}}]);

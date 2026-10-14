@@ -115,7 +115,7 @@ sk-radio-group[data-invalid] {
 }
 
 sk-radio-group .sk-radio-group__required {
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   margin-inline-start: var(--sk-space-1, 0.25rem);
 }
 
@@ -149,7 +149,7 @@ sk-radio-group .sk-radio-group__error {
   align-items: center;
   gap: var(--sk-space-1, 0.25rem);
   margin: 0;
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   font-size: var(--sk-text-sm-size, 0.875rem);
   line-height: var(--sk-text-sm-line-height, 1.25rem);
 }

@@ -31,7 +31,7 @@ sk-textarea .sk-textarea__label {
 }
 
 sk-textarea .sk-textarea__required {
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   margin-inline-start: var(--sk-space-1, 0.25rem);
 }
 
@@ -98,7 +98,7 @@ sk-textarea .sk-textarea__error {
   display: flex;
   align-items: flex-start;
   gap: var(--sk-space-1, 0.25rem);
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   font-size: var(--sk-text-xs-size, 0.75rem);
   font-weight: var(--sk-text-xs-weight, 500);
   line-height: var(--sk-text-xs-line-height, 1rem);

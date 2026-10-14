@@ -802,12 +802,17 @@ export namespace Components {
     }
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
-     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
-     * activated, not navigated to), and a real button brings the platform's
-     * keyboard and activation behavior for free.
-     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
-     * `tabindex`, and `data-state` during its sync pass. This component is the
-     * authored shape; the widget is the behavior.
+     * The host element IS the tab: `sk-tabs`' sync pass writes `role="tab"`,
+     * `aria-selected`, `tabindex`, and `data-state` onto it. No inner `<button>`:
+     * a `role="tab"` containing a real button is a nested-interactive violation
+     * (axe), and the APG pattern makes the tab itself the focusable element —
+     * it is activated, not navigated to, and the widget owns Enter/Space and
+     * the arrow keys. The platform-button benefit that motivated the earlier
+     * button shape (free activation) came bundled with a violation that is not
+     * negotiable, so activation is the widget's two extra key handlers.
+     * The tab does not own its active state — `sk-tabs` writes everything during
+     * its sync pass. This component is the authored shape; the widget is the
+     * behavior.
      */
     interface SkTab {
         /**
@@ -1367,12 +1372,17 @@ declare global {
     };
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
-     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
-     * activated, not navigated to), and a real button brings the platform's
-     * keyboard and activation behavior for free.
-     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
-     * `tabindex`, and `data-state` during its sync pass. This component is the
-     * authored shape; the widget is the behavior.
+     * The host element IS the tab: `sk-tabs`' sync pass writes `role="tab"`,
+     * `aria-selected`, `tabindex`, and `data-state` onto it. No inner `<button>`:
+     * a `role="tab"` containing a real button is a nested-interactive violation
+     * (axe), and the APG pattern makes the tab itself the focusable element —
+     * it is activated, not navigated to, and the widget owns Enter/Space and
+     * the arrow keys. The platform-button benefit that motivated the earlier
+     * button shape (free activation) came bundled with a violation that is not
+     * negotiable, so activation is the widget's two extra key handlers.
+     * The tab does not own its active state — `sk-tabs` writes everything during
+     * its sync pass. This component is the authored shape; the widget is the
+     * behavior.
      */
     interface HTMLSkTabElement extends Components.SkTab, HTMLStencilElement {
     }
@@ -2363,12 +2373,17 @@ declare namespace LocalJSX {
     }
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
-     * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
-     * activated, not navigated to), and a real button brings the platform's
-     * keyboard and activation behavior for free.
-     * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
-     * `tabindex`, and `data-state` during its sync pass. This component is the
-     * authored shape; the widget is the behavior.
+     * The host element IS the tab: `sk-tabs`' sync pass writes `role="tab"`,
+     * `aria-selected`, `tabindex`, and `data-state` onto it. No inner `<button>`:
+     * a `role="tab"` containing a real button is a nested-interactive violation
+     * (axe), and the APG pattern makes the tab itself the focusable element —
+     * it is activated, not navigated to, and the widget owns Enter/Space and
+     * the arrow keys. The platform-button benefit that motivated the earlier
+     * button shape (free activation) came bundled with a violation that is not
+     * negotiable, so activation is the widget's two extra key handlers.
+     * The tab does not own its active state — `sk-tabs` writes everything during
+     * its sync pass. This component is the authored shape; the widget is the
+     * behavior.
      */
     interface SkTab {
         /**
@@ -3066,12 +3081,17 @@ declare module "@stencil/core" {
             "sk-switch": LocalJSX.IntrinsicElements["sk-switch"] & JSXBase.HTMLAttributes<HTMLSkSwitchElement>;
             /**
              * Tab — one selectable header inside an `sk-tabs` widget.
-             * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
-             * activated, not navigated to), and a real button brings the platform's
-             * keyboard and activation behavior for free.
-             * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
-             * `tabindex`, and `data-state` during its sync pass. This component is the
-             * authored shape; the widget is the behavior.
+             * The host element IS the tab: `sk-tabs`' sync pass writes `role="tab"`,
+             * `aria-selected`, `tabindex`, and `data-state` onto it. No inner `<button>`:
+             * a `role="tab"` containing a real button is a nested-interactive violation
+             * (axe), and the APG pattern makes the tab itself the focusable element —
+             * it is activated, not navigated to, and the widget owns Enter/Space and
+             * the arrow keys. The platform-button benefit that motivated the earlier
+             * button shape (free activation) came bundled with a violation that is not
+             * negotiable, so activation is the widget's two extra key handlers.
+             * The tab does not own its active state — `sk-tabs` writes everything during
+             * its sync pass. This component is the authored shape; the widget is the
+             * behavior.
              */
             "sk-tab": LocalJSX.IntrinsicElements["sk-tab"] & JSXBase.HTMLAttributes<HTMLSkTabElement>;
             /**

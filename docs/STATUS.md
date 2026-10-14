@@ -21,7 +21,7 @@ package). All six packages pass `publint` and `attw --pack`.
 
 - DTCG source of truth compiled to CSS custom properties, light and dark.
 - The build fails on an unknown token reference or a contrast pair below its
-  target, and writes a contrast report. 25 pairs gated, all passing.
+  target, and writes a contrast report. 27 pairs gated, all passing.
 - Every color emitted twice — hex then `oklch()` behind `@supports` — so a
   Core-tier browser renders the intended color.
 - **48 tests**: 28 pipeline math, 20 theme-contract relationships. The contract
@@ -156,12 +156,19 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 - **10 ADRs missing**: 003, 006, 007, 008, 009, 011, 012, 015, 016, 018.
   ADR-002, ADR-005, and ADR-011 were cited from source comments before this pass;
   those citations now resolve.
-- **No Next.js SSR proof.** Risk R2 rates this a weeks 1–2 item. The strategy is
-  decided in ADR-005; the proof is not done, so no integration may claim SSR.
+- ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
+  ADR-005's consequences): server-rendered tags with public attributes, no
+  `customElements.define` in any server chunk, clean hydration through the lazy
+  loader, scoped styles applied. The fixture also forced the React JSX
+  declarations to actually ship (`@santaka-ui/react/jsx`) and caught `name`
+  missing from three of them.
 - **No visual regression in RTL.** Section 17 requires it per component. Only
   Button has an RTL test, and it is an interaction test, not a visual one.
-- **No `axe-core`.** ADR-008 is unwritten and no automated accessibility check
-  runs.
+- ~~**No `axe-core`.**~~ **Done** — ADR-008 written; axe scans the example page
+  in light, dark, and invalid-submit states on every run (WCAG 2.0/2.1 A+AA,
+  nothing disabled). The first run found four real defect classes, all fixed
+  (separator ARIA, tablist role, nested-interactive tab, three dark-contrast
+  token misuses), and added `--sk-color-primary-text` (gates 25 → 27).
 - **No legal preconditions.** Trademark, npm scope, domain, mascot originality.
 - **No consumer fixture.** `attw` and `publint` validate the packed tarball, but
   nothing installs the package into a scratch project and imports it.

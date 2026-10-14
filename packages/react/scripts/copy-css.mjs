@@ -1,10 +1,14 @@
 /**
- * Copy the component stylesheet into the React package's dist.
+ * Copy build artifacts that tsc cannot emit.
  *
- * The React adapter renders the same custom elements as the universal package,
- * so it ships the same stylesheet rather than a second copy authored for React.
- * One source of truth means a CSS fix cannot land in one path and miss the
- * other.
+ * - The component stylesheet: the React adapter renders the same custom
+ *   elements as the universal package, so it ships the same stylesheet rather
+ *   than a second copy authored for React. One source of truth means a CSS
+ *   fix cannot land in one path and miss the other.
+ * - `custom-elements.d.ts`: a `.d.ts` input is never re-emitted by tsc, so
+ *   without this copy the JSX intrinsic declarations exist only in the repo
+ *   and a consumer rendering `sk-*` tags directly — as the SSR fixture does —
+ *   gets "Property 'sk-button' does not exist on JSX.IntrinsicElements".
  */
 import { copyFileSync, mkdirSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
@@ -17,6 +21,9 @@ const target = join(pkgRoot, "dist", "styles.css")
 
 mkdirSync(dirname(target), { recursive: true })
 
+const jsxTypes = join(pkgRoot, "src", "custom-elements.d.ts")
+const jsxTypesTarget = join(pkgRoot, "dist", "custom-elements.d.ts")
+
 try {
   copyFileSync(source, target)
 } catch (error) {
@@ -25,4 +32,6 @@ try {
   )
 }
 
+copyFileSync(jsxTypes, jsxTypesTarget)
 console.log(`[react] copied component styles -> ${target}`)
+console.log(`[react] copied JSX intrinsic declarations -> ${jsxTypesTarget}`)

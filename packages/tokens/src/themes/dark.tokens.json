@@ -33,6 +33,10 @@
       "$value": "{color.violet.600}",
       "$description": "Primary action surface. White text 5.70:1."
     },
+    "primary-text": {
+      "$value": "{color.violet.400}",
+      "$description": "Primary-colored TEXT on the surface — ghost button labels, links. 7.09:1 vs surface, WCAG AA. `primary` itself is a surface color: on dark, violet.600 is 3.39:1 against surface, fine under white text and useless as text."
+    },
     "primary-hover": {
       "$value": "{color.violet.700}",
       "$description": "White text 7.10:1."

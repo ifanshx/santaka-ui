@@ -19,6 +19,7 @@
       "import": "./dist/index.js"
     },
     "./styles.css": "./dist/styles.css",
+    "./jsx": "./dist/custom-elements.d.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {

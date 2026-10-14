@@ -291,6 +291,8 @@ declare module "react" {
         disabled?: boolean
         required?: boolean
         form?: string
+        name?: string
+        value?: string
         checked?: boolean
         "default-checked"?: boolean
         indeterminate?: boolean
@@ -306,9 +308,10 @@ declare module "react" {
         disabled?: boolean
         required?: boolean
         form?: string
+        name?: string
+        value?: string
         checked?: boolean
         "default-checked"?: boolean
-        value?: string
         "onsk-value-change"?: (event: CustomEvent<{ checked: boolean }>) => void
       }
       "sk-radio-group": BaseCustomElement<RadioGroupElement> & {
@@ -394,6 +397,7 @@ declare module "react" {
         required?: boolean
         placeholder?: string
         form?: string
+        name?: string
         value?: string
         "default-value"?: string
         "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void

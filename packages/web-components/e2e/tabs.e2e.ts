@@ -52,7 +52,9 @@ async function mount(page: Page, id: string, rtl = false) {
   return scope
 }
 
-const tab = (scope: Locator, i: number) => scope.locator(`[data-slot='tab-button']`).nth(i)
+// The host is the button now: no inner button element (a button inside a
+// role=tab is a nested-interactive violation). Clicks and focus land on it.
+const tab = (scope: Locator, i: number) => scope.locator(`[data-slot='tab']`).nth(i)
 
 // The widget writes the roving tabindex on the sk-tab *host*; the inner
 // template button is tabindex=-1 by design so exactly one element — the

@@ -17,3 +17,7 @@ packages/core/registry/
 
 # Prose documents are checked by review, not by a formatter.
 *.md
+# Next.js build output: generated, never formatted.
+examples/nextjs/.next
+examples/nextjs/next-env.d.ts
+examples/nextjs/node_modules

@@ -40,11 +40,15 @@ export class SkSeparator {
   @Prop() label = ""
 
   render() {
+    // `aria-orientation` is only meaningful on an exposed `separator` role:
+    // on `role="none"` the element has left the accessibility tree, and an
+    // ARIA attribute on a removed element is the contradiction axe reports
+    // (aria-allowed-attr). The decorative case declares nothing but the role.
     return (
       <Host
         data-slot="separator"
         role={this.decorative ? "none" : "separator"}
-        aria-orientation={this.orientation}
+        aria-orientation={this.decorative ? undefined : this.orientation}
         aria-label={this.decorative || !this.label ? undefined : this.label}
       >
         {/* No slot: a separator has no content. The <hr> is the element. */}

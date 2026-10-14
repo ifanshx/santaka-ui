@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-separator/sk-separator.tsx",
       "type": "registry:component",
-      "checksum": "sha256-159d9f5f6f965ab83928d196700239d9c80e489252c0003070cb21b59f9179c1"
+      "checksum": "sha256-e48bdddc55f5f2411559c83a59e439255860b0e1b15c9e00fbe521dfa703d181"
     },
     {
       "path": "src/components/sk-separator/sk-separator.css",

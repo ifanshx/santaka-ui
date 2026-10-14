@@ -53,11 +53,7 @@ by someone reading only the README of the package they depend on.
 
 ## Consequences
 
-- **The Next.js SSR proof is not done.** `plan.md` §15 Weeks 1–2 requires proving
-  scoped styles and lazy registration under Next.js SSR *before* committing to
-  them, and §18 assigns this ADR to weeks 3–4. The strategy is decided here; the
-  proof is an open item and the support matrix must not claim SSR support until
-  it exists.
+- **The Next.js SSR proof is done** (`examples/nextjs`, `pnpm --filter @santaka-ui/example-nextjs test:ssr`). It asserts, against the production build served by Next itself: every shipped tag renders in the server output with its public attributes; no server chunk calls `customElements.define` (the eager path has not leaked in); every element upgrades after hydration through the lazy loader; the scoped 3px stroke applies to the upgraded element (R3); and the console records no hydration mismatch (R2). The support matrix may claim SSR support on this evidence — for the default output, this page's shape, and these components.
 - Stencil's generated loader needed a correction before it resolved at all: it
   emitted `export * from '../dist/types/components'`, a directory specifier with
   no entry file, so the loader's types did not resolve under `node16`. Fixed in
@@ -66,6 +62,14 @@ by someone reading only the README of the package they depend on.
 - The loader ships ESM only. Its CommonJS sibling is removed in the same build
   step, because the exports map names only ESM and unreachable formats are dead
   weight (ADR-012).
+- The fixture exposed a shipping gap while being typed: the React package's
+  JSX intrinsic declarations never reached `dist` — tsc never re-emits a
+  `.d.ts` input, and nothing imported the file. They now ship as
+  `@santaka-ui/react/jsx`, and a consumer renders `sk-*` tags directly with
+  full attribute types. Two gaps in those declarations were fixed by the
+  fixture's own typecheck: `name` was missing from `sk-checkbox`, `sk-switch`,
+  and `sk-select` (the forms contract's most basic prop), and the file had
+  drifted from the components it declares.
 
 ## What would reverse this
 

@@ -47,6 +47,9 @@ const CONTRAST_GATES = [
   { token: "color.primary-fg", against: "color.danger", min: 4.5 },
   { token: "color.primary-fg", against: "color.danger-hover", min: 4.5 },
   { token: "color.primary", against: "color.surface", min: 3 },
+  // Primary-colored text (ghost button labels, links) is text, so it is held
+  // to 4.5:1 — not the 3:1 a primary *surface* gets.
+  { token: "color.primary-text", against: "color.surface", min: 4.5 },
   { token: "color.focus-ring", against: "color.surface", min: 3 },
   { token: "color.danger", against: "color.surface", min: 3 },
   { token: "color.success", against: "color.surface", min: 3 },

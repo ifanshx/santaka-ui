@@ -21,12 +21,12 @@
     {
       "path": "src/components/sk-tabs/sk-tabs.tsx",
       "type": "registry:component",
-      "checksum": "sha256-2ec13d0abf8a1669963c0a3219ea02a2911e55e4c0294fc8c9436b21d31911ed"
+      "checksum": "sha256-6023bfdc13c76980f1988d1c427b715910e9b8e818c8a8586f0ff307f00589e4"
     },
     {
       "path": "src/components/sk-tabs/sk-tabs.css",
       "type": "registry:style",
-      "checksum": "sha256-9794e6b82dfcd1986131ea2233b7d972aa2f9492eb96ff4bb237d51c38521cdd"
+      "checksum": "sha256-407b3baa0eca3bca37e83976dd0fa4450428e2c7bf71476496efda9148c3fb45"
     }
   ],
   "cssVariables": [

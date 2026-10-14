@@ -1,0 +1,152 @@
+{
+  "..\\..\\node_modules\\.pnpm\\next@15.5.4_@playwright+test@1.64.0_react-dom@19.3.0_react@19.3.0__react@19.3.0\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
+    "id": 6293,
+    "files": [
+      "static/chunks/293.c7cb535f9c84ecb9.js"
+    ]
+  },
+  "..\\..\\node_modules\\.pnpm\\next@15.5.4_@playwright+test@1.64.0_react-dom@19.3.0_react@19.3.0__react@19.3.0\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
+    "id": 2704,
+    "files": [
+      "static/chunks/704.01b0a561ec011581.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-alert-dialog.entry.js": {
+    "id": 4799,
+    "files": [
+      "static/chunks/799.16e9f6d0b2ac0522.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-badge.entry.js": {
+    "id": 1709,
+    "files": [
+      "static/chunks/709.156fafdb895213ca.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-button.entry.js": {
+    "id": 3114,
+    "files": [
+      "static/chunks/114.ed7865debef8efb1.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-card.entry.js": {
+    "id": 5048,
+    "files": [
+      "static/chunks/48.e7f7ff58b872bb26.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-checkbox.entry.js": {
+    "id": 9267,
+    "files": [
+      "static/chunks/267.e5dea92ce0ec6f34.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-dialog.entry.js": {
+    "id": 5114,
+    "files": [
+      "static/chunks/733.7153dfd40c7af438.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-icon-button.entry.js": {
+    "id": 3102,
+    "files": [
+      "static/chunks/102.297901597e91e4f8.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-input.entry.js": {
+    "id": 3145,
+    "files": [
+      "static/chunks/526.0cce0ca017ecfe69.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-label.entry.js": {
+    "id": 6144,
+    "files": [
+      "static/chunks/144.8f2c64b3628ffabe.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-link.entry.js": {
+    "id": 3298,
+    "files": [
+      "static/chunks/298.02946bc61af9fce8.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-radio-group.entry.js": {
+    "id": 9251,
+    "files": [
+      "static/chunks/251.61cde49fd8cc3e4e.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-select.entry.js": {
+    "id": 1730,
+    "files": [
+      "static/chunks/730.492d7703a733bf66.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-separator.entry.js": {
+    "id": 5121,
+    "files": [
+      "static/chunks/121.3d2980e26dc95f86.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-skeleton.entry.js": {
+    "id": 4133,
+    "files": [
+      "static/chunks/133.63958a74d24e62bb.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-spinner.entry.js": {
+    "id": 7415,
+    "files": [
+      "static/chunks/415.5cb3244f83236362.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-switch.entry.js": {
+    "id": 5986,
+    "files": [
+      "static/chunks/986.caa11b2bf7144bb4.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-tab-panel.entry.js": {
+    "id": 8586,
+    "files": [
+      "static/chunks/586.0b780e00debe55d1.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-tab.entry.js": {
+    "id": 9829,
+    "files": [
+      "static/chunks/829.bd9467d9c4aa13d7.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-tabs.entry.js": {
+    "id": 2686,
+    "files": [
+      "static/chunks/686.2bb1f827089858b7.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-text.entry.js": {
+    "id": 581,
+    "files": [
+      "static/chunks/581.68f667b7cec3bf99.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-textarea.entry.js": {
+    "id": 8456,
+    "files": [
+      "static/chunks/456.6df57481bea6cb2e.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-toast.entry.js": {
+    "id": 4177,
+    "files": [
+      "static/chunks/558.4c0c0eb3e52e569e.js"
+    ]
+  },
+  "..\\..\\packages\\web-components\\dist\\esm\\index-C1PTKS62.js -> ./sk-tooltip.entry.js": {
+    "id": 3101,
+    "files": [
+      "static/chunks/101.85a4cef272c8cd49.js"
+    ]
+  }
+}

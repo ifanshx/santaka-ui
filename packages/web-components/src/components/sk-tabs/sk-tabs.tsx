@@ -82,6 +82,13 @@ export class SkTabs {
     const tabs = this.tabs()
     this.tabCount = tabs.length
     this.tablist = this.host.querySelector("[data-slot='tablist']")
+    // `role="tablist"` belongs on the container: axe's aria-required-parent
+    // rule (and the ARIA APG) require each `role="tab"` to be owned by one.
+    // The slot wrapper the consumer authored is plain markup until this
+    // assigns the role, so the consumer cannot forget it silently.
+    if (this.tablist) {
+      this.tablist.setAttribute("role", "tablist")
+    }
 
     tabs.forEach((tab, index) => {
       const panel = this.panelFor(tab)
@@ -167,6 +174,17 @@ export class SkTabs {
       [prevKey]: () => this.activate(this.active - 1, true),
       Home: () => this.activate(0, true),
       End: () => this.activate(this.tabCount - 1, true),
+      // Enter and Space activate the focused tab. The tab host is not a real
+      // `<button>` — a button inside a role=tab is a nested-interactive
+      // violation — so activation is this widget's job, not the platform's.
+      Enter: () => {
+        const index = this.tabs().indexOf(tab as HTMLElement)
+        if (index >= 0) this.activate(index, false)
+      },
+      " ": () => {
+        const index = this.tabs().indexOf(tab as HTMLElement)
+        if (index >= 0) this.activate(index, false)
+      },
     }
     ;(window as unknown as { __tabsLog?: string[] }).__tabsLog?.push(
       "key=" + event.key + " active=" + this.active + " keys=" + Object.keys(handlers).join(","),

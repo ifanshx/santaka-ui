@@ -26,7 +26,7 @@ sk-tabs [data-slot="tablist"] {
   border-block-end: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
 }
 
-sk-tab [data-slot="tab-button"] {
+sk-tab.sk-tab__button {
   box-sizing: border-box;
   padding: var(--sk-space-2, 0.5rem) var(--sk-space-4, 1rem);
   border: var(--sk-border-thick, 3px) solid transparent;
@@ -39,16 +39,19 @@ sk-tab [data-slot="tab-button"] {
   font-weight: var(--sk-text-sm-weight, 400);
   line-height: var(--sk-text-sm-line-height, 1.25rem);
   cursor: pointer;
+  /* The host is the button now (no inner button element), so text behaves
+     like button text: unselectable on click-drag, font inherited cleanly. */
+  user-select: none;
   /* The active tab's border must reach down to swallow the tablist rule; a
      margin would break the connection. */
   margin-block-end: -3px;
 }
 
-sk-tab [data-slot="tab-button"]:hover {
+sk-tab.sk-tab__button:hover {
   color: var(--sk-color-text, #17141c);
 }
 
-sk-tab[data-state="active"] [data-slot="tab-button"] {
+sk-tab.sk-tab__button[data-state="active"] {
   border-color: var(--sk-color-border-strong, #8b85a0);
   background-color: var(--sk-color-surface, #ffffff);
   color: var(--sk-color-text, #17141c);
@@ -57,7 +60,7 @@ sk-tab[data-state="active"] [data-slot="tab-button"] {
      pressable control in the brutalist sense — it is a position marker. */
 }
 
-sk-tab [data-slot="tab-button"]:focus-visible {
+sk-tab.sk-tab__button:focus-visible {
   outline: var(--sk-ring-width, 3px) solid var(--sk-color-focus-ring, #6d28d9);
   outline-offset: var(--sk-ring-offset, 3px);
 }
@@ -74,7 +77,7 @@ sk-tab-panel[data-slot="panel"] {
     border-block-end-color: CanvasText;
   }
 
-  sk-tab[data-state="active"] [data-slot="tab-button"] {
+  sk-tab.sk-tab__button[data-state="active"] {
     border-color: CanvasText;
     background-color: Canvas;
   }

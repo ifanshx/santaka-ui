@@ -3,13 +3,18 @@ import { Component, Element, h, Host, Prop, Watch } from "@stencil/core"
 /**
  * Tab — one selectable header inside an `sk-tabs` widget.
  *
- * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are
- * activated, not navigated to), and a real button brings the platform's
- * keyboard and activation behavior for free.
+ * The host element IS the tab: `sk-tabs`' sync pass writes `role="tab"`,
+ * `aria-selected`, `tabindex`, and `data-state` onto it. No inner `<button>`:
+ * a `role="tab"` containing a real button is a nested-interactive violation
+ * (axe), and the APG pattern makes the tab itself the focusable element —
+ * it is activated, not navigated to, and the widget owns Enter/Space and
+ * the arrow keys. The platform-button benefit that motivated the earlier
+ * button shape (free activation) came bundled with a violation that is not
+ * negotiable, so activation is the widget's two extra key handlers.
  *
- * The tab does not own its active state — `sk-tabs` writes `aria-selected`,
- * `tabindex`, and `data-state` during its sync pass. This component is the
- * authored shape; the widget is the behavior.
+ * The tab does not own its active state — `sk-tabs` writes everything during
+ * its sync pass. This component is the authored shape; the widget is the
+ * behavior.
  */
 @Component({
   tag: "sk-tab",
@@ -31,10 +36,8 @@ export class SkTab {
 
   render() {
     return (
-      <Host data-slot="tab">
-        <button type="button" class="sk-tab__button" data-slot="tab-button" tabindex={-1}>
-          {this.label ? <span>{this.label}</span> : <slot />}
-        </button>
+      <Host data-slot="tab" class="sk-tab__button">
+        {this.label ? <span>{this.label}</span> : <slot />}
       </Host>
     )
   }

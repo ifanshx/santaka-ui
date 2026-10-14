@@ -88,3 +88,30 @@ describe("glass surface reachability", () => {
     expect(pkg.sideEffects).toContain("**/*.css")
   })
 })
+
+describe("React JSX declarations reachability", () => {
+  it("exports the custom-element JSX types as @santaka-ui/react/jsx", () => {
+    // A `.d.ts` input is never re-emitted by tsc, so these declarations only
+    // ship if the build copies them and the exports map names them. The Next.js
+    // SSR fixture was the consumer that found the gap: rendering `sk-*` tags
+    // directly failed to compile because the intrinsics existed only in the
+    // repository, not in the published package.
+    const pkg = JSON.parse(
+      readFileSync(join(repoRoot, "packages", "react", "package.json"), "utf8"),
+    )
+    const exported = pkg.exports["./jsx"]
+    expect(exported, "@santaka-ui/react must export ./jsx").toBeDefined()
+    expect(exported).toBe("./dist/custom-elements.d.ts")
+    expect(
+      existsSync(join(repoRoot, "packages", "react", exported)),
+      "the export resolves to a file that does not exist — run the react build",
+    ).toBe(true)
+  })
+
+  it("publishes the declarations it exports", () => {
+    const pkg = JSON.parse(
+      readFileSync(join(repoRoot, "packages", "react", "package.json"), "utf8"),
+    )
+    expect(pkg.files).toContain("dist")
+  })
+})

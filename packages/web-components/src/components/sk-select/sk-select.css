@@ -37,7 +37,7 @@ sk-select .sk-select__label {
 }
 
 sk-select .sk-select__required {
-  color: var(--sk-color-danger, #dc2626);
+  color: var(--sk-color-danger-fg, #b91c1c);
   margin-inline-start: var(--sk-space-1, 0.25rem);
 }
 
