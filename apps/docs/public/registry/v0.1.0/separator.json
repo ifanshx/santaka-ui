@@ -1,0 +1,83 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "separator",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-separator/sk-separator.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-e48bdddc55f5f2411559c83a59e439255860b0e1b15c9e00fbe521dfa703d181"
+    },
+    {
+      "path": "src/components/sk-separator/sk-separator.css",
+      "type": "registry:style",
+      "checksum": "sha256-b94d6f3f90924aeedd063418bdb60d45c8a3530b4fbd8702a0d53fd39ce922c5"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-width",
+    "--sk-color-border"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "decorative",
+      "type": "boolean",
+      "default": "false",
+      "description": "Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Label for a meaningful separator, e.g. \"or\" between two actions. Announced only when the separator is not decorative, because a name on a `role=\"none\"` element is a contradiction."
+    },
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
+      "default": "\"horizontal\"",
+      "description": "Axis of the line. Vertical separators need a sized parent."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A hairline between content: a real <hr> that announces itself unless it is purely visual.",
+    "whenToUse": [
+      "Two groups of content need a thematic break between them",
+      "A form's sections need dividing without a heading",
+      "A vertical rule splits two columns"
+    ],
+    "whenNotToUse": [
+      "The break is already communicated by a heading or Card boundary — mark it `decorative` or skip it",
+      "You are separating items in a list — use spacing or a list style; it is the honest tool",
+      "Two routes branch at a choice — use Tabs or a Radio Group to express the choice; \"or\" between buttons is not a widget"
+    ],
+    "accessibility": "Renders a real `<hr>`, announced as a separator by screen readers. `decorative` flips it to `role=\"none\"` for lines that exist only for the eye. A `label` (e.g. \"or\" between two actions) is announced only when the separator is meaningful — a name on a `role=\"none\"` element is a contradiction. The line is the 1px hairline token, not the 3px chrome stroke: a separator divides content, and a 3px stroke between paragraphs reads as a wall.",
+    "example": "<sk-separator label=\"or\"></sk-separator>",
+    "knownLimitations": [
+      "Vertical separators need a sized parent — `align-self: stretch` is the default, not a guarantee",
+      "No motion, no chrome, by design — the one component where the hairline is the point"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

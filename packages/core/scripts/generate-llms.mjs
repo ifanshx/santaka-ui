@@ -44,6 +44,15 @@ const REGISTRY_DIR = join(coreRoot, "registry")
 const TYPES_FILE = join(repoRoot, "packages", "web-components", "src", "components.d.ts")
 const OUT_DIR = join(repoRoot, "apps", "docs", "public")
 
+/**
+ * The published registry version, for the immutable link in `llms.txt`. ADR-007
+ * pins `v<version>/` so a consumer — or an agent — can address a payload that
+ * will never change.
+ */
+const version = JSON.parse(
+  readFileSync(join(repoRoot, "packages", "web-components", "package.json"), "utf8"),
+).version
+
 /** Stable before Preview before Experimental — §11's ordering rule. */
 const STABILITY_ORDER = { stable: 0, preview: 1, experimental: 2 }
 
@@ -129,6 +138,17 @@ function renderIndex(entries, tokens) {
   lines.push("")
   lines.push("- [llms-full.txt](./llms-full.txt) — every component's props, variants,")
   lines.push("  accessibility notes, and example, in one file.")
+  lines.push("")
+  lines.push("## Machine-readable registry")
+  lines.push("")
+  // ADR-007: the registry is static versioned JSON served from here, so the
+  // payload an agent reads is the same URL the CLI fetches — one artifact, not a
+  // document describing one.
+  lines.push("- [registry/index.json](./registry/index.json) — every registry entry as JSON.")
+  lines.push(
+    `- [registry/v${version}/index.json](./registry/v${version}/index.json) — the same at a pinned, immutable version.`,
+  )
+  lines.push("- [registry/<name>.json](./registry/button.json) — one component's entry.")
   lines.push("")
   lines.push("## Key conventions")
   lines.push("")

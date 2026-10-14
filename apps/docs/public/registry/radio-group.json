@@ -1,0 +1,173 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "radio-group",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-radio-group/sk-radio-group.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-819ae86e6bdc913c4a5d7d74be4ca7c89e75311da022f041259c7a9bd97e0b69"
+    },
+    {
+      "path": "src/components/sk-radio-group/sk-radio-group.css",
+      "type": "registry:style",
+      "checksum": "sha256-3fcf70aa7334d6a62fc309b11894c4a60b422fb839305d00f80c0c95eff4fabc"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-3",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-weight",
+    "--sk-text-lg-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Initial value for the uncontrolled case."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text below the group."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "Associates the control with a form it is not nested inside."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid, with the same independence from `error` as Input."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The group's own label text, rendered above the options."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The submitted name. Every radio in the group carries it."
+    },
+    {
+      "name": "options",
+      "type": "RadioOption[]",
+      "default": "[]",
+      "description": "The choices. Serialized as JSON when written as an attribute."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Native constraint validation still applies and is never suppressed."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Label text size. The row target stays 44px at every size."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The value. Uncontrolled by default; \"\" means nothing selected."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"quiet\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
+  "ai": {
+    "summary": "An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.",
+    "whenToUse": [
+      "Exactly one choice from 2–7 known options",
+      "The options are short enough to read at a glance — longer lists want a Select",
+      "It must submit through a plain `<form>` with no JavaScript state"
+    ],
+    "whenNotToUse": [
+      "More than roughly 7 options — use a Select, which scrolls and filters",
+      "Several choices at once — use a Checkbox per option",
+      "A single on/off setting that acts immediately — use a Switch"
+    ],
+    "accessibility": "Renders real native `<input type=\"radio\">` elements in a `role=\"radiogroup\"` container, so the browser owns arrow-key navigation within the group, the single tab stop, and constraint validation (\"please select one of these options\" is the browser's message, not a reimplementation). The group label names the container through `aria-labelledby`; each option is labelled by its wrapping label. An error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract on the group: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+    "example": "<sk-radio-group name=\"env\" label=\"Environment\" required options='[{\"value\":\"production\",\"label\":\"Production\"},{\"value\":\"staging\",\"label\":\"Staging\"}]'></sk-radio-group>",
+    "knownLimitations": [
+      "Options arrive as JSON, like Select — they cannot be slotted as children, because scoped encapsulation cannot distribute host children into the render tree",
+      "The generated `id` for the group label differs from React's `useId()`, so an SSR consumer must pass an explicit `id` (section 4, forms contract)"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

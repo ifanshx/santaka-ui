@@ -1,0 +1,90 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "tooltip",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-tooltip/sk-tooltip.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-6644f81caa1ec992480a86402fa1b2b23787f1d1793ffd52e7127ebb6f2feaf6"
+    },
+    {
+      "path": "src/components/sk-tooltip/sk-tooltip.css",
+      "type": "registry:style",
+      "checksum": "sha256-43bc365571f6d61526140767c6f608a8b54b1a19ef0eec47f8e3193906211f29"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-text",
+    "--sk-font-sans",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-z-tooltip"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "delay",
+      "type": "number",
+      "default": "300",
+      "description": "Milliseconds of hover before showing. A tooltip that fires instantly is a strobe."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the tooltip is showing. Driven by hover/focus; also settable."
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+      "default": "\"top\"",
+      "description": "Preferred side. Flips at the viewport edge rather than clipping."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.",
+    "whenToUse": [
+      "An icon-only control needs its name spelled out",
+      "A jargon term or abbreviation needs one sentence of context",
+      "A control is disabled and the reason helps"
+    ],
+    "whenNotToUse": [
+      "The information is essential — put it in the page; a tooltip hides it from touch and from anyone not hovering",
+      "The content is interactive or long — use a Popover",
+      "It is the control's name — use a Label or aria-label; a tooltip is a description, not the name"
+    ],
+    "accessibility": "Named through `aria-describedby` pointing at the panel, so a screen reader reads it on demand — a tooltip that grabs focus is a popup wearing a tiny hat. Shows on hover after a delay (a tooltip that fires instantly is a strobe) and immediately on keyboard focus, because a tabbing user asked for it explicitly and a 300ms penance on every tab is hostile. Escape hides it. The panel takes no pointer events (`pointer-events: none`), so hovering the tooltip never flickers it away. Explicitly excluded from the forms contract (section 4): it cannot be form-associated.",
+    "example": "<sk-tooltip placement=\"top\">\n  <sk-button slot=\"trigger\">Deploy</sk-button>\n  Ships the current build to production.\n</sk-tooltip>",
+    "knownLimitations": [
+      "Placement is a hint, not a viewport-aware computation — the panel anchors to the trigger and can clip at edges",
+      "Touch has no hover: a tooltip is invisible on touch until the control is focused",
+      "The trigger must be a focusable element — a non-interactive span gives keyboard users nothing to describe"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

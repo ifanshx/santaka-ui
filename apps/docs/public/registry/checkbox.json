@@ -1,0 +1,178 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "checkbox",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-checkbox/sk-checkbox.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-43df2e82506ed2e3e81f1ad0c0a434506e404a391f85142c4c67f58f0a051ccb"
+    },
+    {
+      "path": "src/components/sk-checkbox/sk-checkbox.css",
+      "type": "registry:style",
+      "checksum": "sha256-4b1064c46fca19e2ed85290cbd0e12ee4d5469118cd100f93a26ac099a593bb0"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-3",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-lg-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the box is checked. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isChecked`, not `value`."
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "default": "false",
+      "description": "Initial state for the uncontrolled case."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text below the row."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "Associates the control with a form it is not nested inside."
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "default": "false",
+      "description": "Visual \"some children\" state. Property-only on the platform — there is no `indeterminate` attribute — so this prop writes the DOM node after render and never reaches the form: an indeterminate box submits as unchecked."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid, with the same independence from `error` as Input."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The label text, rendered beside the box. Wraps the control."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Native constraint validation still applies and is never suppressed."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Label text size. The row target stays 44px at every size."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"on\"",
+      "description": "The submitted value when checked. `\"on\"` is the platform default, kept so a plain form reads exactly what a native checkbox would send."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"quiet\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
+  "ai": {
+    "summary": "A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.",
+    "whenToUse": [
+      "The value is a single yes/no choice that submits with a form",
+      "It must work without JavaScript: plain HTML form submission",
+      "The browser's native constraint validation is wanted — required means required"
+    ],
+    "whenNotToUse": [
+      "The choice is one of several exclusive options — use a Radio Group",
+      "It represents an on/off state that acts immediately without form submission — use a Switch",
+      "The value is text — use an Input or Textarea"
+    ],
+    "accessibility": "Renders a real native `<input type=\"checkbox\">`, so the browser supplies constraint validation, Space-to-toggle, and autofill rather than this component reimplementing them. The label wraps the input, making the whole row the activation target with no click handler. `label`, `description`, and `error` are wired through the wrapping label and `aria-describedby`; an error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). `indeterminate` is visual only (`aria-checked=\"mixed\"`), and submits as unchecked. Implements the FACE contract: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+    "example": "<sk-checkbox name=\"agree\" label=\"I agree to the terms\" required></sk-checkbox>",
+    "knownLimitations": [
+      "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
+      "`indeterminate` is a property, not an attribute — it cannot be set in declarative HTML and resets on re-render if not re-applied"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

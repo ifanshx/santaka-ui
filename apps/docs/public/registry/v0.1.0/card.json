@@ -1,0 +1,109 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "card",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-card/sk-card.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-96d32039e8cd1890377bc4d7685db72a1ab76e338f3bc5378059e810963fd488"
+    },
+    {
+      "path": "src/components/sk-card/sk-card.css",
+      "type": "registry:style",
+      "checksum": "sha256-fe181d029cc6546666c4669755d31713b89938a611e524d852c3fcf0ad5ac66d"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-border-width",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-space-5",
+    "--sk-space-6",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-xl-line-height",
+    "--sk-text-xl-size",
+    "--sk-text-xl-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Heading text for the card, rendered in the header.  Named `heading`, not `title`. `title` is a standardized `HTMLElement` member, and a prop by that name shadows the prototype property, so the browser would show this text as a hover tooltip on the entire card — a second, invisible copy of the heading appearing on hover. Stencil warns about this by name.  A string rather than a heading element: the card does not know what level it sits at in the document's outline, and a hard-coded `<h3>` inside a card in an `<h2>` section produces a heading level that contradicts the surrounding structure. A consumer who needs a real heading passes one in the `header` slot instead."
+    },
+    {
+      "name": "padding",
+      "type": "\"none\" | \"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "The card's inner padding.  Not the `size` prop, because `size` is the height scale every other component uses and a card has no intrinsic height: it is whatever its content makes it. Padding is the axis a card actually varies on."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Supporting text under the heading."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"outlined\" | \"bare\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis.  `default` is the raised, hard-edged surface every other chrome component matches. `outlined` drops the fill for a card that sits inside another surface, where two competing fills would fight. `bare` drops the shadow too, for a card that is grouped rather than elevated."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A hard-edged surface that groups related content, with optional header, body, and footer.",
+    "whenToUse": [
+      "A group of related facts, settings, or actions needs a boundary of its own",
+      "Content sits inside another surface and needs a raised panel to read against it",
+      "A record needs a title, a body, and a row of actions below a rule"
+    ],
+    "whenNotToUse": [
+      "The whole card is one action — use a Button or a Link with card styling",
+      "You are nesting it inside another card to group further — two competing fills and shadows read as noise",
+      "The separation is a list of peers — use a plain list or a Separator"
+    ],
+    "accessibility": "A card is a surface, not a control: it exposes no role, is not focusable, and has no interaction props, because a clickable card is a link or a button wearing a card's styling and adding a click handler here would produce something neither keyboard-reachable nor announced. `heading` renders as a `<span>`, not a heading, because the card does not know its level in the document outline — pass a real `<h2 slot=\"header\">` when you need one. Slots are optional and each renders nothing when empty, so a card without a header carries no empty bordered band.",
+    "example": "<sk-card heading=\"Deployment\" subtitle=\"Build 4821\"><p>Shipped to production.</p></sk-card>",
+    "knownLimitations": [
+      "There is no `size` prop: a card has no intrinsic height to scale, so `padding` is the axis it varies on",
+      "There is no click handler, by design — a card that navigates should be a Link, and one that acts should be a Button"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

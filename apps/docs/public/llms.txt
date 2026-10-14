@@ -88,6 +88,12 @@ stylesheet.
 - [llms-full.txt](./llms-full.txt) — every component's props, variants,
   accessibility notes, and example, in one file.
 
+## Machine-readable registry
+
+- [registry/index.json](./registry/index.json) — every registry entry as JSON.
+- [registry/v0.1.0/index.json](./registry/v0.1.0/index.json) — the same at a pinned, immutable version.
+- [registry/<name>.json](./registry/button.json) — one component's entry.
+
 ## Key conventions
 
 - Styling hooks are `data-slot` attributes; components use scoped CSS, never a

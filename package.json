@@ -24,7 +24,8 @@
     "validate:packages": "turbo run validate:package",
     "docs:tokens": "pnpm --filter @santaka-ui/tokens build",
     "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run size && pnpm run validate:packages",
-    "test:consumer": "node tests/consumer/run.mjs"
+    "test:consumer": "node tests/consumer/run.mjs",
+    "test:registry": "node --test tests/registry/*.test.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",

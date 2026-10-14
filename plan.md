@@ -757,7 +757,7 @@ npx santaka@latest update
 - Versioned registry schema and source checksums.
 - License, authorship, attribution, and provenance fields.
 - Safe JSON metadata and source file payloads with path validation.
-- Public and private registries with explicit trust boundaries.
+- Public and private registries with explicit trust boundaries. *(Resolved by ADR-007: registries are **static versioned JSON**, not a live endpoint. The payload is build output under `apps/docs/public/registry/` — a current `index.json`, an immutable `v<version>/` directory for pinned consumers, and one file per component so a scripted consumer need not fetch the whole index. A private registry is the same directory served from wherever a company serves internal assets, so the trust boundary is the URL the developer typed, not an API key to invent. Validation is not review: the CLI prints that registry content is untrusted until reviewed, and bundled entries win a name collision so a third party cannot shadow a shipped component. `tests/registry/remote.test.mjs` serves the published payload over HTTP and drives the CLI against it, so the remote path is exercised rather than assumed.)*
 
 ### Registry safety rules
 
@@ -988,7 +988,7 @@ This is a planning estimate for a small team of roughly 2–4 experienced contri
 - [ ] Verify the legal preconditions in section 13: trademark search, npm scope availability, domain, mascot originality.
 - [ ] Build a small visual prototype and test package architecture decisions early.
 - [x] Write the API conventions, forms contract, and starter token values into the shared `tooling/` config, then implement Button against them as the first conformance test.
-- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(All six of those ADRs now exist, and 16 of 18 total: 001–005, 008–019. Still missing are 006 and 007, whose deadlines are for the docs site and registry hosting, neither of which exists. The Next.js SSR proof is done — `examples/nextjs` builds, renders every tag on the server, defines nothing server-side, and hydrates cleanly; evidence in ADR-005.)*
+- [ ] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(All six of those ADRs now exist, and 17 of 18: 001–005, 007–019. ADR-007 (registry hosting) is now recorded as well, so 17 of 18 exist and only 006 (docs site framework and search) is outstanding. The Next.js SSR proof is done — `examples/nextjs` builds, renders every tag on the server, defines nothing server-side, and hydrates cleanly; evidence in ADR-005.)*
 
 **Exit criteria:** architecture decision record, working monorepo, first token build, and a documented proof of concept.
 

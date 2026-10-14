@@ -64,6 +64,24 @@ the brutalist treatment — 3px stroke,
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
+### Registry hosting
+
+ADR-007 settles §9's question: registries are **static versioned JSON**, not a
+live endpoint. The payload is build output under `apps/docs/public/registry/` —
+a current `index.json`, an immutable `v<version>/` directory for pinned
+consumers, and one file per component so a scripted consumer need not fetch the
+whole index.
+
+The CLI's remote path was real code that no test reached until now.
+`tests/registry/remote.test.mjs` serves the published payload over HTTP and
+drives the CLI against it: 7 tests covering fetch and validation, a 404, an
+entry that fails the schema (reported, not silently dropped), and an install
+that resolves through a configured registry.
+
+Private registries are the same directory served from wherever a company serves
+internal assets, so the trust boundary is the URL the developer typed rather
+than an API key to invent. And validation is not review — the CLI says so when
+a registry is added.
 ### The third FACE callback
 
 All six form controls implement three callbacks: `formResetCallback`,
@@ -162,11 +180,12 @@ measured budgets.
 
 ### Decisions recorded
 
-**16 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+**17 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
 pipeline, and why `style-dictionary` is not used), 003 (behavior ownership:
 Web Components owns every component, React adapts, no Radix), 004 (naming,
 scope, license), 005 (SSR and hydration), 008 (accessibility testing stack),
-010 (budgets), 011 (scoped styles, never a shadow root), 012 (ESM-only
+007 (registry hosting: static versioned JSON, not a live endpoint), 010
+(budgets), 011 (scoped styles, never a shadow root), 012 (ESM-only
 distribution contract and the two defects it caught), 013 (API conventions, one
 question open), 014 (browser baseline), 015 (AI metadata schema, llms.txt, and
 MCP packaging — including why the public surface is derived rather than
@@ -256,10 +275,10 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- **2 ADRs missing**: 006 (docs site framework and search), 007 (registry
-  hosting model). Both are deadlines for work that has not started — there is no
-  docs site and no hosted registry — so those decisions have nothing to bind yet.
-  The ADRs that *were* overdue are now written — see "Decisions recorded".
+- **1 ADR missing**: 006 (docs site framework and search). Its deadline is for
+  work that has not started — there is no docs site — so the decision has nothing
+  to bind yet. The ADRs that *were* overdue are now written — see "Decisions
+  recorded".
 - ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
   ADR-005's consequences): server-rendered tags with public attributes, no
   `customElements.define` in any server chunk, clean hydration through the lazy

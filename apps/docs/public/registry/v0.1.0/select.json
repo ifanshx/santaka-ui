@@ -1,0 +1,182 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "select",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-select/sk-select.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-9da194759666131a5a2d04888ddce3f50db81c1819175857c2d9f322c39d2f9a"
+    },
+    {
+      "path": "src/components/sk-select/sk-select.css",
+      "type": "registry:style",
+      "checksum": "sha256-234fc536408bcc04bbedc0667e47ffce8cf247a361b4c830681fb04ab5b5b5e8"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-lg-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Initial value for the uncontrolled case."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text below the field."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "Associates the control with a form it is not nested inside."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid, with the same independence from `error` as Input."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The control's own label text, rendered above the field."
+    },
+    {
+      "name": "options",
+      "type": "SelectOption[]",
+      "default": "[]",
+      "description": "The choices. Serialized as JSON when written as an attribute."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Placeholder-style first choice, shown when the value is \"\"."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Native constraint validation still applies and is never suppressed."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The value. Uncontrolled by default."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"quiet\"",
+      "default": "\"default\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
+  "ai": {
+    "summary": "A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.",
+    "whenToUse": [
+      "The value is one of a fixed set of choices",
+      "The form must submit through plain HTML with no component state reading",
+      "The list is long enough that radio buttons would be a wall"
+    ],
+    "whenNotToUse": [
+      "The choice is between two options — use a Switch or two Radio Buttons; a select hides the answer",
+      "The options depend on typing — use a Combobox",
+      "There are fewer than five options and the page has room — Radio Group shows every answer at once"
+    ],
+    "accessibility": "Renders a real native `<select>`, visibly — §4's hidden-native path was rejected deliberately, so the popup is the browser's: touch, wheel, typeahead, and native validation all work without a listbox reimplementing them. FACE with all three form callbacks; `required` is enforced by the browser and never suppressed; the label is associated through `for`, and an error sets `aria-invalid` with an icon beside its text, never color alone (WCAG 1.4.1). `sk-value-change` fires only for user-initiated changes. Options are JSON, because slot distribution cannot move host children into the render tree.",
+    "example": "<sk-select name=\"environment\" label=\"Environment\" required placeholder=\"Choose an environment\" options='[{\"value\":\"production\",\"label\":\"Production\"}]'></sk-select>",
+    "knownLimitations": [
+      "The popup cannot be styled — that is the trade the visible-native decision makes, and it is why the popup works everywhere",
+      "Options are JSON, not slotted markup — slot distribution cannot reach the render tree",
+      "SSR consumers must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

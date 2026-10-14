@@ -24,6 +24,12 @@ packages/core/registry/
 # scripts/generate-llms.mjs, which `llms:check` verifies byte-for-byte.
 apps/docs/public/llms.txt
 apps/docs/public/llms-full.txt
+# The published registry payload (ADR-007) is build output written by
+# scripts/build-registry-payload.mjs. It is formatted JSON, but reformatting it is
+# meaningless: `rmSync` regenerates it byte-for-byte, so a Prettier pass would
+# either be a no-op or, worse, a diff that the next build undoes. Same reason
+# `packages/core/registry/` is ignored.
+apps/docs/public/registry/
 # Next.js build output: generated, never formatted.
 examples/nextjs/.next
 examples/nextjs/next-env.d.ts

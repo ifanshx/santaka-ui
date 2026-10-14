@@ -1,0 +1,125 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "text",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-text/sk-text.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-0ff2cfa8312118af4bbc80e8adefbc2a24e9f1d2a4d981f6531ddb66422dae14"
+    },
+    {
+      "path": "src/components/sk-text/sk-text.css",
+      "type": "registry:style",
+      "checksum": "sha256-a44dcb44283f5a71184faa93b13613f51219f31bb3f6aeb065911245f3a7259e"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-text-muted",
+    "--sk-font-display",
+    "--sk-font-mono",
+    "--sk-font-sans",
+    "--sk-text-2xl-line-height",
+    "--sk-text-2xl-size",
+    "--sk-text-2xl-tracking",
+    "--sk-text-2xl-weight",
+    "--sk-text-3xl-line-height",
+    "--sk-text-3xl-size",
+    "--sk-text-3xl-tracking",
+    "--sk-text-3xl-weight",
+    "--sk-text-4xl-line-height",
+    "--sk-text-4xl-size",
+    "--sk-text-4xl-tracking",
+    "--sk-text-4xl-weight",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-tracking",
+    "--sk-text-base-weight",
+    "--sk-text-display-line-height",
+    "--sk-text-display-size",
+    "--sk-text-display-sm-line-height",
+    "--sk-text-display-sm-size",
+    "--sk-text-display-sm-tracking",
+    "--sk-text-display-sm-weight",
+    "--sk-text-display-tracking",
+    "--sk-text-display-weight",
+    "--sk-text-lg-line-height",
+    "--sk-text-lg-size",
+    "--sk-text-lg-tracking",
+    "--sk-text-lg-weight",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-sm-weight",
+    "--sk-text-xl-line-height",
+    "--sk-text-xl-size",
+    "--sk-text-xl-tracking",
+    "--sk-text-xl-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-tracking",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "family",
+      "type": "\"inherit\" | \"sans\" | \"display\" | \"mono\"",
+      "default": "\"inherit\"",
+      "description": "Which family to set. The default leaves `font-family` untouched, because body copy inherits the platform stack and re-declaring it per-element would fight any consumer who changes `--sk-font-body`."
+    },
+    {
+      "name": "muted",
+      "type": "boolean",
+      "default": "false",
+      "description": "Muted text. The one color decision a text component owns, because secondary text is a *typographic* role in this system — it exists as `.sk-text-muted` today, and this is where that class retires to."
+    },
+    {
+      "name": "variant",
+      "type": "\"xs\" | \"sm\" | \"base\" | \"lg\" | \"xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"display-sm\" | \"display\"",
+      "default": "\"base\"",
+      "description": "The type step to apply, named exactly as the token is.  This is the `variant` slot of the §4 two-prop rule — the axis a text component varies on. `size` is not used for it, because `size` is the height scale every other component uses and a text element has no height of its own to scale."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Applies one whole type step — size, line-height, weight, and tracking together — to any element.",
+    "whenToUse": [
+      "A heading, paragraph, or label must match the type scale without hand-assembling four tokens",
+      "The consumer's markup chooses the element; the look must come from the system",
+      "Display-face headings at weight 800, or muted secondary text"
+    ],
+    "whenNotToUse": [
+      "Text inside a Button or Card heading slot — those components already apply their own steps",
+      "You want to choose the element with a prop — pick the element in markup instead; an `as` prop is how heading levels end up contradicting the outline",
+      "Text that is a control — a link is a Link, not styled text"
+    ],
+    "accessibility": "Renders no wrapper and no role: the element the consumer chose keeps its semantics, and the component only sets typography. There is no `as` prop by design — an element-choosing prop invites `<h3 as=\"h2\">`-style fixes that contradict the document outline. `muted` sets color only; the muted pair passes the contrast gates in both themes (6.64:1 light).",
+    "example": "<sk-text variant=\"2xl\" family=\"display\"><h1>Title</h1></sk-text>",
+    "knownLimitations": [
+      "There is no `size` prop: `size` is the height scale other components use, and text has no intrinsic height — `variant` names the type step instead",
+      "It does not truncate, clamp, or balance lines — layout concerns stay with the consumer"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "icon-button",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-icon-button/sk-icon-button.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-cc00806bf838c07288bada27a2748a82700414aef8c67fa8a269b1ce604e44ef"
+    },
+    {
+      "path": "src/components/sk-icon-button/sk-icon-button.css",
+      "type": "registry:style",
+      "checksum": "sha256-61bcc51fbee2d0579b1688f9611b3d982c615e3680e2ca93da995cb8fad8531c"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-touch-min",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-duration-control-slow",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-icon-sm",
+    "--sk-icon-md",
+    "--sk-icon-lg",
+    "--sk-radius-full",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-hover",
+    "--sk-shadow-brutal-none"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name. An icon-only control with no name is announced as just \"button\", which tells a screen-reader user nothing."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "false",
+      "description": "Shows a busy state and blocks interaction."
+    },
+    {
+      "name": "size",
+      "type": "ButtonSize",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "type",
+      "type": "ButtonType",
+      "default": "\"button\"",
+      "description": "Native form semantics."
+    },
+    {
+      "name": "variant",
+      "type": "ButtonVariant",
+      "default": "\"ghost\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "The `id` of a `<form>` element to associate this element with."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A square, icon-only control for actions that need no label, such as edit or delete.",
+    "whenToUse": [
+      "The action is unambiguous from a well-known icon",
+      "Space is tight, such as a toolbar or a table row",
+      "The control sits next to a labelled control that implies the group"
+    ],
+    "whenNotToUse": [
+      "The action is not obvious from the icon alone — use a Button with a label",
+      "It is the primary or most common action on the page — use a Button",
+      "It performs navigation — use a Link instead"
+    ],
+    "accessibility": "Button role with an explicit accessible name from the required `label` prop. The slotted icon is aria-hidden because it carries no information the name does not. A missing label warns in development.",
+    "example": "<sk-icon-button label=\"Delete item\"><svg><!-- trash icon --></svg></sk-icon-button>",
+    "knownLimitations": [
+      "The `label` prop is required in the React types but only warns in plain HTML"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

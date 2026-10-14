@@ -1,0 +1,89 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "tabs",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-tabs/sk-tabs.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-6023bfdc13c76980f1988d1c427b715910e9b8e818c8a8586f0ff307f00589e4"
+    },
+    {
+      "path": "src/components/sk-tabs/sk-tabs.css",
+      "type": "registry:style",
+      "checksum": "sha256-407b3baa0eca3bca37e83976dd0fa4450428e2c7bf71476496efda9148c3fb45"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-focus-ring",
+    "--sk-color-surface",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-space-2",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-lg-weight",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "active",
+      "type": "number",
+      "default": "0",
+      "description": "The active tab's index. Zero-based, over the tabs in DOM order."
+    }
+  ],
+  "events": [
+    "sk-tab-change"
+  ],
+  "ai": {
+    "summary": "Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.",
+    "whenToUse": [
+      "Related content shares one surface and only one view matters at a time",
+      "The views are peers — Settings-style sections, editor panes",
+      "Switching should feel like moving, not navigating"
+    ],
+    "whenNotToUse": [
+      "Each view is a destination — use navigation, not tabs",
+      "The views must be compared side by side — show them all",
+      "Content must stay mounted across switches — this component unmounts inactive panels"
+    ],
+    "accessibility": "The ARIA tabs pattern's hard rule is enforced: only the active tab is in the tab order, arrow keys move and activate (automatic activation), Home and End jump to the ends, and activation wraps. Tabs are real `<button>`s. `aria-selected` / `aria-controls` / `aria-labelledby` are computed and written by the widget, because tabs and panels are separately slotted. Arrow semantics derive from `getComputedStyle().direction` at interaction time, so `dir=\"rtl\"` inverts Left and Right with no build flag (§4). The active panel carries `tabindex=0` so keyboard users reach its content after the last tab.",
+    "example": "<sk-tabs>\n  <div slot=\"tablist\" data-slot=\"tablist\">\n    <sk-tab label=\"Account\"></sk-tab>\n    <sk-tab label=\"Billing\"></sk-tab>\n  </div>\n  <sk-tab-panel><p>Account settings.</p></sk-tab-panel>\n  <sk-tab-panel><p>Billing history.</p></sk-tab-panel>\n</sk-tabs>",
+    "knownLimitations": [
+      "Inactive panels are hidden, not kept alive — state inside a panel is lost on switch, unless the application holds it",
+      "The tablist slot must carry `data-slot=\"tablist\"` and each part its `data-slot` — the wiring contract is structural"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

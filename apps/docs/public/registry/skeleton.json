@@ -1,0 +1,80 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "skeleton",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-skeleton/sk-skeleton.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-b276b39939daa1d8d49fbef93945a3cc6257c58716e35fc1c9af8b3c06c69f0a"
+    },
+    {
+      "path": "src/components/sk-skeleton/sk-skeleton.css",
+      "type": "registry:style",
+      "checksum": "sha256-b36f71282cc247967fe471bac7e1a71f1758f6aebbad6ae7c9fb6b1730e164c0"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-duration-overlay-slow",
+    "--sk-height-md",
+    "--sk-icon-lg",
+    "--sk-radius-full",
+    "--sk-text-base-line-height"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "direction",
+      "type": "\"ltr\" | \"rtl\"",
+      "default": "\"ltr\"",
+      "description": "The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale."
+    },
+    {
+      "name": "variant",
+      "type": "\"text\" | \"rect\" | \"circle\"",
+      "default": "\"text\"",
+      "description": "The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.",
+    "whenToUse": [
+      "Content is loading into a known layout and the space must be held",
+      "A list, table, or card grid is fetching and the shape of what arrives is already known"
+    ],
+    "whenNotToUse": [
+      "An operation's duration matters — use a Spinner or Progress",
+      "The placeholder would be on screen more than a moment or two — show a real empty state instead"
+    ],
+    "accessibility": "`aria-hidden` by design: a skeleton is scaffolding, not content, and announcing five grey rectangles before a table loads is noise. There is no `label` prop on purpose — if a region needs announcing while it loads, that is a live region and the consumer owns it. Real content announces itself when it arrives. Dimensions are the feature: every variant sets a default size the consumer overrides, because a skeleton that guesses the content's height causes the very layout shift it exists to prevent. Under reduced motion the shimmer is removed entirely rather than slowed — a slower shimmer is still motion, and the grey shape is the whole message.",
+    "example": "<sk-skeleton variant=\"text\" style=\"inline-size: 60%\"></sk-skeleton>",
+    "knownLimitations": [
+      "No slot by design: real content replaces the element, not its children",
+      "`direction` is a prop, not auto-detected — the component does not know its locale"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "button",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-button/sk-button.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-0f3fd8e812e3cb9eb6cfff59eedacbb3b78b4079ace3ce349b13facd17a8dce1"
+    },
+    {
+      "path": "src/components/sk-button/sk-button.css",
+      "type": "registry:style",
+      "checksum": "sha256-0b8dc6be396bd143cf41f977b255d0218152453ee49dc21af6e4b078515cc9db"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-touch-min",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-hover",
+    "--sk-shadow-brutal-none"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables interaction. Mirrors the ARIA name."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "false",
+      "description": "Shows a busy state and blocks interaction."
+    },
+    {
+      "name": "size",
+      "type": "ButtonSize",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "type",
+      "type": "ButtonType",
+      "default": "\"button\"",
+      "description": "`submit`, `reset`, or `button`. Native semantics, so a Button inside a form behaves like the `<button>` a consumer would have written by hand."
+    },
+    {
+      "name": "variant",
+      "type": "ButtonVariant",
+      "default": "\"primary\"",
+      "description": "Visual emphasis."
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "default": null,
+      "description": "The `id` of a `<form>` element to associate this element with."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": null,
+      "description": "The name of the element, used when submitting an HTML form."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Triggers an action: submit a form, open a dialog, save a change.",
+    "whenToUse": [
+      "The control performs an action on the current page",
+      "It submits or resets a form",
+      "It opens a panel, dialog, or menu"
+    ],
+    "whenNotToUse": [
+      "It navigates somewhere — use a Link instead",
+      "It toggles a value on its own, with no action — use a Checkbox or Switch",
+      "It is the only option in a set — use a Radio Group"
+    ],
+    "accessibility": "Button role. Activates on Enter and Space. A loading button is aria-busy rather than disabled, so it keeps its accessible name and position in the tab order.",
+    "example": "<sk-button variant=\"primary\">Save changes</sk-button>",
+    "knownLimitations": [
+      "As a form-associated custom element, `type=\"submit\"` calls form.requestSubmit() explicitly; native implicit submission does not apply"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

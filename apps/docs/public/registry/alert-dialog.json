@@ -1,0 +1,87 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "alert-dialog",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-alert-dialog/sk-alert-dialog.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-3f2756779ef607f8b551d89158677c118794173f7f952863d8fea94db0ffc98c"
+    },
+    {
+      "path": "src/components/sk-alert-dialog/sk-alert-dialog.css",
+      "type": "registry:style",
+      "checksum": "sha256-743c63205113304cffcb149a66c66377fa944ec50ac7ec3d4edbbf80f8572fc8"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-danger",
+    "--sk-space-2",
+    "--sk-space-3"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "initialFocus",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the alert is showing."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
+  "ai": {
+    "summary": "A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.",
+    "whenToUse": [
+      "The action is destructive and irreversible — a delete, a revoke, a permanent change",
+      "The page cannot continue until the question is answered",
+      "The interruption must be announced as an interruption, not as a window"
+    ],
+    "whenNotToUse": [
+      "The user may reasonably decline without answering — use a Dialog, which allows Escape and optional backdrop dismissal",
+      "The message is informational and needs no decision — use a Toast or Alert",
+      "The action has a URL or needs deep linking — use a page"
+    ],
+    "accessibility": "`role=\"alertdialog\"`, so assistive technology announces an interruption rather than a window. Escape is *refused* and the backdrop does not dismiss: a dialog that lets Escape answer its question did not need to be asked — this is the ARIA APG's requirement for the role, not a style choice. Focus lands on `initialFocus` (the consumer's chosen default action) rather than the first focusable, because in a delete confirmation the wrong default is a destructive one. Label it with a real heading in the `title` slot. The panel wears the danger stroke: an interruption should look like one before a single word is read.",
+    "example": "<sk-alert-dialog initial-focus=\"#cancel\">\n  <sk-text variant=\"lg\" slot=\"title\"><h3>Delete this repository?</h3></sk-text>\n  <p>This cannot be undone.</p>\n  <sk-button id=\"cancel\" variant=\"secondary\">Cancel</sk-button>\n</sk-alert-dialog>",
+    "knownLimitations": [
+      "There is no trigger slot: the application raises it in response to something, never the user browsing",
+      "There is no imperative `close()` without a decision — the only exit is an action"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

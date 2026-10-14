@@ -1,0 +1,102 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "link",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-link/sk-link.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-cc820584caa3614fa69017f341ddf1e3edee9f6a200fde52613d12eb15fecd33"
+    },
+    {
+      "path": "src/components/sk-link/sk-link.css",
+      "type": "registry:style",
+      "checksum": "sha256-20a9cc3d17d60ae953a19ec91f2db5ef076f05673ac0ed1f7357a327bda98306"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-primary",
+    "--sk-color-primary-hover",
+    "--sk-color-focus-ring",
+    "--sk-color-text-muted"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "download",
+      "type": "string",
+      "default": null,
+      "description": ""
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "default": "false",
+      "description": "`external` marks a link that leaves the application: it adds the external icon, sets `target=\"_blank\"`, and adds `rel=\"noopener noreferrer\"`. Left off by default because most links do not leave."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The destination. A link that navigates."
+    },
+    {
+      "name": "rel",
+      "type": "string",
+      "default": null,
+      "description": "Forwarded to the underlying anchor."
+    },
+    {
+      "name": "subtle",
+      "type": "boolean",
+      "default": "false",
+      "description": "Suppresses the underline until hover or focus."
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "default": null,
+      "description": "Opens in a new tab without the external treatment."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Navigates to another URL, in place or in a new tab.",
+    "whenToUse": [
+      "It changes the URL",
+      "The destination is a document or page",
+      "It can be opened in a new tab or copied by the reader"
+    ],
+    "whenNotToUse": [
+      "It performs an action without changing the URL — use a Button instead",
+      "It downloads a file rather than navigating — pass `download`",
+      "It triggers a dialog or menu — use a Button"
+    ],
+    "accessibility": "Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `external` sets target=_blank with rel=noopener noreferrer and renders a decorative indicator.",
+    "example": "<sk-link href=\"/docs\">Read the docs</sk-link>",
+    "knownLimitations": [
+      "An empty `href` renders as visibly disabled rather than failing at build time"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

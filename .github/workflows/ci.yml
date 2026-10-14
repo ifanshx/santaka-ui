@@ -245,3 +245,28 @@ jobs:
       # project outside the workspace, and exercises them the way a consumer would.
       - name: Consumer fixture
         run: pnpm run test:consumer
+
+  registry:
+    name: registry payload and remote path
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The payload is build output (ADR-007), and the CLI is a bin the tests run.
+      - run: pnpm run build
+
+      # ADR-007: the registry is static versioned JSON, not a live endpoint. These
+      # tests serve the published payload over HTTP and drive the CLI against it,
+      # so the remote path is exercised rather than assumed.
+      - name: Registry tests
+        run: pnpm run test:registry

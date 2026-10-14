@@ -1,0 +1,106 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "badge",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-badge/sk-badge.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-7288da3483932e1e181c4d0f57eb44033dd38dbde7a403c5e7c91f114081f1d7"
+    },
+    {
+      "path": "src/components/sk-badge/sk-badge.css",
+      "type": "registry:style",
+      "checksum": "sha256-3226b3c0018aa251d9ac3aa5ce08810d12e693ffc045eb6d9c76aa0d1d8201b6"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-danger-fg",
+    "--sk-color-danger-subtle",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-success",
+    "--sk-color-success-fg",
+    "--sk-color-success-subtle",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-color-warning",
+    "--sk-color-warning-fg",
+    "--sk-color-warning-subtle",
+    "--sk-radius-full",
+    "--sk-shadow-sm"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "dot",
+      "type": "boolean",
+      "default": "false",
+      "description": "Renders the badge as a dot instead of a pill. Requires a text label for screen readers, because the dot itself conveys nothing but color."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "default": "\"md\"",
+      "description": "Control height."
+    },
+    {
+      "name": "statusLabel",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Screen-reader text for the dot variant. Required when `dot` is set."
+    },
+    {
+      "name": "variant",
+      "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "\"neutral\"",
+      "description": "Visual emphasis."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A static label for status, category, or count. It is not interactive.",
+    "whenToUse": [
+      "It marks a record's state, such as Active, Pending, or Failed",
+      "It labels a category or count that must stand out from body copy",
+      "It marks an item in a dense list where state has to stay scannable"
+    ],
+    "whenNotToUse": [
+      "It is clickable — use a Button, because a badge has no interaction",
+      "It navigates — use a Link instead",
+      "It carries a value the reader selects — use a Checkbox or Switch instead"
+    ],
+    "accessibility": "Static text, so it exposes no role and no tab stop. Each variant sets a foreground and a background measured together, so the label clears 4.5:1 against its own fill rather than only against the page. The dot variant would otherwise convey state by color alone, which WCAG 1.4.1 forbids, so it renders the consumer-supplied `statusLabel` visually hidden instead.",
+    "example": "<sk-badge variant=\"success\">Active</sk-badge>",
+    "knownLimitations": [
+      "The `statusLabel` prop is required in the React types for the `dot` variant but only warns in plain HTML"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}
