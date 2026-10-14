@@ -1,0 +1,90 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "radio-group",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-radio-group/sk-radio-group.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-819ae86e6bdc913c4a5d7d74be4ca7c89e75311da022f041259c7a9bd97e0b69"
+    },
+    {
+      "path": "src/components/sk-radio-group/sk-radio-group.css",
+      "type": "registry:style",
+      "checksum": "sha256-0622cb0ab380d07880b519fb934748aa969a00caae566795e779a05c29e953f8"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-focus-ring",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-active",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-3",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-weight",
+    "--sk-text-lg-size",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.",
+    "whenToUse": [
+      "Exactly one choice from 2–7 known options",
+      "The options are short enough to read at a glance — longer lists want a Select",
+      "It must submit through a plain `<form>` with no JavaScript state"
+    ],
+    "whenNotToUse": [
+      "More than roughly 7 options — use a Select, which scrolls and filters",
+      "Several choices at once — use a Checkbox per option",
+      "A single on/off setting that acts immediately — use a Switch"
+    ],
+    "accessibility": "Renders real native `<input type=\"radio\">` elements in a `role=\"radiogroup\"` container, so the browser owns arrow-key navigation within the group, the single tab stop, and constraint validation (\"please select one of these options\" is the browser's message, not a reimplementation). The group label names the container through `aria-labelledby`; each option is labelled by its wrapping label. An error sets `aria-invalid` and renders an icon beside its text, never color alone (WCAG 1.4.1). Implements the FACE contract on the group: formResetCallback, formDisabledCallback, formStateRestoreCallback, and sk-value-change fires only for user-initiated changes.",
+    "example": "<sk-radio-group name=\"env\" label=\"Environment\" required options='[{\"value\":\"production\",\"label\":\"Production\"},{\"value\":\"staging\",\"label\":\"Staging\"}]'></sk-radio-group>",
+    "knownLimitations": [
+      "Options arrive as JSON, like Select — they cannot be slotted as children, because scoped encapsulation cannot distribute host children into the render tree",
+      "The generated `id` for the group label differs from React's `useId()`, so an SSR consumer must pass an explicit `id` (section 4, forms contract)"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -102,16 +102,19 @@ const BUDGETS = [
   // Raised 12 → 13 when Label and Separator completed Tier 1, 13 → 14 when
   // Dialog opened Tier 2, 14 → 15 for Toast, and 15 → 16 for Select — the
   // forms-contract component, carrying FACE wiring, JSON option parsing, and
-  // the label/error record. The runtime bundles 16 components where the 12 KB
-  // figure covered eight. The Dialog remains the most expensive single
-  // addition; the per-component CSS average has *fallen* on nearly every
-  // addition — 2.45 → 1.94 KB — which is the number that says the additions
-  // are lean. Expect this row to move once more for Tabs, the last v1.0 Tier 2
-  // component; each raise is recorded here, never silent.
+  // the label/error record. 16 → 17 for Checkbox. 17 → 18 for Switch and
+  // Radio Group, which closed the v1.0 Tier 2 scope: Switch is the checkbox
+  // boolean path under role=switch, and Radio Group is the Select-style JSON
+  // option parsing plus group-level FACE — the two of them added 1.13 KB
+  // combined, 0.57 KB per component, against a per-component CSS average of
+  // 2.24 KB. The runtime now bundles 21 components where the 12 KB figure
+  // covered eight. The per-component CSS average has fallen on nearly every
+  // addition — 2.45 → 2.24 KB — which is the number that says the additions
+  // are lean. Each raise is recorded here, never silent.
   {
     name: "web-components runtime",
     measure: () => measureJs(join(pkgRoot, "dist/components/index.js"), runtimeExports()),
-    budgetKb: 17,
+    budgetKb: 18,
   },
   {
     name: "component CSS, per component",

@@ -330,4 +330,57 @@ beforeAll(() => {
   if (!customElements.get("sk-tab-panel")) {
     customElements.define("sk-tab-panel", class extends HTMLElement {})
   }
+
+  // Switch and Radio Group follow their shipped components' prop surfaces.
+  // Switch's stub reflects `checked` from the attribute so `default-checked`
+  // reads back as a property, the way Stencil's reflection would.
+  if (!customElements.get("sk-switch")) {
+    customElements.define(
+      "sk-switch",
+      class extends HTMLElement {
+        variant = "default"
+        size = "md"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        required = false
+        form?: string
+        checked = false
+        defaultChecked = false
+        value = "on"
+
+        static get observedAttributes() {
+          return ["checked", "default-checked"]
+        }
+
+        attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+          if (name === "checked") this.checked = value !== null
+          if (name === "default-checked") this.defaultChecked = value !== null
+        }
+      },
+    )
+  }
+
+  if (!customElements.get("sk-radio-group")) {
+    customElements.define(
+      "sk-radio-group",
+      class extends HTMLElement {
+        options: Array<{ value: string; label: string; disabled?: boolean }> = []
+        variant = "default"
+        size = "md"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        required = false
+        form?: string
+        name = ""
+        value = ""
+        defaultValue = ""
+      },
+    )
+  }
 })

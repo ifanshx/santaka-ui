@@ -20,7 +20,7 @@ let probeCount = 0
 async function mountCheckbox(page: Page, attrs: Record<string, string>) {
   const formId = `probe-form-${probeCount++}`
   const tagAttrs = Object.entries(attrs)
-    .map(([k, v]) => `${k}="${v.replace(/"/g, '\\"')}"`)
+    .map(([k, v]) => `${k}="${v.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`)
     .join(" ")
   await page.evaluate(
     ({ formId, tagAttrs }) => {

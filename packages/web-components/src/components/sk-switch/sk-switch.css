@@ -1,0 +1,220 @@
+/*
+ * Switch styles.
+ *
+ * A switch is chrome, not a floating layer, so it carries the same brutalist
+ * treatment as every other control: a 3px stroke, no rounding, and a
+ * zero-blur offset shadow on the track.
+ *
+ * The rendered control is a real native `<input type="checkbox">` with
+ * `role="switch"`, visually restyled but never `display: none` — it stays in
+ * the tab order, keeps the platform's Space-to-toggle behavior, and remains
+ * the labelled element the form and assistive technology see. The visible
+ * track and thumb are drawn elements driven by `:checked`, not an image.
+ */
+
+sk-switch {
+  --sk-switch-bg: var(--sk-color-surface, #ffffff);
+  --sk-switch-fg: var(--sk-color-text, #17141c);
+  --sk-switch-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-switch-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-switch-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-switch .sk-switch__label {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-3, 0.75rem);
+  /* The whole row is the touch target, so the track itself can stay compact. */
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  color: var(--sk-switch-fg);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  cursor: pointer;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+/*
+ * The native input is the control: it owns focus, the keyboard, and the
+ * validity state. It is rendered transparent behind the track rather than
+ * removed, so a click anywhere on the row reaches it through label
+ * activation and the browser never loses the element it validates.
+ */
+sk-switch .sk-switch__control {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  opacity: 0;
+  /* Not `display: none`: a visually-hidden element stays focusable, and the
+     track must light up when the keyboard user arrives. */
+}
+
+/* Focus goes on the track via the sibling selector: the ring reads on the
+   visible surface, which is where a sighted keyboard user is looking. */
+sk-switch .sk-switch__control:focus-visible + .sk-switch__track {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-switch-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-switch .sk-switch__track {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  inline-size: 3rem;
+  block-size: 1.5rem;
+  padding: 3px;
+  border: var(--sk-border-thick, 3px) solid var(--sk-switch-border);
+  border-radius: 0;
+  background-color: var(--sk-switch-bg);
+  box-shadow: var(--sk-switch-shadow) var(--sk-color-shadow, #17141c);
+  cursor: pointer;
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+/* The thumb is a square block that slides the full inner width. Arcade
+   easing on the transform makes the arrival visibly overshoot and settle. */
+sk-switch .sk-switch__thumb {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  background-color: var(--sk-color-border-strong, #8b85a0);
+  transform: translateX(0);
+  transition: transform var(--sk-duration-control, 140ms)
+    var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+sk-switch .sk-switch__control:checked + .sk-switch__track {
+  background-color: var(--sk-color-primary, #6d28d9);
+  border-color: var(--sk-color-shadow, #17141c);
+}
+
+sk-switch .sk-switch__control:checked + .sk-switch__thumb {
+  background-color: var(--sk-color-primary-fg, #ffffff);
+}
+
+sk-switch .sk-switch__control:checked + .sk-switch__track .sk-switch__thumb {
+  transform: translateX(1.5rem);
+  background-color: var(--sk-color-primary-fg, #ffffff);
+}
+
+sk-switch .sk-switch__control:disabled + .sk-switch__track {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-switch .sk-switch__label:has(.sk-switch__control:disabled) {
+  cursor: not-allowed;
+}
+
+sk-switch[data-invalid] {
+  --sk-switch-border: var(--sk-color-danger, #dc2626);
+}
+
+sk-switch .sk-switch__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+/* Sizes change the label text, never the 44px row target. */
+sk-switch[size="sm"] .sk-switch__label {
+  font-size: var(--sk-text-sm-size, 0.875rem);
+}
+
+sk-switch[size="lg"] .sk-switch__label {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+}
+
+/*
+ * `quiet` drops the shadow so a switch can sit inside a card without two
+ * competing hard edges. The stroke stays — the track's boundary is what makes
+ * it a switch.
+ */
+sk-switch[variant="quiet"] {
+  --sk-switch-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-switch .sk-switch__description {
+  margin: 0;
+  padding-inline-start: calc(3rem + var(--sk-space-3, 0.75rem));
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-switch .sk-switch__error {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-1, 0.25rem);
+  margin: 0;
+  padding-inline-start: calc(3rem + var(--sk-space-3, 0.75rem));
+  color: var(--sk-color-danger, #dc2626);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-switch .sk-switch__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+/*
+ * Forced colors: the browser's own palette replaces every author color, so the
+ * brutalist shadow disappears entirely and the stroke is the only boundary left.
+ */
+@media (forced-colors: active) {
+  sk-switch {
+    --sk-switch-border: CanvasText;
+    --sk-switch-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-switch[data-invalid] {
+    --sk-switch-border: LinkText;
+  }
+
+  sk-switch .sk-switch__track {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+  }
+
+  sk-switch .sk-switch__control:checked + .sk-switch__track {
+    background-color: Highlight;
+    border-color: HighlightText;
+  }
+
+  sk-switch .sk-switch__thumb,
+  sk-switch .sk-switch__control:checked + .sk-switch__track .sk-switch__thumb {
+    background-color: ButtonText;
+  }
+}
+
+/*
+ * Reduced motion removes the thumb slide and the shadow transition rather
+ * than shortening them: a 1ms slide is still a slide. The state change itself
+ * (color swap) stays — it is a color, not motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-switch .sk-switch__thumb {
+    transition: none;
+  }
+
+  sk-switch .sk-switch__track {
+    transition: none;
+  }
+}

@@ -30,6 +30,17 @@ budgets are unchanged.
 | component CSS, per component | 4 KB | 2.83 KB |
 | token themes, light + dark | 13 KB (was 12) | 12.21 KB |
 
+## Amendment: the runtime row has moved with the component count
+
+The runtime budget is raised in the script itself as components ship, each
+raise recorded in the `BUDGETS` comment: 12 → 13 (Tier 1 completion), → 14
+(Dialog), → 15 (Toast), → 16 (Select), → 17 (Checkbox), and **17 → 18 KB** for
+Switch and Radio Group, which closed the v1.0 Tier 2 scope. The last raise
+added 1.13 KB combined — 0.57 KB per component — while the per-component CSS
+average continued to fall (2.45 → 2.24 KB). The runtime now bundles 21
+components where the original 12 KB figure covered eight; the growth is
+component surface, not regression.
+
 ## Evidence: the growth is the token surface, not a regression
 
 The delta is the deliberate token surface from ADR-017: the brutal shadow ladder

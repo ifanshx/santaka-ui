@@ -98,8 +98,10 @@ export const Checkbox = forwardRef<SkCheckboxElement, CheckboxProps>(function Ch
   const id = providedId ?? generatedId
 
   const handleChange = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    onValueChange?.(target.checked)
+    // The event arrives from the custom element host, not the inner input, so
+    // the payload is `detail` — the same contract Input and Select adapt.
+    const detail = (e as CustomEvent<{ checked: boolean }>).detail
+    onValueChange?.(detail.checked)
   }
 
   return (

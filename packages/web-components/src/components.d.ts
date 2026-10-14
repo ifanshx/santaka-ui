@@ -7,9 +7,11 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 import { InputType } from "./components/sk-input/sk-input";
+import { RadioOption } from "./components/sk-radio-group/sk-radio-group";
 import { SelectOption } from "./components/sk-select/sk-select";
 export { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/button-base.js";
 export { InputType } from "./components/sk-input/sk-input";
+export { RadioOption } from "./components/sk-radio-group/sk-radio-group";
 export { SelectOption } from "./components/sk-select/sk-select";
 export namespace Components {
     /**
@@ -492,6 +494,72 @@ export namespace Components {
          */
         "target"?: string;
     }
+    interface SkRadioGroup {
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue": string;
+        /**
+          * Persistent helper text below the group.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Input.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The group's own label text, rendered above the options.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * The submitted name. Every radio in the group carries it.
+          * @default ""
+         */
+        "name": string;
+        /**
+          * The choices. Serialized as JSON when written as an attribute.
+          * @default []
+         */
+        "options": RadioOption[];
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Label text size. The row target stays 44px at every size.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * The value. Uncontrolled by default; "" means nothing selected.
+          * @default ""
+         */
+        "value": string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant": "default" | "quiet";
+    }
     interface SkSelect {
         /**
           * Initial value for the uncontrolled case.
@@ -647,6 +715,90 @@ export namespace Components {
           * @default ""
          */
         "status": string;
+    }
+    /**
+     * Switch — Tier 2, the second of the three missing form controls.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A switch is the checkbox contract under a different role. It renders a real
+     * native `<input type="checkbox">` carrying `role="switch"`, which is what the
+     * ARIA authoring practices direct: the platform still owns FACE, the
+     * Space-to-toggle behavior, constraint validation through `required`, and
+     * autofill, while assistive technology reads the state as on/off instead of
+     * checked/unchecked. Nothing about the form behavior is reimplemented.
+     * The distinction from Checkbox is *when* it applies, not what it submits:
+     * a switch is an on/off setting that acts immediately, a checkbox is an
+     * option collected for a later submit. The registry `ai` block carries that
+     * guidance; the contract here is identical on purpose.
+     * The visual is the brutalist track-and-thumb, not the native box. The track
+     * is a 3px-stroked rectangle (no rounding — chrome is square) with a thumb
+     * that slides on the arcade easing; `:checked` moves the thumb and fills the
+     * track. Like Checkbox's tick, the state change is drawn in CSS, not shipped
+     * as an asset.
+     * `sk-value-change` fires only for user-initiated changes (section 4): the
+     * native `change` event is the only event path, and a programmatic prop write
+     * dispatches none.
+     */
+    interface SkSwitch {
+        /**
+          * Whether the switch is on. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isOn`.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Initial state for the uncontrolled case.
+          * @default false
+         */
+        "defaultChecked": boolean;
+        /**
+          * Persistent helper text below the row.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Checkbox.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The label text, rendered beside the track. Wraps the control.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Label text size. The row target stays 44px at every size.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * The submitted value when on. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox-role=switch would send.
+          * @default "on"
+         */
+        "value": string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant": "default" | "quiet";
     }
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
@@ -1110,6 +1262,12 @@ declare global {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
     };
+    interface HTMLSkRadioGroupElement extends Components.SkRadioGroup, HTMLStencilElement {
+    }
+    var HTMLSkRadioGroupElement: {
+        prototype: HTMLSkRadioGroupElement;
+        new (): HTMLSkRadioGroupElement;
+    };
     interface HTMLSkSelectElement extends Components.SkSelect, HTMLStencilElement {
     }
     var HTMLSkSelectElement: {
@@ -1177,6 +1335,35 @@ declare global {
     var HTMLSkSpinnerElement: {
         prototype: HTMLSkSpinnerElement;
         new (): HTMLSkSpinnerElement;
+    };
+    /**
+     * Switch — Tier 2, the second of the three missing form controls.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A switch is the checkbox contract under a different role. It renders a real
+     * native `<input type="checkbox">` carrying `role="switch"`, which is what the
+     * ARIA authoring practices direct: the platform still owns FACE, the
+     * Space-to-toggle behavior, constraint validation through `required`, and
+     * autofill, while assistive technology reads the state as on/off instead of
+     * checked/unchecked. Nothing about the form behavior is reimplemented.
+     * The distinction from Checkbox is *when* it applies, not what it submits:
+     * a switch is an on/off setting that acts immediately, a checkbox is an
+     * option collected for a later submit. The registry `ai` block carries that
+     * guidance; the contract here is identical on purpose.
+     * The visual is the brutalist track-and-thumb, not the native box. The track
+     * is a 3px-stroked rectangle (no rounding — chrome is square) with a thumb
+     * that slides on the arcade easing; `:checked` moves the thumb and fills the
+     * track. Like Checkbox's tick, the state change is drawn in CSS, not shipped
+     * as an asset.
+     * `sk-value-change` fires only for user-initiated changes (section 4): the
+     * native `change` event is the only event path, and a programmatic prop write
+     * dispatches none.
+     */
+    interface HTMLSkSwitchElement extends Components.SkSwitch, HTMLStencilElement {
+    }
+    var HTMLSkSwitchElement: {
+        prototype: HTMLSkSwitchElement;
+        new (): HTMLSkSwitchElement;
     };
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
@@ -1345,10 +1532,12 @@ declare global {
         "sk-input": HTMLSkInputElement;
         "sk-label": HTMLSkLabelElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-radio-group": HTMLSkRadioGroupElement;
         "sk-select": HTMLSkSelectElement;
         "sk-separator": HTMLSkSeparatorElement;
         "sk-skeleton": HTMLSkSkeletonElement;
         "sk-spinner": HTMLSkSpinnerElement;
+        "sk-switch": HTMLSkSwitchElement;
         "sk-tab": HTMLSkTabElement;
         "sk-tab-panel": HTMLSkTabPanelElement;
         "sk-tabs": HTMLSkTabsElement;
@@ -1858,6 +2047,72 @@ declare namespace LocalJSX {
          */
         "target"?: string;
     }
+    interface SkRadioGroup {
+        /**
+          * Initial value for the uncontrolled case.
+          * @default ""
+         */
+        "defaultValue"?: string;
+        /**
+          * Persistent helper text below the group.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Input.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The group's own label text, rendered above the options.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * The submitted name. Every radio in the group carries it.
+          * @default ""
+         */
+        "name"?: string;
+        /**
+          * The choices. Serialized as JSON when written as an attribute.
+          * @default []
+         */
+        "options"?: RadioOption[];
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Label text size. The row target stays 44px at every size.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * The value. Uncontrolled by default; "" means nothing selected.
+          * @default ""
+         */
+        "value"?: string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant"?: "default" | "quiet";
+    }
     interface SkSelect {
         /**
           * Initial value for the uncontrolled case.
@@ -2017,6 +2272,94 @@ declare namespace LocalJSX {
           * @default ""
          */
         "status"?: string;
+    }
+    /**
+     * Switch — Tier 2, the second of the three missing form controls.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A switch is the checkbox contract under a different role. It renders a real
+     * native `<input type="checkbox">` carrying `role="switch"`, which is what the
+     * ARIA authoring practices direct: the platform still owns FACE, the
+     * Space-to-toggle behavior, constraint validation through `required`, and
+     * autofill, while assistive technology reads the state as on/off instead of
+     * checked/unchecked. Nothing about the form behavior is reimplemented.
+     * The distinction from Checkbox is *when* it applies, not what it submits:
+     * a switch is an on/off setting that acts immediately, a checkbox is an
+     * option collected for a later submit. The registry `ai` block carries that
+     * guidance; the contract here is identical on purpose.
+     * The visual is the brutalist track-and-thumb, not the native box. The track
+     * is a 3px-stroked rectangle (no rounding — chrome is square) with a thumb
+     * that slides on the arcade easing; `:checked` moves the thumb and fills the
+     * track. Like Checkbox's tick, the state change is drawn in CSS, not shipped
+     * as an asset.
+     * `sk-value-change` fires only for user-initiated changes (section 4): the
+     * native `change` event is the only event path, and a programmatic prop write
+     * dispatches none.
+     */
+    interface SkSwitch {
+        /**
+          * Whether the switch is on. An ARIA-mirroring boolean, so the ARIA name verbatim (ADR-013, decision 1) — not `isOn`.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Initial state for the uncontrolled case.
+          * @default false
+         */
+        "defaultChecked"?: boolean;
+        /**
+          * Persistent helper text below the row.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables interaction. Mirrors the ARIA name.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Associates the control with a form it is not nested inside.
+         */
+        "form"?: string;
+        /**
+          * Marks the field invalid, with the same independence from `error` as Checkbox.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The label text, rendered beside the track. Wraps the control.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * Native constraint validation still applies and is never suppressed.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Label text size. The row target stays 44px at every size.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * The submitted value when on. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox-role=switch would send.
+          * @default "on"
+         */
+        "value"?: string;
+        /**
+          * Visual emphasis.
+          * @default "default"
+         */
+        "variant"?: "default" | "quiet";
     }
     /**
      * Tab — one selectable header inside an `sk-tabs` widget.
@@ -2373,6 +2716,20 @@ declare namespace LocalJSX {
         "rel": string;
         "download": string;
     }
+    interface SkRadioGroupAttributes {
+        "variant": "default" | "quiet";
+        "size": "sm" | "md" | "lg";
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "form": string;
+        "name": string;
+        "value": string;
+        "defaultValue": string;
+    }
     interface SkSelectAttributes {
         "variant": "default" | "quiet";
         "size": "sm" | "md" | "lg";
@@ -2400,6 +2757,20 @@ declare namespace LocalJSX {
         "size": "sm" | "md" | "lg";
         "label": string;
         "status": string;
+    }
+    interface SkSwitchAttributes {
+        "variant": "default" | "quiet";
+        "size": "sm" | "md" | "lg";
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "form": string;
+        "checked": boolean;
+        "defaultChecked": boolean;
+        "value": string;
     }
     interface SkTabAttributes {
         "label": string;
@@ -2455,10 +2826,12 @@ declare namespace LocalJSX {
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-radio-group": Omit<SkRadioGroup, keyof SkRadioGroupAttributes> & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes]?: SkRadioGroup[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `attr:${K}`]?: SkRadioGroupAttributes[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `prop:${K}`]?: SkRadioGroup[K] };
         "sk-select": Omit<SkSelect, keyof SkSelectAttributes> & { [K in keyof SkSelect & keyof SkSelectAttributes]?: SkSelect[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `attr:${K}`]?: SkSelectAttributes[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `prop:${K}`]?: SkSelect[K] };
         "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
         "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
+        "sk-switch": Omit<SkSwitch, keyof SkSwitchAttributes> & { [K in keyof SkSwitch & keyof SkSwitchAttributes]?: SkSwitch[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `attr:${K}`]?: SkSwitchAttributes[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `prop:${K}`]?: SkSwitch[K] };
         "sk-tab": Omit<SkTab, keyof SkTabAttributes> & { [K in keyof SkTab & keyof SkTabAttributes]?: SkTab[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `attr:${K}`]?: SkTabAttributes[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `prop:${K}`]?: SkTab[K] };
         "sk-tab-panel": Omit<SkTabPanel, keyof SkTabPanelAttributes> & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes]?: SkTabPanel[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `attr:${K}`]?: SkTabPanelAttributes[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `prop:${K}`]?: SkTabPanel[K] };
         "sk-tabs": Omit<SkTabs, keyof SkTabsAttributes> & { [K in keyof SkTabs & keyof SkTabsAttributes]?: SkTabs[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `attr:${K}`]?: SkTabsAttributes[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `prop:${K}`]?: SkTabs[K] };
@@ -2618,6 +2991,7 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            "sk-radio-group": LocalJSX.IntrinsicElements["sk-radio-group"] & JSXBase.HTMLAttributes<HTMLSkRadioGroupElement>;
             "sk-select": LocalJSX.IntrinsicElements["sk-select"] & JSXBase.HTMLAttributes<HTMLSkSelectElement>;
             /**
              * Separator — Tier 1 foundation component.
@@ -2666,6 +3040,30 @@ declare module "@stencil/core" {
              *    choice the consumer has to make, not an accident.
              */
             "sk-spinner": LocalJSX.IntrinsicElements["sk-spinner"] & JSXBase.HTMLAttributes<HTMLSkSpinnerElement>;
+            /**
+             * Switch — Tier 2, the second of the three missing form controls.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * A switch is the checkbox contract under a different role. It renders a real
+             * native `<input type="checkbox">` carrying `role="switch"`, which is what the
+             * ARIA authoring practices direct: the platform still owns FACE, the
+             * Space-to-toggle behavior, constraint validation through `required`, and
+             * autofill, while assistive technology reads the state as on/off instead of
+             * checked/unchecked. Nothing about the form behavior is reimplemented.
+             * The distinction from Checkbox is *when* it applies, not what it submits:
+             * a switch is an on/off setting that acts immediately, a checkbox is an
+             * option collected for a later submit. The registry `ai` block carries that
+             * guidance; the contract here is identical on purpose.
+             * The visual is the brutalist track-and-thumb, not the native box. The track
+             * is a 3px-stroked rectangle (no rounding — chrome is square) with a thumb
+             * that slides on the arcade easing; `:checked` moves the thumb and fills the
+             * track. Like Checkbox's tick, the state change is drawn in CSS, not shipped
+             * as an asset.
+             * `sk-value-change` fires only for user-initiated changes (section 4): the
+             * native `change` event is the only event path, and a programmatic prop write
+             * dispatches none.
+             */
+            "sk-switch": LocalJSX.IntrinsicElements["sk-switch"] & JSXBase.HTMLAttributes<HTMLSkSwitchElement>;
             /**
              * Tab — one selectable header inside an `sk-tabs` widget.
              * Renders a real `<button>`: tabs are buttons in the ARIA pattern (they are

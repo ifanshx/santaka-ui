@@ -189,6 +189,37 @@ type CheckboxElement = HTMLElement & {
   onValueChange: ((checked: boolean) => void) | undefined
 }
 
+type SwitchElement = HTMLElement & {
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  required: boolean
+  form: string | undefined
+  checked: boolean
+  defaultChecked: boolean
+  onValueChange: ((checked: boolean) => void) | undefined
+}
+
+type RadioGroupElement = HTMLElement & {
+  options: unknown[]
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  required: boolean
+  form: string | undefined
+  name: string
+  value: string
+  onValueChange: ((value: string) => void) | undefined
+}
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -264,6 +295,37 @@ declare module "react" {
         "default-checked"?: boolean
         indeterminate?: boolean
         "onsk-value-change"?: (event: CustomEvent<{ checked: boolean }>) => void
+      }
+      "sk-switch": BaseCustomElement<SwitchElement> & {
+        variant?: "default" | "quiet"
+        size?: "sm" | "md" | "lg"
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        required?: boolean
+        form?: string
+        checked?: boolean
+        "default-checked"?: boolean
+        value?: string
+        "onsk-value-change"?: (event: CustomEvent<{ checked: boolean }>) => void
+      }
+      "sk-radio-group": BaseCustomElement<RadioGroupElement> & {
+        options?: string
+        variant?: "default" | "quiet"
+        size?: "sm" | "md" | "lg"
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        required?: boolean
+        form?: string
+        name?: string
+        value?: string
+        "default-value"?: string
+        "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
       }
       "sk-card": BaseCustomElement<CardElement> & {
         variant?: "default" | "outlined" | "bare"

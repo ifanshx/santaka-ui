@@ -48,6 +48,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "test": "playwright test",
+    "test:unit": "vitest run --root ../.. tests",
     "size": "node scripts/measure-bundle.mjs",
     "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
   },
@@ -58,12 +59,13 @@
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
-    "@stencil/core": "4.45.2",
     "@santaka-ui/utilities": "workspace:^",
+    "@stencil/core": "4.45.2",
     "esbuild": "0.25.10",
     "eslint": "9.39.5",
     "publint": "0.3.25",
     "rimraf": "6.0.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
   }
 }

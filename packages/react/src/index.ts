@@ -23,6 +23,16 @@ export { Text } from "./text.js"
 export type { TextProps, SkTextElement } from "./text.js"
 export { Checkbox } from "./checkbox.js"
 export type { CheckboxProps, CheckboxSize, CheckboxVariant, SkCheckboxElement } from "./checkbox.js"
+export { Switch } from "./switch.js"
+export type { SwitchProps, SwitchSize, SwitchVariant, SkSwitchElement } from "./switch.js"
+export { RadioGroup } from "./radio-group.js"
+export type {
+  RadioGroupProps,
+  RadioGroupSize,
+  RadioGroupVariant,
+  RadioOption,
+  SkRadioGroupElement,
+} from "./radio-group.js"
 export { Spinner } from "./spinner.js"
 export type { SpinnerProps, SkSpinnerElement } from "./spinner.js"
 export { Skeleton } from "./skeleton.js"

@@ -1018,7 +1018,7 @@ Review this list at the end of every two-week phase. A risk without a named owne
 
 ### Weeks 5–6 — Interactions and forms
 
-- [ ] Add Checkbox, Radio Group, Switch, Tabs, Select, Tooltip, Dialog, Alert Dialog, and Toast — the v1.0 Tier 2 scope from section 7. *(Shipped and proven in Chromium: Tabs, Select, Tooltip, Dialog, Alert Dialog, Toast — each with universal + React implementations, keyboard tests, and registry `ai` blocks. Missing: Checkbox, Radio Group, Switch. No `llms.txt`, no MCP server.)*
+- [x] Add Checkbox, Radio Group, Switch, Tabs, Select, Tooltip, Dialog, Alert Dialog, and Toast — the v1.0 Tier 2 scope from section 7. *(Complete: all nine shipped and proven in Chromium, each with universal + React implementations, keyboard tests, and registry `ai` blocks. The remaining v1.0 gaps are `llms.txt` and the MCP server.)*
 - [ ] Validate keyboard interaction, focus return, accessible labeling, and controlled/uncontrolled behavior.
 - [ ] Name the behavior owner (section 4) for each interactive component in its documentation; undocumented divergence blocks the Stable label.
 - [ ] Add interaction, keyboard, and accessibility tests.
@@ -1092,11 +1092,11 @@ A release candidate is ready only when the applicable items are checked and evid
 - [x] Light/dark themes, forced-colors considerations, and reduced motion are reviewed. *(Token contract tests assert the glass fallback panel clears 4.5:1 against each theme's own text and is near-opaque; `forced-colors` is handled in sixteen component stylesheets plus `glass.css` and `primitives.css`; `prefers-reduced-motion` removes the press transform rather than merely shortening it.)*
 - [ ] SSR/hydration works for each integration that claims it.
 - [x] CSS isolation and prebuilt CSS behavior are verified. *(The conformance test asserts every component is scoped with no shadow root, and that styling hooks are `data-slot` rather than classes. Prebuilt CSS reachability is covered by `exports-contract.test.ts`.)*
-- [x] Bundle size, tree-shaking, and dependency impact are measured. *(Measured per component rather than as a package total: runtime 16.13 KB of 17, component CSS 1.92 KB of 4 per component, token themes 12.21 KB of 13. One budget — `tokens + core` at 8 KB — has no measurement and is recorded as an open gap in ADR-010.)*
+- [x] Bundle size, tree-shaking, and dependency impact are measured. *(Measured per component rather than as a package total: runtime 17.96 KB of 18, component CSS 2.24 KB of 4 per component, token themes 12.21 KB of 13. One budget — `tokens + core` at 8 KB — has no measurement and is recorded as an open gap in ADR-010.)*
 - [x] Bundle budgets in section 12 pass in CI, or any exception is recorded as an ADR. *(`pnpm run size` runs in CI and fails the build on a regression. The token theme budget moved from 12 KB to 13 KB, recorded in ADR-010.)*
-- [x] Every Stable component names its behavior owner and its locale coverage. *(All eighteen registry entries declare `behaviorOwner: "web-components"` and `localesCovered: ["en-US"]`, and a test asserts it.)*
+- [x] Every Stable component names its behavior owner and its locale coverage. *(All twenty-one registry entries declare `behaviorOwner: "web-components"` and `localesCovered: ["en-US"]`, and a test asserts it.)*
 - [ ] CLI initialization, component add, dry run, conflicts, and recovery are tested.
-- [x] Registry entries validate and cannot write outside intended destinations. *(Eighteen entries validate against the schema with checksums verified against the shipped files. Path traversal is refused by the validator and by the example server, which normalizes then confirms the resolved path stays inside the repo root.)*
+- [x] Registry entries validate and cannot write outside intended destinations. *(Twenty-one entries validate against the schema with checksums verified against the shipped files. Path traversal is refused by the validator and by the example server, which normalizes then confirms the resolved path stays inside the repo root.)*
 - [ ] Dependency licenses and security scans are reviewed.
 - [ ] Changelog, semver policy, upgrade notes, and migration guidance are prepared.
 - [x] Component API conventions are enforced by a conformance test, and no Stable component deviates. *(Nine tests in `conventions.e2e.ts`, checking section 4's grammar statically and at runtime. One question is recorded as open in ADR-013 rather than enforced either way: whether a presentation boolean takes the `is`/`has`/`can` prefix.)*

@@ -213,6 +213,58 @@
             disabled
           ></sk-checkbox>
         </section>
+
+        <section aria-labelledby="switch-heading" class="sk-stack">
+          <sk-text variant="lg" family="display">
+            <h2 id="switch-heading">Switches</h2>
+          </sk-text>
+          <sk-switch
+            id="example-dark-mode"
+            name="dark-mode"
+            label="Dark mode"
+            description="Applies immediately."
+          ></sk-switch>
+          <sk-switch
+            id="example-notifications"
+            name="notifications"
+            label="Desktop notifications"
+            checked
+          ></sk-switch>
+          <sk-switch
+            id="example-quiet-switch"
+            name="quiet-switch"
+            label="Quiet variant"
+            variant="quiet"
+          ></sk-switch>
+          <sk-switch
+            id="example-disabled-switch"
+            name="legacy-sync"
+            label="Legacy sync"
+            disabled
+          ></sk-switch>
+        </section>
+
+        <section aria-labelledby="radio-heading" class="sk-stack">
+          <sk-text variant="lg" family="display">
+            <h2 id="radio-heading">Radio Groups</h2>
+          </sk-text>
+          <sk-radio-group
+            id="example-env"
+            name="environment"
+            label="Deployment environment"
+            description="Where the build deploys."
+            required
+            options='[{"value":"production","label":"Production"},{"value":"staging","label":"Staging"},{"value":"development","label":"Development"}]'
+          ></sk-radio-group>
+          <sk-radio-group
+            id="example-region"
+            name="region"
+            label="Region"
+            variant="quiet"
+            value="eu"
+            options='[{"value":"us","label":"US East"},{"value":"eu","label":"EU West"},{"value":"ap","label":"Asia Pacific","disabled":true}]'
+          ></sk-radio-group>
+        </section>
       </section>
 
       <section aria-labelledby="textarea-heading" class="sk-stack">

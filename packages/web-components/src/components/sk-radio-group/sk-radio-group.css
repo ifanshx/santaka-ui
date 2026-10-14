@@ -1,0 +1,204 @@
+/*
+ * Radio Group styles.
+ *
+ * A radio group is chrome, not a floating layer, so it carries the same
+ * brutalist treatment as every other control: a 3px stroke, no rounding, and
+ * a zero-blur offset shadow on each radio's dot.
+ *
+ * The rendered controls are real native `<input type="radio">` elements,
+ * visually restyled but never `display: none` — they stay in the tab order,
+ * keep the platform's arrow-key navigation, and remain the labelled elements
+ * the form and assistive technology see.
+ */
+
+sk-radio-group {
+  --sk-radio-bg: var(--sk-color-surface, #ffffff);
+  --sk-radio-fg: var(--sk-color-text, #17141c);
+  --sk-radio-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-radio-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-radio-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+}
+
+sk-radio-group .sk-radio-group__label {
+  color: var(--sk-radio-fg);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  font-weight: var(--sk-text-base-weight, 400);
+}
+
+sk-radio-group .sk-radio-group__options {
+  display: flex;
+  flex-direction: column;
+}
+
+sk-radio-group .sk-radio-group__option {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-3, 0.75rem);
+  /* The whole row is the touch target, so the radio itself can stay square. */
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  color: var(--sk-radio-fg);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  cursor: pointer;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+sk-radio-group .sk-radio-group__control {
+  /* Visually restyled, never removed: the input stays focusable and keeps the
+     platform's arrow-key behavior. `appearance: none` clears the native box so
+     the brutalist one below draws instead. */
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  margin: 0;
+  border: var(--sk-border-thick, 3px) solid var(--sk-radio-border);
+  border-radius: 0;
+  background-color: var(--sk-radio-bg);
+  box-shadow: var(--sk-radio-shadow) var(--sk-color-shadow, #17141c);
+  cursor: pointer;
+  transition:
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+/*
+ * The selected dot is drawn, not an image: a centered square in the primary
+ * fill reads as a mark at any size and needs no asset. It matches the
+ * checkbox tick's stroke language.
+ */
+sk-radio-group .sk-radio-group__control:checked {
+  background-color: var(--sk-color-primary, #6d28d9);
+  border-color: var(--sk-color-shadow, #17141c);
+}
+
+sk-radio-group .sk-radio-group__control:checked::after {
+  content: "";
+  display: block;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-block-start: 0.1875rem;
+  margin-inline-start: 0.1875rem;
+  background-color: var(--sk-color-primary-fg, #ffffff);
+}
+
+/* The focus ring is a hard 3px stroke at 3px offset, matching every control. */
+sk-radio-group .sk-radio-group__control:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-radio-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-radio-group .sk-radio-group__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+sk-radio-group .sk-radio-group__option:has(.sk-radio-group__control:disabled) {
+  cursor: not-allowed;
+}
+
+sk-radio-group[data-invalid] {
+  --sk-radio-border: var(--sk-color-danger, #dc2626);
+}
+
+sk-radio-group .sk-radio-group__required {
+  color: var(--sk-color-danger, #dc2626);
+  margin-inline-start: var(--sk-space-1, 0.25rem);
+}
+
+/* Sizes change the label text, never the 44px row target. */
+sk-radio-group[size="sm"] .sk-radio-group__option {
+  font-size: var(--sk-text-sm-size, 0.875rem);
+}
+
+sk-radio-group[size="lg"] .sk-radio-group__option {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+}
+
+/*
+ * `quiet` drops the shadow so a group can sit inside a card without two
+ * competing hard edges. The stroke stays — the radio's boundary is what makes
+ * it a radio.
+ */
+sk-radio-group[variant="quiet"] {
+  --sk-radio-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+sk-radio-group .sk-radio-group__description {
+  margin: 0;
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-radio-group .sk-radio-group__error {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-1, 0.25rem);
+  margin: 0;
+  color: var(--sk-color-danger, #dc2626);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-radio-group .sk-radio-group__error-icon {
+  flex: none;
+  inline-size: var(--sk-icon-sm, 1rem);
+  block-size: var(--sk-icon-sm, 1rem);
+}
+
+/*
+ * Forced colors: the browser's own palette replaces every author color, so the
+ * brutalist shadow disappears entirely and the stroke is the only boundary left.
+ */
+@media (forced-colors: active) {
+  sk-radio-group {
+    --sk-radio-border: CanvasText;
+    --sk-radio-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  sk-radio-group[data-invalid] {
+    --sk-radio-border: LinkText;
+  }
+
+  sk-radio-group .sk-radio-group__control {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+  }
+
+  sk-radio-group .sk-radio-group__control:checked {
+    background-color: Canvas;
+  }
+
+  sk-radio-group .sk-radio-group__control:checked::after {
+    background-color: CanvasText;
+  }
+
+  sk-radio-group .sk-radio-group__required {
+    color: LinkText;
+  }
+}
+
+/*
+ * Reduced motion removes the shadow transition rather than shortening it: a 1ms
+ * change is still a change, and the radio's shadow does not need to move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-radio-group .sk-radio-group__control {
+    transition: none;
+  }
+}

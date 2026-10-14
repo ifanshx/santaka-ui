@@ -22,6 +22,8 @@ export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkSelect } from "./components/sk-select/sk-select.js"
 export { SkCheckbox } from "./components/sk-checkbox/sk-checkbox.js"
+export { SkSwitch } from "./components/sk-switch/sk-switch.js"
+export { SkRadioGroup } from "./components/sk-radio-group/sk-radio-group.js"
 export { SkLabel } from "./components/sk-label/sk-label.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
 export { SkSeparator } from "./components/sk-separator/sk-separator.js"
@@ -47,6 +49,9 @@ export const COMPONENTS = [
   "sk-input",
   "sk-select",
   "sk-checkbox",
+  "sk-switch",
+  "sk-radio-group",
+  "sk-label",
   "sk-link",
   "sk-separator",
   "sk-skeleton",
