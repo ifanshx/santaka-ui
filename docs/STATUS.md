@@ -258,8 +258,40 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   (separator ARIA, tablist role, nested-interactive tab, three dark-contrast
   token misuses), and added `--sk-color-primary-text` (gates 25 → 27).
 - **No legal preconditions.** Trademark, npm scope, domain, mascot originality.
-- **No consumer fixture.** `attw` and `publint` validate the packed tarball, but
-  nothing installs the package into a scratch project and imports it.
+- ~~**No consumer fixture.**~~ **Done** — `tests/consumer/run.mjs` packs all
+  eight packages with `pnpm pack`, installs the tarballs into a scratch project
+  outside the workspace, and runs ten checks the workspace cannot make. It found
+  a real defect on first run; see "What the consumer fixture found".
+
+### What the consumer fixture found
+
+`tests/consumer/run.mjs` installs the packed tarballs into a scratch project
+outside the workspace and exercises them the way a consumer would. Every other
+check in this repository resolves through the workspace, which is why three
+defects of one class shipped before it existed — `glass.css` built but absent
+from `exports`, 358 KB of unreachable CommonJS that nothing measured, and CLI
+source mode resolving a path that existed only in the monorepo.
+
+It found a fourth on its first run: **`loader/cdn.js`**. A one-line CommonJS
+shim, `module.exports = require('../dist/cjs/loader.cjs.js')`, that the exports
+map never names — so it was unreachable *and* it pointed at a file
+`strip-cjs-output.mjs` deletes. A dead CommonJS file violates the ESM-only
+contract; a dead CommonJS file whose target does not exist is also a broken
+artifact. It shipped in every tarball because nothing looked inside `loader/`.
+Fixed by adding it to the strip list.
+
+Two checks exist only because the fixture can make them:
+
+- **The universal packages typecheck without `@types/node`.** A component library
+  whose public types use `Buffer` or `process` forces every consumer to install
+  Node types. The fixture compiles with `skipLibCheck: false` — without it,
+  TypeScript never reads the shipped `.d.ts` and the check would pass on
+  anything.
+- **The loader registers nothing on import.** ADR-005's lazy path exists for SSR;
+  a server render that upgrades the tags is the R2 mismatch risk.
+
+Both halves are negative-tested: removing `./glass.css` from `styles`' exports
+fails two checks, and the harness was verified to pass only after the fix.
 
 ### Unmeasured
 

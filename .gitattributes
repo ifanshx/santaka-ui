@@ -1,8 +1,14 @@
-# Shell scripts run in Linux containers (scripts/visual-baseline-entrypoint.sh
-# is invoked inside the pinned Playwright image), so they must keep LF endings
-# regardless of the checkout's `core.autocrlf`. Without this rule a Windows
-# clone writes CRLF and bash fails on the first line with a stray `\r`.
-*.sh text eol=lf
+# Every text file is LF in the working tree, on every platform.
+#
+# This is not cosmetic: Prettier is configured with `endOfLine: "lf"`, so a
+# Windows checkout that converts line endings to CRLF makes `prettier --check .`
+# fail on files nobody edited. That happened — a `git checkout <file>` to undo a
+# deliberate probe rewrote the file with CRLF and broke `pnpm run verify`, which
+# is a confusing failure for a change that touched nothing.
+#
+# It also matters for shell scripts: `scripts/visual-baseline-entrypoint.sh` runs
+# inside a Linux container, where a stray `\r` on the shebang line is a failure.
+* text=auto eol=lf
 
 # PNG baselines are binary; never let Git touch their bytes.
 *.png binary

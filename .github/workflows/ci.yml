@@ -217,3 +217,31 @@ jobs:
 
       - name: End-to-end
         run: pnpm --filter @santaka-ui/cli test:e2e
+
+  consumer:
+    name: consumer fixture (packed tarballs, scratch project)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Every package must be built before it is packed, because the tarballs are
+      # what the fixture installs.
+      - run: pnpm run build
+
+      # `plan.md` section 17: "Public TypeScript types and package exports validate in clean
+      # consumer projects ... Nothing has yet installed the package into a scratch
+      # project and imported it, which is what this gate actually asks for." This
+      # job is that gate: it packs all eight packages, installs the tarballs into a
+      # project outside the workspace, and exercises them the way a consumer would.
+      - name: Consumer fixture
+        run: pnpm run test:consumer

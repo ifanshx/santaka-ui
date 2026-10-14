@@ -30,6 +30,13 @@ const pkgRoot = resolve(here, "..")
 /**
  * Paths Stencil emits that must not ship. The loader's `.cjs.js` is included
  * because `esmLoaderPath` writes both formats side by side.
+ *
+ * `loader/cdn.js` is the subtle one, and the consumer fixture is what found it:
+ * it is a one-line CommonJS shim — `module.exports = require('../dist/cjs/loader.cjs.js')`
+ * — that the exports map never names, so it is unreachable *and* it points at a
+ * file this script deletes. A dead CommonJS file is a policy violation; a dead
+ * CommonJS file whose target does not exist is also a broken artifact, and it
+ * shipped in every tarball because nothing looked inside `loader/`.
  */
 const CJS_PATHS = [
   join(pkgRoot, "dist", "cjs"),
@@ -37,6 +44,8 @@ const CJS_PATHS = [
   join(pkgRoot, "dist", "index.cjs.js.map"),
   join(pkgRoot, "loader", "index.cjs.js"),
   join(pkgRoot, "loader", "index.cjs.js.map"),
+  join(pkgRoot, "loader", "cdn.js"),
+  join(pkgRoot, "loader", "cdn.js.map"),
 ]
 
 /**

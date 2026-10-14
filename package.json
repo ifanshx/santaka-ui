@@ -23,7 +23,8 @@
     "size": "turbo run size",
     "validate:packages": "turbo run validate:package",
     "docs:tokens": "pnpm --filter @santaka-ui/tokens build",
-    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run size && pnpm run validate:packages"
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run size && pnpm run validate:packages",
+    "test:consumer": "node tests/consumer/run.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
