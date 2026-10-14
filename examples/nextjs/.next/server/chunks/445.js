@@ -1,1 +1,0 @@
-"use strict";exports.id=445,exports.ids=[445],exports.modules={8445:(a,b,c)=>{c.r(b),c.d(b,{sk_skeleton:()=>e});var d=c(5576);let e=class{constructor(a){this.variant="text",this.direction="ltr",(0,d.r)(this,a)}render(){return(0,d.h)(d.H,{key:"42dbdea13b06a3b98de4da8a8bb6488ea5a54e0e","data-slot":"skeleton","aria-hidden":"true"})}}}};

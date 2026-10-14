@@ -32,3 +32,6 @@ pnpm-debug.log*
 # Changesets artifacts
 .changeset/*.md
 !.changeset/README.md
+# Next.js build output
+dist-test-tmp
+examples/nextjs/.next/
