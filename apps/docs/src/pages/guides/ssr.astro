@@ -1,0 +1,75 @@
+---
+/**
+ * Server rendering and hydration (ADR-005).
+ *
+ * §10 lists SSR and hydration as required guides. The content here is the ADR's
+ * decision: two registration paths, chosen by the consumer, with the lazy path for
+ * SSR.
+ */
+import Layout from "../../layouts/Layout.astro"
+---
+
+<Layout title="Server rendering and hydration" description="How Santaka UI registers custom elements under SSR.">
+  <h1>Server rendering and hydration</h1>
+
+  <p class="lede">
+    A custom element tag in server output is inert HTML until something calls <code>customElements.define</code>.
+    Santaka UI gives you two paths, and the choice is about <em>when</em> registration happens.
+  </p>
+
+  <section>
+    <h2>The eager path — the default</h2>
+    <pre><code>import "@santaka-ui/web-components"</code></pre>
+    <p>
+      Importing the package registers every element. This is the documented path for plain HTML, React, Vue, Svelte, and
+      Angular where the tag is known at build time.
+    </p>
+  </section>
+
+  <section>
+    <h2>The lazy path — for SSR</h2>
+    <pre><code>{`import { defineCustomElements } from "@santaka-ui/web-components/loader"
+
+defineCustomElements()`}</code></pre>
+    <p>
+      The loader defines nothing on import, which is the property that makes it safe on a server: if it registered at
+      import time, the server pass would upgrade the tags and the client would then see a different tree than the server
+      produced — a hydration mismatch.
+    </p>
+    <p>
+      The consumer fixture asserts this: importing the loader must leave <code>customElements.get("sk-button")</code>
+      undefined until <code>defineCustomElements()</code> is called.
+    </p>
+  </section>
+
+  <section>
+    <h2>Next.js</h2>
+    <p>
+      The <a href="https://github.com/santaka-ui/santaka-ui/tree/main/examples/nextjs">Next.js example</a> proves the
+      path end to end: the server renders every shipped tag with its public attributes, defines nothing in any server
+      chunk, upgrades each element through the lazy loader, applies the scoped styles, and hydrates with no mismatch
+      errors.
+    </p>
+  </section>
+
+  <section>
+    <h2>What is safe on a server</h2>
+    <ul>
+      <li>Rendering the tags with their public attributes — they are inert HTML until upgraded.</li>
+      <li>Importing the tokens and the component CSS — neither touches the DOM.</li>
+      <li>Importing the loader — it defines nothing at import.</li>
+    </ul>
+    <p>What is not safe is importing the eager entry in a server bundle, or calling <code>defineCustomElements()</code> there.</p>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+</style>

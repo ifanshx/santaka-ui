@@ -35,3 +35,6 @@ pnpm-debug.log*
 # Next.js build output
 dist-test-tmp
 examples/nextjs/.next/
+
+# Astro generated types and cache
+apps/docs/.astro/

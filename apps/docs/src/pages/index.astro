@@ -1,0 +1,112 @@
+---
+/**
+ * Component catalogue index (§10, "searchable component catalog").
+ *
+ * Grouped by stability, because §10 asks for separate Stable / Preview /
+ * Experimental / Deprecated labels — and the labels come from the registry
+ * rather than from an author's heading (ADR-006).
+ */
+import Layout from "../layouts/Layout.astro"
+import { componentPages, stabilityGroups } from "../lib/components"
+
+const pages = componentPages()
+const groups = stabilityGroups()
+---
+
+<Layout title="Components" description={`${pages.length} Santaka UI components, generated from the registry.`}>
+  <h1>Components</h1>
+  <p class="lede">
+    Every page below is generated from the same registry entry the CLI installs from, the MCP server answers from, and
+    <code>llms.txt</code> is written from. Nothing here is hand-maintained, so a prop rename cannot reach one and miss
+    another.
+  </p>
+
+  {groups.map((group) => (
+    <section class="group">
+      <h2>
+        <span class={`badge badge--${group.label}`}>{group.label}</span>
+        <span class="count">{group.pages.length}</span>
+      </h2>
+      <ul class="cards">
+        {group.pages.map((page) => (
+          <li class="card">
+            <a href={`/components/${page.name}/`}>
+              <strong>{page.tag}</strong>
+              <span class="summary">{page.summary}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <footer class="note">
+    <p>
+      Machine-readable versions of this catalogue: <a href="/registry/index.json">registry/index.json</a>,
+      <a href="/llms.txt">llms.txt</a>, and <a href="/llms-full.txt">llms-full.txt</a>.
+    </p>
+  </footer>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 60ch;
+    color: var(--muted);
+  }
+  .group h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block-start: 2.5rem;
+  }
+  .count {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .cards {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.75rem;
+  }
+  .card a {
+    display: block;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+    border-radius: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card a:hover {
+    background: var(--surface-raised);
+  }
+  .summary {
+    display: block;
+    margin-block-start: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid currentColor;
+  }
+  .badge--stable {
+    color: #0d9488;
+  }
+  .badge--preview,
+  .badge--experimental {
+    color: #b45309;
+  }
+  .badge--deprecated {
+    color: #b91c1c;
+  }
+  .note {
+    margin-block-start: 3rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,14 @@
+/*
+ * Global stylesheet for the docs site, bundling the packages' own CSS.
+ *
+ * Imported from the layout, so Astro processes it — including the `node_modules`
+ * imports below — and emits one external stylesheet. That is what makes the
+ * tokens and component chrome genuinely bundled rather than copied.
+ *
+ * The import order is the documented sequence (§4's distribution contract):
+ * tokens first, then the component stylesheet. Reversing it would leave the
+ * components resolving tokens that have not been declared yet.
+ */
+@import "@santaka-ui/tokens/css";
+@import "@santaka-ui/web-components/santaka.css";
+@import "./site.css";

@@ -1,0 +1,82 @@
+---
+/**
+ * Quick start (§10: "quick start by framework and install mode").
+ *
+ * The install lines are the documented sequence from §4's distribution contract,
+ * and they are the same lines `santaka init` prints and `get_usage` returns — one
+ * contract, three consumers.
+ */
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="Quick start" description="Install Santaka UI and add your first component.">
+  <h1>Quick start</h1>
+
+  <section>
+    <h2>1. Install</h2>
+    <p>For any framework, or none:</p>
+    <pre><code>pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka-ui/styles</code></pre>
+    <p>With React, add the adapter as well — it wraps the same elements:</p>
+    <pre><code>pnpm add @santaka-ui/react @santaka-ui/web-components @santaka-ui/tokens @santaka-ui/styles</code></pre>
+  </section>
+
+  <section>
+    <h2>2. Import the CSS once, at your entry</h2>
+    <pre><code>{`import "@santaka-ui/tokens/css"
+import "@santaka-ui/styles/index.css"
+import "@santaka-ui/web-components"
+import "@santaka-ui/web-components/santaka.css"`}</code></pre>
+    <p>
+      React consumers swap the registration line for the adapter's stylesheet, because the adapter registers the
+      elements itself:
+    </p>
+    <pre><code>{`import "@santaka-ui/tokens/css"
+import "@santaka-ui/styles/index.css"
+import "@santaka-ui/react/styles.css"`}</code></pre>
+    <p>
+      The order matters: tokens first, then the component chrome. Reversing it leaves components resolving tokens that
+      have not been declared yet.
+    </p>
+  </section>
+
+  <section>
+    <h2>3. Use a component</h2>
+    <pre><code>{`<sk-button variant="primary">Save changes</sk-button>`}</code></pre>
+    <p>
+      Or, in React, the adapter — same element, typed props:
+    </p>
+    <pre><code>{`import { Button } from "@santaka-ui/react"
+
+<Button variant="primary">Save changes</Button>`}</code></pre>
+  </section>
+
+  <section>
+    <h2>4. Or let the CLI do it</h2>
+    <pre><code>{`npx santaka init
+npx santaka add button
+npx santaka doctor`}</code></pre>
+    <p>
+      <code>init</code> detects your framework and prints the install commands without running them — a scaffolder that
+      shells out to a package manager cannot tell a network failure from a permissions failure from a version conflict.
+      <code>add</code> copies the component source in, so you own it (ADR-009).
+    </p>
+  </section>
+
+  <section>
+    <h2>Guides</h2>
+    <ul>
+      <li><a href="/guides/ssr/">Server rendering and hydration</a></li>
+      <li><a href="/guides/forms/">Forms</a></li>
+      <li><a href="/guides/theming/">Theming and design tokens</a></li>
+      <li><a href="/guides/accessibility/">Accessibility</a></li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+</style>

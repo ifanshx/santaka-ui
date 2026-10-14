@@ -1,0 +1,149 @@
+---
+/**
+ * Search UI.
+ *
+ * Pagefind is a build-time index served as static files, so this island loads
+ * those files at runtime and searches in the browser. No API key, no hosted
+ * service, and nothing leaves the page — which is why ADR-006 chose it over a
+ * hosted search dependency.
+ *
+ * The index only exists after `pagefind --site dist` has run, so a missing index
+ * is reported in the UI rather than failing the build: a dev server has no index,
+ * and that must not look like a broken site.
+ */
+---
+
+<div class="search" data-search>
+  <label class="field">
+    <span class="sr-only">Search the documentation</span>
+    <input type="search" placeholder="Search components…" data-search-input autocomplete="off" />
+  </label>
+  <ul class="results" data-search-results hidden></ul>
+  <p class="status" data-search-status hidden></p>
+</div>
+
+<script>
+  const root = document.querySelector("[data-search]")
+  const input = root?.querySelector("[data-search-input]")
+  const list = root?.querySelector("[data-search-results]")
+  const status = root?.querySelector("[data-search-status]")
+
+  let pagefind
+  try {
+    // `@vite-ignore`: the bundle is written into `dist/pagefind/` by the
+    // `pagefind --site dist` step, after Astro builds, so it does not exist when
+    // this module is compiled. The path is absolute because the bundle sits at
+    // the site root, not next to this component.
+    pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js")
+  } catch {
+    if (status) {
+      status.hidden = false
+      status.textContent =
+        "Search index not built. Run `pagefind --site dist` after the site build."
+    }
+    if (input) input.disabled = true
+  }
+
+  const render = async (results) => {
+    if (!list) return
+    list.textContent = ""
+    if (results.length === 0) {
+      if (status) {
+        status.hidden = false
+        status.textContent = "No results."
+      }
+      list.hidden = true
+      return
+    }
+    if (status) status.hidden = true
+    list.hidden = false
+    for (const result of results.slice(0, 10)) {
+      const data = await result.data()
+      const item = document.createElement("li")
+      const link = document.createElement("a")
+      link.href = data.url
+      const title = document.createElement("strong")
+      title.textContent = data.meta?.title ?? data.url
+      const excerpt = document.createElement("span")
+      // Pagefind's excerpt is HTML with <mark> around the match; it is built from
+      // this site's own pages, so it is as trusted as the pages themselves.
+      excerpt.innerHTML = data.excerpt ?? ""
+      link.append(title, excerpt)
+      item.appendChild(link)
+      list.appendChild(item)
+    }
+  }
+
+  let timer
+  input?.addEventListener("input", () => {
+    const query = input.value.trim()
+    clearTimeout(timer)
+    if (!query || !pagefind) {
+      if (list) list.hidden = true
+      if (status) status.hidden = true
+      return
+    }
+    timer = setTimeout(async () => {
+      const search = (await pagefind.debouncedSearch?.(query)) ?? (await pagefind.search(query))
+      await render(search?.results ?? search ?? [])
+    }, 150)
+  })
+</script>
+
+<style>
+  .search {
+    position: relative;
+    max-inline-size: 24rem;
+  }
+  .field {
+    display: block;
+  }
+  input {
+    inline-size: 100%;
+    padding: 0.35rem 0.6rem;
+    border: var(--stroke) solid var(--edge);
+    border-radius: 0;
+    background: var(--sk-color-surface);
+    color: inherit;
+    font: inherit;
+  }
+  .results {
+    position: absolute;
+    inset-inline: 0;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    background: var(--sk-color-surface);
+    border: var(--stroke) solid var(--edge);
+    z-index: 10;
+    max-block-size: 22rem;
+    overflow-y: auto;
+  }
+  .results a {
+    display: block;
+    padding: 0.4rem 0.6rem;
+    text-decoration: none;
+    color: inherit;
+    border-block-end: 1px solid var(--edge);
+  }
+  .results a:hover {
+    background: var(--surface-raised);
+  }
+  .results span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .status {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0.25rem 0 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

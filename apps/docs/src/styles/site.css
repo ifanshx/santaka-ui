@@ -1,0 +1,65 @@
+/*
+ * Site stylesheet: only what the docs shell itself needs.
+ *
+ * Component and token styling is bundled through `src/styles/global.css`, not
+ * served from `public/` — because the packages' exports map is the contract
+ * (ADR-012), and a path in `public/` would be a second copy of the same bytes
+ * that could drift.
+ */
+
+:root {
+  --muted: #5b5566;
+  --edge: #d8d3e0;
+  --surface-raised: #f4f1f8;
+  --stroke: 3px;
+}
+
+[data-sk-theme="dark"] {
+  --muted: #a49fb0;
+  --edge: #3a3543;
+  --surface-raised: #211d28;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  background: var(--sk-color-surface);
+  color: var(--sk-color-text);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-block-end: var(--stroke) solid var(--edge);
+}
+
+.brand {
+  font-weight: 800;
+  text-decoration: none;
+  color: inherit;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+main {
+  max-inline-size: 60rem;
+  margin-inline: auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+#theme-toggle {
+  background: none;
+  border: var(--stroke) solid var(--edge);
+  color: inherit;
+  cursor: pointer;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0;
+}

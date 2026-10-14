@@ -1,0 +1,133 @@
+---
+/**
+ * Site shell.
+ *
+ * The component CSS and token imports are the documented sequence (§4's
+ * distribution contract): tokens, then the component stylesheet. Light/dark is an
+ * attribute on the root element, which works before any script runs — the same
+ * contract the components ship with (ADR-005, no flash of wrong theme).
+ */
+import "../styles/global.css"
+import Search from "../components/Search.astro"
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description } = Astro.props
+---
+
+<!doctype html>
+<html lang="en" data-sk-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+
+    <script is:inline>
+      // Set before paint, so a dark reader never sees a light flash. The same
+      // storage key the components' own example page uses, so a preference
+      // carries across this site and a consumer's app.
+      try {
+        const stored = localStorage.getItem("sk-theme") || "system"
+        const dark =
+          stored === "dark" ||
+          (stored === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+        document.documentElement.setAttribute("data-sk-theme", dark ? "dark" : "light")
+      } catch {}
+    </script>
+  </head>
+
+  <body>
+    <header class="bar">
+      <a class="brand" href="/">Santaka UI</a>
+      <Search />
+      <nav>
+        <a href="/">Components</a>
+        <a href="/registry/index.json">Registry</a>
+        <a href="/llms.txt">llms.txt</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark theme">◐</button>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<script>
+  // The toggle is the only script the shell needs. It writes the same attribute
+  // the components read, so switching theme needs no re-render.
+  const toggle = document.getElementById("theme-toggle")
+  toggle?.addEventListener("click", () => {
+    const root = document.documentElement
+    const next = root.getAttribute("data-sk-theme") === "dark" ? "light" : "dark"
+    root.setAttribute("data-sk-theme", next)
+    try {
+      localStorage.setItem("sk-theme", next)
+    } catch {}
+  })
+</script>
+
+<style is:global>
+  :root {
+    --muted: #5b5566;
+    --edge: #d8d3e0;
+    --surface-raised: #f4f1f8;
+    --stroke: 3px;
+  }
+
+  [data-sk-theme="dark"] {
+    --muted: #a49fb0;
+    --edge: #3a3543;
+    --surface-raised: #211d28;
+  }
+
+  body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+    background: var(--sk-color-surface);
+    color: var(--sk-color-text);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    border-block-end: var(--stroke) solid var(--edge);
+  }
+
+  .brand {
+    font-weight: 800;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+
+  main {
+    max-inline-size: 60rem;
+    margin-inline: auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  #theme-toggle {
+    background: none;
+    border: var(--stroke) solid var(--edge);
+    color: inherit;
+    cursor: pointer;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0;
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+/**
+ * A live preview (§10).
+ *
+ * The element is rendered in the page's own HTML and upgraded in the browser from
+ * **`@santaka-ui/web-components`** — the package a consumer installs — not from a
+ * path inside this repository. A preview that only worked in this workspace would
+ * be a demo of something nobody can install, which is the defect class the
+ * consumer fixture (§17) was built to catch.
+ *
+ * This is also why it is an island: Astro ships no framework runtime by default,
+ * so the page stays static except for this one hydration boundary.
+ */
+interface Props {
+  /** The element name, e.g. `sk-button`. */
+  tag: string
+  /** Attributes as authored, e.g. `variant="primary"`. */
+  attrs?: Record<string, string>
+  /** Text content. */
+  text?: string
+}
+
+const { tag, attrs = {}, text = "" } = Astro.props
+const attrString = Object.entries(attrs)
+  .map(([key, value]) => `${key}="${value.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`)
+  .join(" ")
+---
+
+<div class="preview" data-preview>
+  <div class="stage">
+    <Fragment set:html={`<${tag} ${attrString}>${text}</${tag}>`} />
+  </div>
+  <p class="tip">
+    Rendered from <code>@santaka-ui/web-components</code>.
+  </p>
+</div>
+
+<script>
+  // Registering the elements is a side effect, so it runs in the browser only —
+  // and it is what makes the preview real rather than a picture of one.
+  import("@santaka-ui/web-components").catch((error) => {
+    document.querySelectorAll("[data-preview] .stage").forEach((stage) => {
+      const note = document.createElement("p")
+      note.className = "tip tip--error"
+      note.textContent = `Preview failed to load: ${error?.message ?? error}`
+      stage.after(note)
+    })
+  })
+</script>
+
+<style>
+  .preview {
+    border: var(--stroke) solid var(--edge);
+    margin-block: 1.5rem;
+  }
+  .stage {
+    padding: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .tip {
+    border-block-start: 1px solid var(--edge);
+    margin: 0;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .tip--error {
+    color: #b91c1c;
+  }
+</style>
