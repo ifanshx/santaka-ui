@@ -19,7 +19,8 @@
   "collection:module": "./dist/esm/index.js",
   "files": [
     "dist/",
-    "loader/"
+    "loader/",
+    "src/components"
   ],
   "exports": {
     ".": {

@@ -13,7 +13,8 @@ and Storybook do not exist yet.
 
 `pnpm run verify` exits 0 from a cold cache. **626 tests pass** (48 token, 20
 utilities, 138 core, 159 React, 261 Playwright and barrel across the universal
-package, plus the MCP server). All seven packages pass `publint` and `attw --pack`.
+package, plus the MCP server and the CLI). All eight packages pass `publint` and
+`attw --pack`.
 
 ## Done
 
@@ -139,7 +140,7 @@ measured budgets.
 
 ### Decisions recorded
 
-**15 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+**16 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
 pipeline, and why `style-dictionary` is not used), 003 (behavior ownership:
 Web Components owns every component, React adapts, no Radix), 004 (naming,
 scope, license), 005 (SSR and hydration), 008 (accessibility testing stack),
@@ -171,6 +172,32 @@ on Firefox, 261 on WebKit.** The flake is `a11y.e2e.ts` in the dark theme on
 Firefox — an axe scan that passed on retry, not a behavior difference. That is a
 real datapoint the matrix's predecessors could not have offered, because the
 matrix did not exist and Firefox/WebKit ran only in CI.
+
+### CLI
+
+`@santaka-ui/cli` is the eighth publishable package, and the v1.0 workflow
+surface: `init`, `add`, `list`, `doctor`, `diff`, `theme init`, `registry`, and
+`update`. **37 unit tests** cover detection, path safety, the manifest, the
+diff, and rollback; **18 end-to-end tests** drive the built binary in a real
+subprocess against a real temporary project, because an exit code is only
+observable from a process.
+
+The three rules that shape it:
+
+- **A run either completes or leaves nothing behind.** Writes go through a
+  journal: every destination is backed up before it is replaced, and a failure
+  replays the journal backwards. Verified in the e2e suite by making a later
+  write fail and asserting the earlier file was restored.
+- **A modified file is never overwritten without consent.** A conflict prints a
+  unified diff, exits `2`, and writes nothing. `--skip` leaves the edit and the
+  drift stays visible, because the manifest keeps the hash of the last bytes the
+  CLI wrote rather than the bytes on disk (ADR-009).
+- **The registry is untrusted, and validation is not review.** Destinations are
+  confirmed inside the project root, source bytes are hashed against the entry's
+  declared checksum, and `registry add` says plainly that schema validation is
+  not the same as review.
+
+A CI job runs both suites on Linux, macOS, and Windows, per §8.
 
 ### AI surface
 
@@ -207,11 +234,10 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- **3 ADRs missing**: 006 (docs site framework and search), 007 (registry
-  hosting model), 009 (source-mode upgrade path). Each is a deadline that has
-  not arrived: the docs site and the CLI are both unbuilt, so those decisions
-  have nothing to bind yet. The ADRs that *were* overdue are now written — see
-  "Decisions recorded".
+- **2 ADRs missing**: 006 (docs site framework and search), 007 (registry
+  hosting model). Both are deadlines for work that has not started — there is no
+  docs site and no hosted registry — so those decisions have nothing to bind yet.
+  The ADRs that *were* overdue are now written — see "Decisions recorded".
 - ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
   ADR-005's consequences): server-rendered tags with public attributes, no
   `customElements.define` in any server chunk, clean hydration through the lazy

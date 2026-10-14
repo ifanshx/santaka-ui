@@ -21,6 +21,7 @@ quick start.
 | `@santaka-ui/web-components` | The universal custom elements. The default owner of component behavior. |
 | `@santaka-ui/react` | React adapter over the same custom elements. |
 | `@santaka-ui/mcp` | MCP server over the registry metadata, for AI tooling. No model, no network. |
+| `@santaka-ui/cli` | The `santaka` CLI: project detection, component install, diagnostics. |
 
 ## Requirements
 

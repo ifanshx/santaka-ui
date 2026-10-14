@@ -1,0 +1,52 @@
+{
+  "name": "@santaka-ui/cli",
+  "version": "0.1.0",
+  "description": "Santaka UI CLI: detect a project, install components, run diagnostics.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "bin": {
+    "santaka": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/mark-cli-executable.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "node --test e2e/*.test.mjs",
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
+  },
+  "dependencies": {
+    "@santaka-ui/core": "workspace:^",
+    "@santaka-ui/mcp": "workspace:^",
+    "@santaka-ui/tokens": "workspace:^",
+    "@santaka-ui/web-components": "workspace:^",
+    "cac": "6.7.14",
+    "kleur": "4.1.5"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

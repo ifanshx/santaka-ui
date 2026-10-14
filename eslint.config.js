@@ -87,5 +87,15 @@ export default tseslint.config(
       globals: { ...globals.node, ...globals.browser },
     },
   },
+  {
+    // CLI end-to-end tests run the built binary in a subprocess, so they use
+    // `process` and `node:*` directly. They are `.mjs`, which the TypeScript
+    // block above does not cover, so they would otherwise be linted as browser
+    // scripts and fail on `process` being undefined.
+    files: ["**/e2e/**/*.mjs"],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
   prettier,
 )

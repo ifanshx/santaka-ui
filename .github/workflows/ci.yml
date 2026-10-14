@@ -181,3 +181,39 @@ jobs:
       # serialization rather than only the tool functions.
       - name: Smoke test every tool
         run: pnpm --filter @santaka-ui/mcp test:smoke
+
+  cli:
+    name: CLI end-to-end
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      # plan.md section 8 requires CLI behavior tested on Windows, macOS, and Linux.
+      # The paths, the exit codes, and the executable bit all differ per platform,
+      # and each has been wrong in some CLI at some point.
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @santaka-ui/core build
+      - run: pnpm --filter @santaka-ui/web-components build
+      - run: pnpm --filter @santaka-ui/cli build
+
+      # The unit tests cover the pieces; the e2e run drives the built binary in a
+      # real subprocess against a real temporary project, which is the only way to
+      # assert an exit code.
+      - name: Unit tests
+        run: pnpm --filter @santaka-ui/cli test
+
+      - name: End-to-end
+        run: pnpm --filter @santaka-ui/cli test:e2e
