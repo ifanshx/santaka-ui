@@ -64,6 +64,28 @@ the brutalist treatment — 3px stroke,
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
+### The third FACE callback
+
+All six form controls implement three callbacks: `formResetCallback`,
+`formDisabledCallback`, and `formStateRestoreCallback`. The first two were
+covered per component; the third was implemented everywhere and asserted nowhere
+until `e2e/form-state-restore.e2e.ts` (9 tests).
+
+Driving it honestly took a measurement rather than an assumption. The callback
+fires on a session restore, which a page test cannot trigger, and the obvious
+substitute — the back/forward cache — **does not fire it**: navigating away and
+calling `page.goBack()` restores the DOM intact in Chromium, so the value
+survives with the callback never running. A test built on that navigation would
+pass with the callback deleted, which is worse than no test. The suite invokes
+`el.formStateRestoreCallback(state, "restore")` directly — the platform's own
+call with the platform's own arguments — and asserts the part that is this
+library's contract: the value reaches the prop, the rendered control, and
+`FormData`; no `sk-value-change` fires, because a restore is not a user action;
+and an `"autocomplete"` mode is ignored.
+
+Negative-tested by gutting the callback: one test fails in Input, two in
+Checkbox (the boolean path fails in both directions).
+
 ### Two materials, and the budgets that measure them
 
 `materials.e2e.ts` asserts the system's two-material rule directly: chrome is

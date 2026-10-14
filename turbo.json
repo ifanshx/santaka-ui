@@ -1,5 +1,17 @@
 {
+  "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["tsconfig.json", "**/.env.*local"],
+  // Half the available CPUs, not turbo's default of ten concurrent tasks.
+  //
+  // The default does not look at the machine, and every test task here is itself
+  // a runner that opens one worker process per core: eight packages × a
+  // six-worker pool on a six-core machine is dozens of processes competing for
+  // the same six cores. The symptom was vitest failing to start a forks worker —
+  // `Timeout waiting for worker to respond` — in whichever package lost the race,
+  // which meant a `verify` run failed on a package nobody had touched. Bounding
+  // the task count is the fix that matches the cause; raising the worker timeout
+  // would only move it.
+  "concurrency": "50%",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
