@@ -64,6 +64,19 @@ the brutalist treatment — 3px stroke,
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
+### Documentation site
+
+ADR-006 is recorded — Astro with content collections, Pagefind for search,
+static by default with preview islands — which closes the last §18 ADR. The
+decision was overdue rather than premature: `apps/docs/public/` is already
+generated into on every build, so the framework question had a live answer to
+bind.
+
+What is committed by it: component pages are generated from the registry, so a
+prop rename reaches the docs, the CLI, the MCP server, and `llms.txt` together
+or not at all; search is a build-time index with no hosted dependency; and
+previews import the shipped package rather than a monorepo path, so a preview
+cannot only work here.
 ### Registry hosting
 
 ADR-007 settles §9's question: registries are **static versioned JSON**, not a
@@ -180,7 +193,7 @@ measured budgets.
 
 ### Decisions recorded
 
-**17 of 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
+**All 18 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
 pipeline, and why `style-dictionary` is not used), 003 (behavior ownership:
 Web Components owns every component, React adapts, no Radix), 004 (naming,
 scope, license), 005 (SSR and hydration), 008 (accessibility testing stack),
@@ -275,10 +288,12 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- **1 ADR missing**: 006 (docs site framework and search). Its deadline is for
-  work that has not started — there is no docs site — so the decision has nothing
-  to bind yet. The ADRs that *were* overdue are now written — see "Decisions
-  recorded".
+- ~~**1 ADR missing**~~ — **all eighteen complete.** ADR-006 (docs site: Astro
+  with content collections, Pagefind for search) was the last one, and it is
+  recorded rather than deferred, because the directory it will fill is already
+  written to on every build: `apps/docs/public/` carries `llms.txt`,
+  `llms-full.txt`, and the `registry/` payload. The decision was overdue, not
+  premature.
 - ~~**No Next.js SSR proof.**~~ **Done** — `examples/nextjs` proves it (see
   ADR-005's consequences): server-rendered tags with public attributes, no
   `customElements.define` in any server chunk, clean hydration through the lazy

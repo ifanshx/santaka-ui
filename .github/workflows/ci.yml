@@ -268,5 +268,8 @@ jobs:
       # ADR-007: the registry is static versioned JSON, not a live endpoint. These
       # tests serve the published payload over HTTP and drive the CLI against it,
       # so the remote path is exercised rather than assumed.
-      - name: Registry tests
+      #
+      # ADR-006: the docs source is the registry, so the same suite asserts that a
+      # prop rename reaches the generated reference — a hand-edited page fails.
+      - name: Registry and docs-source tests
         run: pnpm run test:registry
