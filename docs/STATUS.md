@@ -12,10 +12,12 @@ twenty-one shipped components; the CLI, registry hosting, and documentation
 site exist and are tested. **Storybook does not exist yet** — it is the one
 section 10 deliverable still outstanding.
 
-`pnpm run verify` exits 0 from a cold cache. **626 tests pass** (48 token, 20
-utilities, 138 core, 159 React, 261 Playwright and barrel across the universal
-package, plus the MCP server and the CLI). All nine packages pass `publint` and
-`attw --pack`.
+`pnpm run verify` exits 0 from a cold cache. **827 tests pass** — 48 token, 20
+utilities, 145 core, 164 React, 95 Vue, 19 MCP server, 37 CLI, 285 Chromium
+Playwright in the universal package, and 7 in each of the React and Vue examples.
+(The Playwright figure is the `chromium-baseline` project, which is what runs
+locally; CI's `browsers` job runs the same 285 on Firefox and WebKit.) All nine
+publishable packages pass `publint` and `attw --pack`.
 
 ## Done
 
@@ -112,6 +114,40 @@ The fix had to keep the radios' shared `name`, because that is what groups them
 and what Firefox's arrow-key navigation walks — measured: Chromium moved between
 radios without it, Firefox did not.
 
+### Vue example
+
+§17's gate names three targets — "React, **Vue**, and the universal package" —
+and the Vue target was the last one missing. `examples/vue-vite` closes it: a
+real Vite SPA consuming `@santaka-ui/vue` through its published `exports`, whose
+`e2e/form-submission.e2e.ts` renders all six form controls through the adapter,
+submits a plain `<form>`, and reads the entries back out of the browser's own
+`FormData`. It runs as its own CI job (`vue-example`).
+
+It is a separate job from React's rather than a second step in it, because the
+mechanism differs in a way that can hide a defect:
+
+> Vue chooses between writing a **property** and an **attribute** with
+> `key in element`. For `name` that choice is not the same for every component.
+> `Checkbox`, `Switch`, and `Select` declare **no `name` prop at all** — a
+> form-associated custom element is named by its host *attribute*, which is what
+> the platform reads — so the check is false and Vue writes the attribute.
+> `RadioGroup` **does** declare it (`@Prop({ reflect: true }) name = ""`), so Vue
+> writes the property, and the element reflects it back to the attribute. Both
+> routes have to end in a submitted entry, and only a real browser shows that
+> they do.
+
+The example did not find a defect, and saying so plainly is the point: the `name`
+bug was found and fixed on the React side, and the Vue adapters were written
+afterwards with that failure in mind. What it proves is that the fix holds on the
+route Vue takes. Negative-tested by dropping `name` from the Checkbox adapter:
+two tests fail.
+
+The adapter's server-render path is covered separately, in
+`tests/consumer/run.mjs`, which renders it through `vue/server-renderer` from the
+packed tarball and fails if a component touches `document` during `setup` — the
+failure ADR-005's R2 names.
+
+### Dependency audits
 
 §17 asks for license and security review; both are now scripts in CI rather than
 a task someone remembers.
@@ -221,11 +257,12 @@ asserted against the `default-value` attribute when the element declares it as a
 prop, so Vue writes the property; the test reads the property, which is the
 contract.
 
-The adapter package is not yet exercised in a browser or through the consumer
-fixture: `tests/consumer/run.mjs` now packs nine packages and includes `vue`,
-installing its tarball into the scratch project and rendering it through
-`vue/server-renderer` so the shipped declarations are type-checked from a
-tarball and the SSR path is exercised the way React's is.
+The adapter package is exercised in a browser and through the consumer fixture:
+`examples/vue-vite` submits every form control through a plain form (see the Vue
+example above, and the `vue-example` CI job), and `tests/consumer/run.mjs` packs
+nine packages and includes `vue`, installing its tarball into the scratch project
+and rendering it through `vue/server-renderer` so the shipped declarations are
+type-checked from a tarball and the SSR path is exercised the way React's is.
 
 ### Core and utilities
 

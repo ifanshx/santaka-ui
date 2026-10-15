@@ -71,8 +71,10 @@ export const RadioGroup = defineComponent({
     /**
      * The submitted name. Every radio in the group carries it.
      *
-     * The element has no `name` prop, so this lands as a host attribute — the
-     * platform's way of identifying a form-associated control. Without it the
+     * The element declares `name` **with** an initializer and `reflect: true`,
+     * so it is a real own property: Vue takes the property path, and the element
+     * reflects the value back to the host attribute the platform reads. The
+     * attribute is what identifies a form-associated control, so without it the
      * group renders and reports its value and contributes nothing to `FormData`.
      */
     name: optionalProp<string>(String),

@@ -20,24 +20,24 @@ import { RadioGroup } from "./radio-group.js"
  * do not all assert the same thing. Vue chooses between a property and an
  * attribute with `key in element`:
  *
- *   - Checkbox, Switch, and Select declare `name?: string` with **no
- *     initializer** in the element source. A declaration-only class field emits
- *     nothing at the package's `target`, so `"name" in element` is false and Vue
- *     falls through to `patchAttr` — the attribute, which is the channel a
- *     form-associated custom element is identified by. These three assert the
- *     attribute.
+ *   - Checkbox, Switch, and Select declare **no `name` prop at all**. A
+ *     form-associated custom element is named by its host *attribute*, which is
+ *     what the platform reads, so the element has no reason to declare one. With
+ *     no own property, `"name" in element` is false and Vue falls through to
+ *     `patchAttr` — the attribute, which is exactly the channel needed. These
+ *     three assert the attribute.
  *
- *   - RadioGroup declares `name = ""` **with** an initializer, so it is a real
- *     own property, `"name" in element` is true, and Vue takes the property
- *     path. The element reads its own `name` and reflects it back to the
- *     attribute (`@Prop({ reflect: true })`), but the jsdom stub in
- *     `test-setup.ts` implements no reflection, so the property is the channel
- *     this test can read. It asserts the property, and the browser run in
- *     `examples/react-vite/e2e` covers the reflection.
+ *   - RadioGroup **does** declare `name` — `@Prop({ reflect: true }) name = ""`
+ *     — so it is a real own property, `"name" in element` is true, and Vue takes
+ *     the property path. The element reflects the value back to the attribute
+ *     the platform reads, but the jsdom stub in `test-setup.ts` implements no
+ *     reflection, so the property is the channel this test can read. It asserts
+ *     the property, and the browser run in `examples/vue-vite/e2e` covers the
+ *     reflection end to end.
  *
- * The stub mirrors the shipped element on purpose: if it declared `name = ""`
- * for Checkbox, Vue would take the property path and this file would be
- * asserting a route no browser takes — a green test over a real bug.
+ * The stub mirrors the shipped element on purpose: if it declared `name` for
+ * Checkbox, Vue would take the property path and this file would be asserting a
+ * route no browser takes — a green test over a real bug.
  *
  * jsdom has no form submission and no form-associated custom element
  * implementation, so these tests cannot prove the control is *submitted*. They

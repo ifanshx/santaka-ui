@@ -19,7 +19,7 @@ mistake into a failing check.
 
 ### The packages
 
-All six published packages declare `"type": "module"` and expose only `import`
+All nine published packages declare `"type": "module"` and expose only `import`
 conditions. There is no `require`, no `main` pointing at CommonJS, and no `.cjs`
 file in any tarball.
 
@@ -78,7 +78,7 @@ and `@santaka-ui/utilities`; `@santaka-ui/react` peers
 `@santaka-ui/web-components`. The graph is acyclic and every peer is a package
 the consumer must install deliberately, not a transitive surprise.
 
-Node `>=22.11.0` is an `engines` field on all six, and CI includes the oldest
+Node `>=22.11.0` is an `engines` field on all nine, and CI includes the oldest
 supported version in its matrix (`plan.md` §4).
 
 ## Decision
@@ -89,7 +89,7 @@ and peer dependencies for anything not bundled.**
 Enforced by three gates that all run in CI:
 
 - `pnpm run validate:packages` — `publint` and `attw --pack` on the packed
-  tarball of all six packages. Release-blocking.
+  tarball of all nine packages. Release-blocking.
 - `exports-contract.test.ts` — every stylesheet a package builds is reachable
   through `exports`, and every export resolves to a file that exists.
 - The build scripts that strip CommonJS and rewrite declaration specifiers, both

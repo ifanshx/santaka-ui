@@ -2,6 +2,8 @@ import js from "@eslint/js"
 import tseslint from "typescript-eslint"
 import globals from "globals"
 import prettier from "eslint-config-prettier"
+import vue from "eslint-plugin-vue"
+import vueParser from "vue-eslint-parser"
 
 /**
  * Root flat ESLint config (ADR-018).
@@ -100,6 +102,40 @@ export default tseslint.config(
     files: ["**/e2e/**/*.mjs", "tests/**/*.mjs"],
     languageOptions: {
       globals: { ...globals.node, ...globals.browser },
+    },
+  },
+  {
+    // Vue single-file components. `eslint-plugin-vue` is a plugin for the
+    // existing ESLint, not a second linter — ADR-018's "no additional linter"
+    // rule is about a second tool, and this is the same one. It is needed
+    // because the flat config above matches only `**/*.{ts,tsx,mts,cts}`, so a
+    // `.vue` file was silently unlinted: `eslint .` exited 0 while skipping it,
+    // which is worse than not running a linter at all. Recorded in ADR-018.
+    //
+    // The parser is `vue-eslint-parser` with `typescript-eslint` as the inner
+    // parser for `<script lang="ts">`, so the same rules that apply to the
+    // adapter packages apply inside the example's SFC.
+    files: ["**/*.vue"],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tseslint.parser,
+        ecmaVersion: 2023,
+        sourceType: "module",
+        extraFileExtensions: [".vue"],
+      },
+      globals: { ...globals.browser, ...globals.node },
+    },
+    plugins: { vue, "@typescript-eslint": tseslint.plugin },
+    extends: [...vue.configs["flat/recommended"]],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports", fixStyle: "separate-type-imports" },
+      ],
+      "no-console": ["error", { allow: ["warn", "error"] }],
+      eqeqeq: ["error", "always", { null: "ignore" }],
+      "prefer-const": "error",
     },
   },
   prettier,

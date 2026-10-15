@@ -125,6 +125,46 @@ jobs:
           path: examples/react-vite/playwright-report/
           retention-days: 7
 
+  vue-example:
+    name: Vue example submits through a plain form
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @santaka-ui/example-vue-vite exec playwright install --with-deps chromium
+
+      # The same reason as the React job: `dist/` is gitignored, and the example
+      # deliberately carries no `resolve.alias`, so it needs the workspace build
+      # to resolve `@santaka-ui/vue` through its published `exports` map.
+      - name: Build the workspace packages
+        run: pnpm run build
+
+      # `plan.md` section 17: every form control submits through a plain form in
+      # Vue. This is the Vue half, and it is a separate job rather than a second
+      # step in the React job because it is a separate claim: Vue chooses between
+      # a property and an attribute per component, so a control can take a route
+      # React never takes and still be wrong.
+      - name: Build the example and run its browser tests
+        run: pnpm --filter @santaka-ui/example-vue-vite test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: vue-example-report
+          path: examples/vue-vite/playwright-report/
+          retention-days: 7
+
   nextjs-example:
     name: Next.js renders on the server and hydrates clean
     runs-on: ubuntu-latest

@@ -15,7 +15,7 @@ recovering from a naming conflict after dependents exist forces breaking churn
 
 ## Decision
 
-**Scope `@santaka-ui`, license MIT, publish scope is all six packages, all
+**Scope `@santaka-ui`, license MIT, publish scope is all nine packages, all
 public.**
 
 | Package | Publishes | Contents |
@@ -26,6 +26,9 @@ public.**
 | `@santaka-ui/styles` | yes | Reset, base elements, primitives, `glass.css` |
 | `@santaka-ui/web-components` | yes | Custom elements, eagerly registered; `/loader` for SSR |
 | `@santaka-ui/react` | yes | React adapters over the custom elements |
+| `@santaka-ui/vue` | yes | Vue 3 adapters over the same custom elements |
+| `@santaka-ui/mcp` | yes | MCP server over the registry metadata. No model, no network |
+| `@santaka-ui/cli` | yes | The `santaka` CLI: project detection, install, diagnostics |
 
 Every package declares `"license": "MIT"`, `"publishConfig": { "access": "public",
 "provenance": true }`, and passes `publint` and `attw --pack`.

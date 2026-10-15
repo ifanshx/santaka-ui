@@ -24,14 +24,15 @@ record for the "no second linter" rule.
 
 | Concern | Tool | Evidence |
 |---|---|---|
-| Runtime and package manager | Node `>=22.11.0`, pnpm 10 via corepack | `engines` on all six packages; `packageManager: pnpm@10.34.7` |
+| Runtime and package manager | Node `>=22.11.0`, pnpm 10 via corepack | `engines` on all nine packages; `packageManager: pnpm@10.34.7` |
 | Task orchestration | Turborepo | `turbo.json`; cache-aware pipeline |
 | Language | TypeScript 5.x, `strict`, `noUncheckedIndexedAccess` | `tooling/typescript/base.json`, plus `verbatimModuleSyntax`, `noImplicitOverride`, `noFallthroughCasesInSwitch` |
 | Lint and format | ESLint 9 flat config + typescript-eslint, Prettier 3 | `eslint.config.js`, `.prettierrc.json` |
+| Vue SFC lint | `eslint-plugin-vue` + `vue-eslint-parser` | `eslint.config.js`, the `**/*.vue` block |
 | Unit tests | Vitest | `packages/tokens`, `packages/react` |
 | Browser and E2E tests | Playwright | `packages/web-components/e2e`, three baseline projects |
 | Accessibility | `axe-core` + `@axe-core/playwright` | `e2e/a11y.e2e.ts`, scope in ADR-008 |
-| Package health | `publint` + `@arethetypeswrong/cli` | `validate:package` on all six, release-blocking |
+| Package health | `publint` + `@arethetypeswrong/cli` | `validate:package` on all nine, release-blocking |
 | Release and versioning | Changesets, npm provenance | `.changeset/`, `publish.yml` publishes with provenance |
 | CI | GitHub Actions, one required workflow | `.github/workflows/ci.yml`, steps in the §5 order |
 
@@ -71,6 +72,19 @@ record for the "no second linter" rule.
 TypeScript covers linting, formatting, and types; a second linter is a decision
 that needs a record, not a dependency that needs installing. `eslint.config.js`
 cites this ADR for that rule.
+
+The Vue example added `eslint-plugin-vue` and `vue-eslint-parser` on
+2026-10-16. This is an **extension of the existing linter, not a second one** —
+the plugin runs inside ESLint 9, sharing its config, its rules, and its exit
+code — so the rule above is satisfied by an entry here rather than by a new ADR.
+It was necessary rather than optional: the flat config matched only
+`**/*.{ts,tsx,mts,cts}`, so `examples/vue-vite/src/App.vue` was silently
+unlinted. `eslint .` exited 0 while skipping the file, which is worse than
+running no linter at all, because the exit code claimed coverage it did not have.
+That was verified by injecting an unused variable into the SFC: before the block,
+`eslint .` passed; after it, the same injection fails. The parser is configured
+with `typescript-eslint` as the inner parser for `<script lang="ts">`, so the
+rules that apply to the adapter packages apply inside the SFC.
 
 ## Consequences
 
