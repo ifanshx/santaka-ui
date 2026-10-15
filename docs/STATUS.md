@@ -64,6 +64,20 @@ the brutalist treatment — 3px stroke,
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
+### Touch targets
+
+§17 asks for a `--sk-touch-min` compliant target on every component. Until now
+that was asserted for Button and Icon Button and measured for nothing else.
+`e2e/touch-target.e2e.ts` adds 14 tests across all ten interactive components,
+and **reads the threshold from the token** rather than asserting 44 literally —
+raising the token to 3.5rem fails two tests here while the nine hardcoded
+assertions elsewhere stay green, which is the weakness it exposes.
+
+**A finding, recorded rather than rounded away:** `sk-tab` is 39px and `sk-link`
+is 24px. Both clear WCAG 2.2 SC 2.5.8; neither reaches the project's own 44px
+commitment. `sk-link` is exempt outright — SC 2.5.8 exempts an inline target in a
+sentence. They are measured against the WCAG floor and pinned by a test that
+fails if they ever reach 44, so the exception cannot linger unexamined.
 ### Dependency audit
 
 §17 asks for license and security review; both are now scripts in CI rather than
