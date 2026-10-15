@@ -12,6 +12,7 @@
  */
 import { readFileSync } from "node:fs"
 import { createRequire } from "node:module"
+import type { RegistryIndex, RegistryItem } from "@santaka-ui/core"
 
 const require = createRequire(import.meta.url)
 
@@ -49,10 +50,10 @@ const STABILITY_ORDER = { stable: 0, preview: 1, experimental: 2, deprecated: 3 
 
 type Stability = keyof typeof STABILITY_ORDER
 
-function loadIndex() {
+function loadIndex(): RegistryIndex {
   return JSON.parse(
     require.resolve ? readFileSync(require.resolve("@santaka-ui/core/registry"), "utf8") : "{}",
-  )
+  ) as RegistryIndex
 }
 
 /**
@@ -64,7 +65,7 @@ export function componentPages(): ComponentPage[] {
   const items = index.items ?? []
 
   return items
-    .map((item) => ({
+    .map((item: RegistryItem) => ({
       name: item.name,
       tag: `sk-${item.name}`,
       stability: item.stability,
@@ -84,7 +85,7 @@ export function componentPages(): ComponentPage[] {
       type: item.type,
     }))
     .sort(
-      (a, b) =>
+      (a: ComponentPage, b: ComponentPage) =>
         (STABILITY_ORDER[a.stability as Stability] ?? 9) -
           (STABILITY_ORDER[b.stability as Stability] ?? 9) || a.name.localeCompare(b.name),
     )
@@ -94,7 +95,8 @@ export function componentPages(): ComponentPage[] {
 export function stabilityGroups(): Array<{ label: string; pages: ComponentPage[] }> {
   const pages = componentPages()
   const labels = [...new Set(pages.map((page) => page.stability))].sort(
-    (a, b) => (STABILITY_ORDER[a as Stability] ?? 9) - (STABILITY_ORDER[b as Stability] ?? 9),
+    (a: string, b: string) =>
+      (STABILITY_ORDER[a as Stability] ?? 9) - (STABILITY_ORDER[b as Stability] ?? 9),
   )
   return labels.map((label) => ({
     label,

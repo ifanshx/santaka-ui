@@ -23,18 +23,23 @@
 </div>
 
 <script>
-  const root = document.querySelector("[data-search]")
-  const input = root?.querySelector("[data-search-input]")
-  const list = root?.querySelector("[data-search-results]")
-  const status = root?.querySelector("[data-search-status]")
+  import type { PagefindModule, PagefindResult } from "../lib/pagefind"
 
-  let pagefind
+  const root = document.querySelector("[data-search]")
+  const input = root?.querySelector<HTMLInputElement>("[data-search-input]")
+  const list = root?.querySelector<HTMLUListElement>("[data-search-results]")
+  const status = root?.querySelector<HTMLParagraphElement>("[data-search-status]")
+
+  let pagefind: PagefindModule | undefined
   try {
     // `@vite-ignore`: the bundle is written into `dist/pagefind/` by the
     // `pagefind --site dist` step, after Astro builds, so it does not exist when
     // this module is compiled. The path is absolute because the bundle sits at
-    // the site root, not next to this component.
-    pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js")
+    // the site root, not next to this component. It is held in a variable so the
+    // specifier stays dynamic — there is no file for the type checker to resolve,
+    // and a literal would be reported as a missing module.
+    const bundlePath = "/pagefind/pagefind.js"
+    pagefind = (await import(/* @vite-ignore */ bundlePath)) as PagefindModule
   } catch {
     if (status) {
       status.hidden = false
@@ -44,7 +49,7 @@
     if (input) input.disabled = true
   }
 
-  const render = async (results) => {
+  const render = async (results: PagefindResult[]): Promise<void> => {
     if (!list) return
     list.textContent = ""
     if (results.length === 0) {
@@ -74,7 +79,7 @@
     }
   }
 
-  let timer
+  let timer: ReturnType<typeof setTimeout> | undefined
   input?.addEventListener("input", () => {
     const query = input.value.trim()
     clearTimeout(timer)
@@ -83,9 +88,10 @@
       if (status) status.hidden = true
       return
     }
+    const active = pagefind
     timer = setTimeout(async () => {
-      const search = (await pagefind.debouncedSearch?.(query)) ?? (await pagefind.search(query))
-      await render(search?.results ?? search ?? [])
+      const search = (await active.debouncedSearch?.(query)) ?? (await active.search(query))
+      await render(search?.results ?? [])
     }, 150)
   })
 </script>

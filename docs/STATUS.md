@@ -177,6 +177,28 @@ prop rename reaches the docs, the CLI, the MCP server, and `llms.txt` together
 or not at all; search is a build-time index with no hosted dependency; and
 previews import the shipped package rather than a monorepo path, so a preview
 cannot only work here.
+
+#### The docs typecheck was a false green
+
+`apps/docs` declared a `typecheck` script, and `pnpm run verify` ran it — but
+`@astrojs/check`, the package `astro check` delegates to, was **not a declared
+dependency**. `astro check` could not resolve its own checker, printed
+`Cannot find package '@emnapi/core'` (a transitive peer of `@astrojs/check`), and
+**exited 0**. The gate passed without checking a single `.astro` file: a check
+that reports success while doing nothing is worse than no check, because the exit
+code claims coverage it does not have.
+
+Declaring `@astrojs/check` and installing it made the check actually run, and it
+immediately found **20 real type errors** the gate had never seen — untyped
+`resolvePackage` parameters in `astro.config.mjs`, `any`-typed registry items in
+`src/lib/components.ts`, and an untyped Pagefind island in
+`src/components/Search.astro`. All twenty are fixed with real types, not
+suppressions: `components.ts` reads `RegistryIndex`/`RegistryItem` from
+`@santaka-ui/core`; `Search.astro` types the Pagefind runtime surface in
+`src/lib/pagefind.ts` and imports it, holding the bundle specifier in a variable
+so it stays dynamic (there is no file to resolve, and a literal would be reported
+as a missing module). `astro check` now reports 0 errors over 12 files, and the
+exit code is load-bearing again.
 ### Registry hosting
 
 ADR-007 settles §9's question: registries are **static versioned JSON**, not a

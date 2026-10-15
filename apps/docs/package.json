@@ -23,6 +23,7 @@
     "astro": "7.3.8"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "pagefind": "1.5.2",
     "rimraf": "6.0.1",
     "typescript": "5.9.3"

@@ -51,6 +51,9 @@ export default defineConfig({
  * Resolve a file inside a workspace package, so the docs site imports the
  * package's exported artifact rather than a hardcoded relative path out of
  * `node_modules`.
+ *
+ * @param {string} packageJson
+ * @param {string} relative
  */
 function resolvePackage(packageJson, relative) {
   const packageRoot = dirname(createRequire(import.meta.url).resolve(packageJson))
