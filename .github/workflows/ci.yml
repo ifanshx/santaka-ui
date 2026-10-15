@@ -273,3 +273,33 @@ jobs:
       # prop rename reaches the generated reference — a hand-edited page fails.
       - name: Registry and docs-source tests
         run: pnpm run test:registry
+
+  audit:
+    name: dependency license and security audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # plan.md section 17: "Dependency licenses and security scans are reviewed."
+      # A denied license (strong copyleft) fails here. A license needing review is
+      # reported, not failed, because it needs a person to read it rather than a
+      # string match to allow it.
+      - name: License audit
+        run: pnpm run audit:licenses
+
+      # Severity alone is what makes a security report useless, so the scan
+      # classifies advisories by reach: a critical in an example application and
+      # the same advisory in a published package are different obligations. Only
+      # the latter blocks release.
+      - name: Security scan
+        run: pnpm run audit:security

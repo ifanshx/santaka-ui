@@ -64,6 +64,23 @@ the brutalist treatment — 3px stroke,
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
 `3px 3px` with `2px 2px`.
 
+### Dependency audit
+
+§17 asks for license and security review; both are now scripts in CI rather than
+a task someone remembers.
+
+**Licenses** — 526 packages across 13 expressions, none denied. Three are flagged
+for review, and they are precisely the ones a string match cannot judge: a
+compound SPDX expression (`Apache-2.0 AND LGPL-3.0-or-later`), weak copyleft
+(`MPL-2.0`), and a data license (`CC-BY-4.0`). They are listed with the packages
+that carry them in `docs/dependency-licenses.md`.
+
+**Security** — `pnpm audit` reports 40 advisories, and **none reaches a published
+package's direct dependencies**. All of them are in `next` and `sharp` (the Next.js
+example) and `postcss` (the build chain). The scan classifies by reach rather than
+severity alone, because a critical in an example and a critical in a shipped
+package are different obligations — and a report printing only "3 critical" makes
+them look identical.
 ### Documentation site
 
 ADR-006 is recorded — Astro with content collections, Pagefind for search,
