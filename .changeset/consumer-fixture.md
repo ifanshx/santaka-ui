@@ -14,7 +14,7 @@ and CLI source mode resolving a path that existed only in the monorepo. All
 three passed every test here.
 
 tests/consumer/run.mjs packs all eight packages with pnpm pack, installs the
-tarballs into a scratch project outside the workspace, and runs ten checks
+tarballs into a scratch project outside the workspace, and runs twelve checks
 covering export resolution, real imports, the loader's lazy contract, the
 stylesheets, CommonJS reachability, the CLI and MCP server from the tarball,
 TypeScript against the shipped declarations, and React server rendering.

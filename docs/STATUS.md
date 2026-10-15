@@ -14,7 +14,7 @@ section 10 deliverable still outstanding.
 
 `pnpm run verify` exits 0 from a cold cache. **626 tests pass** (48 token, 20
 utilities, 138 core, 159 React, 261 Playwright and barrel across the universal
-package, plus the MCP server and the CLI). All eight packages pass `publint` and
+package, plus the MCP server and the CLI). All nine packages pass `publint` and
 `attw --pack`.
 
 ## Done
@@ -205,6 +205,28 @@ rather than left to review: `<Badge dot />` does not compile without
 `statusLabel`, and `Input` generates its id with `useId()` so the id stays
 stable across re-renders.
 
+### Vue package
+
+`@santaka-ui/vue` is a Vue 3 adapter over the same custom elements, exporting
+the same names in the same order as the React adapter — 21 components plus
+`ThemeScript` / `useTheme`. **95 tests** cover prop mapping, the class merge, the
+exposed ref, form `name` wiring, and the no-slot boundary. Behavior stays owned
+and proven in `@santaka-ui/web-components`.
+
+Two defects the tests found are recorded in the changeset. Six field adapters
+declared a `default` slot the element does not have — React takes no `children`
+and the elements render no `<slot>`, so default content was silently dropped; a
+per-adapter test now asserts the absence. And `select`'s `defaultValue` was
+asserted against the `default-value` attribute when the element declares it as a
+prop, so Vue writes the property; the test reads the property, which is the
+contract.
+
+The adapter package is not yet exercised in a browser or through the consumer
+fixture: `tests/consumer/run.mjs` now packs nine packages and includes `vue`,
+installing its tarball into the scratch project and rendering it through
+`vue/server-renderer` so the shipped declarations are type-checked from a
+tarball and the SSR path is exercised the way React's is.
+
 ### Core and utilities
 
 - Registry JSON Schema, validation of untrusted entries, checksums verified
@@ -381,8 +403,8 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   token misuses), and added `--sk-color-primary-text` (gates 25 → 27).
 - **No legal preconditions.** Trademark, npm scope, domain, mascot originality.
 - ~~**No consumer fixture.**~~ **Done** — `tests/consumer/run.mjs` packs all
-  eight packages with `pnpm pack`, installs the tarballs into a scratch project
-  outside the workspace, and runs ten checks the workspace cannot make. It found
+  nine packages with `pnpm pack`, installs the tarballs into a scratch project
+  outside the workspace, and runs twelve checks the workspace cannot make. It found
   a real defect on first run; see "What the consumer fixture found".
 
 ### What the consumer fixture found

@@ -119,6 +119,7 @@ generated from the registry; a rename shows up everywhere or nowhere.
 | `@santaka-ui/core` | Registry JSON Schema, entry validation, and the generated registry payload. |
 | `@santaka-ui/web-components` | The universal custom elements — the default owner of component behavior. Twenty-one components: alert-dialog, badge, button, card, checkbox, dialog, icon-button, input, label, link, radio-group, select, separator, skeleton, spinner, switch, tabs, text, textarea, toast, tooltip. |
 | `@santaka-ui/react` | React adapter over the same custom elements. |
+| `@santaka-ui/vue` | Vue 3 adapter over the same custom elements. |
 | `@santaka-ui/mcp` | MCP server over the registry metadata. |
 | `@santaka-ui/cli` | The `santaka` command: project detection, component install, diagnostics. |
 

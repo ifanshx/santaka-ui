@@ -19,7 +19,7 @@
  * `attw --pack` and `publint` are the strongest checks available without a
  * consumer, and they are not this: both inspect the tarball, and neither can say
  * whether `import "@santaka-ui/react"` actually loads in a project that is not
- * this one. So this script packs all eight packages, installs the tarballs into
+ * this one. So this script packs all nine packages, installs the tarballs into
  * a scratch project outside the workspace, and exercises them the way a consumer
  * would.
  *
@@ -40,7 +40,17 @@ const repoRoot = resolve(here, "..", "..")
 
 /** Every publishable package, in dependency order (nothing depends on order here,
  *  but a stable list makes the output readable). */
-const PACKAGES = ["tokens", "styles", "utilities", "core", "web-components", "react", "mcp", "cli"]
+const PACKAGES = [
+  "tokens",
+  "styles",
+  "utilities",
+  "core",
+  "web-components",
+  "react",
+  "vue",
+  "mcp",
+  "cli",
+]
 
 const keep = process.argv.includes("--keep")
 const scratch = mkdtempSync(join(tmpdir(), "santaka-consumer-"))
@@ -139,6 +149,9 @@ function writeConsumerProject(dir, tarballDir) {
   }
   dependencies.react = "^19.0.0"
   dependencies["react-dom"] = "^19.0.0"
+  // Vue is a peer of `@santaka-ui/vue`, so a consumer installing the adapter
+  // brings it — the fixture declares it for the same reason it declares React.
+  dependencies.vue = "^3.5.0"
   // The MCP client used by the fixture is the consumer's own dependency, not a
   // re-export of `@santaka-ui/mcp`. A consumer that mounts the server on a
   // transport imports the SDK directly, so the fixture does too — and pinning it
@@ -192,6 +205,8 @@ const EXPORT_SUBPATHS = [
   "@santaka-ui/react",
   "@santaka-ui/react/styles.css",
   "@santaka-ui/react/jsx",
+  "@santaka-ui/vue",
+  "@santaka-ui/vue/styles.css",
   "@santaka-ui/mcp",
   "@santaka-ui/cli",
 ]
@@ -221,6 +236,7 @@ check("the ESM entrypoints actually import, and export what they claim", () => {
     import * as mcp from "@santaka-ui/mcp"
     import * as cli from "@santaka-ui/cli"
     import * as react from "@santaka-ui/react"
+    import * as vue from "@santaka-ui/vue"
 
     const problems = []
     const expect = (condition, message) => { if (!condition) problems.push(message) }
@@ -232,6 +248,16 @@ check("the ESM entrypoints actually import, and export what they claim", () => {
     expect(typeof mcp.createServer === "function", "mcp.createServer is not a function")
     expect(typeof cli.detectProject === "function", "cli.detectProject is not a function")
     expect(typeof react.Button === "object" || typeof react.Button === "function", "react.Button is not exported")
+    expect(typeof vue.Button === "object" || typeof vue.Button === "function", "vue.Button is not exported")
+    // Vue's defineComponent returns an object; a function would mean the
+    // export is not a component. Same names as React, so a consumer moving
+    // between the two finds one surface.
+    expect(typeof vue.Card === "object", "vue.Card is not exported")
+    // ThemeScript is a defineComponent here, so it is an object — unlike
+    // React's, which is a plain function component. Asserting "function" would
+    // encode React's shape onto Vue's and fail on a correct package.
+    expect(typeof vue.ThemeScript === "object", "vue.ThemeScript is not exported")
+    expect(typeof vue.useTheme === "function", "vue.useTheme is not a function")
 
     // The registry aggregate must be readable through its subpath, not only
     // through the package root — that subpath is what the CLI and MCP use.
@@ -410,7 +436,7 @@ check("the universal packages typecheck without @types/node", () => {
       jsx: "react-jsx",
       types: [],
     },
-    include: ["consumer.ts", "consumer.tsx"],
+    include: ["consumer.ts", "consumer.tsx", "consumer-vue.ts"],
   }
   writeFileSync(join(scratch, "tsconfig.json"), `${JSON.stringify(tsconfig, null, 2)}\n`)
 
@@ -455,6 +481,29 @@ export function App() {
     </Card>
   )
 }
+`,
+  )
+
+  writeFileSync(
+    join(scratch, "consumer-vue.ts"),
+    `// A Vue consumer of the shipped declarations. Written with \`h\` rather than an
+// SFC because a .vue file needs vue-tsc and the SFC compiler, which is a
+// consumer's build tooling and not part of the contract this check is about.
+// What it proves is the same as \`consumer.tsx\`: the tarball's .d.ts files
+// resolve under NodeNext and the props accept the values the docs promise.
+import { defineComponent, h } from "vue"
+import { Button, Card, Checkbox, Dialog, DialogContent, DialogTrigger } from "@santaka-ui/vue"
+
+export const App = defineComponent({
+  name: "App",
+  render() {
+    return h(Card, { heading: "Example" }, () => [
+      h(Button, { variant: "primary", onSkClick: () => undefined }, () => "Save"),
+      h(Dialog, null, () => [h(DialogTrigger, null, () => "Open"), h(DialogContent, null, () => "Body")]),
+      h(Checkbox, { checked: true, label: "Agree" }),
+    ])
+  },
+})
 `,
   )
 
@@ -612,6 +661,29 @@ check("the React adapter renders the element it wraps, in a real DOM", () => {
   if (!out.includes("ok")) throw new Error(out)
 })
 
+check("the Vue adapter renders the element it wraps, server-side", () => {
+  // The same contract as the React check above, through `vue/server-renderer`.
+  // Vue's SSR pass has no DOM, so a component that reads `document` or touches
+  // the element during `setup` would throw here rather than in a browser — which
+  // is the failure ADR-005's R2 names. The adapters render a tag and set props,
+  // so this must pass.
+  const script = `
+    import { createSSRApp, h } from "vue"
+    import { renderToString } from "vue/server-renderer"
+    import { Button, Card } from "@santaka-ui/vue"
+
+    const app = createSSRApp({
+      render: () => h(Card, { heading: "Hi" }, () => h(Button, { variant: "primary" }, () => "Save")),
+    })
+    const html = await renderToString(app)
+    if (!html.includes("sk-card")) throw new Error("no sk-card in the server output: " + html)
+    if (!html.includes("sk-button")) throw new Error("no sk-button in the server output: " + html)
+    console.log("ok")
+  `
+  const out = runScript("vue-ssr", script)
+  if (!out.includes("ok")) throw new Error(out)
+})
+
 // ---------------------------------------------------------------------------
 // Run
 // ---------------------------------------------------------------------------
@@ -620,7 +692,7 @@ async function main() {
   const tarballDir = join(scratch, "tarballs")
   console.log(`[consumer] scratch project: ${scratch}`)
 
-  console.log("[consumer] packing 8 packages with pnpm pack")
+  console.log(`[consumer] packing ${PACKAGES.length} packages with pnpm pack`)
   packAll(tarballDir)
 
   console.log("[consumer] writing the consumer project")
