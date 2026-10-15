@@ -23,6 +23,8 @@ export type SkSelectElement = HTMLElement & {
   disabled: boolean
   required: boolean
   placeholder: string
+  /** The field's name in the form submission. */
+  name: string | undefined
   value: string
   defaultValue: string
 }
@@ -47,6 +49,14 @@ export type SelectProps = {
   /** Placeholder-style first choice, shown when the value is "". */
   placeholder?: string
   form?: string
+  /**
+   * The field's name in the form submission.
+   *
+   * Forwarded to the element host attribute, which is how the platform
+   * identifies a form-associated control. Without it the select renders and
+   * reports its value but contributes nothing to `FormData`.
+   */
+  name?: string
   /** The controlled value. */
   value?: string
   /** Initial value for the uncontrolled case. */
@@ -69,6 +79,7 @@ export const Select = forwardRef<SkSelectElement, SelectProps>(function Select(
     required,
     placeholder,
     form,
+    name,
     value,
     defaultValue,
     onValueChange,
@@ -92,6 +103,7 @@ export const Select = forwardRef<SkSelectElement, SelectProps>(function Select(
       required={required}
       placeholder={placeholder}
       form={form}
+      name={name}
       value={value}
       default-value={defaultValue}
       onsk-value-change={

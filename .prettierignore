@@ -34,6 +34,10 @@ apps/docs/public/registry/
 examples/nextjs/.next
 examples/nextjs/next-env.d.ts
 examples/nextjs/node_modules
+# Vite build output: generated, never formatted.
+examples/react-vite/dist
+examples/react-vite/playwright-report
+examples/react-vite/test-results
 # Astro build output: generated, never formatted.
 apps/docs/dist
 apps/docs/.astro

@@ -1,6 +1,7 @@
 import { Component, Element, h, Host, Prop, State, Watch } from "@stencil/core"
 import {
   createFieldWiring,
+  type FieldWiring,
   isFieldInvalid,
   setupFormControl,
   syncFormControl,
@@ -117,7 +118,7 @@ export class SkInput {
   private internals?: ElementInternals
   private input?: TextControl
   private teardown?: () => void
-  private wiring = createFieldWiring(this.host, "sk-input")
+  private wiring!: FieldWiring
 
   /** Accessors onto this component, for the shared form-control base. */
   private get accessors(): FormControlAccessors {
@@ -141,6 +142,9 @@ export class SkInput {
   }
 
   componentWillLoad() {
+    // Assigned here, not as a field initializer: a field initializer runs in the
+    // constructor, before Stencil assigns `this.host`.
+    this.wiring = createFieldWiring(this.host, "sk-input")
     this.internals = this.host.attachInternals()
     // The element may upgrade after the form was parsed, so the initial value is
     // read from the attribute rather than assumed empty.

@@ -24,6 +24,8 @@ export type SkSwitchElement = HTMLElement & {
   disabled: boolean
   required: boolean
   form: string | undefined
+  /** The field's name in the form submission. */
+  name: string | undefined
   checked: boolean
   defaultChecked: boolean
   /** Fired when the user toggles the switch. */
@@ -49,6 +51,14 @@ export type SwitchProps = {
   required?: boolean
   /** Associates the control with a form it is not nested inside. */
   form?: string
+  /**
+   * The field's name in the form submission.
+   *
+   * Forwarded to the element host attribute, which is how the platform
+   * identifies a form-associated control. Without it the switch renders and
+   * reports its value but contributes nothing to `FormData`.
+   */
+  name?: string
   /** Whether the switch is on. An ARIA-mirroring boolean (ADR-013). */
   checked?: boolean
   /** Uncontrolled initial state. */
@@ -79,6 +89,7 @@ export const Switch = forwardRef<SkSwitchElement, SwitchProps>(function Switch(
     disabled = false,
     required = false,
     form,
+    name,
     checked,
     defaultChecked = false,
     value = "on",
@@ -111,6 +122,7 @@ export const Switch = forwardRef<SkSwitchElement, SwitchProps>(function Switch(
       disabled={disabled}
       required={required}
       form={form}
+      name={name}
       checked={checked ?? undefined}
       defaultChecked={defaultChecked}
       value={value}

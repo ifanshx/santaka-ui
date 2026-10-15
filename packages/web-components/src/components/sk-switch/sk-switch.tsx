@@ -1,5 +1,5 @@
 import { Component, Element, h, Host, Prop, Watch } from "@stencil/core"
-import { createFieldWiring, isFieldInvalid } from "../shared/form-control-base.js"
+import { createFieldWiring, isFieldInvalid, type FieldWiring } from "../shared/form-control-base.js"
 
 /**
  * Switch — Tier 2, the second of the three missing form controls.
@@ -83,12 +83,15 @@ export class SkSwitch {
 
   private internals?: ElementInternals
   private input?: HTMLInputElement
-  private wiring = createFieldWiring(this.host, "sk-switch")
+  private wiring!: FieldWiring
 
   /** The last reported state, for the change-event rule — same guard as Checkbox. */
   private reportedChecked: boolean | undefined
 
   componentWillLoad() {
+    // Assigned here, not as a field initializer: a field initializer runs in the
+    // constructor, before Stencil assigns `this.host`.
+    this.wiring = createFieldWiring(this.host, "sk-switch")
     this.internals = this.host.attachInternals()
     // The element may upgrade after the form was parsed, so the initial state
     // is read from the attribute rather than assumed off. Same sequence as

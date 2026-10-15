@@ -1,5 +1,5 @@
 import { Component, Element, h, Host, Prop, State, Watch } from "@stencil/core"
-import { createFieldWiring, isFieldInvalid } from "../shared/form-control-base.js"
+import { createFieldWiring, isFieldInvalid, type FieldWiring } from "../shared/form-control-base.js"
 
 /**
  * Radio Group — Tier 2, the last of the three missing form controls.
@@ -91,14 +91,22 @@ export class SkRadioGroup {
   @Element() host!: HTMLElement
 
   private internals?: ElementInternals
-  private wiring = createFieldWiring(this.host, "sk-radio-group")
+  private wiring!: FieldWiring
 
   /** The last reported value, for the change-event rule — same guard as Checkbox. */
   private reportedValue: string | undefined
 
   componentWillLoad() {
+    // Assigned here, not as a field initializer: a field initializer runs in the
+    // constructor, before Stencil assigns `this.host`.
+    this.wiring = createFieldWiring(this.host, "sk-radio-group")
     this.internals = this.host.attachInternals()
-    this.optionsJson = this.parseOptions(this.host.getAttribute("options"))
+    // Prefer the attribute (the serialized form); otherwise the property, which
+    // is how a framework sets it. `parseOptions` normalizes both.
+    const optionsAttribute = this.host.getAttribute("options")
+    this.optionsJson = this.parseOptions(
+      optionsAttribute === null ? (this.options as RadioOption[] | string) : optionsAttribute,
+    )
     // The element may upgrade after the form was parsed, so the initial value
     // is read from the attribute rather than assumed empty — the same
     // sequence as Select.
@@ -131,14 +139,21 @@ export class SkRadioGroup {
    * Options arrive as a JSON string when written as an attribute and an array
    * when set as a property. Parsing once here, not on every render.
    */
-  private parseOptions(raw: string | null): RadioOption[] {
-    if (!raw) return this.options
+  private parseOptions(raw: string | RadioOption[] | null | undefined): RadioOption[] {
+    // Both routes into this element are normalized here: an `options` attribute
+    // holding JSON (the plain-HTML path), and a property a framework assigns
+    // directly (the React adapter serializes to a string and passes it as one).
+    // Returning `this.options` for a missing attribute was the bug: with the
+    // property set and no attribute, that returned the string, and the render
+    // called `.map` on it — which is why the group rendered nothing at all.
+    if (raw === null || raw === undefined) return []
+    if (Array.isArray(raw)) return raw
     try {
       const parsed = JSON.parse(raw)
       return Array.isArray(parsed) ? parsed : []
     } catch {
-      // A malformed attribute must not take the whole field down; an empty
-      // group with a visible error is better than a blank page.
+      // A malformed value must not take the whole field down; an empty group
+      // with a visible error is better than a blank page.
       return []
     }
   }
@@ -184,17 +199,21 @@ export class SkRadioGroup {
   private sync() {
     const internals = this.internals
     if (!internals) return
-    // Nothing selected withholds the pair entirely — `setFormValue(null)`
-    // means "not successful", the same rule an unchecked checkbox follows.
-    // A selected radio submits its value, exactly as a native radio would.
-    if (!this.disabled && this.value !== "") {
-      internals.setFormValue(this.value)
-    } else {
-      internals.setFormValue(null)
-    }
-    // Required on a group with nothing selected is a constraint violation.
-    // The checked radio's own validity is the browser's report; with nothing
-    // selected, the group itself is valueMissing.
+    // The host deliberately does **not** call `setFormValue`.
+    //
+    // It is form-associated because that is what gives it `required`, the
+    // validity report, and `formDisabledCallback`. But the value is submitted by
+    // the native radios it renders, which carry the group's `name` and are real
+    // successful controls inside the real form. When the host submitted too, the
+    // field appeared twice in `FormData` — once per radio path, once per host —
+    // and `FormData.get()` returned the first and hid it.
+    //
+    // The alternative was to drop `name` from the radios, and that is worse: the
+    // shared name is what groups them, and Firefox's arrow-key navigation walks
+    // that grouping. Measured — Chromium moved between radios without it,
+    // Firefox did not.
+    //
+    // Validity still belongs to the host, so it is still reported here.
     if (this.disabled) {
       internals.setValidity({})
       return
@@ -251,8 +270,11 @@ export class SkRadioGroup {
   }
 
   @Watch("options")
-  optionsChanged(next: RadioOption[]) {
-    this.optionsJson = Array.isArray(next) ? next : []
+  optionsChanged(next: RadioOption[] | string) {
+    // Same normalization as the initial read: a framework may assign the
+    // serialized string, and a string here previously became `[]`, so the
+    // choices silently vanished on update.
+    this.optionsJson = this.parseOptions(next)
   }
 
   render() {
@@ -294,6 +316,17 @@ export class SkRadioGroup {
                 class="sk-radio-group__control"
                 data-slot="control"
                 type="radio"
+                // The radios carry the group's own `name`, because the native
+                // radios are what the browser actually submits — they are real
+                // form controls inside a real form, and a `name` is what makes
+                // them successful controls. It is also what groups them: the
+                // shared name is what makes them mutually exclusive, and what
+                // Firefox's arrow-key navigation walks.
+                //
+                // The host is form-associated too, and that is deliberate — it
+                // owns `required`, the error, and the disabled callback. But it
+                // must not *also* submit the value, or the field appears twice.
+                // See `sync()`.
                 name={this.name}
                 value={option.value}
                 checked={option.value === this.value}

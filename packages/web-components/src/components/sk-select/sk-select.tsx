@@ -1,6 +1,7 @@
 import { Component, Element, h, Host, Prop, State, Watch } from "@stencil/core"
 import {
   createFieldWiring,
+  type FieldWiring,
   isFieldInvalid,
   setupFormControl,
   syncFormControl,
@@ -106,7 +107,7 @@ export class SkSelect {
   private internals?: ElementInternals
   private select?: TextControl
   private teardown?: () => void
-  private wiring = createFieldWiring(this.host, "sk-select")
+  private wiring!: FieldWiring
 
   /** Accessors onto this component, for the shared form-control base. */
   private get accessors(): FormControlAccessors {
@@ -130,8 +131,19 @@ export class SkSelect {
   }
 
   componentWillLoad() {
+    // Assigned here, not as a field initializer: a field initializer runs in the
+    // constructor, before Stencil assigns `this.host`.
+    this.wiring = createFieldWiring(this.host, "sk-select")
     this.internals = this.host.attachInternals()
-    this.optionsJson = this.parseOptions(this.host.getAttribute("options"))
+    // Prefer the attribute when it is present, because that is the serialized
+    // form; otherwise use the property, which is how a framework sets it.
+    // `this.options` is typed as an array, but a string reaches it whenever the
+    // attribute is parsed or a framework assigns the serialized form, so
+    // `parseOptions` normalizes both.
+    const optionsAttribute = this.host.getAttribute("options")
+    this.optionsJson = this.parseOptions(
+      optionsAttribute === null ? (this.options as SelectOption[] | string) : optionsAttribute,
+    )
     // The element may upgrade after the form was parsed, so the initial value is
     // read from the attribute rather than assumed empty.
     if (!this.value && this.host.hasAttribute("value")) {
@@ -158,14 +170,27 @@ export class SkSelect {
    * Options arrive as a JSON string when written as an attribute and an array
    * when set as a property. Parsing once here, not on every render.
    */
-  private parseOptions(raw: string | null): SelectOption[] {
-    if (!raw) return this.options
+  private parseOptions(raw: string | SelectOption[] | null | undefined): SelectOption[] {
+    // The choices arrive by two routes and both end here, so both are normalized
+    // here rather than at each call site:
+    //
+    //   - an `options` attribute holding JSON (the plain-HTML path), which is
+    //     why the JSON parse exists;
+    //   - a property a framework assigns directly, which React's adapter does.
+    //     It serializes the array to a string for the attribute case, and the
+    //     same string lands here as a property value.
+    //
+    // Returning `this.options` for a missing attribute was the bug: with the
+    // property set and no attribute, that returned the *string*, and the render
+    // called `.map` on it.
+    if (raw === null || raw === undefined) return []
+    if (Array.isArray(raw)) return raw
     try {
       const parsed = JSON.parse(raw)
       return Array.isArray(parsed) ? parsed : []
     } catch {
-      // A malformed attribute must not take the whole field down; an empty
-      // select with a visible error is better than a blank page.
+      // A malformed value must not take the whole field down; an empty select
+      // with a visible error is better than a blank page.
       return []
     }
   }
@@ -211,8 +236,11 @@ export class SkSelect {
   }
 
   @Watch("options")
-  optionsChanged(next: SelectOption[]) {
-    this.optionsJson = Array.isArray(next) ? next : []
+  optionsChanged(next: SelectOption[] | string) {
+    // Same normalization as the initial read: a framework may assign the
+    // serialized string, and a string here previously became `[]` (so the
+    // choices silently vanished on update) or, via the initial path, crashed.
+    this.optionsJson = this.parseOptions(next)
   }
 
   render() {

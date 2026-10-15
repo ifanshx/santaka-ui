@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" data-sk-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Santaka UI — React + Vite</title>
+    <script>
+      // Read the same storage key the docs and React's ThemeScript use, and set
+      // the attribute before first paint so the page does not flash.
+      try {
+        var v = localStorage.getItem("sk-theme") || "system"
+        var d =
+          v === "dark" || (v === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+        document.documentElement.setAttribute("data-sk-theme", d ? "dark" : "light")
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -20,11 +20,11 @@ export default defineConfig({
     // remove it, because the two multiply: the real ceiling is tasks × workers.
     // Two workers here keeps the tests parallel without oversubscribing, and it is
     // stated rather than left to a default that depends on the machine.
-    poolOptions: {
-      forks: {
-        maxForks: 2,
-        minForks: 1,
-      },
-    },
+    //
+    // This is the Vitest 4 spelling. The earlier `poolOptions.forks.maxForks` was
+    // removed in Vitest 4 and silently ignored — it emitted a DEPRECATED notice and
+    // did nothing, so the bound this comment describes was never actually applied.
+    // `minWorkers` has no Vitest 4 equivalent and is gone.
+    maxWorkers: 2,
   },
 })

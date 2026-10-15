@@ -211,6 +211,26 @@ test("a form reset returns the group to its initial value", async ({ page }) => 
   expect(await submitted(page, formId, "env")).toBe("staging")
 })
 
+test("the group contributes exactly one entry, not one per radio", async ({ page }) => {
+  // `submitted()` uses `FormData.get`, which returns the *first* value and so
+  // cannot see a duplicate. This asserts the count instead, and it exists
+  // because there was one: the inner radios carried the group's `name`, so the
+  // browser submitted them as well as the form-associated host, and every
+  // submission carried the field twice. `get` hid it; `getAll` does not.
+  const formId = await mountGroup(page, {
+    id: "test-single-entry",
+    name: "env",
+    label: "Environment",
+    value: "staging",
+    options: OPTIONS,
+  })
+  const entries = await page.evaluate((formId) => {
+    const form = document.getElementById(formId) as HTMLFormElement
+    return new FormData(form).getAll("env")
+  }, formId)
+  expect(entries).toEqual(["staging"])
+})
+
 test("an error sets aria-invalid and is described by the error element", async ({ page }) => {
   const formId = await mountGroup(page, {
     id: "test-error",

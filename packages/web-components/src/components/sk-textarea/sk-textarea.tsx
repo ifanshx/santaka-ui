@@ -1,6 +1,7 @@
 import { Component, Element, h, Host, Prop, State, Watch } from "@stencil/core"
 import {
   createFieldWiring,
+  type FieldWiring,
   isFieldInvalid,
   setupFormControl,
   syncFormControl,
@@ -108,7 +109,7 @@ export class SkTextarea {
   private internals?: ElementInternals
   private textarea?: TextControl
   private teardown?: () => void
-  private wiring = createFieldWiring(this.host, "sk-textarea")
+  private wiring!: FieldWiring
 
   /** Accessors onto this component, for the shared form-control base. */
   private get accessors(): FormControlAccessors {
@@ -132,6 +133,9 @@ export class SkTextarea {
   }
 
   componentWillLoad() {
+    // Assigned here, not as a field initializer: a field initializer runs in the
+    // constructor, before Stencil assigns `this.host`.
+    this.wiring = createFieldWiring(this.host, "sk-textarea")
     this.internals = this.host.attachInternals()
 
     // A <textarea> takes its initial content as children, not as a `value`

@@ -30,6 +30,8 @@ export type SkCheckboxElement = HTMLElement & {
   disabled: boolean
   required: boolean
   form: string | undefined
+  /** The field's name in the form submission. */
+  name: string | undefined
   checked: boolean
   indeterminate: boolean
   /** Fired when the user toggles the checkbox. */
@@ -55,10 +57,31 @@ export type CheckboxProps = {
   required?: boolean
   /** Associates the control with a form it is not nested inside. */
   form?: string
+  /**
+   * The field's name in the form submission.
+   *
+   * The custom element reads `name` off its own host attribute — that is how a
+   * form-associated element is identified to the platform — so this adapter has
+   * to forward it. Without it the control renders, validates, and reports its
+   * value, and then contributes **nothing** to `FormData`: the element is
+   * form-associated but unnamed, and an unnamed control is not submitted.
+   */
+  name?: string
   /** Whether the box is checked. An ARIA-mirroring boolean (ADR-013). */
   checked?: boolean
   /** Uncontrolled initial checked state. */
   defaultChecked?: boolean
+  /**
+   * The value submitted when the box is checked.
+   *
+   * The custom element has always carried this — `"on"` is the platform default,
+   * so a plain form reads what a native checkbox would send. This adapter simply
+   * did not forward it, which made the element's own `value` unreachable from
+   * React: a consumer could set the label and the name and still not choose what
+   * the form received. Switch has forwarded its `value` all along; this is the
+   * same prop for the same reason.
+   */
+  value?: string
   /** Visual "some children" state. Property-only — submits as unchecked. */
   indeterminate?: boolean
   /** Called when the user toggles the checkbox. */
@@ -85,8 +108,10 @@ export const Checkbox = forwardRef<SkCheckboxElement, CheckboxProps>(function Ch
     disabled = false,
     required = false,
     form,
+    name,
     checked,
     defaultChecked = false,
+    value = "on",
     indeterminate = false,
     onValueChange,
     id: providedId,
@@ -117,8 +142,10 @@ export const Checkbox = forwardRef<SkCheckboxElement, CheckboxProps>(function Ch
       disabled={disabled}
       required={required}
       form={form}
+      name={name}
       checked={checked ?? undefined}
       defaultChecked={defaultChecked}
+      value={value}
       indeterminate={indeterminate}
       onsk-value-change={handleChange}
       class={cn(className)}

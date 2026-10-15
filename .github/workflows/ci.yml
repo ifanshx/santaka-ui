@@ -83,6 +83,39 @@ jobs:
 
       - run: pnpm --filter @santaka-ui/web-components exec playwright test --project ${{ matrix.project }}
 
+  react-example:
+    name: React example submits through a plain form
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @santaka-ui/example-react-vite exec playwright install --with-deps chromium
+
+      # `plan.md` section 17: every form control submits through a plain form in
+      # React. The universal half is proven in the web-components suite; this is
+      # the React half, and it is a separate job because it is a separate claim —
+      # the adapter dropping `name` is invisible to the universal tests.
+      - name: Build the example and run its browser tests
+        run: pnpm --filter @santaka-ui/example-react-vite test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: react-example-report
+          path: examples/react-vite/playwright-report/
+          retention-days: 7
+
   changesets:
     name: changesets are valid
     runs-on: ubuntu-latest

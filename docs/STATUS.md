@@ -8,8 +8,9 @@ what exists today. Every claim below is checked against the repository.
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
 package are real, tested, and green; the React package now covers all
-twenty-one shipped components; the CLI, registry hosting, documentation site,
-and Storybook do not exist yet.
+twenty-one shipped components; the CLI, registry hosting, and documentation
+site exist and are tested. **Storybook does not exist yet** — it is the one
+section 10 deliverable still outstanding.
 
 `pnpm run verify` exits 0 from a cold cache. **626 tests pass** (48 token, 20
 utilities, 138 core, 159 React, 261 Playwright and barrel across the universal
@@ -78,7 +79,39 @@ is 24px. Both clear WCAG 2.2 SC 2.5.8; neither reaches the project's own 44px
 commitment. `sk-link` is exempt outright — SC 2.5.8 exempts an inline target in a
 sentence. They are measured against the WCAG floor and pinned by a test that
 fails if they ever reach 44, so the exception cannot linger unexamined.
-### Dependency audit
+
+### React example
+
+§17's gate reads "every form control submits through a plain `<form>` in React".
+The universal half was proven in the browser matrix; the React half was not, and
+the two are different claims — an adapter that drops `name` renders, validates,
+and reports values correctly while the form submits without the control, and no
+universal test can see that.
+
+`examples/react-vite` closes it. It is a real Vite SPA consuming
+`@santaka-ui/react`, and `e2e/form-submission.e2e.ts` renders all six form
+controls through the adapter, submits a plain `<form>`, and reads the entries
+back out of the browser's own `FormData` — not React state, not a hidden input.
+It runs as its own CI job (`react-example`), because "the adapter forwards the
+attribute" and "the universal element submits" fail for different reasons.
+
+Writing it found two real defects the jsdom tests could not:
+
+- **`Checkbox` never forwarded `value`.** The element has carried the prop all
+  along (`"on"` is the platform default); the adapter dropped it, so a React
+  consumer could set the label and the name and still not choose what the form
+  received. `Switch` forwarded its own `value` the whole time — the asymmetry is
+  what made it visible, and `form-name.test.tsx` now covers both paths.
+- **`Radio Group` submitted every field twice.** The inner radios carried the
+  group's `name` *and* the form-associated host called `setFormValue`, so the
+  browser submitted both paths. `FormData.get()` returned the first and hid the
+  duplicate; only counting entries exposes it. The host no longer submits, the
+  radios do, and a regression test asserts `getAll("env")` is exactly one entry.
+
+The fix had to keep the radios' shared `name`, because that is what groups them
+and what Firefox's arrow-key navigation walks — measured: Chromium moved between
+radios without it, Firefox did not.
+
 
 §17 asks for license and security review; both are now scripts in CI rather than
 a task someone remembers.
