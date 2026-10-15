@@ -1,0 +1,13 @@
+---
+"@santaka-ui/core": minor
+"@santaka-ui/react": minor
+"@santaka-ui/web-components": minor
+---
+
+sk-label is the programmatic label for any control, wired the way Input proved: associate through for, and let the browser's own label activation handle click-to-focus -- no click handler here, because the platform's is better and reimplementing it means reimplementing its edge cases. The required marker is a glyph plus color, aria-hidden, because the control's own required attribute carries the semantics and the asterisk is for the sighted. required on the label sets nothing on the control: a label reaching into another component's DOM is what section 4 forbids.
+
+Two attribute findings, both caught by tests rather than by reading. First: Stencil maps a camelCase prop to its kebab attribute, so @Prop() htmlFor became html-for, and a consumer writing the HTML attribute for -- the only spelling that exists in plain markup -- would have set nothing. The first build proved it: for=standalone-email in the page, for= empty in the DOM, and the focus test timed out on an association that never existed. The prop is now @Prop({ attribute: "for" }) forId, keeping the native spelling working, and the React adapter accepts the React idiom and maps it onto the same attribute. Second: field controls render their control with the id hostId-control, so a label's for must carry that suffix -- wiring a consumer should not have to know, recorded as a known limitation with the honest fix (a cross-component id contract) tracked as open rather than smuggled in.
+
+sk-separator is a real hr that announces itself as a separator unless decorative flips it to role=none -- and a label such as 'or' between two actions is announced only when the separator is meaningful, because a name on a role=none element is a contradiction. Its line is the 1px hairline token, deliberately: the one component in the system where the hairline is the point, and a 3px chrome stroke between paragraphs would read as a wall. No slot, no motion, no chrome, no reduced-motion block, because there is nothing animating to reduce.
+
+Tier 1 is complete: twelve components, each with a universal implementation, a React adapter, browser tests, and a registry entry. The runtime budget was raised 12 to 13 KB with the rationale recorded in measure-bundle.mjs -- twelve components where 12 KB covered eight, and the per-component CSS average fell from 2.45 to 2.11 KB, which is the number that says the additions are lean. The registry validator also enforced its alternative-component contract on the new entries, and won: both whenNotToUse lists now name what to use instead.

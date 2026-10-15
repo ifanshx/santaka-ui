@@ -1,0 +1,13 @@
+---
+"@santaka-ui/core": minor
+"@santaka-ui/react": minor
+"@santaka-ui/web-components": minor
+---
+
+Tier 2's heaviest component, and the one whose architecture was a genuine fork: section 4 permits composite controls to hide the native element behind a custom listbox (the Radix shape). This component rejects that path deliberately and renders a real native <select>, visibly. Three reasons compound: a native select submits through a plain form with no wiring, works on touch, scrolls with a wheel, filters by typing, and validates natively -- a listbox reimplements all of it and gets most of it subtly wrong. The chrome here is restylable, and the closed control is the stylable part while the popup being native means it works on a phone rather than fighting one. And the forms contract's spirit is that the browser owns what the browser is good at: a hidden select behind a custom listbox is the browser owning a filing cabinet while the component pretends to be the clerk.
+
+Options arrive as JSON, not slotted <option> elements: slotted options are children of the host while the native select lives in the host's render tree, and light-DOM slot distribution cannot move them in -- the Dialog panel's lesson again. A malformed options attribute degrades to an empty select rather than a blank page. Everything else is the Input contract verbatim and shared: FACE with all three callbacks, native required validation through the real element, the label/description/error wiring, and sk-value-change only for user-initiated changes. The plan's exit criterion 'prove plain form submission for Input and Select' is now closed: the tests submit through new FormData(form), verify formResetCallback, verify a disabled ancestor fieldset withholds the value, and verify the change-event rule in both directions.
+
+Two build findings recorded in the stylesheet and tests. Scoped CSS cannot share rules across host tags, so the field chrome is redeclared for sk-select: the first draft pointed at Input's class names, the class was right, and the selector never matched, leaving a 1px UA border. And the test suite relearned the Dialog's mounting lesson: an upgraded element's outerHTML already contains rendered output, and re-upgrading the clone renders a second control -- probes now mount from attributes and wait for the inner element as the upgrade signal.
+
+The React adapter serializes options to JSON and delivers onValueChange from the custom event; value rides the property channel and defaultValue the attribute, per React 19's custom-element rules. Runtime budget raised 15 to 16 KB with the rationale recorded in measure-bundle.mjs; the per-component CSS average sits at 1.94 KB, still half its budget.

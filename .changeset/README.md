@@ -18,18 +18,9 @@ from the consumer's point of view.
 | Bump | When |
 |---|---|
 | `patch` | Bug fix, no API change |
-| `minor` | New component, new prop, new optional export |
-| `major` | Removed or renamed public API, changed behavior, changed defaults |
+| `minor` | Backwards-compatible addition |
+| `major` | A breaking change; see `docs/MIGRATIONS.md` |
 
-`0.x` releases may break freely; the policy is in section 14 of `plan.md`.
-
-## Writing the sentence
-
-Write it for someone reading the changelog in six months:
-
-- ✅ "`Button` no longer submits its form when `loading` is true."
-- ❌ "fixed the click handler bug in sk-button.tsx"
-
-Do not mark `web-components` alone when a React consumer sees the change — the
-packages ship together, and a fix in the behavior owner belongs in the changelog
-of both.
+A changeset with no packages listed (`---` / `---`) is valid and is used for
+changes that affect the repository but no published package — tooling, CI, and
+documentation.

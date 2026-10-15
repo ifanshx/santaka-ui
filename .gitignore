@@ -30,8 +30,11 @@ npm-debug.log*
 pnpm-debug.log*
 
 # Changesets artifacts
-.changeset/*.md
-!.changeset/README.md
+# Changeset files are the release record: they are the input to
+# `changeset version`, which writes each package's CHANGELOG and bumps its
+# version. Ignoring them meant none was ever tracked, so the `changesets are
+# valid` CI job could never pass on a real PR and no release could be cut.
+!.changeset/*.md
 # Next.js build output
 dist-test-tmp
 examples/nextjs/.next/
