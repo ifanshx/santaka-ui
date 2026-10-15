@@ -413,9 +413,18 @@ jobs:
       - name: License audit
         run: pnpm run audit:licenses
 
+      # The scan's reach classification is what the report rests on, and it cannot
+      # be checked against the live tree when the tree is clean: every advisory
+      # would look correctly `dev` even if the classifier reported everything as
+      # `dev`. The tests feed synthetic dependency paths so a transitive advisory
+      # under a published package is exercised even when none exists.
+      - name: Security classifier tests
+        run: pnpm run test:security
+
       # Severity alone is what makes a security report useless, so the scan
       # classifies advisories by reach: a critical in an example application and
-      # the same advisory in a published package are different obligations. Only
-      # the latter blocks release.
+      # the same advisory in a published package are different obligations. The
+      # reach is read from the audit's own dependency paths, so a transitive
+      # dependency under a published package counts as shipping and blocks too.
       - name: Security scan
         run: pnpm run audit:security

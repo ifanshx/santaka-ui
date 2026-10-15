@@ -26,6 +26,7 @@
     "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run size && pnpm run validate:packages",
     "test:consumer": "node tests/consumer/run.mjs",
     "test:registry": "node --test tests/registry/*.test.mjs",
+    "test:security": "node --test tests/security/*.test.mjs",
     "audit:licenses": "node scripts/audit-licenses.mjs --write",
     "audit:security": "node scripts/scan-security.mjs"
   },

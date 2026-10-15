@@ -158,12 +158,23 @@ compound SPDX expression (`Apache-2.0 AND LGPL-3.0-or-later`), weak copyleft
 (`MPL-2.0`), and a data license (`CC-BY-4.0`). They are listed with the packages
 that carry them in `docs/dependency-licenses.md`.
 
-**Security** — `pnpm audit` reports 40 advisories, and **none reaches a published
-package's direct dependencies**. All of them are in `next` and `sharp` (the Next.js
-example) and `postcss` (the build chain). The scan classifies by reach rather than
-severity alone, because a critical in an example and a critical in a shipped
-package are different obligations — and a report printing only "3 critical" makes
-them look identical.
+**Security** — `pnpm audit` reports 40 advisories, and **none reaches a package
+that ships to consumers**. All of them are in `next` and `sharp` (the Next.js
+example) and `postcss` (the build chain). The scan classifies by **reach** — read
+from the audit's own dependency paths (`findings[].paths`), not guessed from a
+module name — rather than severity alone, because a critical in an example and a
+critical one level below a shipped package are different obligations, and a report
+printing only "3 critical" makes them look identical. Three classes: `published`
+(a direct dependency of a package in `packages/`), `transitive` (reachable through
+a shipped package's tree, so installing it pulls the advisory in), and `dev`
+(tooling, examples, or the private docs app). Both `published` and `transitive`
+fail at high severity or above; `dev` is reported but never fails. Classifying
+`transitive` apart from `dev` is the point: an earlier version could not tell them
+apart, so a vulnerability one level below a shipped package looked like tooling.
+The classifier is covered by `tests/security/scan-security.test.mjs`, which feeds
+synthetic dependency paths so the classes are exercised even when the tree is clean
+— verified load-bearing by mutating the classifier until the transitive test fails.
+
 ### Documentation site
 
 ADR-006 is recorded — Astro with content collections, Pagefind for search,
