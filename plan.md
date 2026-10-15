@@ -52,18 +52,27 @@ Santaka must **not be designed as a Next.js-only or React-only product**. The de
 
 Use a capability matrix with three states: **Planned**, **Preview**, and **Stable**. Only Stable integrations may be advertised as officially supported.
 
-| Target | Planned implementation | Release gate |
-|---|---|---|
-| React + Vite | React-native package; source and package modes | Type checks, unit/component tests, production build, keyboard/accessibility checks |
-| Next.js | React package with documented SSR and Client Component guidance | Production build, hydration smoke tests, CSS and client-boundary checks |
-| Plain HTML / JavaScript | Web Components + CSS, no framework runtime requirement | Browser tests in a minimal HTML fixture |
-| Vue 3 + Vite | Vue wrappers/adapters and/or direct Web Components use | Props, emitted events, forms, styling, production build |
-| Nuxt | Vue integration with SSR/hydration guidance | Server rendering, hydration, route-level example |
-| Svelte / SvelteKit | Native wrappers where needed and Web Components usage path | Props/events, SSR and hydration tests |
-| Angular | Angular integration package and typing | Inputs, outputs, forms, production build and accessibility tests |
-| Astro | Web Components integration and framework-island examples | Static build, client hydration paths and custom-element loading |
-| Solid, Preact, Qwik and others | Community or official adapters after validation | Framework-specific compatibility suite |
-| React Native, Flutter, native desktop | Separate future product decision | Requires native renderers; not covered by web support claims |
+**Stable** requires the release gate below to pass in CI on every change. **Preview** means an example exists and works but the gate is not yet enforced automatically, so the claim is not defended against regression. **Planned** means nothing has been built.
+
+| Target | State | Planned implementation | Release gate |
+|---|---|---|---|
+| React + Vite | **Stable** | React-native package; source and package modes | Type checks, unit/component tests, production build, keyboard/accessibility checks |
+| Next.js | **Stable** | React package with documented SSR and Client Component guidance | Production build, hydration smoke tests, CSS and client-boundary checks |
+| Plain HTML / JavaScript | **Stable** | Web Components + CSS, no framework runtime requirement | Browser tests in a minimal HTML fixture |
+| Vue 3 + Vite | Planned | Vue wrappers/adapters and/or direct Web Components use | Props, emitted events, forms, styling, production build |
+| Nuxt | Planned | Vue integration with SSR/hydration guidance | Server rendering, hydration, route-level example |
+| Svelte / SvelteKit | Planned | Native wrappers where needed and Web Components usage path | Props/events, SSR and hydration tests |
+| Angular | Planned | Angular integration package and typing | Inputs, outputs, forms, production build and accessibility tests |
+| Astro | Planned | Web Components integration and framework-island examples | Static build, client hydration paths and custom-element loading |
+| Solid, Preact, Qwik and others | Planned | Community or official adapters after validation | Framework-specific compatibility suite |
+| React Native, Flutter, native desktop | Planned | Separate future product decision | Requires native renderers; not covered by web support claims |
+
+### Why each state, and what is missing
+
+- **React + Vite — Stable.** `examples/react-vite` is in the workspace, its browser suite submits a plain `<form>` and reads the entries from the browser's own `FormData`, and the `react-example` CI job runs it on every change. The React unit tests, type checks, and the production build are in `verify`.
+- **Plain HTML / JavaScript — Stable.** `examples/vanilla-html/index.html` is the fixture the universal browser suite serves at `127.0.0.1:4173`, so the whole universal suite — 261 browser tests, the a11y scan included — runs against the framework-free path. It needs no build and no package of its own, which is the point.
+- **Next.js — Stable.** `examples/nextjs` builds, renders every component server-side, defines nothing server-side, and hydrates cleanly; `scripts/ssr-proof.mjs` asserts all three, and the `nextjs-example` CI job runs it on every change. It was Preview until that job existed: the proof passed locally but no job ran it, so nothing stopped it from regressing. The job is the difference, not the script.
+
 
 ### Architectural rule
 

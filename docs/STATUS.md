@@ -363,7 +363,9 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   `customElements.define` in any server chunk, clean hydration through the lazy
   loader, scoped styles applied. The fixture also forced the React JSX
   declarations to actually ship (`@santaka-ui/react/jsx`) and caught `name`
-  missing from three of them.
+  missing from three of them. **Now enforced by the `nextjs-example` CI job**,
+  which is what moves the Next.js target from Preview to Stable — the proof
+  existed but nothing ran it, so nothing defended it against regression.
 - ~~**No visual regression in RTL.**~~ **Done** — ADR-019; a dedicated `visual`
   Playwright project photographs every example-page section in light/ltr,
   light/rtl, and dark/ltr (57 baselines), so §17's per-component RTL case is a

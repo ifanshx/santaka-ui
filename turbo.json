@@ -15,7 +15,12 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "www/**", "loader/**", ".stencil/**"]
+      // `.next/**` is the Next.js example's build output; without it turbo
+      // reports "no output files found" and the example's build is never
+      // cached. `.next/cache/**` is excluded because it is Next's own
+      // incremental build cache (67 MB of the 69 MB here) — caching it in
+      // turbo too would double the storage for no benefit.
+      "outputs": ["dist/**", "www/**", "loader/**", ".stencil/**", ".next/**", "!.next/cache/**"]
     },
     "typecheck": {
       "dependsOn": ["^build"],

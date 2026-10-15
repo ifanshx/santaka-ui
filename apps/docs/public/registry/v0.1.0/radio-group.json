@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-radio-group/sk-radio-group.tsx",
       "type": "registry:component",
-      "checksum": "sha256-819ae86e6bdc913c4a5d7d74be4ca7c89e75311da022f041259c7a9bd97e0b69"
+      "checksum": "sha256-676d10258c0e4ee4b4086810bc8a02dd19e286e047bbd8c5d2779ace05b64470"
     },
     {
       "path": "src/components/sk-radio-group/sk-radio-group.css",

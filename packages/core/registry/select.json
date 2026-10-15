@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-select/sk-select.tsx",
       "type": "registry:component",
-      "checksum": "sha256-9da194759666131a5a2d04888ddce3f50db81c1819175857c2d9f322c39d2f9a"
+      "checksum": "sha256-e7aebae64af49bfb03e0e689d3e9d35c7d61de408bd1d69572c259010cc1b48c"
     },
     {
       "path": "src/components/sk-select/sk-select.css",

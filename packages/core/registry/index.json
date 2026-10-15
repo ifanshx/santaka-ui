@@ -474,7 +474,7 @@
         {
           "path": "src/components/sk-checkbox/sk-checkbox.tsx",
           "type": "registry:component",
-          "checksum": "sha256-43df2e82506ed2e3e81f1ad0c0a434506e404a391f85142c4c67f58f0a051ccb"
+          "checksum": "sha256-3ca965044d1c962da588553f3f567b151adf05d8c6644e21a3bdc6ff813c187a"
         },
         {
           "path": "src/components/sk-checkbox/sk-checkbox.css",
@@ -899,7 +899,7 @@
         {
           "path": "src/components/sk-input/sk-input.tsx",
           "type": "registry:component",
-          "checksum": "sha256-ed26c2d8e35aa7e39d76c7ee147aa17cfa50d763f00300042c4b2bd5dd3d1c21"
+          "checksum": "sha256-d0ecd14585d87c7f0b56838cd2c54e3049a3a633ad796c05da4af919ef8ffd66"
         },
         {
           "path": "src/components/sk-input/sk-input.css",
@@ -1303,7 +1303,7 @@
         {
           "path": "src/components/sk-radio-group/sk-radio-group.tsx",
           "type": "registry:component",
-          "checksum": "sha256-819ae86e6bdc913c4a5d7d74be4ca7c89e75311da022f041259c7a9bd97e0b69"
+          "checksum": "sha256-676d10258c0e4ee4b4086810bc8a02dd19e286e047bbd8c5d2779ace05b64470"
         },
         {
           "path": "src/components/sk-radio-group/sk-radio-group.css",
@@ -1476,7 +1476,7 @@
         {
           "path": "src/components/sk-select/sk-select.tsx",
           "type": "registry:component",
-          "checksum": "sha256-9da194759666131a5a2d04888ddce3f50db81c1819175857c2d9f322c39d2f9a"
+          "checksum": "sha256-e7aebae64af49bfb03e0e689d3e9d35c7d61de408bd1d69572c259010cc1b48c"
         },
         {
           "path": "src/components/sk-select/sk-select.css",
@@ -1905,7 +1905,7 @@
         {
           "path": "src/components/sk-switch/sk-switch.tsx",
           "type": "registry:component",
-          "checksum": "sha256-cabc793adcf6263118441f7178115bc47084ea647dcb7aa65695986a88778cbd"
+          "checksum": "sha256-dccd4e432b684349a2b4615f6631b1af234adb5468e939ae572a0ed9fae4e869"
         },
         {
           "path": "src/components/sk-switch/sk-switch.css",
@@ -2290,7 +2290,7 @@
         {
           "path": "src/components/sk-textarea/sk-textarea.tsx",
           "type": "registry:component",
-          "checksum": "sha256-f921792991a29ef6f8678b9f45a5f5f87dd0ac8a855963b8b190bd3212d3787a"
+          "checksum": "sha256-7dbc8107be1621f10076ea95efa2ad7b1671f710ae1d44a2ebc098f8984e92aa"
         },
         {
           "path": "src/components/sk-textarea/sk-textarea.css",

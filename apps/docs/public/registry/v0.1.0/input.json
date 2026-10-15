@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-input/sk-input.tsx",
       "type": "registry:component",
-      "checksum": "sha256-ed26c2d8e35aa7e39d76c7ee147aa17cfa50d763f00300042c4b2bd5dd3d1c21"
+      "checksum": "sha256-d0ecd14585d87c7f0b56838cd2c54e3049a3a633ad796c05da4af919ef8ffd66"
     },
     {
       "path": "src/components/sk-input/sk-input.css",

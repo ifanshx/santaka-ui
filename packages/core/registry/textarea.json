@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-textarea/sk-textarea.tsx",
       "type": "registry:component",
-      "checksum": "sha256-f921792991a29ef6f8678b9f45a5f5f87dd0ac8a855963b8b190bd3212d3787a"
+      "checksum": "sha256-7dbc8107be1621f10076ea95efa2ad7b1671f710ae1d44a2ebc098f8984e92aa"
     },
     {
       "path": "src/components/sk-textarea/sk-textarea.css",

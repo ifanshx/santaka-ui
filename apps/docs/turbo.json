@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // The docs site tests assert against `dist/` — the built pages, the bundled
+    // CSS, the Pagefind index, and the served copy of the registry payload — so
+    // they are tests of build output, not of source. The root `test` task
+    // depends only on `^build` (the dependencies' builds), which is not enough
+    // here: on a cold checkout `apps/docs/dist` does not exist and every test in
+    // `tests/site.test.mjs` fails. The defect stayed hidden because a local
+    // `dist/` from an earlier build always satisfied it.
+    //
+    // `build` (this package's own) is added, so turbo orders core's build, then
+    // the docs build, then the tests.
+    "test": {
+      "dependsOn": ["^build", "build"],
+      "outputs": ["coverage/**", "playwright-report/**", "test-results/**"]
+    }
+  }
+}

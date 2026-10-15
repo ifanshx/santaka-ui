@@ -102,6 +102,15 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter @santaka-ui/example-react-vite exec playwright install --with-deps chromium
 
+      # The workspace packages are consumed through their published `exports`
+      # maps, which point into `dist/` — and `dist/` is gitignored, so a fresh
+      # checkout has none. Without this build, `vite build` cannot resolve
+      # `@santaka-ui/react` at all. The example deliberately carries no
+      # `resolve.alias` so it proves the consumer resolution path; that path is
+      # the one that needs the build.
+      - name: Build the workspace packages
+        run: pnpm run build
+
       # `plan.md` section 17: every form control submits through a plain form in
       # React. The universal half is proven in the web-components suite; this is
       # the React half, and it is a separate job because it is a separate claim —
@@ -115,6 +124,40 @@ jobs:
           name: react-example-report
           path: examples/react-vite/playwright-report/
           retention-days: 7
+
+  nextjs-example:
+    name: Next.js renders on the server and hydrates clean
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @santaka-ui/example-nextjs exec playwright install --with-deps chromium
+
+      # Same reason as the React example: the packages resolve through `dist/`,
+      # which a fresh checkout does not have. `next build` imports
+      # `@santaka-ui/react` and `@santaka-ui/web-components` by their exports maps.
+      - name: Build the workspace packages
+        run: pnpm run build
+
+      # `plan.md` section 3 and risk R2: the server output must carry the custom
+      # element tags with their public attributes and must NOT define them, so the
+      # tree the server produced is the tree the client hydrates against. The
+      # example built and proved this locally but no job ran it, which left the
+      # Next.js integration at Preview — a claim nothing defended against
+      # regression. `test:ssr` builds the app first, so it is self-contained.
+      - name: Build the app and run the SSR proof
+        run: pnpm --filter @santaka-ui/example-nextjs test:ssr
 
   changesets:
     name: changesets are valid

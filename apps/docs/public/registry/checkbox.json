@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-checkbox/sk-checkbox.tsx",
       "type": "registry:component",
-      "checksum": "sha256-43df2e82506ed2e3e81f1ad0c0a434506e404a391f85142c4c67f58f0a051ccb"
+      "checksum": "sha256-3ca965044d1c962da588553f3f567b151adf05d8c6644e21a3bdc6ff813c187a"
     },
     {
       "path": "src/components/sk-checkbox/sk-checkbox.css",

@@ -21,7 +21,7 @@
     {
       "path": "src/components/sk-switch/sk-switch.tsx",
       "type": "registry:component",
-      "checksum": "sha256-cabc793adcf6263118441f7178115bc47084ea647dcb7aa65695986a88778cbd"
+      "checksum": "sha256-dccd4e432b684349a2b4615f6631b1af234adb5468e939ae572a0ed9fae4e869"
     },
     {
       "path": "src/components/sk-switch/sk-switch.css",
