@@ -1,4 +1,4 @@
-import { forwardRef, type ReactElement, type ReactNode } from "react"
+import { forwardRef, type MouseEventHandler, type ReactElement, type ReactNode } from "react"
 import { cn } from "@santaka-ui/utilities"
 
 /**
@@ -35,12 +35,26 @@ export type ButtonProps = {
   disabled?: boolean
   loading?: boolean
   type?: ButtonType
+  /**
+   * Explicit id. The element generates none — a button is not a form control
+   * that needs a label association — so this is forwarded only when given.
+   */
+  id?: string
+  /**
+   * The click handler, wired as a native listener on the custom element.
+   *
+   * React 19 attaches a real `click` listener for `onClick` on a custom
+   * element (verified in `button.test.tsx`), so the handler fires for both a
+   * user click and a dispatched event, exactly as it would on a native button.
+   * The event type is the element's, not a `MouseEvent` over a native button.
+   */
+  onClick?: MouseEventHandler<SkButtonElement>
   className?: string
   children?: ReactNode
 }
 
 export const Button = forwardRef<SkButtonElement, ButtonProps>(function Button(
-  { variant, size, disabled, loading, type, className, children },
+  { variant, size, disabled, loading, type, id, onClick, className, children },
   ref,
 ): ReactElement {
   return (
@@ -52,6 +66,8 @@ export const Button = forwardRef<SkButtonElement, ButtonProps>(function Button(
       disabled={disabled}
       loading={loading}
       type={type}
+      id={id}
+      onClick={onClick}
     >
       {children}
     </sk-button>

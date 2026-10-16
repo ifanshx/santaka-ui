@@ -78,4 +78,19 @@ describe("Button adapter", () => {
     const element = rendered(<Button type="submit">Save</Button>)
     expect(element.type).toBe("submit")
   })
+
+  it("forwards id to the element", () => {
+    const element = rendered(<Button id="save-button">Save</Button>)
+    expect(element.id).toBe("save-button")
+  })
+
+  it("wires onClick as a listener on the element", () => {
+    // A click a user makes and a dispatched event take the same path: React 19
+    // attaches a native `click` listener for `onClick` on a custom element.
+    // This is the contract the adapter's prop list must not break by omission.
+    let clicks = 0
+    const element = rendered(<Button onClick={() => clicks++}>Save</Button>)
+    element.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+    expect(clicks).toBe(1)
+  })
 })

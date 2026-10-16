@@ -76,6 +76,28 @@ describe("IconButton adapter", () => {
     )
     expect(container.querySelector("sk-icon-button")!.getAttribute("class")).toBe("toolbar-button")
   })
+
+  it("forwards id to the element", () => {
+    const container = rendered(
+      <IconButton label="Add" id="add-row">
+        <svg />
+      </IconButton>,
+    )
+    expect(container.querySelector("sk-icon-button")!.id).toBe("add-row")
+  })
+
+  it("wires onClick as a listener on the element", () => {
+    let clicks = 0
+    const container = rendered(
+      <IconButton label="Add" onClick={() => clicks++}>
+        <svg />
+      </IconButton>,
+    )
+    container
+      .querySelector("sk-icon-button")!
+      .dispatchEvent(new MouseEvent("click", { bubbles: true }))
+    expect(clicks).toBe(1)
+  })
 })
 
 describe("Link adapter", () => {

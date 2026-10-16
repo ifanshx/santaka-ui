@@ -1,4 +1,4 @@
-import { forwardRef, type ReactElement, type ReactNode } from "react"
+import { forwardRef, type MouseEventHandler, type ReactElement, type ReactNode } from "react"
 import { cn } from "@santaka-ui/utilities"
 import type { ButtonSize, ButtonType, ButtonVariant } from "./button.js"
 
@@ -32,12 +32,23 @@ export type IconButtonProps = {
   disabled?: boolean
   loading?: boolean
   type?: ButtonType
+  /**
+   * Explicit id. Forwarded only when given, and never generated: the control's
+   * accessible name comes from `label`, not from a labelled-by association.
+   */
+  id?: string
+  /**
+   * The click handler, wired as a native listener on the custom element.
+   * Identical to `Button`'s: React 19 attaches a real `click` listener for
+   * `onClick` on a custom element.
+   */
+  onClick?: MouseEventHandler<SkIconButtonElement>
   className?: string
   children?: ReactNode
 }
 
 export const IconButton = forwardRef<SkIconButtonElement, IconButtonProps>(function IconButton(
-  { label, variant, size, disabled, loading, type, className, children },
+  { label, variant, size, disabled, loading, type, id, onClick, className, children },
   ref,
 ): ReactElement {
   return (
@@ -50,6 +61,8 @@ export const IconButton = forwardRef<SkIconButtonElement, IconButtonProps>(funct
       disabled={disabled}
       loading={loading}
       type={type}
+      id={id}
+      onClick={onClick}
     >
       {children}
     </sk-icon-button>

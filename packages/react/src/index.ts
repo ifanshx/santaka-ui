@@ -7,6 +7,7 @@ export type {
   SkButtonElement,
 } from "./button.js"
 export { IconButton } from "./icon-button.js"
+export type { IconButtonProps, SkIconButtonElement } from "./icon-button.js"
 export { Badge } from "./badge.js"
 export type { BadgeProps, BadgeVariant, BadgeSize, DotBadgeProps, SkBadgeElement } from "./badge.js"
 export { Card } from "./card.js"
