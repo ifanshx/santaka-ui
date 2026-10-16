@@ -12,11 +12,12 @@ the bottom of that section — *no additional linter is added without an ADR* �
 which only has force if there is a document saying which tools are in and which
 are out.
 
-Four tools named in §5 are deliberately not used, and two concerns have no
-implementation at all. This ADR records each deviation with its reason, so a
-reader does not have to diff the plan against the lockfile to find out whether an
-absence is a decision or an oversight. `eslint.config.js` already cites this
-record for the "no second linter" rule.
+Four tools named in §5 are deliberately not used, and the concerns that once had
+no implementation at all — the docs site and the CLI — now have one, so their
+rows are gone from the table below. This ADR records each *remaining* deviation
+with its reason, so a reader does not have to diff the plan against the lockfile
+to find out whether an absence is a decision or an oversight.
+`eslint.config.js` already cites this record for the "no second linter" rule.
 
 ## Decision
 
@@ -43,9 +44,7 @@ record for the "no second linter" rule.
 | Token pipeline | `style-dictionary` | A bespoke pipeline (`packages/tokens/scripts/`) | ADR-002. The emitted contract is "hex then `oklch()` behind `@supports`", which `style-dictionary` cannot express; a transform plugin to fake it was more code than the pipeline. |
 | Bundle budgets | `size-limit` | `scripts/measure-bundle.mjs` | ADR-010. Budgets are per-component and per-theme, which `size-limit`'s entrypoint model does not express, and the measurement must throw when it finds nothing to measure. |
 | Dependency hygiene | `knip` | Not used | Absent, not replaced. §5 itself schedules it as a non-blocking job that "becomes blocking once the workspace is clean"; the workspace has never been run through it. |
-| Storybook | Storybook 9, React renderer first | Not used | Absent. §10's workshop is unbuilt; `plan.md` §17 records it as a Tier 1 blocker. |
-| Docs site and search | Astro + Pagefind | Not used | Absent. ADR-006 is unwritten and the site is unbuilt. |
-| CLI | Node with `cac` and `kleur` | Not used | Absent. `packages/cli` does not exist. |
+| Storybook | Storybook 9, React renderer first | `apps/storybook`, Storybook 10 | ADR-020. §10's workshop is built; the version moved 9 → 10, and the ADR records what one React-renderer setup cannot host (the Vue, Svelte, and Angular adapters). |
 | `tooling/` layout | `tooling/{eslint,typescript,test-config}` | Only `tooling/typescript` | ESLint config is at the root (flat config is naturally root-anchored); there is no shared test-config package. Recorded as a deviation, not a plan to fill the tree — §5 says "do not generate empty packages just to fill the directory tree". |
 
 ### Two concerns where the specification is only partly met
@@ -88,9 +87,12 @@ rules that apply to the adapter packages apply inside the SFC.
 
 ## Consequences
 
-- The four absent tools are *absences*, not decisions with an alternative. Each
-  one is either a Tier 1 blocker (`plan.md` §17) or scheduled work; none of them
-  is "done differently", and this table must not be read as if it were.
+- The remaining absent tools are *absences*, not decisions with an alternative.
+  Each one is either a Tier 1 blocker (`plan.md` §17) or scheduled work; none of
+  them is "done differently", and this table must not be read as if it were. The
+  docs site (Astro + Pagefind, ADR-006) and the CLI (`cac`/`kleur`) have since
+  landed and left this table; Storybook moved from absent to a documented
+  implementation (ADR-020).
 - A new tool added to the workspace without an entry here is a deviation from
   §5. The remedy is an ADR, and for a linter it is required rather than
   encouraged.
@@ -100,7 +102,8 @@ rules that apply to the adapter packages apply inside the SFC.
 ## What would reverse this
 
 Nothing about the adopted column is contested. The deviations reverse as the
-work lands: `knip` becomes relevant once the workspace is worth sweeping,
-`cac`/`kleur` when the CLI ships, Astro when the docs site does, Storybook when
-§10 is built. Each of those brings its own ADR where the plan already calls for
-one (ADR-006 for docs, ADR-015 for the AI/MCP surface).
+work lands: `knip` becomes relevant once the workspace is worth sweeping, and it
+is the one still outstanding. The others have landed — `cac`/`kleur` when the CLI
+shipped, Astro + Pagefind when the docs site did, Storybook when §10 was built —
+each with its own ADR where the plan called for one (ADR-006 for docs, ADR-009
+for the CLI, ADR-020 for Storybook).

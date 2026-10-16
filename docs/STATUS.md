@@ -8,16 +8,18 @@ what exists today. Every claim below is checked against the repository.
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
 package are real, tested, and green; the React package now covers all
-twenty-one shipped components; the CLI, registry hosting, and documentation
-site exist and are tested. **Storybook does not exist yet** — it is the one
-section 10 deliverable still outstanding.
+twenty-one shipped components; the CLI, registry hosting, documentation site,
+and the Storybook workshop exist and are tested. **Section 10's deliverables are
+all present** — stories, controls, interaction tests, the a11y addon, and the
+framework decision (ADR-020).
 
-`pnpm run verify` exits 0 from a cold cache. **827 tests pass** — 48 token, 20
-utilities, 145 core, 164 React, 95 Vue, 19 MCP server, 37 CLI, 285 Chromium
-Playwright in the universal package, and 7 in each of the React and Vue examples.
-(The Playwright figure is the `chromium-baseline` project, which is what runs
-locally; CI's `browsers` job runs the same 285 on Firefox and WebKit.) All nine
-publishable packages pass `publint` and `attw --pack`.
+`pnpm run verify` exits 0 from a cold cache. **986 tests pass** — 48 token, 20
+utilities, 145 core, 168 React, 95 Vue, 19 MCP server, 37 CLI, 155 Storybook
+interaction tests, 285 Chromium Playwright in the universal package, and 7 in
+each of the React and Vue examples. (The Playwright figure is the
+`chromium-baseline` project, which is what runs locally; CI's `browsers` job runs
+the same 285 on Firefox and WebKit.) All nine publishable packages pass `publint`
+and `attw --pack`.
 
 ## Done
 
@@ -146,6 +148,55 @@ The adapter's server-render path is covered separately, in
 `tests/consumer/run.mjs`, which renders it through `vue/server-renderer` from the
 packed tarball and fails if a component touches `document` during `setup` — the
 failure ADR-005's R2 names.
+
+### Storybook
+
+§10's workshop now exists: `apps/storybook`, `@storybook/react-vite`, twenty-one
+story files covering all twenty-one shipped components — **155 stories** with the
+documented variants (default, sizes, disabled, loading, error/invalid, long
+content), a light/dark theme toolbar, and the a11y addon. The framework choice
+and, more importantly, **what it cannot host** are recorded in ADR-020 rather
+than assumed.
+
+The stories import `@santaka-ui/react` — the package a consumer installs — never
+`packages/react/src`, and `preview.tsx` registers the elements through the
+documented loader and imports the three stylesheets a consumer adds, so a
+component that only looks right under Storybook's own CSS cannot hide.
+
+**Interaction tests are real tests.** Nine stories carry `play` functions that
+run in Chromium through `@storybook/addon-vitest` (`apps/storybook/vitest.config.ts`),
+covering Button, Checkbox, Switch, Input, Textarea, Select, Radio Group, Tabs, and
+Dialog. They live in the story files, not a parallel suite, so a test cannot drift
+from the story a reviewer looks at. `pnpm run verify` builds, typechecks, lints,
+and runs them like any other workspace package.
+
+Writing them found things a rendering-only story cannot:
+
+- **Stencil's internal elements render a tick late.** A synchronous
+  `getByRole` in a `play` function races the first render and finds nothing; the
+  queries had to become `findByRole`, which retries. The one exception is Button,
+  whose `role` is written in `componentDidLoad` on the host — also a tick late,
+  so it needed the same fix.
+- **Tabs update `aria-selected` before the panel's `hidden`.** The state
+  attribute is written imperatively and lands synchronously; the panel's `hidden`
+  is declarative and follows one render later. The assertion waits for the panel
+  instead of sampling the intermediate frame.
+- **The dialog panel carries a stray `hidden` while open.** Stencil's scoped-mode
+  slot manager writes it onto the panel (it hosts `<slot>` elements it built), and
+  `sk-dialog.css` keeps the open panel visible anyway via `[hidden][open] { display:
+  flex }`. Testing Library's role query drops `hidden` elements regardless of
+  computed style, and jest-dom's `toBeVisible()` agrees — so the play function
+  asserts the two facts that are true (`data-state="open"` on the host, `open` on
+  the panel) and leaves real-browser visibility to `e2e/dialog.e2e.ts`, where the
+  visibility model matches the pixels.
+
+One §10 bullet is satisfied structurally rather than by a new artifact: **visual
+regression for key stories**. ADR-019 photographs the vanilla example page —
+every component in its documented states, in light/ltr, light/rtl, and dark/ltr,
+57 baselines owned by the pinned Playwright image — and deliberately keeps that
+out of `verify`. Story screenshots would add a second baseline set owned by
+whoever ran `--update-snapshots` last, which is the failure ADR-019 exists to
+prevent.
 
 ### Dependency audits
 
@@ -440,7 +491,12 @@ The decisions are recorded in ADR-015.
 ### Blocking Tier 1
 
 All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB with the rationale recorded in measure-bundle.mjs: twelve components where 12 KB covered eight, and the per-component CSS average *fell* from 2.45 to 2.11 KB.
-- **No Storybook.** Section 10's workshop; nothing in the repo references it.
+- ~~**No Storybook.**~~ **Done** — `apps/storybook`, `@storybook/react-vite`,
+  ADR-020. Twenty-one story files, 155 stories, nine `play` functions that run as
+  real Chromium tests through `@storybook/addon-vitest`, and the a11y addon. The
+  framework decision names what it cannot host (Vue, Svelte, Angular adapters)
+  instead of pretending one setup covers them. The `visual` bullet above is
+  satisfied by ADR-019's example-page baselines, not by a second story-level set.
 
 ### Blocking Stable
 
