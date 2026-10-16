@@ -87,12 +87,14 @@ rules that apply to the adapter packages apply inside the SFC.
 
 ## Consequences
 
-- The remaining absent tools are *absences*, not decisions with an alternative.
-  Each one is either a Tier 1 blocker (`plan.md` §17) or scheduled work; none of
-  them is "done differently", and this table must not be read as if it were. The
-  docs site (Astro + Pagefind, ADR-006) and the CLI (`cac`/`kleur`) have since
-  landed and left this table; Storybook moved from absent to a documented
-  implementation (ADR-020).
+- Absences are recorded, not papered over. Where §5 names a tool the workspace
+  does not use at all — `knip` is the one — the row says so and says why. Where
+  a tool was replaced by an alternative, the replacement is named
+  (`style-dictionary` → the bespoke pipeline, `size-limit` →
+  `scripts/measure-bundle.mjs`). A missing tool is never left to read as if it
+  were "done differently" without a record. The docs site (Astro + Pagefind,
+  ADR-006) and the CLI (`cac`/`kleur`) have since landed and left this table;
+  Storybook moved from absent to a documented implementation (ADR-020).
 - A new tool added to the workspace without an entry here is a deviation from
   §5. The remedy is an ADR, and for a linter it is required rather than
   encouraged.

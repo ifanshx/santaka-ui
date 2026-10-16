@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-16
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §10, §17 Tier 1 blocker)
+- **Plan deadline:** end of weeks 5–6 (`plan.md` §10; §19 task 9)
 
 ## Context
 
