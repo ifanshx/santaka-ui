@@ -20,6 +20,10 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "line" : "list",
+  // One worker: this suite is a handful of tests, and a single browser keeps it
+  // from competing with the larger suites turbo runs alongside it (see
+  // `packages/react/vitest.config.ts`).
+  workers: 1,
   use: {
     baseURL: "http://127.0.0.1:4174",
     trace: "on-first-retry",

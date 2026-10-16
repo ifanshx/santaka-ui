@@ -19,7 +19,9 @@ export default defineConfig({
     // Bounding turbo's task concurrency (turbo.json, "50%") reduced but did not
     // remove it, because the two multiply: the real ceiling is tasks × workers.
     // Two workers here keeps the tests parallel without oversubscribing, and it is
-    // stated rather than left to a default that depends on the machine.
+    // stated rather than left to a default that depends on the machine. Every
+    // other vitest suite and each Playwright config states the same bound, so the
+    // ceiling holds across the whole `verify` run rather than for one package.
     //
     // This is the Vitest 4 spelling. The earlier `poolOptions.forks.maxForks` was
     // removed in Vitest 4 and silently ignored — it emitted a DEPRECATED notice and

@@ -23,6 +23,10 @@ export default defineConfig({
   plugins: [storybookTest({ configDir: `${dirname}.storybook` })],
   test: {
     name: "storybook",
+    // Each worker is a Chromium instance, so an unbounded pool is the heaviest
+    // thing in `verify`. Bound it the same way as the other suites (see
+    // `packages/react/vitest.config.ts`).
+    maxWorkers: 2,
     browser: {
       enabled: true,
       headless: true,

@@ -16,6 +16,11 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "line" : "list",
+  // Cap parallel browsers. Playwright defaults to roughly one worker per core,
+  // and turbo runs several browser-bearing tasks at once, so the ceiling that
+  // matters is tasks × workers — see `packages/react/vitest.config.ts` for the
+  // full note. Two browsers covers the suite without starving the machine.
+  workers: 2,
   // Visual-regression defaults (ADR-019). Screenshots are the only test whose
   // result depends on fonts, so the tolerance and the baseline environment are
   // stated rather than left to defaults: 1% of pixels may differ (antialiasing
