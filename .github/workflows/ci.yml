@@ -246,6 +246,37 @@ jobs:
       - name: Check the generated support matrix
         run: pnpm --filter @santaka-ui/web-components support-matrix:check
 
+  framework-matrix:
+    name: framework support matrix is in sync with the repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # plan.md section 17: "The public framework/browser support matrix reflects
+      # tested evidence." The browser half is the job above, derived from the
+      # Playwright projects. This is the framework half, and it needs no build:
+      # every claim it checks is a directory or a package script, both of which
+      # are in the checkout. It fails in both directions — a Stable target whose
+      # example is gone, and a Planned target whose package now exists.
+      - name: Check the framework matrix against the repository
+        run: pnpm run framework-support:check
+
+      # The check above proves the committed document matches the tree; these
+      # tests prove the check itself rejects an unbacked claim, which cannot be
+      # shown against the real tree because every claim in it is true.
+      - name: Framework matrix tests
+        run: pnpm run test:docs
+
   llms:
     name: llms.txt and llms-full.txt are in sync
     runs-on: ubuntu-latest

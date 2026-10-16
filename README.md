@@ -97,6 +97,12 @@ export default function App() {
   each engine and writes `docs/browser-support.md`, so a browser appears in the
   document only if a project launches it and passes. Adding a browser to the docs
   without a test job is a release blocker (`plan.md` §4).
+- **Framework support is the same kind of claim.** `docs/framework-support.md`
+  gives each target a state — Stable, Preview, or Planned — plus the adapter
+  package, the example application, and the test command that back it.
+  `pnpm run framework-support:check` fails if a Stable target's example has gone,
+  or a Planned target's package has appeared, so the table cannot describe a
+  repository that does not exist.
 
 ## License
 

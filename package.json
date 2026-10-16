@@ -27,6 +27,9 @@
     "test:consumer": "node tests/consumer/run.mjs",
     "test:registry": "node --test tests/registry/*.test.mjs",
     "test:security": "node --test tests/security/*.test.mjs",
+    "test:docs": "node --test tests/docs/*.test.mjs",
+    "framework-support": "node scripts/generate-framework-support.mjs",
+    "framework-support:check": "node scripts/generate-framework-support.mjs --check",
     "audit:licenses": "node scripts/audit-licenses.mjs --write",
     "audit:security": "node scripts/scan-security.mjs"
   },
