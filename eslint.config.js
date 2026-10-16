@@ -27,6 +27,7 @@ export default tseslint.config(
       "**/.turbo/**",
       "**/generated/**",
       "**/*.d.ts",
+      "**/storybook-static/**",
     ],
   },
   js.configs.recommended,

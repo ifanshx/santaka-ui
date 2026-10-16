@@ -1,0 +1,9 @@
+{
+  "extends": "../../tooling/typescript/react.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node", "vitest/globals", "@vitest/browser/matchers"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", "*.config.ts"]
+}

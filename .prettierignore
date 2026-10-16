@@ -41,3 +41,5 @@ examples/react-vite/test-results
 # Astro build output: generated, never formatted.
 apps/docs/dist
 apps/docs/.astro
+# Storybook build output: generated, never formatted.
+apps/storybook/storybook-static
