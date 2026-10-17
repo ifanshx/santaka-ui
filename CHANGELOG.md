@@ -25,6 +25,34 @@ changes get a pointer to [MIGRATIONS.md](./docs/MIGRATIONS.md).
 - `@santaka-ui/docs` — the documentation site. Astro, pages generated from the
   registry, Pagefind for search. 24 pages (§10, ADR-006).
 
+### Added — components
+
+- **`sk-alert`** — a status surface. `role="status"` for informational variants and
+  `role="alert"` for the interrupting one, which is the whole reason the component
+  exists: an author picking a variant is choosing an announcement policy.
+- **`sk-empty-state`** — the placeholder surface: heading, description, an icon
+  slot, and an actions slot. `bare` drops the chrome for the state sitting inside a
+  card, the same reasoning as `sk-card.bare`.
+- **`sk-progress`** — determinate and indeterminate are one component: omitting
+  `value` is the indeterminate signal, and `aria-valuenow` is omitted with it
+  rather than sent as `0`. A second prop would be a second way to say
+  `value === undefined`, and the two could disagree.
+- **`sk-accordion` / `sk-accordion-item`** — a disclosure group over native
+  `<details>`/`<summary>`: the platform owns the semantics, the focus stop, and
+  Enter/Space activation. `multiple` on the group controls sibling exclusion;
+  `open` on the item reflects both ways, so a consumer can author it in HTML and
+  read back what the browser did. The `toggle` listener is bound to the inner
+  `<details>` — `toggle` does not bubble, and a host-level listener leaves the
+  reflected `open` attached to nothing while every click still toggles the native
+  node.
+- **`sk-table`** — a skin a consumer authors a real `<table>` inside, so the table
+  semantics, the caption, and the column headers survive untouched. The scroll
+  region is the keyboard stop and carries the accessible name; `plain` is for a
+  table inside a card, `striped` and `density` for reading a lot of rows.
+- **The six ship complete:** React and Vue adapters, Storybook stories (with
+  interaction tests on the accordion, progress, empty-state, and table), registry
+  entries with derived props and events, and browser tests.
+
 ### Added — capabilities
 
 - **Form controls.** Checkbox, Switch, Radio Group — completing the v1.0 Tier 2

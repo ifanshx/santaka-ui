@@ -4,6 +4,98 @@ Generated from the registry metadata and the component type declarations.
 Every component below is a custom element; the React/Vue/Svelte/Angular
 packages are adapters over the same element.
 
+## sk-accordion
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+- Events: `sk-open-change`
+
+A stack of disclosure panels where one, or several, can be open at a time.
+
+**When to use**
+
+- Secondary content belongs on the page but should not occupy it — questions, advanced settings, release notes
+- The reader opens panels in any order and may want none of them open
+- The content is short enough to expand in place rather than to open a route
+
+**When not to use**
+
+- The sections are the page's navigation — use Tabs
+- The content must be read in order, or hiding it loses the thread — keep it on the page
+- Every panel starts open and none should close — use headings and sections
+
+**Accessibility**
+
+Built on the native `<details>` and `<summary>` elements, so the disclosure semantics, the focus stop, the expanded state, and Enter and Space are the browser's rather than reimplemented — which is why the item needs no ARIA of its own. The marker is aria-hidden and drawn with pseudo-elements. `heading` renders as a span inside the summary; a consumer that needs a real heading level puts one in the slot. The summary meets `--sk-touch-min`.
+
+**Example**
+
+```html
+<sk-accordion>
+  <sk-accordion-item heading="What is Santaka UI?" open>
+    <p>A token layer, a universal package, and framework adapters.</p>
+  </sk-accordion-item>
+  <sk-accordion-item heading="Does it need a framework?">
+    <p>No.</p>
+  </sk-accordion-item>
+</sk-accordion>
+```
+
+**Known limitations**
+
+- Exclusive by default: opening an item closes its siblings, and `multiple` opts out
+- No group-level event summarises the open items — each item dispatches its own bubbling `sk-open-change` with `detail.open`
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `multiple` | `boolean` | `false` | Whether several panels may be open at once. When false, opening one item closes the others. |
+| `variant` | `"default" \| "plain"` | `"default"` | Visual dressing. `default` is the stroked container with a hard shadow; `plain` drops the container chrome for an accordion that sits inside a card — mirror of sk-card's `bare` reasoning. |
+
+## sk-alert
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+An inline message about the current page: a success, a warning, a failure, or a note.
+
+**When to use**
+
+- A result or a state needs stating next to the content it describes
+- A page-level or form-level failure must be visible without a modal
+- The message may need an action, such as Retry or View logs
+
+**When not to use**
+
+- It interrupts a flow the user must acknowledge — use an Alert Dialog
+- It is a transient, self-dismissing update — use a Toast
+- It labels a value with one word's worth of state — use a Badge
+
+**Accessibility**
+
+Carries `role="alert"` for the danger and warning variants, so those interrupt; the rest are `role="status"` and wait for a pause. The variant glyph is aria-hidden and differs in shape as well as colour, so the message survives a monochrome display. A consumer-set `role` is never overwritten.
+
+**Example**
+
+```html
+<sk-alert variant="warning" heading="Quota nearly full">Your workspace is using 96% of its quota.</sk-alert>
+```
+
+**Known limitations**
+
+- No dismiss control, deliberately: a dismissible alert needs focus management and a close affordance that belongs to a Dialog or a Toast
+- The actions slot is not part of the announced message, so an action the user must take also needs to exist in the page
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `heading` | `string` | `""` | Heading text for the alert, rendered as a `<span>`.  Named `heading`, not `title`, for the reason sk-card records: `title` is a standardized `HTMLElement` member and a prop by that name is shadowed by the prototype property, so the browser would surface it as a hover tooltip on the whole alert.  A string rather than a heading element: the alert does not know what level it sits at in the document's outline, and a hard-coded heading inside it produces a level that may contradict the surrounding structure. A consumer who needs a real heading puts one in the body itself. |
+| `variant` | `\| "neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one. |
+
 ## sk-alert-dialog
 
 - Stability: stable
@@ -291,6 +383,52 @@ Renders the native `<dialog>` element: focus trapping, Escape, and inert backgro
 | `open` | `boolean` | `false` | Whether the dialog is showing. Reflects so page CSS can target it. |
 | `showModal` | `() => Promise<void>` | — | Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering. |
 
+## sk-empty-state
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+The surface a list, table, or panel shows when it has nothing to display.
+
+**When to use**
+
+- A region is legitimately empty and the page should say why
+- The empty region has a next action, such as Create or Import
+- A filter or a search matched nothing and the user can widen it
+
+**When not to use**
+
+- The content is still loading — use a Skeleton or a Spinner
+- The message is about the page as a whole — use an Alert
+- It is a placeholder for one field inside a form
+
+**Accessibility**
+
+Not focusable, with no role and no live region: an empty state is content, not a status change, and announcing "no results" on every render is noise. `heading` renders as a span rather than a heading element, because the level belongs to the consumer's document outline — put a real heading in the body slot when it needs to be one. Slotted actions keep their own semantics.
+
+**Example**
+
+```html
+<sk-empty-state heading="No deploys yet" description="Push to main and the first build starts on its own.">
+  <sk-button slot="actions">New deploy</sk-button>
+</sk-empty-state>
+```
+
+**Known limitations**
+
+- `bare` drops the fill, the border, and the shadow rather than restyling them, because it exists for one inside a Card
+- The icon slot falls back to a dashed CSS glyph: this package ships no icon set
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `description` | `string` | `""` | Supporting text under the heading. |
+| `heading` | `string` | `""` | Plain text in a `<span>`, not a heading element. This component does not know what level it sits at in the document's outline, and a hard-coded heading inside it contradicts the surrounding structure. Decision shared with sk-card. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Density axis: block padding and glyph size. `md` is the default because an empty state usually fills the whole area left by the missing content. |
+| `variant` | `"default" \| "bare"` | `"default"` | Visual treatment.  `default` is the stroked, shadowed surface. `bare` drops the fill, the stroke and the shadow for an empty state nested inside another surface, where two competing boundaries would fight. |
+
 ## sk-icon-button
 
 - Stability: stable
@@ -487,6 +625,50 @@ Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `exter
 | `rel` | `string` | — | Forwarded to the underlying anchor. |
 | `subtle` | `boolean` | `false` | Suppresses the underline until hover or focus. |
 | `target` | `string` | — | Opens in a new tab without the external treatment. |
+
+## sk-progress
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Shows how far along a task is, or that a task is running with no known end.
+
+**When to use**
+
+- Work is in progress and the user is waiting on it
+- The completion fraction is known and moving
+- The progress explains why something else on the page is unavailable
+
+**When not to use**
+
+- The operation finished and its result is what matters — use an Alert
+- A single unmeasured delay is all there is — use a Spinner
+- It is a placeholder for content that is about to arrive — use a Skeleton
+
+**Accessibility**
+
+`role="progressbar"` with `aria-valuemin` and `aria-valuemax`, and `aria-valuenow` only when the value is determinate — an indeterminate bar that announced a number would be lying. The bar's width is derived from value over max. The `label` prop becomes `aria-label` only when the consumer set none of its own.
+
+**Example**
+
+```html
+<sk-progress label="Uploading build 4821" value="40"></sk-progress>
+```
+
+**Known limitations**
+
+- No percentage text is rendered: formatting a number for the reader's locale is an Intl decision this element does not make
+- Under reduced motion the indeterminate bar keeps a static partial fill rather than sitting at zero, because an empty track reads as not started rather than unknown
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `""` | The accessible name. Rendered as `aria-label` only when non-empty AND only when the host does not already carry `aria-label` or `aria-labelledby`, because a consumer's own labelling must never be clobbered by a default. |
+| `max` | `number` | `100` | The scale the value is measured against. Clamped to 0..max on render. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Track height scale. |
+| `value` | `number` | — | The current value. A finite number makes the bar determinate; an absent (or non-finite) value makes it indeterminate — there is no honest percentage to report for a task whose length is unknown, so the contract says the bar sweeps instead of filling. |
 
 ## sk-radio-group
 
@@ -773,6 +955,60 @@ Renders a real native `<input type="checkbox">` carrying `role="switch"`, so the
 | `value` | `string` | `"on"` | The submitted value when on. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox-role=switch would send. |
 | `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
 | `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-table
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A styled container for tabular data, which the consumer writes as a real table.
+
+**When to use**
+
+- Tabular data where comparison down a column is the point
+- The same data in a narrow viewport must scroll sideways without breaking the page
+- The table needs the dense or striped treatment without hand-rolling it
+
+**When not to use**
+
+- It is a read-only summary of a few fields — use a Card
+- The layout is a grid of unrelated panels — use Cards in a layout primitive
+- There is one column and no comparison to make — use a list of Text rows
+
+**Accessibility**
+
+The consumer writes the semantics: `<caption>`, `<thead>`, and `<th scope>`. This element adds a scrollable region that is reachable from the keyboard and carries `role="group"` with an accessible name only when `label` is set — a scroll region a keyboard user cannot reach hides its own content. `label` names that region; it is not a substitute for a `<caption>`.
+
+**Example**
+
+```html
+<sk-table label="Deployments">
+  <table>
+    <caption>Deployments in the last 24 hours</caption>
+    <thead>
+      <tr><th scope="col">Build</th><th scope="col">Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>4821</td><td>Live</td></tr>
+    </tbody>
+  </table>
+</sk-table>
+```
+
+**Known limitations**
+
+- It does not sort, paginate, or read the rows: the table inside is the consumer's markup
+- Sticky headers are not implemented — the scroll height belongs to the consumer's own container, so a sticky offset this element chose would be wrong
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `density` | `"default" \| "compact"` | `"default"` | Cell padding, not a height scale. `size` is the height scale every other component uses and a table has no intrinsic height — it is whatever its rows make it. Density is the axis a table actually varies on, and its default value is named for what it is rather than for a comfort level: `default` matches `variant`, and a table that wants tighter rows opts in. |
+| `label` | `string` | `""` | The name of the scroll region.  The viewport is focusable (`tabindex="0"`) because a scrollable region that cannot be reached from the keyboard is unreachable content (WCAG 2.1.1). With a label it also carries `role="group"` and an accessible name; with none it carries no role at all — an unnamed group is noise in the accessibility tree, not structure. |
+| `striped` | `boolean` | `false` | Zebra rows: even body rows take the sunken surface. |
+| `variant` | `"default" \| "plain"` | `"default"` | `default` is the stroked, shadowed container; `plain` drops the container chrome for a table sitting inside a `sk-card`. |
 
 ## sk-tabs
 

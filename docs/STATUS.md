@@ -8,18 +8,19 @@ what exists today. Every claim below is checked against the repository.
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
 package are real, tested, and green; the React package now covers all
-twenty-one shipped components; the CLI, registry hosting, documentation site,
+twenty-six shipped components; the CLI, registry hosting, documentation site,
 and the Storybook workshop exist and are tested. **Section 10's deliverables are
 all present** — stories, controls, interaction tests, the a11y addon, and the
 framework decision (ADR-020).
 
-`pnpm run verify` exits 0 from a cold cache. **986 tests pass** — 48 token, 20
-utilities, 145 core, 168 React, 95 Vue, 19 MCP server, 37 CLI, 155 Storybook
-interaction tests, 285 Chromium Playwright in the universal package, and 7 in
-each of the React and Vue examples. (The Playwright figure is the
-`chromium-baseline` project, which is what runs locally; CI's `browsers` job runs
-the same 285 on Firefox and WebKit.) All nine publishable packages pass `publint`
-and `attw --pack`.
+`pnpm run verify` exits 0 from a cold cache. **1171 tests pass** — 48 token, 20
+utilities, 170 core, 211 React, 122 Vue, 9 Svelte, 19 MCP server, 37 CLI, 181
+Storybook interaction tests, 328 Chromium Playwright in the universal package, 7
+in each of the React and Vue examples, and 12 in the Svelte example. (The
+Playwright figure is the `chromium-baseline` project, which is what runs locally;
+CI's `browsers` job runs the same 328 on Firefox and WebKit. The Svelte example's
+12 are Chromium-only by design — the framework path, not a browser-support claim.)
+All ten publishable packages pass `publint` and `attw --pack`.
 
 ## Done
 
@@ -36,9 +37,10 @@ and `attw --pack`.
 
 ### Components
 
-Twenty-one universal custom elements — Tier 1 complete; **Tier 2 v1.0 scope
+Twenty-six universal custom elements — Tier 1 complete; **Tier 2 v1.0 scope
 complete**: Dialog, Alert Dialog, Toast, Tooltip, Select, Tabs, Checkbox,
-Switch, Radio Group, each with browser tests against real Chromium:
+Switch, Radio Group, plus the surfaces and the compound pair added last, each
+with browser tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -62,8 +64,14 @@ Switch, Radio Group, each with browser tests against real Chromium:
 | `sk-checkbox` | FACE on a boolean, indeterminate submits as unchecked, native validation |
 | `sk-switch` | the checkbox contract under role=switch: FACE, native validation, thumb slide |
 | `sk-radio-group` | real native radios in a radiogroup: browser-owned arrows, group-level FACE |
+| `sk-tabs` | roving tabindex, arrows move **and** activate, Home/End, RTL inverts the arrow meaning at interaction time, panels hidden rather than visually inactive |
+| `sk-alert` | role follows the variant — `status` or `alert` — without overwriting the consumer's, glyph aria-hidden, the actions row disappears when empty |
+| `sk-empty-state` | heading and description at their hooks, `bare` drops fill/stroke/shadow, no role and no focus stop |
+| `sk-progress` | `aria-valuenow` omitted when indeterminate rather than sent as `0`, size scales the track only, the sweep stops under reduced motion with the state still visible |
+| `sk-accordion` | real <details>/<summary> pair, Enter/Space activation, the marker swap is a drawn stroke rather than a class, `multiple` governs sibling exclusion, `sk-open-change` bubbles with `detail.open` |
+| `sk-table` | the consumer's table semantics survive untouched, the scroll region is the keyboard stop and carries the group name, `striped` and `compact`, `plain` leaves the stroke unpainted without changing its width |
 
-**257 Playwright tests** plus the barrel-export contract tests. Chrome carries
+**328 Playwright tests** plus the barrel-export contract tests. Chrome carries
 the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
@@ -344,9 +352,60 @@ contract.
 The adapter package is exercised in a browser and through the consumer fixture:
 `examples/vue-vite` submits every form control through a plain form (see the Vue
 example above, and the `vue-example` CI job), and `tests/consumer/run.mjs` packs
-nine packages and includes `vue`, installing its tarball into the scratch project
+ten packages and includes `vue`, installing its tarball into the scratch project
 and rendering it through `vue/server-renderer` so the shipped declarations are
 type-checked from a tarball and the SSR path is exercised the way React's is.
+
+### Svelte package and example
+
+`@santaka-ui/svelte` is the tenth publishable package and the third framework
+adapter, and it is the first one that ships **no components**. Svelte 5 decides
+per write whether a prop reaches the element's property or its attribute — the
+setters the element exposes once it is registered, and an object-valued prop as a
+property while it is not — so a wrapper would restate what the compiler does and
+give a prop a second name to be renamed in. What the package ships is what Svelte
+cannot supply: the types-only
+`./elements` subpath (a raw `.d.ts` copied into `dist/`, so a type-only import
+emits nothing) and the §6 theme store — `theme`, `preference`, `setTheme`,
+`THEME_INIT_SCRIPT`, `THEME_STORAGE_KEY`. **9 unit tests** cover the store: the
+storage key and document attribute as the only two sources, the pre-paint snippet
+executed as a program, an unreadable preference, and a mutation from another
+writer.
+
+The types are not decoration. Svelte's fallback for an unknown tag accepts
+anything, so a misspelled attribute is silently dropped; `src/app.d.ts` in the
+example references the subpath instead. Measured: a temporary component with
+`<sk-button varaint="primary">` and `<sk-input naem="email">` fails `svelte-check`
+naming `SkButtonAttributes` and `SkInputAttributes`, and the file was deleted with
+the check returning to zero errors.
+
+`examples/svelte-vite` is the fourth example and the second server-rendered one:
+`server.mjs` serves the Vite-built client assets and fills `renderAppHtml()` into
+the emitted HTML per request, so the page really arrives as markup the browser
+parses. **12 browser tests** cover the served markup, props and the element's own
+`sk-value-change` event, all six form controls through the browser's `FormData`,
+native constraint validation, withheld values, reset, the theme contract with a
+pointer and with the keyboard, and the chrome classes.
+
+The hydration test earned its place. Registering the elements **before** hydration
+produced `Failed to hydrate: HierarchyRequestError` — an `appendChild` on a text
+node — after which Svelte 5 catches its own error, clears the target and mounts
+the application again: the page looks correct and the server's rendering is gone.
+Localising it meant stalling the client module, inspecting the server's DOM after
+the elements upgraded but before hydration, and serialising both node trees: the
+server's `#app` held 117 nodes, the post-mount tree 274, the difference being the
+light DOM the scoped elements render (ADR-011). Registering **after** hydration
+keeps the nodes, the markers and the props. That is the same order React has
+always used — effects run after hydration, which is why the Next.js example
+defines the elements in one (ADR-005) — so the rule is now written down once and
+asserted by this test, which fails if `src/entry-client.ts` is reordered
+(ADR-021).
+
+SvelteKit is **not** covered: `@sveltejs/kit@3.1.0` peer-requires
+`typescript ^6.0.0` while the workspace pins `5.9.3`, so adopting it would mean a
+TypeScript major across every package. The ADR records that the row's `Svelte`
+half is measured and the `SvelteKit` half is not, rather than letting one word in
+a table cover both.
 
 ### Core and utilities
 
@@ -454,19 +513,25 @@ reads the repository:
 
 - A **Stable** target must name an adapter package, an example application, and a
   test script, all three of which must exist — React + Vite, Next.js, Plain
-  HTML/JavaScript, and Vue 3 + Vite do.
+  HTML/JavaScript, Vue 3 + Vite, and Svelte / SvelteKit do.
 - A **Planned** target names the directory where that support would live, and the
-  check fails if it appears. Creating `packages/svelte` fails the build until the
-  row is updated, which is the drift that matters most: an adapter that exists
-  while the document says it does not loses a supported target.
+  check fails if it appears. Creating an adapter package before its row is
+  updated fails the build, which is the drift that matters most: an adapter that
+  exists while the document says it does not loses a supported target.
 - Every directory in `packages/`, `examples/`, and `apps/` must be named by a row
   or listed as not-a-framework artifact, which catches support that exists and
   was never written down.
 
 Both directions were negative-tested: deleting a Stable target's example, and
-creating `packages/svelte`, each fail the check. The framework matrix does not
-assert that the tests pass — the CI jobs the rows name do that — because a
-committed pass/fail would be stale by the next commit.
+creating `packages/svelte`, each fail the check. **The second one then fired for
+real**: adding `packages/svelte` and `examples/svelte-vite` produced exactly the
+three problems the negative test had predicted — the directory exists, no row
+names it, and the Svelte row still said `Planned` with a `wouldLiveAt` path that
+now existed. Promoting the row was therefore part of shipping the adapter rather
+than a follow-up, and the check named every missing claim (the package, the
+example, the test script) instead of leaving the document to someone's memory. The
+framework matrix does not assert that the tests pass — the CI jobs the rows name
+do that — because a committed pass/fail would be stale by the next commit.
 
 ### CLI
 
@@ -534,7 +599,7 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
 
 ### Blocking Stable
 
-- ~~**1 ADR missing**~~ — **all eighteen complete.** ADR-006 (docs site: Astro
+- ~~**1 ADR missing**~~ — **complete through ADR-021.** ADR-006 (docs site: Astro
   with content collections, Pagefind for search) was the last one, and it is
   recorded rather than deferred, because the directory it will fill is already
   written to on every build: `apps/docs/public/` carries `llms.txt`,
@@ -563,8 +628,8 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   token misuses), and added `--sk-color-primary-text` (gates 25 → 27).
 - **No legal preconditions.** Trademark, npm scope, domain, mascot originality.
 - ~~**No consumer fixture.**~~ **Done** — `tests/consumer/run.mjs` packs all
-  nine packages with `pnpm pack`, installs the tarballs into a scratch project
-  outside the workspace, and runs twelve checks the workspace cannot make. It found
+  ten packages with `pnpm pack`, installs the tarballs into a scratch project
+  outside the workspace, and runs thirteen checks the workspace cannot make. It found
   a real defect on first run; see "What the consumer fixture found".
 
 ### What the consumer fixture found
