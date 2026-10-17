@@ -89,12 +89,12 @@ import Layout from "../../layouts/Layout.astro"
           <td>Detects the framework, reports the evidence, and prints the install commands for the chosen mode.</td>
         </tr>
         <tr>
-          <td><code>add &lt;component…&gt;</code></td>
-          <td>Copies component source. Resolves registry dependencies, refuses paths that escape the project, verifies checksums, and stops on a conflict.</td>
+          <td><code>add &lt;name…&gt;</code></td>
+          <td>Copies source for a component or a block. Resolves <code>registryDependencies</code> first — adding a block installs every component it composes — refuses paths that escape the project, verifies checksums, and stops on a conflict.</td>
         </tr>
         <tr>
           <td><code>list</code></td>
-          <td>Lists the available components and what is already installed.</td>
+          <td>Lists the available components and blocks, with counts by type, and what is already installed.</td>
         </tr>
         <tr>
           <td><code>doctor</code></td>
@@ -188,11 +188,11 @@ import Layout from "../../layouts/Layout.astro"
           <td>The override is not a supported value. The list in the message is the whole set.</td>
         </tr>
         <tr>
-          <td><code>Name at least one component: santaka add button dialog</code></td>
-          <td><code>add</code> was run with no component names.</td>
+          <td><code>Name at least one item: santaka add button dialog</code></td>
+          <td><code>add</code> was run with no names.</td>
         </tr>
         <tr>
-          <td><code>Unknown component(s): …</code></td>
+          <td><code>Unknown item(s): …</code></td>
           <td>The name is not in the registry. The same output lists what is available; <code>list</code> shows it with install state.</td>
         </tr>
         <tr>

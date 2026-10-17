@@ -28,6 +28,9 @@ export default tseslint.config(
       "**/generated/**",
       "**/*.d.ts",
       "**/storybook-static/**",
+      // Next.js build output: generated, never linted (the same reason .turbo is
+      // here, and the same rule .prettierignore already states for this directory).
+      "**/.next/**",
     ],
   },
   js.configs.recommended,
@@ -114,6 +117,20 @@ export default tseslint.config(
     files: ["**/e2e/**/*.mjs", "tests/**/*.mjs"],
     languageOptions: {
       globals: { ...globals.node, ...globals.browser },
+    },
+  },
+  {
+    // The vanilla example's own scripts. Nothing covered them: `examples/react-vite`,
+    // `vue-vite`, and `svelte-vite` each run `eslint .` from their own package, and
+    // `examples/vanilla-html` has no `package.json` — it is mounted by the
+    // Playwright config rather than built. So its `main.js` was linted by nobody,
+    // and when run by hand it reported eighteen `no-undef` errors for `document`,
+    // `fetch`, and `CustomEvent`: browser globals in a file the config had no
+    // browser block for. A file that would fail the rules and is simply not
+    // covered is worse than one that fails, because nothing reports it.
+    files: ["examples/vanilla-html/**/*.js"],
+    languageOptions: {
+      globals: { ...globals.browser },
     },
   },
   {

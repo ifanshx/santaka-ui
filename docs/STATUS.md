@@ -8,18 +8,23 @@ what exists today. Every claim below is checked against the repository.
 
 Weeks 1–4 of the roadmap. The token layer and the universal Web Components
 package are real, tested, and green; the React package now covers all
-twenty-six shipped components; the CLI, registry hosting, documentation site,
-and the Storybook workshop exist and are tested. **Section 10's deliverables are
-all present** — stories, controls, interaction tests, the a11y addon, and the
-framework decision (ADR-020).
+twenty-six shipped components and three starter blocks; the CLI, registry
+hosting, documentation site, and the Storybook workshop exist and are tested.
+**Section 10's deliverables are all present** — stories, controls, interaction
+tests, the a11y addon, and the framework decision (ADR-020). §17's starter-block
+gate is closed (ADR-022): `dashboard`, `settings`, and `authentication` ship as
+markup plus layout CSS, their `registryDependencies` are derived from the markup
+rather than authored, and `santaka add` resolves that closure — a field the
+registry had declared and no code had ever read.
 
-`pnpm run verify` exits 0 from a cold cache. **1171 tests pass** — 48 token, 20
-utilities, 170 core, 211 React, 122 Vue, 9 Svelte, 19 MCP server, 37 CLI, 181
-Storybook interaction tests, 328 Chromium Playwright in the universal package, 7
+`pnpm run verify` exits 0 from a cold cache. **1227 tests pass** — 48 token, 20
+utilities, 187 core, 220 React, 122 Vue, 9 Svelte, 28 MCP server, 45 CLI, 181
+Storybook interaction tests, 341 Chromium Playwright in the universal package, 7
 in each of the React and Vue examples, and 12 in the Svelte example. (The
 Playwright figure is the `chromium-baseline` project, which is what runs locally;
-CI's `browsers` job runs the same 328 on Firefox and WebKit. The Svelte example's
-12 are Chromium-only by design — the framework path, not a browser-support claim.)
+CI's `browsers` job runs the same 341 on Firefox and WebKit (682 passed on the
+last local cross-engine run). The Svelte example's 12 are Chromium-only by
+design — the framework path, not a browser-support claim.)
 All ten publishable packages pass `publint` and `attw --pack`.
 
 ## Done
@@ -71,7 +76,7 @@ with browser tests against real Chromium:
 | `sk-accordion` | real <details>/<summary> pair, Enter/Space activation, the marker swap is a drawn stroke rather than a class, `multiple` governs sibling exclusion, `sk-open-change` bubbles with `detail.open` and reports changes only — WebKit's extra `toggle` for the sibling a group closes is not reported |
 | `sk-table` | the consumer's table semantics survive untouched, the scroll region is the keyboard stop and carries the group name, `striped` and `compact`, `plain` leaves the stroke unpainted without changing its width |
 
-**328 Playwright tests** plus the barrel-export contract tests. Chrome carries
+**341 Playwright tests** plus the barrel-export contract tests. Chrome carries
 the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
@@ -457,6 +462,13 @@ and the test verifies that rather than assuming it.
 pnpm 10 + Turborepo, three-job CI, Changesets, TypeScript strict, ESLint, Prettier,
 measured budgets.
 
+**ESLint's coverage is a per-package task, and two directories were outside it.**
+`pnpm run lint` is `turbo run lint`, so a package with no `lint` script is a
+package no linter reads. `examples/vanilla-html` (no `package.json` at all) and
+`examples/nextjs` (no `lint` script) were both in that state; both are covered
+now, and `**/.next/**` is ignored so a root `eslint .` reads the source rather
+than 2,068 errors about generated output.
+
 ### Decisions recorded
 
 **All 20 ADRs exist**: 001 (Stencil over Lit, with evidence), 002 (token
@@ -527,9 +539,34 @@ than argued: 36 repeats of the three scans under four workers passed, which is w
 this stayed invisible, and `verify` still fails intermittently. The wait now
 requires every registered custom element to be hydrated and every finite animation
 to have landed, and `expectNoAxeViolations` prints the scan-time state with a
-violation so the next one names its own cause. Whether the Firefox/dark
-occurrence above was this same window is not known — nothing recorded its
-violations — but the window is gone either way.
+violation so the next one names its own cause.
+
+That was still not the cause. `verify` kept failing on those two scans — twice in
+a row, each time at 60 s — and 60 s twice is not a slow machine, it is a page
+that will never be ready. The snapshot in the failure's `error-context.md` showed
+every `sk-*` element as `generic`, i.e. **none** had upgraded: the module had not
+loaded at all. The reason was the task graph, not the test. The root `test` task
+depends on `^build` — the *dependencies'* builds — which says nothing about a
+package's own, and `apps/storybook:test` pulls `web-components#build` in through
+its own `^build`. So under `verify`, `web-components#test` and
+`web-components#build` ran **concurrently**, and that build begins with
+`rimraf dist loader` while `scripts/serve-examples.mjs` serves `dist/` from disk.
+The suite served a directory being deleted; every module request 404ed. Running
+the package's tests alone never reproduced it, because nothing pulled the build
+in.
+
+`packages/web-components/turbo.json` now adds `build` to that package's `test`
+task — the same shape as the existing `apps/docs/turbo.json` override, and
+scoped to the package so Storybook's and the docs' own builds are not forced
+before their tests. The fix was checked in the graph (`turbo run test --dry`) and
+by a forced `verify`: the build finishes before the suites start, and the scans
+that timed out at 60 s now pass in **4.9 s and 5.1 s**. The wait also reports
+which elements failed to upgrade and which hyphenated tags have no definition, so
+a future failure of this class names its cause instead of printing a timeout.
+
+Whether the earlier Firefox/dark occurrence was this same cause is not known — it
+predates the fixture and nothing recorded its violations — but the mechanism that
+was reachable from a cold checkout is now closed.
 
 One more failure has no cause attached: a forced `turbo run test` (every task
 re-run at once, for stronger evidence than a cache hit) failed in
@@ -576,10 +613,10 @@ do that — because a committed pass/fail would be stale by the next commit.
 
 `@santaka-ui/cli` is the eighth publishable package, and the v1.0 workflow
 surface: `init`, `add`, `list`, `doctor`, `diff`, `theme init`, `registry`, and
-`update`. **37 unit tests** cover detection, path safety, the manifest, the
-diff, and rollback; **18 end-to-end tests** drive the built binary in a real
-subprocess against a real temporary project, because an exit code is only
-observable from a process.
+`update`. **45 unit tests** cover detection, path safety, the manifest, the
+diff, rollback, and the dependency closure; **20 end-to-end tests** drive the
+built binary in a real subprocess against a real temporary project, because an
+exit code is only observable from a process.
 
 The three rules that shape it:
 
@@ -598,6 +635,50 @@ The three rules that shape it:
 
 A CI job runs both suites on Linux, macOS, and Windows, per §8.
 
+**Registry dependencies are resolved, and that is new.** `registryDependencies`
+was declared in the schema, in the types, and in all twenty-six entries, and no
+code read it: `add` copied one entry's own files and stopped. A block is the
+first item where that is a broken install rather than an inert field, so `add`
+now walks the closure depth-first, deduplicates by name, refuses a cycle with the
+chain named, reports a missing dependency with the entry that requested it, and
+puts the whole closure through the existing conflict, `--skip`/`--overwrite`,
+journal, and manifest rules as one plan. A dependency-free install is unchanged —
+checked by diffing an `add button accordion` run against the previous binary.
+
+`list` reports counts by type (`26 components, 3 blocks`), derived from the
+entries, so an entry with an unexpected type is still counted rather than dropped.
+
+### Starter blocks
+
+`dashboard`, `settings`, and `authentication` ship in
+`packages/web-components/src/blocks/` as `.html` plus layout CSS. The decision and
+its four parts are ADR-022. The parts that matter for review:
+
+- **No JavaScript, no per-framework variants.** The elements own their behavior
+  (ADR-003), so a block that scripted them would be a second implementation of
+  it. The CSS is layout only: logical properties, tokens for every spacing and
+  colour value, nothing restyling a component's internals.
+- **The entry is derived, not written.** `generate-registry.mjs` reads the markup
+  to find the custom elements the block opens, maps each tag to its entry (a
+  compound part maps to its group), and fails the build if a tag has no entry.
+  It scans the stylesheet for the `--sk-` variables the block reads. So
+  `registryDependencies` cannot describe a block that does not exist.
+- **The files ship in the web-components package** (`src/blocks`), because
+  `resolveItemFiles` mirrors a declared path under one root and a second root
+  would be a second naming rule. The trade-off is stated in the ADR: block
+  markup is not a web component and now lives in that package.
+- **Proof.** Six axe scans (three pages, light and dark) pass, and the scan was
+  negative-tested by injecting an unlabelled `<input>` and watching it fail.
+  `tests/consumer/run.mjs` installs `settings` from the packed tarball outside the
+  workspace and asserts all eleven composed components land with it. No screenshot
+  baseline: a block's layout is meant to be edited by the consumer.
+
+Three claims that held only while every entry was a component are now scoped:
+the docs build `/blocks/<name>` pages that carry the install command and the
+components it brings, `llms.txt` lists blocks under their own heading instead of
+emitting `sk-dashboard` for an element that does not exist, and the MCP tools
+report `type` and a `tag` only where the entry justifies one.
+
 ### AI surface
 
 `apps/docs/public/llms.txt` (a curated index: what the system is, the token
@@ -611,7 +692,7 @@ regenerates and fails on a diff.
 same metadata, with the four tools §11 names — `search_components`,
 `get_component`, `get_tokens`, `get_usage`. No model is called and no network is
 reached; the only I/O is reading the registry and the compiled token CSS at
-startup. **19 unit tests** cover tool behavior, and a CI job smoke-tests the
+startup. **28 unit tests** cover tool behavior, and a CI job smoke-tests the
 server by driving a real MCP client over the SDK's in-memory transport pair —
 which covers tool registration, input schemas, and serialization, not just the
 functions.

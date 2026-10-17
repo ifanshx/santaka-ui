@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-sk-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Santaka UI — settings block</title>
+
+    <link rel="stylesheet" href="/packages/tokens/dist/css/light.css" />
+    <link rel="stylesheet" href="/packages/tokens/dist/css/dark.css" />
+    <link rel="stylesheet" href="/packages/web-components/dist/santaka.css" />
+    <link rel="stylesheet" href="/packages/styles/dist/index.css" />
+
+    <!--
+      The block stylesheet is the block file itself, not a copy: the block
+      ships once and the example consumes the shipped source.
+    -->
+    <link rel="stylesheet" href="/packages/web-components/src/blocks/settings/settings.css" />
+
+    <script type="module">
+      // Registers every custom element eagerly, as the components package
+      // documents (ADR-001) — the block markup is inert until this runs — and
+      // pulls the block in. `blocks/main.js` is the loader; the fetched
+      // markup lands in the #block-mount slot below.
+      import "/packages/web-components/dist/components/index.js"
+      import { loadBlock } from "/examples/vanilla-html/blocks/main.js"
+
+      await loadBlock("settings", "block-mount")
+    </script>
+  </head>
+
+  <body>
+    <!--
+      The block markup is NOT duplicated here: the single source is
+      /packages/web-components/src/blocks/settings/settings.html, which the
+      loader above fetches and injects into this slot.
+    -->
+    <div id="block-mount" data-block></div>
+  </body>
+</html>

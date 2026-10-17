@@ -195,8 +195,96 @@ export async function fetchRemoteRegistry(url: string): Promise<LoadedRegistry> 
   return { items, sources: [{ name: url, url }], rejected }
 }
 
+/**
+ * The `N components, M blocks` line: counts by item type, derived from the
+ * entries rather than from a list of type names, so an entry whose type is
+ * unexpected is still counted and shown (ADR-022 §4) rather than silently
+ * dropped from the total. Order follows first appearance, which is the order
+ * the registry source emits.
+ */
+export function typeCounts(items: Array<Pick<RegistryItem, "type">>): string {
+  const byType = new Map<string, number>()
+  for (const item of items) {
+    byType.set(item.type, (byType.get(item.type) ?? 0) + 1)
+  }
+  return [...byType.entries()]
+    .map(([type, count]) => `${count} ${type}${count === 1 ? "" : "s"}`)
+    .join(", ")
+}
+
 /** Find an item by name across the bundled registry and any configured remotes. */
 export function findItem(registry: LoadedRegistry, name: string): RegistryItem | undefined {
   const normalized = name.trim().replace(/^sk-/, "").toLowerCase()
   return registry.items.find((item) => item.name === normalized)
+}
+
+export type ClosureResult =
+  | { ok: true; items: RegistryItem[]; missing: MissingDependency[] }
+  | { ok: false; reason: string; missing: MissingDependency[] }
+
+/** A `registryDependencies` entry that does not resolve, with who asked for it. */
+export type MissingDependency = { name: string; requestedBy: string }
+
+/**
+ * Walk the named items' `registryDependencies` depth-first and return the whole
+ * install plan: dependencies first, then the named items themselves.
+ *
+ * Deduplication is by entry name, so a diamond (a→b,c→d) lists `d` once, and a
+ * dependency already named on the command line is not installed twice. A cycle
+ * is refused rather than recursed: `registryDependencies` is data from a
+ * registry, which is untrusted until reviewed (§9's registry safety rules), so
+ * a self-referential or mutual entry is an error the consumer sees, not a hang.
+ *
+ * The order below is the write order `add` uses: every dependency appears
+ * before the item that declares it. With no `registryDependencies` anywhere —
+ * the state of all shipped components — the plan is the named items alone.
+ */
+export function resolveClosure(registry: LoadedRegistry, roots: RegistryItem[]): ClosureResult {
+  const missing: MissingDependency[] = []
+  // `"visiting"` marks an item on the current DFS chain; `"done"` marks one
+  // already placed in the plan. A `"visiting"` hit is therefore a cycle, and the
+  // chain is what the error names.
+  const states: Record<string, "visiting" | "done"> = {}
+  const ordered: RegistryItem[] = []
+
+  for (const root of roots) {
+    const cycle = walkClosure(registry, root, states, ordered, missing, [])
+    if (cycle !== null) {
+      return { ok: false, reason: cycle, missing }
+    }
+  }
+
+  return { ok: true, items: ordered, missing }
+}
+
+/**
+ * One depth-first visit. Returns the cycle description when one is found, so
+ * `resolveClosure` can fail with *the chain*, not a bare "recursion happened".
+ */
+function walkClosure(
+  registry: LoadedRegistry,
+  item: RegistryItem,
+  states: Record<string, "visiting" | "done">,
+  ordered: RegistryItem[],
+  missing: MissingDependency[],
+  chain: string[],
+): string | null {
+  const state = states[item.name]
+  if (state === "done") return null
+  if (state === "visiting") {
+    return [...chain.slice(chain.indexOf(item.name)), item.name].join(" → ")
+  }
+  states[item.name] = "visiting"
+  for (const dependency of item.registryDependencies) {
+    const next = findItem(registry, dependency)
+    if (!next) {
+      missing.push({ name: dependency, requestedBy: item.name })
+      continue
+    }
+    const cycle = walkClosure(registry, next, states, ordered, missing, [...chain, item.name])
+    if (cycle !== null) return cycle
+  }
+  states[item.name] = "done"
+  ordered.push(item)
+  return null
 }

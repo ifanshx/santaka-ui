@@ -1,0 +1,65 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "authentication",
+  "namespace": null,
+  "type": "block",
+  "frameworks": [
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "framework-neutral",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [
+    "alert",
+    "button",
+    "checkbox",
+    "input",
+    "link",
+    "separator",
+    "text"
+  ],
+  "files": [
+    {
+      "path": "src/blocks/authentication/authentication.html",
+      "type": "registry:block",
+      "checksum": "sha256-6e1f55aadab767958b62a0b52d7163550d45b0373b3004f5d492c89d8dc4ac18"
+    },
+    {
+      "path": "src/blocks/authentication/authentication.css",
+      "type": "registry:style",
+      "checksum": "sha256-691d5a6d949fcea0d95f58c922e4c571da4c164829a3d5b494a766e644e43e85"
+    }
+  ],
+  "cssVariables": [
+    "--sk-space-2",
+    "--sk-space-4",
+    "--sk-space-8"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A centred sign-in card: an email and password field, a remember-me checkbox, a submit button, a recovery link, and an error alert.",
+    "whenToUse": [
+      "A sign-in, sign-up, or password-reset screen that needs the card, the fields, and the error state",
+      "You want the error alert and the recovery link placed where a user looks for them"
+    ],
+    "whenNotToUse": [
+      "An in-app login dialog — use Alert Dialog",
+      "A settings screen for an already signed-in user — use the settings block"
+    ],
+    "accessibility": "The card is a single `<form>` with an accessible name from its heading; each field is labelled by a `<sk-label>` bound to it, and the password field declares `autocomplete=\"current-password\"` so password managers and assistive technology recognise it. The error alert is a live region placed before the fields, and the recovery link is a real link rather than a button styled as one.",
+    "knownLimitations": [
+      "Nothing is submitted and nothing is validated: the error alert demonstrates the state, it is not wired to a response",
+      "There is no second-factor step, no OAuth buttons, and no password-strength meter"
+    ],
+    "example": "<!--\n * Santaka UI — authentication starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022).\n * `packages/core/registry/authentication.json` is the list, and\n * `santaka add authentication` installs exactly it.\n *\n * Layout only lives in authentication.css. A single centered card; the\n * placeholder form posts nowhere and validation is the consumer's wiring.\n -->\n<main class=\"sk-auth\">\n  <section aria-labelledby=\"auth-heading\" class=\"sk-auth__card\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h1 id=\"auth-heading\">Sign in to Acme</h1>\n    </sk-text>\n    <sk-text variant=\"sm\" muted>\n      <p>New here? <sk-link href=\"/sign-up\">Create an account</sk-link>.</p>\n    </sk-text>\n\n    <!--\n      An error shown as the block ships it, so the invalid state is visible in\n      the source rather than hidden behind a submit. Remove it for a clean form.\n    -->\n    <sk-alert variant=\"danger\" heading=\"That password did not match\">\n      <p>Try again, or reset your password below.</p>\n    </sk-alert>\n\n    <form id=\"auth-sign-in\" class=\"sk-auth__form\">\n      <sk-input\n        name=\"email\"\n        type=\"email\"\n        label=\"Email\"\n        placeholder=\"you@example.com\"\n        autocomplete=\"email\"\n        required\n      ></sk-input>\n\n      <sk-input\n        name=\"password\"\n        type=\"password\"\n        label=\"Password\"\n        autocomplete=\"current-password\"\n        required\n      ></sk-input>\n\n      <div class=\"sk-auth__row\">\n        <sk-checkbox name=\"remember\" label=\"Keep me signed in for 30 days\" checked> </sk-checkbox>\n        <sk-link href=\"/reset-password\">Forgot password?</sk-link>\n      </div>\n\n      <sk-button type=\"submit\" variant=\"primary\">Sign in</sk-button>\n    </form>\n\n    <sk-separator label=\"or\"></sk-separator>\n\n    <sk-text variant=\"sm\" muted>\n      <p>\n        By continuing you agree to the\n        <sk-link href=\"/terms\">Terms of Service</sk-link> and\n        <sk-link href=\"/privacy\">Privacy Policy</sk-link>.\n      </p>\n    </sk-text>\n  </section>\n</main>\n",
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

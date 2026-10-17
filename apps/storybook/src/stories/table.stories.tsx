@@ -1,4 +1,4 @@
-import { expect, within } from "storybook/test"
+import { expect, waitFor, within } from "storybook/test"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { Table } from "@santaka-ui/react"
 
@@ -160,6 +160,14 @@ export const ScrollRegionIsKeyboardReachable: Story = {
   render: Striped.render,
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement)
+    // The scroll region does not exist until the element upgrades: before
+    // hydration the markup is the consumer's bare <table> with no container
+    // around it, so a query by role finds nothing. This passed alone and failed
+    // under `turbo run test` — the same race the dialog story documents, and
+    // the same fix: wait for Stencil's `hydrated` marker, which is written
+    // after the render that creates the container.
+    const host = canvasElement.querySelector("sk-table")
+    await waitFor(() => expect(host).toHaveClass("hydrated"))
     const region = canvas.getByRole("group", { name: "Backup schedule" })
     await userEvent.tab()
     await expect(region).toHaveFocus()

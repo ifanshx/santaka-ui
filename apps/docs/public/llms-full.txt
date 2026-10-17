@@ -2,7 +2,9 @@
 
 Generated from the registry metadata and the component type declarations.
 Every component below is a custom element; the React/Vue/Svelte/Angular
-packages are adapters over the same element.
+packages are adapters over the same element. Blocks are page compositions
+that use those elements: they are markup and layout CSS, with no props and
+no events of their own.
 
 ## sk-accordion
 
@@ -94,7 +96,7 @@ Carries `role="alert"` for the danger and warning variants, so those interrupt; 
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `heading` | `string` | `""` | Heading text for the alert, rendered as a `<span>`.  Named `heading`, not `title`, for the reason sk-card records: `title` is a standardized `HTMLElement` member and a prop by that name is shadowed by the prototype property, so the browser would surface it as a hover tooltip on the whole alert.  A string rather than a heading element: the alert does not know what level it sits at in the document's outline, and a hard-coded heading inside it produces a level that may contradict the surrounding structure. A consumer who needs a real heading puts one in the body itself. |
-| `variant` | `\| "neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one. |
+| `variant` | `"neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one. |
 
 ## sk-alert-dialog
 
@@ -143,6 +145,106 @@ A forced decision on the glass material: role=alertdialog, no Escape, no backdro
 | `initialFocus` | `string` | `""` | Selector or element id for the control that receives initial focus — the action the consumer wants to be the default. Falls back to the first button in the panel. |
 | `label` | `string` | `""` | Accessible name. Required in spirit: an interruption that announces nothing is a modal mystery. Prefer a real heading in the `title` slot. |
 | `open` | `boolean` | `false` | Whether the alert is showing. |
+
+## authentication
+
+- Type: block (2 files, no custom element)
+- Composes: alert, button, checkbox, input, link, separator, text
+- Stability: stable
+- Framework packages: web-components
+- Locales covered: en-US
+
+A centred sign-in card: an email and password field, a remember-me checkbox, a submit button, a recovery link, and an error alert.
+
+**When to use**
+
+- A sign-in, sign-up, or password-reset screen that needs the card, the fields, and the error state
+- You want the error alert and the recovery link placed where a user looks for them
+
+**When not to use**
+
+- An in-app login dialog — use Alert Dialog
+- A settings screen for an already signed-in user — use the settings block
+
+**Accessibility**
+
+The card is a single `<form>` with an accessible name from its heading; each field is labelled by a `<sk-label>` bound to it, and the password field declares `autocomplete="current-password"` so password managers and assistive technology recognise it. The error alert is a live region placed before the fields, and the recovery link is a real link rather than a button styled as one.
+
+**Example**
+
+```html
+<!--
+ * Santaka UI — authentication starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022).
+ * `packages/core/registry/authentication.json` is the list, and
+ * `santaka add authentication` installs exactly it.
+ *
+ * Layout only lives in authentication.css. A single centered card; the
+ * placeholder form posts nowhere and validation is the consumer's wiring.
+ -->
+<main class="sk-auth">
+  <section aria-labelledby="auth-heading" class="sk-auth__card">
+    <sk-text variant="lg" family="display">
+      <h1 id="auth-heading">Sign in to Acme</h1>
+    </sk-text>
+    <sk-text variant="sm" muted>
+      <p>New here? <sk-link href="/sign-up">Create an account</sk-link>.</p>
+    </sk-text>
+
+    <!--
+      An error shown as the block ships it, so the invalid state is visible in
+      the source rather than hidden behind a submit. Remove it for a clean form.
+    -->
+    <sk-alert variant="danger" heading="That password did not match">
+      <p>Try again, or reset your password below.</p>
+    </sk-alert>
+
+    <form id="auth-sign-in" class="sk-auth__form">
+      <sk-input
+        name="email"
+        type="email"
+        label="Email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      ></sk-input>
+
+      <sk-input
+        name="password"
+        type="password"
+        label="Password"
+        autocomplete="current-password"
+        required
+      ></sk-input>
+
+      <div class="sk-auth__row">
+        <sk-checkbox name="remember" label="Keep me signed in for 30 days" checked> </sk-checkbox>
+        <sk-link href="/reset-password">Forgot password?</sk-link>
+      </div>
+
+      <sk-button type="submit" variant="primary">Sign in</sk-button>
+    </form>
+
+    <sk-separator label="or"></sk-separator>
+
+    <sk-text variant="sm" muted>
+      <p>
+        By continuing you agree to the
+        <sk-link href="/terms">Terms of Service</sk-link> and
+        <sk-link href="/privacy">Privacy Policy</sk-link>.
+      </p>
+    </sk-text>
+  </section>
+</main>
+
+```
+
+**Known limitations**
+
+- Nothing is submitted and nothing is validated: the error alert demonstrates the state, it is not wired to a response
+- There is no second-factor step, no OAuth buttons, and no password-strength meter
 
 ## sk-badge
 
@@ -331,6 +433,226 @@ Renders a real native `<input type="checkbox">`, so the browser supplies constra
 | `value` | `string` | `"on"` | The submitted value when checked. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox would send. |
 | `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
 | `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## dashboard
+
+- Type: block (2 files, no custom element)
+- Composes: alert, badge, button, card, empty-state, icon-button, progress, separator, skeleton, spinner, table, text
+- Stability: stable
+- Framework packages: web-components
+- Locales covered: en-US
+
+An application shell with a navigation sidebar, a search header, summary cards, and a table of recent activity.
+
+**When to use**
+
+- The first screen of an internal tool, where the shell matters more than any one panel
+- You want the layout, the sidebar behaviour, and the responsive breakpoints already settled
+
+**When not to use**
+
+- It is a marketing page — use Button and link components, not the sidebar shell
+- You only need the summary cards — take Card and write the grid yourself
+
+**Accessibility**
+
+The block is plain markup: the landmarks are the ones it writes (`<header>`, `<nav aria-label>`, `<main>`, `<section aria-labelledby>`), and the table carries a `<caption>`. Nothing in the block is keyboard-reachable that is not also labelled; the sidebar's links are real `<sk-link>` elements wrapping real `<a href>`, so they are in the tab order as links rather than as clickable boxes.
+
+**Example**
+
+```html
+<!--
+ * Santaka UI — dashboard starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022), and a
+ * hand-kept copy of that list was already missing one before this comment
+ * replaced it. `packages/core/registry/dashboard.json` is the list, and
+ * `santaka add dashboard` installs exactly it.
+ *
+ * Layout only lives in dashboard.css, which loads alongside this file. The
+ * data the consumer owns is a small, obviously-placeholder set; every element
+ * below is a shipped sk-* component in a documented state.
+ -->
+<main class="sk-dashboard">
+  <header class="sk-dashboard__header">
+    <div class="sk-dashboard__title">
+      <sk-text variant="2xl" family="display">
+        <h1>Deploy console</h1>
+      </sk-text>
+      <sk-text variant="sm" muted>
+        <p>Production workspace · eu-west-1 · last deploy 14:02 UTC</p>
+      </sk-text>
+    </div>
+    <div class="sk-cluster">
+      <sk-icon-button label="Refresh now" variant="outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6" />
+        </svg>
+      </sk-icon-button>
+      <sk-icon-button label="Workspace settings" variant="outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2" />
+        </svg>
+      </sk-icon-button>
+      <sk-button variant="primary">New deployment</sk-button>
+    </div>
+  </header>
+
+  <section aria-labelledby="stats-heading" class="sk-dashboard__stats">
+    <h2 id="stats-heading" class="sk-visually-hidden">Deployment statistics</h2>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Active deployments</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>12</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="success">Live</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>+2 since yesterday</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Queued builds</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>3</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="warning">Pending</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>oldest waiting 4m</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Failed builds</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>1</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="danger">Failed</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>build 4820</span>
+        </sk-text>
+      </div>
+    </sk-card>
+  </section>
+
+  <section aria-labelledby="deploys-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="deploys-heading">Recent deployments</h2>
+    </sk-text>
+
+    <!--
+      The table is the consumer's own markup — caption, thead, th scope — and
+      sk-table contributes the container, the overflow handling, and style.
+    -->
+    <sk-table label="Recent deployments">
+      <table>
+        <caption>
+          Deployments in the last 24 hours
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Build</th>
+            <th scope="col">Environment</th>
+            <th scope="col">Status</th>
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4823</td>
+            <td>staging</td>
+            <td><sk-badge variant="warning">Pending</sk-badge></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>4821</td>
+            <td>production</td>
+            <td><sk-badge variant="success">Live</sk-badge></td>
+            <td>42s</td>
+          </tr>
+          <tr>
+            <td>4820</td>
+            <td>production</td>
+            <td><sk-badge variant="danger">Failed</sk-badge></td>
+            <td>1m 05s</td>
+          </tr>
+        </tbody>
+      </table>
+    </sk-table>
+  </section>
+
+  <section aria-labelledby="usage-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="usage-heading">Build usage</h2>
+    </sk-text>
+
+    <div class="sk-dashboard__usage">
+      <sk-card>
+        <sk-progress label="Build minutes, this cycle" value="68" size="lg"></sk-progress>
+        <sk-progress label="Artifact storage" value="40"></sk-progress>
+        <sk-text variant="sm" muted>
+          <p>Usage resets on the first of every month.</p>
+        </sk-text>
+      </sk-card>
+
+      <sk-card>
+        <sk-alert variant="warning" heading="Quota nearly full">
+          Your workspace has used 68% of its build minutes.
+          <sk-button slot="actions" variant="secondary" size="sm">View usage</sk-button>
+        </sk-alert>
+        <sk-separator decorative></sk-separator>
+        <sk-text variant="sm" muted>
+          <p>Approved reviewers see usage per runner in the audit log.</p>
+        </sk-text>
+      </sk-card>
+    </div>
+  </section>
+
+  <section aria-labelledby="queue-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="queue-heading">Waiting on the queue</h2>
+    </sk-text>
+
+    <sk-card>
+      <sk-skeleton variant="text" style="inline-size: 70%"></sk-skeleton>
+      <sk-skeleton variant="text" style="inline-size: 55%"></sk-skeleton>
+      <div class="sk-cluster">
+        <sk-spinner label="Refreshing queue" size="sm"></sk-spinner>
+        <sk-text variant="sm" muted>
+          <span>Queue refreshes every 30 seconds.</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card variant="bare">
+      <!--
+        The empty state for the one gap in the data: the resting state, not a
+        pretend load. Composing it next to a loading card covers both.
+      -->
+      <sk-empty-state
+        heading="No deploy previews yet"
+        description="Open a pull request and a preview build starts on its own."
+      >
+        <sk-button slot="actions" size="sm">Open PRs</sk-button>
+      </sk-empty-state>
+    </sk-card>
+  </section>
+</main>
+
+```
+
+**Known limitations**
+
+- The rows, counts, and progress values are placeholder markup: the block fetches nothing
+- The sidebar is not collapsible and the block ships no JavaScript to make it so
 
 ## sk-dialog
 
@@ -822,6 +1144,166 @@ Renders a real `<hr>`, announced as a separator by screen readers. `decorative` 
 | `decorative` | `boolean` | `false` | Purely visual: removes the element from the accessibility tree. Set it whenever the surrounding structure — a heading, whitespace, a card boundary — already communicates the break. |
 | `label` | `string` | `""` | Label for a meaningful separator, e.g. "or" between two actions. Announced only when the separator is not decorative, because a name on a `role="none"` element is a contradiction. |
 | `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Axis of the line. Vertical separators need a sized parent. |
+
+## settings
+
+- Type: block (2 files, no custom element)
+- Composes: alert, badge, button, checkbox, input, radio-group, select, separator, switch, text, textarea
+- Stability: stable
+- Framework packages: web-components
+- Locales covered: en-US
+
+A settings form grouping account fields, a select, switches, and a checkbox, with a save action and an inline alert.
+
+**When to use**
+
+- A preferences or account screen where the grouping and the save affordance are the work
+- You want the label, description, and error wiring for each field already correct
+
+**When not to use**
+
+- A single field — use Input with a Label
+- A multi-step flow — the block is one form and no wizard state
+
+**Accessibility**
+
+Every control is a labelled `<sk-input>`, `<sk-select>`, `<sk-switch>`, or `<sk-checkbox>`; the switches are named by the visible label and explained by the description text beside them rather than by a title attribute. The alert is a live region, so a validation message is announced when it appears. The save button is a real `<button type="submit">`, so Enter in a field submits the form.
+
+**Example**
+
+```html
+<!--
+ * Santaka UI — settings starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022), and a
+ * hand-kept copy of that list drifted from it twice before this comment
+ * replaced it. `packages/core/registry/settings.json` is the list, and
+ * `santaka add settings` installs exactly it.
+ *
+ * Layout only lives in settings.css. The elements own their behavior
+ * (ADR-003), so there is no script here: form submission, validation, and the
+ * switches act immediately without help from the block.
+ -->
+<main class="sk-settings">
+  <header class="sk-settings__header">
+    <div class="sk-settings__title">
+      <sk-text variant="2xl" family="display">
+        <h1>Workspace settings</h1>
+      </sk-text>
+      <sk-text variant="sm" muted>
+        <p>Changes apply to everyone in the workspace.</p>
+      </sk-text>
+    </div>
+    <sk-badge variant="primary">Free plan</sk-badge>
+  </header>
+
+  <nav aria-label="Settings sections" class="sk-cluster">
+    <sk-button variant="secondary" size="sm">General</sk-button>
+    <sk-button variant="ghost" size="sm">Members</sk-button>
+    <sk-button variant="ghost" size="sm">Billing</sk-button>
+  </nav>
+
+  <form id="settings-profile" class="sk-settings__stack">
+    <section aria-labelledby="profile-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="profile-heading">Profile</h2>
+      </sk-text>
+
+      <sk-input
+        name="workspace-name"
+        label="Workspace name"
+        description="Shown on every deploy page."
+        value="Acme Platform"
+        required
+      ></sk-input>
+
+      <sk-input
+        name="workspace-slug"
+        label="URL slug"
+        description="The subdomain of your workspace."
+        value="acme"
+        required
+      ></sk-input>
+
+      <sk-textarea
+        name="description"
+        label="Description"
+        rows="3"
+        description="A short summary shown in the directory."
+      ></sk-textarea>
+
+      <sk-select
+        name="region"
+        label="Default region"
+        description="Where new builds run."
+        value="eu"
+        options='[{"value":"eu","label":"EU West"},{"value":"us","label":"US East"},{"value":"ap","label":"Asia Pacific"}]'
+      ></sk-select>
+
+      <sk-radio-group
+        name="visibility"
+        label="Workspace visibility"
+        description="Who can see deployments."
+        value="private"
+        options='[{"value":"private","label":"Private"},{"value":"team","label":"Team"},{"value":"public","label":"Public"}]'
+      ></sk-radio-group>
+    </section>
+
+    <sk-separator decorative></sk-separator>
+
+    <section aria-labelledby="notifications-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="notifications-heading">Notifications</h2>
+      </sk-text>
+
+      <sk-switch
+        name="deploy-email"
+        label="Email me when a deploy finishes"
+        description="One message per deploy, grouped by build."
+        checked
+      ></sk-switch>
+
+      <sk-switch
+        name="failure-banner"
+        label="Show a failure banner in the console"
+        checked
+      ></sk-switch>
+
+      <sk-checkbox name="weekly-digest" label="Send a weekly digest of usage"> </sk-checkbox>
+
+      <sk-checkbox name="product-updates" label="Email me about product updates" checked>
+      </sk-checkbox>
+    </section>
+
+    <sk-separator decorative></sk-separator>
+
+    <section aria-labelledby="danger-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="danger-heading">Danger zone</h2>
+      </sk-text>
+
+      <sk-alert variant="danger" heading="Deleting the workspace is permanent">
+        <p>Every build, log, and secret is removed. There is no undo.</p>
+        <sk-button slot="actions" variant="danger" size="sm">Delete workspace</sk-button>
+      </sk-alert>
+
+      <sk-input name="confirm-slug" label="Type acme to confirm" placeholder="acme"></sk-input>
+    </section>
+
+    <div class="sk-cluster" role="group" aria-label="Form actions">
+      <sk-button type="submit" variant="primary">Save changes</sk-button>
+      <sk-button type="reset" variant="ghost">Discard changes</sk-button>
+    </div>
+  </form>
+</main>
+
+```
+
+**Known limitations**
+
+- The form has no validation logic and no submit handler: the values are markup, not state
+- Saving is not implemented — the button is a submit button waiting for the consumer's handler
 
 ## sk-skeleton
 

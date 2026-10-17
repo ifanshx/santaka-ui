@@ -191,11 +191,11 @@ describe("the built CLI", () => {
     assert.match(drifted.stdout, /modified/)
   })
 
-  it("refuses an unknown component and names the available ones", () => {
+  it("refuses an unknown item and names the available ones", () => {
     const dir = makeProject()
     const result = runCli(["add", "buton"], dir)
     assert.notEqual(result.code, 0)
-    assert.match(result.stdout, /Unknown component/)
+    assert.match(result.stdout, /Unknown item/)
     assert.match(result.stdout, /button/)
   })
 
@@ -259,5 +259,57 @@ describe("the built CLI", () => {
     writeFileSync(css, `${readFileSync(css, "utf8")}\n/* consumer edit */\n`)
     const result = runCli(["update"], dir)
     assert.equal(result.code, 2, "update must not overwrite an edited file either")
+  })
+
+  it("adding a block installs every component's files it composes, recorded in the manifest", () => {
+    // ADR-022 §3: `registryDependencies` is resolved. The authentication block
+    // composes seven components (alert, button, checkbox, input, link,
+    // separator, text), all dependency-free, so the plan is the block plus its
+    // seven dependencies — every file on disk, every entry in the manifest.
+    const dir = makeProject()
+    const result = runCli(["add", "authentication"], dir)
+    assert.equal(result.code, 0, result.stdout + result.stderr)
+
+    assert.ok(
+      existsSync(join(dir, "src/blocks/authentication/authentication.html")),
+      "the block's own markup was copied",
+    )
+    assert.ok(existsSync(join(dir, "src/blocks/authentication/authentication.css")))
+    for (const component of ["alert", "button", "checkbox", "input", "link", "separator", "text"]) {
+      assert.ok(
+        existsSync(join(dir, `src/components/sk-${component}/sk-${component}.tsx`)),
+        `dependency component ${component} was copied`,
+      )
+    }
+
+    const manifest = JSON.parse(readFileSync(join(dir, "santaka-manifest.json"), "utf8"))
+    const installed = Object.keys(manifest.items)
+    for (const name of [
+      "authentication",
+      "alert",
+      "button",
+      "checkbox",
+      "input",
+      "link",
+      "separator",
+      "text",
+    ]) {
+      assert.ok(installed.includes(name), `manifest records ${name}`)
+    }
+    assert.equal(installed.length, 8, "exactly the block and its dependencies are recorded")
+    // The whole closure is one plan: the block's checksum is verified like any
+    // other entry's.
+    assert.match(
+      manifest.items.authentication.files["src/blocks/authentication/authentication.html"],
+      /^sha256-/,
+    )
+  })
+
+  it("list reports counts by item type, not one total", () => {
+    const dir = makeProject()
+    const result = runCli(["list"], dir)
+    assert.equal(result.code, 0)
+    // Derived from the entries, in the order the registry publishes them.
+    assert.match(result.stdout, /26 components, 3 blocks/)
   })
 })

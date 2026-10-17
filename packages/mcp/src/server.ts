@@ -61,9 +61,9 @@ export function createServer(options: ServerOptions = {}): McpServer {
   server.registerTool(
     "search_components",
     {
-      title: "Search components",
+      title: "Search registry items",
       description:
-        "Find Santaka UI components for a need. Ranks by match, and returns Stable components ahead of Preview and Experimental so a query never silently steers work onto an unstable surface.",
+        "Find Santaka UI items for a need — components and blocks (full-screen compositions such as a dashboard or a settings page). Each result carries `type`, and `tag` only when the item is a component (a block is addressed by its name and installs components via `registryDependencies`). Ranks by match, and returns Stable items ahead of Preview and Experimental so a query never silently steers work onto an unstable surface.",
       inputSchema: {
         need: z
           .string()
@@ -93,12 +93,12 @@ export function createServer(options: ServerOptions = {}): McpServer {
   server.registerTool(
     "get_component",
     {
-      title: "Get component details",
+      title: "Get registry item details",
       description:
-        "The full record for one component: props with types and defaults, events, accessibility notes, example, and known limitations.",
+        "The full record for one item. For a component: props with types and defaults, events, the `sk-*` tag, accessibility notes, example, and known limitations. For a block: empty `props`/`events` and no `tag` (its name is the identifier); the block's composed components (`registryDependencies`), `files`, and example are reported instead.",
       inputSchema: {
-        name: z.string().min(1).describe("Component name, with or without the `sk-` prefix."),
-        framework: FRAMEWORK.optional().describe("Restrict to a framework the component supports."),
+        name: z.string().min(1).describe("Item name, with or without the `sk-` prefix."),
+        framework: FRAMEWORK.optional().describe("Restrict to a framework the item supports."),
       },
     },
     async ({ name, framework }) => {
@@ -154,7 +154,7 @@ export function createServer(options: ServerOptions = {}): McpServer {
     {
       title: "Get setup and usage",
       description:
-        "Copy-ready install and import lines plus a usage example for the component that best matches a goal.",
+        "Copy-ready install and import lines plus a usage example for the item that best matches a goal. The result carries the item's `type` and `tag` only for a component; for a block, `registryDependencies` lists the components that must be added first.",
       inputSchema: {
         goal: z.string().min(2).describe("What the user wants to build."),
         framework: FRAMEWORK.describe("The framework the snippet is for."),

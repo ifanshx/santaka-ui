@@ -5,10 +5,12 @@
     "accordion.json",
     "alert-dialog.json",
     "alert.json",
+    "authentication.json",
     "badge.json",
     "button.json",
     "card.json",
     "checkbox.json",
+    "dashboard.json",
     "dialog.json",
     "empty-state.json",
     "icon-button.json",
@@ -19,6 +21,7 @@
     "radio-group.json",
     "select.json",
     "separator.json",
+    "settings.json",
     "skeleton.json",
     "spinner.json",
     "switch.json",
@@ -336,6 +339,71 @@
           "No dismiss control, deliberately: a dismissible alert needs focus management and a close affordance that belongs to a Dialog or a Toast",
           "The actions slot is not part of the announced message, so an action the user must take also needs to exist in the page"
         ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "authentication",
+      "namespace": null,
+      "type": "block",
+      "frameworks": [
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "framework-neutral",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [
+        "alert",
+        "button",
+        "checkbox",
+        "input",
+        "link",
+        "separator",
+        "text"
+      ],
+      "files": [
+        {
+          "path": "src/blocks/authentication/authentication.html",
+          "type": "registry:block",
+          "checksum": "sha256-6e1f55aadab767958b62a0b52d7163550d45b0373b3004f5d492c89d8dc4ac18"
+        },
+        {
+          "path": "src/blocks/authentication/authentication.css",
+          "type": "registry:style",
+          "checksum": "sha256-691d5a6d949fcea0d95f58c922e4c571da4c164829a3d5b494a766e644e43e85"
+        }
+      ],
+      "cssVariables": [
+        "--sk-space-2",
+        "--sk-space-4",
+        "--sk-space-8"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "ai": {
+        "summary": "A centred sign-in card: an email and password field, a remember-me checkbox, a submit button, a recovery link, and an error alert.",
+        "whenToUse": [
+          "A sign-in, sign-up, or password-reset screen that needs the card, the fields, and the error state",
+          "You want the error alert and the recovery link placed where a user looks for them"
+        ],
+        "whenNotToUse": [
+          "An in-app login dialog — use Alert Dialog",
+          "A settings screen for an already signed-in user — use the settings block"
+        ],
+        "accessibility": "The card is a single `<form>` with an accessible name from its heading; each field is labelled by a `<sk-label>` bound to it, and the password field declares `autocomplete=\"current-password\"` so password managers and assistive technology recognise it. The error alert is a live region placed before the fields, and the recovery link is a real link rather than a button styled as one.",
+        "knownLimitations": [
+          "Nothing is submitted and nothing is validated: the error alert demonstrates the state, it is not wired to a response",
+          "There is no second-factor step, no OAuth buttons, and no password-strength meter"
+        ],
+        "example": "<!--\n * Santaka UI — authentication starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022).\n * `packages/core/registry/authentication.json` is the list, and\n * `santaka add authentication` installs exactly it.\n *\n * Layout only lives in authentication.css. A single centered card; the\n * placeholder form posts nowhere and validation is the consumer's wiring.\n -->\n<main class=\"sk-auth\">\n  <section aria-labelledby=\"auth-heading\" class=\"sk-auth__card\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h1 id=\"auth-heading\">Sign in to Acme</h1>\n    </sk-text>\n    <sk-text variant=\"sm\" muted>\n      <p>New here? <sk-link href=\"/sign-up\">Create an account</sk-link>.</p>\n    </sk-text>\n\n    <!--\n      An error shown as the block ships it, so the invalid state is visible in\n      the source rather than hidden behind a submit. Remove it for a clean form.\n    -->\n    <sk-alert variant=\"danger\" heading=\"That password did not match\">\n      <p>Try again, or reset your password below.</p>\n    </sk-alert>\n\n    <form id=\"auth-sign-in\" class=\"sk-auth__form\">\n      <sk-input\n        name=\"email\"\n        type=\"email\"\n        label=\"Email\"\n        placeholder=\"you@example.com\"\n        autocomplete=\"email\"\n        required\n      ></sk-input>\n\n      <sk-input\n        name=\"password\"\n        type=\"password\"\n        label=\"Password\"\n        autocomplete=\"current-password\"\n        required\n      ></sk-input>\n\n      <div class=\"sk-auth__row\">\n        <sk-checkbox name=\"remember\" label=\"Keep me signed in for 30 days\" checked> </sk-checkbox>\n        <sk-link href=\"/reset-password\">Forgot password?</sk-link>\n      </div>\n\n      <sk-button type=\"submit\" variant=\"primary\">Sign in</sk-button>\n    </form>\n\n    <sk-separator label=\"or\"></sk-separator>\n\n    <sk-text variant=\"sm\" muted>\n      <p>\n        By continuing you agree to the\n        <sk-link href=\"/terms\">Terms of Service</sk-link> and\n        <sk-link href=\"/privacy\">Privacy Policy</sk-link>.\n      </p>\n    </sk-text>\n  </section>\n</main>\n",
         "localesCovered": [
           "en-US"
         ]
@@ -853,6 +921,76 @@
           "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
           "`indeterminate` is a property, not an attribute — it cannot be set in declarative HTML and resets on re-render if not re-applied"
         ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "dashboard",
+      "namespace": null,
+      "type": "block",
+      "frameworks": [
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "framework-neutral",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [
+        "alert",
+        "badge",
+        "button",
+        "card",
+        "empty-state",
+        "icon-button",
+        "progress",
+        "separator",
+        "skeleton",
+        "spinner",
+        "table",
+        "text"
+      ],
+      "files": [
+        {
+          "path": "src/blocks/dashboard/dashboard.html",
+          "type": "registry:block",
+          "checksum": "sha256-b5a6757677be15719bbf224dc5da9893413c1a2750a16bb618427b1ce55d82a8"
+        },
+        {
+          "path": "src/blocks/dashboard/dashboard.css",
+          "type": "registry:style",
+          "checksum": "sha256-e9192479b98be2fc4a01fe0d7d088866bff663fa73ac2ef1a4407485c407928d"
+        }
+      ],
+      "cssVariables": [
+        "--sk-space-1",
+        "--sk-space-4",
+        "--sk-space-8"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "ai": {
+        "summary": "An application shell with a navigation sidebar, a search header, summary cards, and a table of recent activity.",
+        "whenToUse": [
+          "The first screen of an internal tool, where the shell matters more than any one panel",
+          "You want the layout, the sidebar behaviour, and the responsive breakpoints already settled"
+        ],
+        "whenNotToUse": [
+          "It is a marketing page — use Button and link components, not the sidebar shell",
+          "You only need the summary cards — take Card and write the grid yourself"
+        ],
+        "accessibility": "The block is plain markup: the landmarks are the ones it writes (`<header>`, `<nav aria-label>`, `<main>`, `<section aria-labelledby>`), and the table carries a `<caption>`. Nothing in the block is keyboard-reachable that is not also labelled; the sidebar's links are real `<sk-link>` elements wrapping real `<a href>`, so they are in the tab order as links rather than as clickable boxes.",
+        "knownLimitations": [
+          "The rows, counts, and progress values are placeholder markup: the block fetches nothing",
+          "The sidebar is not collapsible and the block ships no JavaScript to make it so"
+        ],
+        "example": "<!--\n * Santaka UI — dashboard starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022), and a\n * hand-kept copy of that list was already missing one before this comment\n * replaced it. `packages/core/registry/dashboard.json` is the list, and\n * `santaka add dashboard` installs exactly it.\n *\n * Layout only lives in dashboard.css, which loads alongside this file. The\n * data the consumer owns is a small, obviously-placeholder set; every element\n * below is a shipped sk-* component in a documented state.\n -->\n<main class=\"sk-dashboard\">\n  <header class=\"sk-dashboard__header\">\n    <div class=\"sk-dashboard__title\">\n      <sk-text variant=\"2xl\" family=\"display\">\n        <h1>Deploy console</h1>\n      </sk-text>\n      <sk-text variant=\"sm\" muted>\n        <p>Production workspace · eu-west-1 · last deploy 14:02 UTC</p>\n      </sk-text>\n    </div>\n    <div class=\"sk-cluster\">\n      <sk-icon-button label=\"Refresh now\" variant=\"outline\">\n        <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6\" />\n        </svg>\n      </sk-icon-button>\n      <sk-icon-button label=\"Workspace settings\" variant=\"outline\">\n        <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <circle cx=\"12\" cy=\"12\" r=\"3\" />\n          <path d=\"M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2\" />\n        </svg>\n      </sk-icon-button>\n      <sk-button variant=\"primary\">New deployment</sk-button>\n    </div>\n  </header>\n\n  <section aria-labelledby=\"stats-heading\" class=\"sk-dashboard__stats\">\n    <h2 id=\"stats-heading\" class=\"sk-visually-hidden\">Deployment statistics</h2>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Active deployments</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>12</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"success\">Live</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>+2 since yesterday</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Queued builds</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>3</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"warning\">Pending</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>oldest waiting 4m</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Failed builds</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>1</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"danger\">Failed</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>build 4820</span>\n        </sk-text>\n      </div>\n    </sk-card>\n  </section>\n\n  <section aria-labelledby=\"deploys-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"deploys-heading\">Recent deployments</h2>\n    </sk-text>\n\n    <!--\n      The table is the consumer's own markup — caption, thead, th scope — and\n      sk-table contributes the container, the overflow handling, and style.\n    -->\n    <sk-table label=\"Recent deployments\">\n      <table>\n        <caption>\n          Deployments in the last 24 hours\n        </caption>\n        <thead>\n          <tr>\n            <th scope=\"col\">Build</th>\n            <th scope=\"col\">Environment</th>\n            <th scope=\"col\">Status</th>\n            <th scope=\"col\">Duration</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td>4823</td>\n            <td>staging</td>\n            <td><sk-badge variant=\"warning\">Pending</sk-badge></td>\n            <td>—</td>\n          </tr>\n          <tr>\n            <td>4821</td>\n            <td>production</td>\n            <td><sk-badge variant=\"success\">Live</sk-badge></td>\n            <td>42s</td>\n          </tr>\n          <tr>\n            <td>4820</td>\n            <td>production</td>\n            <td><sk-badge variant=\"danger\">Failed</sk-badge></td>\n            <td>1m 05s</td>\n          </tr>\n        </tbody>\n      </table>\n    </sk-table>\n  </section>\n\n  <section aria-labelledby=\"usage-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"usage-heading\">Build usage</h2>\n    </sk-text>\n\n    <div class=\"sk-dashboard__usage\">\n      <sk-card>\n        <sk-progress label=\"Build minutes, this cycle\" value=\"68\" size=\"lg\"></sk-progress>\n        <sk-progress label=\"Artifact storage\" value=\"40\"></sk-progress>\n        <sk-text variant=\"sm\" muted>\n          <p>Usage resets on the first of every month.</p>\n        </sk-text>\n      </sk-card>\n\n      <sk-card>\n        <sk-alert variant=\"warning\" heading=\"Quota nearly full\">\n          Your workspace has used 68% of its build minutes.\n          <sk-button slot=\"actions\" variant=\"secondary\" size=\"sm\">View usage</sk-button>\n        </sk-alert>\n        <sk-separator decorative></sk-separator>\n        <sk-text variant=\"sm\" muted>\n          <p>Approved reviewers see usage per runner in the audit log.</p>\n        </sk-text>\n      </sk-card>\n    </div>\n  </section>\n\n  <section aria-labelledby=\"queue-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"queue-heading\">Waiting on the queue</h2>\n    </sk-text>\n\n    <sk-card>\n      <sk-skeleton variant=\"text\" style=\"inline-size: 70%\"></sk-skeleton>\n      <sk-skeleton variant=\"text\" style=\"inline-size: 55%\"></sk-skeleton>\n      <div class=\"sk-cluster\">\n        <sk-spinner label=\"Refreshing queue\" size=\"sm\"></sk-spinner>\n        <sk-text variant=\"sm\" muted>\n          <span>Queue refreshes every 30 seconds.</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card variant=\"bare\">\n      <!--\n        The empty state for the one gap in the data: the resting state, not a\n        pretend load. Composing it next to a loading card covers both.\n      -->\n      <sk-empty-state\n        heading=\"No deploy previews yet\"\n        description=\"Open a pull request and a preview build starts on its own.\"\n      >\n        <sk-button slot=\"actions\" size=\"sm\">Open PRs</sk-button>\n      </sk-empty-state>\n    </sk-card>\n  </section>\n</main>\n",
         "localesCovered": [
           "en-US"
         ]
@@ -2149,6 +2287,75 @@
           "Vertical separators need a sized parent — `align-self: stretch` is the default, not a guarantee",
           "No motion, no chrome, by design — the one component where the hairline is the point"
         ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "settings",
+      "namespace": null,
+      "type": "block",
+      "frameworks": [
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "framework-neutral",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [
+        "alert",
+        "badge",
+        "button",
+        "checkbox",
+        "input",
+        "radio-group",
+        "select",
+        "separator",
+        "switch",
+        "text",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "src/blocks/settings/settings.html",
+          "type": "registry:block",
+          "checksum": "sha256-15cf18838aa1564e0f4bc8a7a8f2bce5d254829cea492606357a3dc2f9deee1d"
+        },
+        {
+          "path": "src/blocks/settings/settings.css",
+          "type": "registry:style",
+          "checksum": "sha256-a27d75c66769e536ae229faef6ad908139e4515866726585fba9282ab9258450"
+        }
+      ],
+      "cssVariables": [
+        "--sk-space-1",
+        "--sk-space-4",
+        "--sk-space-8"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "ai": {
+        "summary": "A settings form grouping account fields, a select, switches, and a checkbox, with a save action and an inline alert.",
+        "whenToUse": [
+          "A preferences or account screen where the grouping and the save affordance are the work",
+          "You want the label, description, and error wiring for each field already correct"
+        ],
+        "whenNotToUse": [
+          "A single field — use Input with a Label",
+          "A multi-step flow — the block is one form and no wizard state"
+        ],
+        "accessibility": "Every control is a labelled `<sk-input>`, `<sk-select>`, `<sk-switch>`, or `<sk-checkbox>`; the switches are named by the visible label and explained by the description text beside them rather than by a title attribute. The alert is a live region, so a validation message is announced when it appears. The save button is a real `<button type=\"submit\">`, so Enter in a field submits the form.",
+        "knownLimitations": [
+          "The form has no validation logic and no submit handler: the values are markup, not state",
+          "Saving is not implemented — the button is a submit button waiting for the consumer's handler"
+        ],
+        "example": "<!--\n * Santaka UI — settings starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022), and a\n * hand-kept copy of that list drifted from it twice before this comment\n * replaced it. `packages/core/registry/settings.json` is the list, and\n * `santaka add settings` installs exactly it.\n *\n * Layout only lives in settings.css. The elements own their behavior\n * (ADR-003), so there is no script here: form submission, validation, and the\n * switches act immediately without help from the block.\n -->\n<main class=\"sk-settings\">\n  <header class=\"sk-settings__header\">\n    <div class=\"sk-settings__title\">\n      <sk-text variant=\"2xl\" family=\"display\">\n        <h1>Workspace settings</h1>\n      </sk-text>\n      <sk-text variant=\"sm\" muted>\n        <p>Changes apply to everyone in the workspace.</p>\n      </sk-text>\n    </div>\n    <sk-badge variant=\"primary\">Free plan</sk-badge>\n  </header>\n\n  <nav aria-label=\"Settings sections\" class=\"sk-cluster\">\n    <sk-button variant=\"secondary\" size=\"sm\">General</sk-button>\n    <sk-button variant=\"ghost\" size=\"sm\">Members</sk-button>\n    <sk-button variant=\"ghost\" size=\"sm\">Billing</sk-button>\n  </nav>\n\n  <form id=\"settings-profile\" class=\"sk-settings__stack\">\n    <section aria-labelledby=\"profile-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"profile-heading\">Profile</h2>\n      </sk-text>\n\n      <sk-input\n        name=\"workspace-name\"\n        label=\"Workspace name\"\n        description=\"Shown on every deploy page.\"\n        value=\"Acme Platform\"\n        required\n      ></sk-input>\n\n      <sk-input\n        name=\"workspace-slug\"\n        label=\"URL slug\"\n        description=\"The subdomain of your workspace.\"\n        value=\"acme\"\n        required\n      ></sk-input>\n\n      <sk-textarea\n        name=\"description\"\n        label=\"Description\"\n        rows=\"3\"\n        description=\"A short summary shown in the directory.\"\n      ></sk-textarea>\n\n      <sk-select\n        name=\"region\"\n        label=\"Default region\"\n        description=\"Where new builds run.\"\n        value=\"eu\"\n        options='[{\"value\":\"eu\",\"label\":\"EU West\"},{\"value\":\"us\",\"label\":\"US East\"},{\"value\":\"ap\",\"label\":\"Asia Pacific\"}]'\n      ></sk-select>\n\n      <sk-radio-group\n        name=\"visibility\"\n        label=\"Workspace visibility\"\n        description=\"Who can see deployments.\"\n        value=\"private\"\n        options='[{\"value\":\"private\",\"label\":\"Private\"},{\"value\":\"team\",\"label\":\"Team\"},{\"value\":\"public\",\"label\":\"Public\"}]'\n      ></sk-radio-group>\n    </section>\n\n    <sk-separator decorative></sk-separator>\n\n    <section aria-labelledby=\"notifications-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"notifications-heading\">Notifications</h2>\n      </sk-text>\n\n      <sk-switch\n        name=\"deploy-email\"\n        label=\"Email me when a deploy finishes\"\n        description=\"One message per deploy, grouped by build.\"\n        checked\n      ></sk-switch>\n\n      <sk-switch\n        name=\"failure-banner\"\n        label=\"Show a failure banner in the console\"\n        checked\n      ></sk-switch>\n\n      <sk-checkbox name=\"weekly-digest\" label=\"Send a weekly digest of usage\"> </sk-checkbox>\n\n      <sk-checkbox name=\"product-updates\" label=\"Email me about product updates\" checked>\n      </sk-checkbox>\n    </section>\n\n    <sk-separator decorative></sk-separator>\n\n    <section aria-labelledby=\"danger-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"danger-heading\">Danger zone</h2>\n      </sk-text>\n\n      <sk-alert variant=\"danger\" heading=\"Deleting the workspace is permanent\">\n        <p>Every build, log, and secret is removed. There is no undo.</p>\n        <sk-button slot=\"actions\" variant=\"danger\" size=\"sm\">Delete workspace</sk-button>\n      </sk-alert>\n\n      <sk-input name=\"confirm-slug\" label=\"Type acme to confirm\" placeholder=\"acme\"></sk-input>\n    </section>\n\n    <div class=\"sk-cluster\" role=\"group\" aria-label=\"Form actions\">\n      <sk-button type=\"submit\" variant=\"primary\">Save changes</sk-button>\n      <sk-button type=\"reset\" variant=\"ghost\">Discard changes</sk-button>\n    </div>\n  </form>\n</main>\n",
         "localesCovered": [
           "en-US"
         ]

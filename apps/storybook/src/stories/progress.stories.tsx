@@ -85,7 +85,10 @@ export const IndeterminateHasNoValueNow: Story = {
   args: { value: undefined },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const bar = canvas.getByRole("progressbar")
+    // The role is written by the element on upgrade, so a non-retrying query
+    // can run against markup that has no role yet. `findByRole` retries for
+    // exactly that window (see the button story's note on the same point).
+    const bar = await canvas.findByRole("progressbar")
     await expect(bar).toHaveAttribute("aria-valuemax", "100")
     await expect(bar).not.toHaveAttribute("aria-valuenow")
   },

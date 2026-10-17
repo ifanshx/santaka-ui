@@ -1,0 +1,45 @@
+/*
+ * Santaka UI — dashboard starter block, layout.
+ *
+ * Layout only: stacking, grid columns, spacing. Every color, distance, and
+ * stroke decision that a component owns stays in the component; this file
+ * picks a spacing token, never a raw pixel value.
+ */
+.sk-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-8);
+}
+
+.sk-dashboard__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sk-space-4);
+}
+
+.sk-dashboard__title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1);
+}
+
+.sk-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--sk-space-4);
+}
+
+.sk-dashboard__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4);
+}
+
+.sk-dashboard__usage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--sk-space-4);
+  align-items: start;
+}

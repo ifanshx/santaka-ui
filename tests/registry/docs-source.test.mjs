@@ -61,15 +61,26 @@ describe("the documentation source is the registry", () => {
     assert.deepEqual(published.items, registry.items)
   })
 
-  it("every component's documentation comes from its registry entry", () => {
+  it("every entry's documentation comes from its registry entry", () => {
     for (const item of registry.items) {
-      assert.ok(
-        reference.includes(`## sk-${item.name}`),
-        `llms-full.txt has no section for sk-${item.name}`,
-      )
+      // A block has no tag (ADR-022), so its section is its name.
+      const heading = item.type === "block" ? `## ${item.name}` : `## sk-${item.name}`
+      assert.ok(reference.includes(heading), `llms-full.txt has no section for ${heading.slice(3)}`)
       // The prose a page would render is the entry's own prose.
       assert.ok(reference.includes(item.ai.summary), `${item.name}: summary absent from the docs`)
       assert.ok(reference.includes(item.ai.example), `${item.name}: example absent from the docs`)
+    }
+  })
+
+  it("a block's documentation names the components it composes", () => {
+    // The install and the document are the same list: `santaka add` resolves
+    // `registryDependencies` (ADR-022), so the generated reference has to say
+    // which components arrive with the block.
+    for (const item of registry.items.filter((item) => item.type === "block")) {
+      assert.ok(
+        reference.includes(`- Composes: ${item.registryDependencies.join(", ")}`),
+        `${item.name}: the components it composes are absent from the docs`,
+      )
     }
   })
 

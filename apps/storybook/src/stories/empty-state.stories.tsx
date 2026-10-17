@@ -123,7 +123,10 @@ export const ActionsAreReachable: Story = {
   render: WithActions.render,
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement)
-    const create = canvas.getByRole("button", { name: "Create project" })
+    // `findByRole`, not `getByRole`: the button's role appears when the
+    // element upgrades, and this suite runs beside the browser suites under
+    // `turbo run test`, so the upgrade can still be in flight here.
+    const create = await canvas.findByRole("button", { name: "Create project" })
     await userEvent.tab()
     await expect(create).toHaveFocus()
   },

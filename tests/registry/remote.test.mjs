@@ -34,7 +34,8 @@ const PAYLOAD = join(repoRoot, "apps", "docs", "public", "registry")
  * count of the day (`21`), which is how they went stale while the component set
  * grew to twenty-six — a grep for a number, not a check on the CLI.
  */
-const PAYLOAD_COUNT = JSON.parse(readFileSync(join(PAYLOAD, "index.json"), "utf8")).items.length
+const PAYLOAD_ITEMS = JSON.parse(readFileSync(join(PAYLOAD, "index.json"), "utf8")).items
+const PAYLOAD_COUNT = PAYLOAD_ITEMS.length
 
 const quote = (value) => (/\s/.test(value) ? `"${value}"` : value)
 /**
@@ -245,8 +246,15 @@ describe("a registry over HTTP", () => {
 
       const listed = await run(["list"], scoped)
       assert.equal(listed.status, 0, listed.stdout + listed.stderr)
-      // The remote entries are visible: every one the payload publishes.
-      assert.match(listed.stdout, new RegExp(`${PAYLOAD_COUNT} components`))
+      // The remote entries are visible: the counts line is derived from the
+      // entries the payload publishes (ADR-022 §4), so the numbers are read
+      // from the payload rather than from a count of the day.
+      const byType = {}
+      for (const item of PAYLOAD_ITEMS) byType[item.type] = (byType[item.type] ?? 0) + 1
+      const expected = Object.entries(byType)
+        .map(([type, count]) => `${count} ${type}${count === 1 ? "" : "s"}`)
+        .join(", ")
+      assert.ok(listed.stdout.includes(expected), `expected "${expected}" in list output`)
 
       const added = await run(["add", "badge"], scoped)
       assert.equal(added.status, 0, added.stdout + added.stderr)

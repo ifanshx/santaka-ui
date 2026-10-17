@@ -59,12 +59,12 @@ function loadIndex(): RegistryIndex {
 /**
  * Every component page, ordered Stable-first so a reader never starts on an
  * unstable surface — the same ordering `search_components` uses (§11).
+ *
+ * Components only: a block has no `sk-*` tag, so mapping one to a component page
+ * would put a tag on a page for an element that does not exist (ADR-022).
  */
 export function componentPages(): ComponentPage[] {
-  const index = loadIndex()
-  const items = index.items ?? []
-
-  return items
+  return pagesOfType("component")
     .map((item: RegistryItem) => ({
       name: item.name,
       tag: `sk-${item.name}`,
@@ -84,11 +84,66 @@ export function componentPages(): ComponentPage[] {
       cssVariables: item.cssVariables ?? [],
       type: item.type,
     }))
-    .sort(
-      (a: ComponentPage, b: ComponentPage) =>
-        (STABILITY_ORDER[a.stability as Stability] ?? 9) -
-          (STABILITY_ORDER[b.stability as Stability] ?? 9) || a.name.localeCompare(b.name),
-    )
+    .sort(byStabilityThenName)
+}
+
+/** A block page: markup that composes components, and the components it names. */
+export type BlockPage = {
+  name: string
+  stability: string
+  frameworks: string[]
+  version: string
+  locales: string[]
+  summary: string
+  whenToUse: string[]
+  whenNotToUse: string[]
+  accessibility: string
+  example: string
+  limitations: string[]
+  cssVariables: string[]
+  /**
+   * The registry entries this block composes, from the entry's own
+   * `registryDependencies` — the same list `santaka add` installs (ADR-022).
+   */
+  composes: string[]
+  /** File paths as the registry declares them, for the "what you get" list. */
+  files: string[]
+}
+
+/** Every block page, in the same order the component catalogue uses. */
+export function blockPages(): BlockPage[] {
+  return pagesOfType("block")
+    .map((item: RegistryItem) => ({
+      name: item.name,
+      stability: item.stability,
+      frameworks: item.frameworks ?? [],
+      version: item.version,
+      locales: item.localesCovered ?? [],
+      summary: item.ai.summary,
+      whenToUse: item.ai.whenToUse ?? [],
+      whenNotToUse: item.ai.whenNotToUse ?? [],
+      accessibility: item.ai.accessibility,
+      example: item.ai.example,
+      limitations: item.ai.knownLimitations ?? [],
+      cssVariables: item.cssVariables ?? [],
+      composes: item.registryDependencies ?? [],
+      files: (item.files ?? []).map((file) => file.path),
+    }))
+    .sort(byStabilityThenName)
+}
+
+function pagesOfType(type: string): RegistryItem[] {
+  return (loadIndex().items ?? []).filter((item: RegistryItem) => item.type === type)
+}
+
+function byStabilityThenName(
+  a: { stability: string; name: string },
+  b: { stability: string; name: string },
+) {
+  return (
+    (STABILITY_ORDER[a.stability as Stability] ?? 9) -
+      (STABILITY_ORDER[b.stability as Stability] ?? 9) || a.name.localeCompare(b.name)
+  )
 }
 
 /** The stability labels in use, so the index can group by them. */

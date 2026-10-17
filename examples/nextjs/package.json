@@ -6,7 +6,8 @@
   "scripts": {
     "build": "next build",
     "start": "next start",
-    "test:ssr": "pnpm run build && node scripts/ssr-proof.mjs"
+    "test:ssr": "pnpm run build && node scripts/ssr-proof.mjs",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@santaka-ui/react": "workspace:*",

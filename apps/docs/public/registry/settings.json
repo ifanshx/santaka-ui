@@ -1,0 +1,69 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "settings",
+  "namespace": null,
+  "type": "block",
+  "frameworks": [
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "framework-neutral",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [
+    "alert",
+    "badge",
+    "button",
+    "checkbox",
+    "input",
+    "radio-group",
+    "select",
+    "separator",
+    "switch",
+    "text",
+    "textarea"
+  ],
+  "files": [
+    {
+      "path": "src/blocks/settings/settings.html",
+      "type": "registry:block",
+      "checksum": "sha256-15cf18838aa1564e0f4bc8a7a8f2bce5d254829cea492606357a3dc2f9deee1d"
+    },
+    {
+      "path": "src/blocks/settings/settings.css",
+      "type": "registry:style",
+      "checksum": "sha256-a27d75c66769e536ae229faef6ad908139e4515866726585fba9282ab9258450"
+    }
+  ],
+  "cssVariables": [
+    "--sk-space-1",
+    "--sk-space-4",
+    "--sk-space-8"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "A settings form grouping account fields, a select, switches, and a checkbox, with a save action and an inline alert.",
+    "whenToUse": [
+      "A preferences or account screen where the grouping and the save affordance are the work",
+      "You want the label, description, and error wiring for each field already correct"
+    ],
+    "whenNotToUse": [
+      "A single field — use Input with a Label",
+      "A multi-step flow — the block is one form and no wizard state"
+    ],
+    "accessibility": "Every control is a labelled `<sk-input>`, `<sk-select>`, `<sk-switch>`, or `<sk-checkbox>`; the switches are named by the visible label and explained by the description text beside them rather than by a title attribute. The alert is a live region, so a validation message is announced when it appears. The save button is a real `<button type=\"submit\">`, so Enter in a field submits the form.",
+    "knownLimitations": [
+      "The form has no validation logic and no submit handler: the values are markup, not state",
+      "Saving is not implemented — the button is a submit button waiting for the consumer's handler"
+    ],
+    "example": "<!--\n * Santaka UI — settings starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022), and a\n * hand-kept copy of that list drifted from it twice before this comment\n * replaced it. `packages/core/registry/settings.json` is the list, and\n * `santaka add settings` installs exactly it.\n *\n * Layout only lives in settings.css. The elements own their behavior\n * (ADR-003), so there is no script here: form submission, validation, and the\n * switches act immediately without help from the block.\n -->\n<main class=\"sk-settings\">\n  <header class=\"sk-settings__header\">\n    <div class=\"sk-settings__title\">\n      <sk-text variant=\"2xl\" family=\"display\">\n        <h1>Workspace settings</h1>\n      </sk-text>\n      <sk-text variant=\"sm\" muted>\n        <p>Changes apply to everyone in the workspace.</p>\n      </sk-text>\n    </div>\n    <sk-badge variant=\"primary\">Free plan</sk-badge>\n  </header>\n\n  <nav aria-label=\"Settings sections\" class=\"sk-cluster\">\n    <sk-button variant=\"secondary\" size=\"sm\">General</sk-button>\n    <sk-button variant=\"ghost\" size=\"sm\">Members</sk-button>\n    <sk-button variant=\"ghost\" size=\"sm\">Billing</sk-button>\n  </nav>\n\n  <form id=\"settings-profile\" class=\"sk-settings__stack\">\n    <section aria-labelledby=\"profile-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"profile-heading\">Profile</h2>\n      </sk-text>\n\n      <sk-input\n        name=\"workspace-name\"\n        label=\"Workspace name\"\n        description=\"Shown on every deploy page.\"\n        value=\"Acme Platform\"\n        required\n      ></sk-input>\n\n      <sk-input\n        name=\"workspace-slug\"\n        label=\"URL slug\"\n        description=\"The subdomain of your workspace.\"\n        value=\"acme\"\n        required\n      ></sk-input>\n\n      <sk-textarea\n        name=\"description\"\n        label=\"Description\"\n        rows=\"3\"\n        description=\"A short summary shown in the directory.\"\n      ></sk-textarea>\n\n      <sk-select\n        name=\"region\"\n        label=\"Default region\"\n        description=\"Where new builds run.\"\n        value=\"eu\"\n        options='[{\"value\":\"eu\",\"label\":\"EU West\"},{\"value\":\"us\",\"label\":\"US East\"},{\"value\":\"ap\",\"label\":\"Asia Pacific\"}]'\n      ></sk-select>\n\n      <sk-radio-group\n        name=\"visibility\"\n        label=\"Workspace visibility\"\n        description=\"Who can see deployments.\"\n        value=\"private\"\n        options='[{\"value\":\"private\",\"label\":\"Private\"},{\"value\":\"team\",\"label\":\"Team\"},{\"value\":\"public\",\"label\":\"Public\"}]'\n      ></sk-radio-group>\n    </section>\n\n    <sk-separator decorative></sk-separator>\n\n    <section aria-labelledby=\"notifications-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"notifications-heading\">Notifications</h2>\n      </sk-text>\n\n      <sk-switch\n        name=\"deploy-email\"\n        label=\"Email me when a deploy finishes\"\n        description=\"One message per deploy, grouped by build.\"\n        checked\n      ></sk-switch>\n\n      <sk-switch\n        name=\"failure-banner\"\n        label=\"Show a failure banner in the console\"\n        checked\n      ></sk-switch>\n\n      <sk-checkbox name=\"weekly-digest\" label=\"Send a weekly digest of usage\"> </sk-checkbox>\n\n      <sk-checkbox name=\"product-updates\" label=\"Email me about product updates\" checked>\n      </sk-checkbox>\n    </section>\n\n    <sk-separator decorative></sk-separator>\n\n    <section aria-labelledby=\"danger-heading\" class=\"sk-settings__stack\">\n      <sk-text variant=\"lg\" family=\"display\">\n        <h2 id=\"danger-heading\">Danger zone</h2>\n      </sk-text>\n\n      <sk-alert variant=\"danger\" heading=\"Deleting the workspace is permanent\">\n        <p>Every build, log, and secret is removed. There is no undo.</p>\n        <sk-button slot=\"actions\" variant=\"danger\" size=\"sm\">Delete workspace</sk-button>\n      </sk-alert>\n\n      <sk-input name=\"confirm-slug\" label=\"Type acme to confirm\" placeholder=\"acme\"></sk-input>\n    </section>\n\n    <div class=\"sk-cluster\" role=\"group\" aria-label=\"Form actions\">\n      <sk-button type=\"submit\" variant=\"primary\">Save changes</sk-button>\n      <sk-button type=\"reset\" variant=\"ghost\">Discard changes</sk-button>\n    </div>\n  </form>\n</main>\n",
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

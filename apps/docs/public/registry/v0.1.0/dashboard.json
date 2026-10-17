@@ -1,0 +1,70 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "dashboard",
+  "namespace": null,
+  "type": "block",
+  "frameworks": [
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "framework-neutral",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [
+    "alert",
+    "badge",
+    "button",
+    "card",
+    "empty-state",
+    "icon-button",
+    "progress",
+    "separator",
+    "skeleton",
+    "spinner",
+    "table",
+    "text"
+  ],
+  "files": [
+    {
+      "path": "src/blocks/dashboard/dashboard.html",
+      "type": "registry:block",
+      "checksum": "sha256-b5a6757677be15719bbf224dc5da9893413c1a2750a16bb618427b1ce55d82a8"
+    },
+    {
+      "path": "src/blocks/dashboard/dashboard.css",
+      "type": "registry:style",
+      "checksum": "sha256-e9192479b98be2fc4a01fe0d7d088866bff663fa73ac2ef1a4407485c407928d"
+    }
+  ],
+  "cssVariables": [
+    "--sk-space-1",
+    "--sk-space-4",
+    "--sk-space-8"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "ai": {
+    "summary": "An application shell with a navigation sidebar, a search header, summary cards, and a table of recent activity.",
+    "whenToUse": [
+      "The first screen of an internal tool, where the shell matters more than any one panel",
+      "You want the layout, the sidebar behaviour, and the responsive breakpoints already settled"
+    ],
+    "whenNotToUse": [
+      "It is a marketing page — use Button and link components, not the sidebar shell",
+      "You only need the summary cards — take Card and write the grid yourself"
+    ],
+    "accessibility": "The block is plain markup: the landmarks are the ones it writes (`<header>`, `<nav aria-label>`, `<main>`, `<section aria-labelledby>`), and the table carries a `<caption>`. Nothing in the block is keyboard-reachable that is not also labelled; the sidebar's links are real `<sk-link>` elements wrapping real `<a href>`, so they are in the tab order as links rather than as clickable boxes.",
+    "knownLimitations": [
+      "The rows, counts, and progress values are placeholder markup: the block fetches nothing",
+      "The sidebar is not collapsible and the block ships no JavaScript to make it so"
+    ],
+    "example": "<!--\n * Santaka UI — dashboard starter block.\n *\n * Which components it composes is not listed here: the registry entry derives\n * `registryDependencies` from the elements this markup opens (ADR-022), and a\n * hand-kept copy of that list was already missing one before this comment\n * replaced it. `packages/core/registry/dashboard.json` is the list, and\n * `santaka add dashboard` installs exactly it.\n *\n * Layout only lives in dashboard.css, which loads alongside this file. The\n * data the consumer owns is a small, obviously-placeholder set; every element\n * below is a shipped sk-* component in a documented state.\n -->\n<main class=\"sk-dashboard\">\n  <header class=\"sk-dashboard__header\">\n    <div class=\"sk-dashboard__title\">\n      <sk-text variant=\"2xl\" family=\"display\">\n        <h1>Deploy console</h1>\n      </sk-text>\n      <sk-text variant=\"sm\" muted>\n        <p>Production workspace · eu-west-1 · last deploy 14:02 UTC</p>\n      </sk-text>\n    </div>\n    <div class=\"sk-cluster\">\n      <sk-icon-button label=\"Refresh now\" variant=\"outline\">\n        <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6\" />\n        </svg>\n      </sk-icon-button>\n      <sk-icon-button label=\"Workspace settings\" variant=\"outline\">\n        <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <circle cx=\"12\" cy=\"12\" r=\"3\" />\n          <path d=\"M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2\" />\n        </svg>\n      </sk-icon-button>\n      <sk-button variant=\"primary\">New deployment</sk-button>\n    </div>\n  </header>\n\n  <section aria-labelledby=\"stats-heading\" class=\"sk-dashboard__stats\">\n    <h2 id=\"stats-heading\" class=\"sk-visually-hidden\">Deployment statistics</h2>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Active deployments</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>12</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"success\">Live</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>+2 since yesterday</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Queued builds</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>3</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"warning\">Pending</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>oldest waiting 4m</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card>\n      <sk-text variant=\"sm\" muted>Failed builds</sk-text>\n      <sk-text variant=\"3xl\" family=\"display\">\n        <p>1</p>\n      </sk-text>\n      <div class=\"sk-cluster\">\n        <sk-badge variant=\"danger\">Failed</sk-badge>\n        <sk-text variant=\"xs\" muted>\n          <span>build 4820</span>\n        </sk-text>\n      </div>\n    </sk-card>\n  </section>\n\n  <section aria-labelledby=\"deploys-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"deploys-heading\">Recent deployments</h2>\n    </sk-text>\n\n    <!--\n      The table is the consumer's own markup — caption, thead, th scope — and\n      sk-table contributes the container, the overflow handling, and style.\n    -->\n    <sk-table label=\"Recent deployments\">\n      <table>\n        <caption>\n          Deployments in the last 24 hours\n        </caption>\n        <thead>\n          <tr>\n            <th scope=\"col\">Build</th>\n            <th scope=\"col\">Environment</th>\n            <th scope=\"col\">Status</th>\n            <th scope=\"col\">Duration</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td>4823</td>\n            <td>staging</td>\n            <td><sk-badge variant=\"warning\">Pending</sk-badge></td>\n            <td>—</td>\n          </tr>\n          <tr>\n            <td>4821</td>\n            <td>production</td>\n            <td><sk-badge variant=\"success\">Live</sk-badge></td>\n            <td>42s</td>\n          </tr>\n          <tr>\n            <td>4820</td>\n            <td>production</td>\n            <td><sk-badge variant=\"danger\">Failed</sk-badge></td>\n            <td>1m 05s</td>\n          </tr>\n        </tbody>\n      </table>\n    </sk-table>\n  </section>\n\n  <section aria-labelledby=\"usage-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"usage-heading\">Build usage</h2>\n    </sk-text>\n\n    <div class=\"sk-dashboard__usage\">\n      <sk-card>\n        <sk-progress label=\"Build minutes, this cycle\" value=\"68\" size=\"lg\"></sk-progress>\n        <sk-progress label=\"Artifact storage\" value=\"40\"></sk-progress>\n        <sk-text variant=\"sm\" muted>\n          <p>Usage resets on the first of every month.</p>\n        </sk-text>\n      </sk-card>\n\n      <sk-card>\n        <sk-alert variant=\"warning\" heading=\"Quota nearly full\">\n          Your workspace has used 68% of its build minutes.\n          <sk-button slot=\"actions\" variant=\"secondary\" size=\"sm\">View usage</sk-button>\n        </sk-alert>\n        <sk-separator decorative></sk-separator>\n        <sk-text variant=\"sm\" muted>\n          <p>Approved reviewers see usage per runner in the audit log.</p>\n        </sk-text>\n      </sk-card>\n    </div>\n  </section>\n\n  <section aria-labelledby=\"queue-heading\" class=\"sk-dashboard__section\">\n    <sk-text variant=\"lg\" family=\"display\">\n      <h2 id=\"queue-heading\">Waiting on the queue</h2>\n    </sk-text>\n\n    <sk-card>\n      <sk-skeleton variant=\"text\" style=\"inline-size: 70%\"></sk-skeleton>\n      <sk-skeleton variant=\"text\" style=\"inline-size: 55%\"></sk-skeleton>\n      <div class=\"sk-cluster\">\n        <sk-spinner label=\"Refreshing queue\" size=\"sm\"></sk-spinner>\n        <sk-text variant=\"sm\" muted>\n          <span>Queue refreshes every 30 seconds.</span>\n        </sk-text>\n      </div>\n    </sk-card>\n\n    <sk-card variant=\"bare\">\n      <!--\n        The empty state for the one gap in the data: the resting state, not a\n        pretend load. Composing it next to a loading card covers both.\n      -->\n      <sk-empty-state\n        heading=\"No deploy previews yet\"\n        description=\"Open a pull request and a preview build starts on its own.\"\n      >\n        <sk-button slot=\"actions\" size=\"sm\">Open PRs</sk-button>\n      </sk-empty-state>\n    </sk-card>\n  </section>\n</main>\n",
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

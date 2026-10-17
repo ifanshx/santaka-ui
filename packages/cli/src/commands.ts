@@ -36,9 +36,12 @@ import {
   findItem,
   loadBundledRegistry,
   readRegistryConfig,
+  resolveClosure,
   resolveItemFiles,
+  typeCounts,
   writeRegistryConfig,
   type LoadedRegistry,
+  type ResolveOutcome,
 } from "./registry.js"
 
 /** Exit codes §8 defines. `2` is a conflict, and it is load-bearing. */
@@ -209,7 +212,7 @@ export type AddOptions = {
 export async function add(ctx: CommandContext, options: AddOptions): Promise<CommandResult> {
   const lines: string[] = []
   if (options.names.length === 0) {
-    lines.push(ctx.paint.error("✖ Name at least one component: santaka add button dialog"))
+    lines.push(ctx.paint.error("✖ Name at least one item: santaka add button dialog"))
     return { code: EXIT.error, lines }
   }
 
@@ -226,19 +229,46 @@ export async function add(ctx: CommandContext, options: AddOptions): Promise<Com
     if (item) items.push(item)
     else unknown.push(name)
   }
+  const rootsByName = new Set(items.map((item) => item.name))
 
   if (unknown.length > 0) {
-    lines.push(ctx.paint.error(`✖ Unknown component(s): ${unknown.join(", ")}`))
+    lines.push(ctx.paint.error(`✖ Unknown item(s): ${unknown.join(", ")}`))
     lines.push("")
     lines.push("Available:")
     lines.push(...listNames(registry, ctx))
     return { code: EXIT.error, lines }
   }
 
+  // The plan is the dependency closure of every requested name, depth-first:
+  // dependencies first, then the item itself. `add block` installs the
+  // block *and* the components it composes (ADR-022); `add button` resolves
+  // to just `button`, so a dependency-free install behaves exactly as before.
+  const closure = resolveClosure(registry, items)
+  if (!closure.ok) {
+    lines.push(ctx.paint.error(`✖ Dependency cycle: ${closure.reason}`))
+    return { code: EXIT.error, lines }
+  }
+  if (closure.missing.length > 0) {
+    for (const missing of closure.missing) {
+      lines.push(
+        ctx.paint.error(
+          `✖ ${missing.requestedBy} depends on "${missing.name}", which is not in any configured registry.`,
+        ),
+      )
+    }
+    return { code: EXIT.error, lines }
+  }
+  const planned = closure.items
+  const dependencies = planned.filter((item) => !rootsByName.has(item.name))
+  if (dependencies.length > 0) {
+    lines.push(ctx.paint.dim(`dependencies of ${items.map((item) => item.name).join(", ")}:`))
+    for (const item of dependencies) lines.push(ctx.paint.dim(`  ${item.name}`))
+  }
+
   // Resolve every file up front: a checksum mismatch or a bad path on the last
   // component must not leave the first ones written.
-  const resolved: Array<{ item: RegistryItem; files: ReturnType<typeof resolveItemFiles> }> = []
-  for (const item of items) {
+  const resolved: Array<{ item: RegistryItem; files: ResolveOutcome }> = []
+  for (const item of planned) {
     const files = resolveItemFiles(item, ctx.cwd)
     if (!files.ok) {
       lines.push(ctx.paint.error(`✖ ${files.reason}`))
@@ -347,7 +377,15 @@ export async function add(ctx: CommandContext, options: AddOptions): Promise<Com
 
   if (ctx.dryRun) {
     lines.push(ctx.paint.dim("[dry run] would write:"))
-    for (const entry of plan) lines.push(`  ${relativeTo(ctx.cwd, entry.destination)}`)
+    for (const entry of resolved) {
+      if (!entry.files.ok || entry.files.files.length === 0) continue
+      lines.push(`  ${entry.item.name}`)
+      for (const file of entry.files.files) {
+        const destination = join(ctx.cwd, file.destination)
+        if (skippedPaths.has(file.destination)) continue
+        lines.push(`    ${relativeTo(ctx.cwd, destination)}`)
+      }
+    }
     for (const path of skipped) lines.push(`  ${path} ${ctx.paint.dim("(skipped)")}`)
     return { code: EXIT.ok, lines }
   }
@@ -379,7 +417,7 @@ export async function add(ctx: CommandContext, options: AddOptions): Promise<Com
   for (const path of skipped) lines.push(ctx.paint.dim(`· skipped ${path}`))
   lines.push("")
   lines.push(
-    `Installed ${items.map((item) => item.name).join(", ")}. Recorded in ${manifestPath(ctx.cwd)
+    `Installed ${planned.map((item) => item.name).join(", ")}. Recorded in ${manifestPath(ctx.cwd)
       .replace(ctx.cwd, "")
       .replace(/^[\\/]/, "")}.`,
   )
@@ -393,7 +431,11 @@ export async function add(ctx: CommandContext, options: AddOptions): Promise<Com
 export async function list(ctx: CommandContext): Promise<CommandResult> {
   const lines: string[] = []
   const registry = await loadRegistry(ctx.cwd)
-  lines.push(ctx.paint.bold(`${registry.items.length} components`))
+  // Counts by item type, derived from the entries rather than from a list of
+  // type names: an entry whose type is new or unexpected is still counted and
+  // still shown (ADR-022 §4), so a future kind cannot silently vanish from the
+  // total.
+  lines.push(ctx.paint.bold(typeCounts(registry.items)))
   lines.push("")
   lines.push(...listNames(registry, ctx))
   const { manifest } = readManifest(ctx.cwd)

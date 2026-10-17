@@ -1,0 +1,65 @@
+<!--
+ * Santaka UI — authentication starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022).
+ * `packages/core/registry/authentication.json` is the list, and
+ * `santaka add authentication` installs exactly it.
+ *
+ * Layout only lives in authentication.css. A single centered card; the
+ * placeholder form posts nowhere and validation is the consumer's wiring.
+ -->
+<main class="sk-auth">
+  <section aria-labelledby="auth-heading" class="sk-auth__card">
+    <sk-text variant="lg" family="display">
+      <h1 id="auth-heading">Sign in to Acme</h1>
+    </sk-text>
+    <sk-text variant="sm" muted>
+      <p>New here? <sk-link href="/sign-up">Create an account</sk-link>.</p>
+    </sk-text>
+
+    <!--
+      An error shown as the block ships it, so the invalid state is visible in
+      the source rather than hidden behind a submit. Remove it for a clean form.
+    -->
+    <sk-alert variant="danger" heading="That password did not match">
+      <p>Try again, or reset your password below.</p>
+    </sk-alert>
+
+    <form id="auth-sign-in" class="sk-auth__form">
+      <sk-input
+        name="email"
+        type="email"
+        label="Email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      ></sk-input>
+
+      <sk-input
+        name="password"
+        type="password"
+        label="Password"
+        autocomplete="current-password"
+        required
+      ></sk-input>
+
+      <div class="sk-auth__row">
+        <sk-checkbox name="remember" label="Keep me signed in for 30 days" checked> </sk-checkbox>
+        <sk-link href="/reset-password">Forgot password?</sk-link>
+      </div>
+
+      <sk-button type="submit" variant="primary">Sign in</sk-button>
+    </form>
+
+    <sk-separator label="or"></sk-separator>
+
+    <sk-text variant="sm" muted>
+      <p>
+        By continuing you agree to the
+        <sk-link href="/terms">Terms of Service</sk-link> and
+        <sk-link href="/privacy">Privacy Policy</sk-link>.
+      </p>
+    </sk-text>
+  </section>
+</main>

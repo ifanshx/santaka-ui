@@ -12,6 +12,7 @@
  * a stdio client is attached is a tool nobody can unit-test.
  */
 import { searchComponents, type ComponentSummary } from "@santaka-ui/core"
+import type { RegistryFile, RegistryItemType } from "@santaka-ui/core"
 import {
   loadRegistry,
   loadTokens,
@@ -34,26 +35,40 @@ export type SearchInput = {
 }
 
 export type SearchResult = {
-  components: Array<ComponentSummary & { tag: string }>
-  /** How many components were considered, so an empty result is legible. */
+  components: Array<
+    ComponentSummary & {
+      type: RegistryItemType
+      /**
+       * The custom element tag. Present only for `type: "component"` — a
+       * block composes components and has no tag of its own, so emitting
+       * `sk-<name>` for one would name an element no package registers.
+       */
+      tag?: string
+      /** Names another `add` must resolve first; a block's composed components. */
+      registryDependencies: string[]
+    }
+  >
+  /** How many items were considered, so an empty result is legible. */
   considered: number
 }
 
 /**
- * Rank components for a need.
+ * Rank registry items for a need.
  *
  * `@santaka-ui/core`'s `searchComponents` does the scoring and the
  * stable-before-preview ordering (it is the same function the CLI uses, so the
  * two cannot disagree). This adds the two filters the plan names that the core
  * function does not implement — `interactive` and `formAssociated` — because
- * those are facts about the component, and the core function is deliberately
- * generic over a registry that may one day hold non-components.
+ * those are facts about the item, and the core function is deliberately
+ * generic over a registry that may hold non-components.
  *
- * `interactive` and `formAssociated` are derived from the component's own
+ * `interactive` and `formAssociated` are derived from the item's own
  * metadata rather than a hand-kept list: a form-associated component is one
  * that declares `sk-value-change` (every FACE control does), and an interactive
- * one is one that has any event or a focusable role. A hardcoded list would
- * silently stop covering a new component.
+ * one is one that has any event or a focusable role. A block has neither
+ * events nor props, so it is asserted non-interactive by the same derivation
+ * rather than by a type special case. A hardcoded list would silently stop
+ * covering a new item.
  */
 export function searchComponentsTool(
   registry: RegistryIndexFile,
@@ -82,11 +97,24 @@ export function searchComponentsTool(
     constraints.framework ? { framework: constraints.framework } : {},
   )
 
-  const tagByName = new Map(eligible.map((item) => [item.name, `sk-${item.name}`]))
-  const components = ranked.map((summary) => ({
-    ...summary,
-    tag: tagByName.get(summary.name) ?? `sk-${summary.name}`,
-  }))
+  // Only a component has a custom element; a block's name *is* its identifier.
+  const tagByName = new Map(
+    eligible
+      .filter((item) => item.type === "component")
+      .map((item) => [item.name, `sk-${item.name}`] as const),
+  )
+  const dependenciesByName = new Map(eligible.map((item) => [item.name, item.registryDependencies]))
+  const typeByName = new Map(eligible.map((item) => [item.name, item.type]))
+  const components = ranked.map((summary) => {
+    const tag = tagByName.get(summary.name)
+    return {
+      ...summary,
+      type: typeByName.get(summary.name) ?? "component",
+      // A spread of a conditional property: present only for a component.
+      ...(tag !== undefined && { tag }),
+      registryDependencies: dependenciesByName.get(summary.name) ?? [],
+    }
+  })
 
   return { components, considered: eligible.length }
 }
@@ -121,7 +149,12 @@ export type GetComponentResult =
 
 export type ComponentDetail = {
   name: string
-  tag: string
+  type: RegistryItemType
+  /**
+   * The custom element tag. Present only for `type: "component"` — a block is
+   * composed of elements and has no tag of its own.
+   */
+  tag?: string
   stability: string
   frameworks: string[]
   behaviorOwner: string
@@ -131,25 +164,41 @@ export type ComponentDetail = {
   accessibility: string
   example: string
   knownLimitations: string[]
+  /** A block composes components instead of declaring props; empty for one. */
   props: Array<{ name: string; type: string; default: string | null; description: string }>
   events: string[]
+  /** The components a block composes, which the consumer must add first. */
+  registryDependencies: string[]
+  /** The block's or component's own source files, with their checksums. */
+  files: RegistryFile[]
   cssVariables: string[]
 }
 
 /**
- * The full record for one component.
+ * The full record for one item.
  *
  * A miss is not an error in the MCP sense — the agent asked a question and the
- * honest answer is "no such component" — so it returns `found: false` with
+ * honest answer is "no such entry" — so it returns `found: false` with
  * near-name suggestions rather than throwing. An agent that gets a bare error
  * retries the same wrong name.
+ *
+ * The `tag` field is present only for a component: a block composes `sk-*`
+ * elements and is identifier-addressed by its name alone, so emitting a tag
+ * for one would name an element no package registers. `props` and `events`
+ * stay empty for a block — the entry's `registryDependencies` and `files` are
+ * what an `add` of it needs.
  */
 export function getComponentTool(
   registry: RegistryIndexFile,
   input: GetComponentInput,
 ): GetComponentResult {
   const name = input.name.trim().replace(/^sk-/, "").toLowerCase()
-  const item = registry.items.find((candidate) => candidate.name === name)
+  const matches = registry.items.filter((candidate) => candidate.name === name)
+  const framework = input.framework
+  const item =
+    framework !== undefined
+      ? matches.find((candidate) => candidate.frameworks.includes(framework))
+      : matches[0]
 
   if (!item) {
     return {
@@ -162,11 +211,14 @@ export function getComponentTool(
     }
   }
 
+  const isComponent = item.type === "component"
   return {
     found: true,
     component: {
       name: item.name,
-      tag: `sk-${item.name}`,
+      type: item.type,
+      // A block composes elements and is addressed by its name — no tag.
+      ...(isComponent && { tag: `sk-${item.name}` }),
       stability: item.stability,
       frameworks: item.frameworks,
       behaviorOwner: item.behaviorOwner,
@@ -178,6 +230,8 @@ export function getComponentTool(
       knownLimitations: item.ai.knownLimitations,
       props: item.props ?? [],
       events: item.events ?? [],
+      registryDependencies: item.registryDependencies,
+      files: item.files,
       cssVariables: item.cssVariables,
     },
   }
@@ -257,10 +311,14 @@ export type GetUsageResult =
   | {
       found: true
       component: string
-      tag: string
+      type: RegistryItemType
+      /** The custom element tag; present only for a component, never a block. */
+      tag?: string
       install: string[]
       usage: string
       notes: string[]
+      /** Names `add` must resolve first before the item's own files. */
+      registryDependencies: string[]
     }
   | { found: false; error: string; suggestions: string[] }
 
@@ -314,16 +372,22 @@ export function getUsageTool(registry: RegistryIndexFile, input: GetUsageInput):
           'import "@santaka-ui/web-components/santaka.css"',
         ]
 
+  const isComponent = detail.component.type === "component"
+  const tag = detail.component.tag
   return {
     found: true,
     component: detail.component.name,
-    tag: detail.component.tag,
+    type: detail.component.type,
+    // A block's usage is its markup, so the same field carries it; the tag
+    // would name an element nothing registers.
+    ...(tag !== undefined && { tag }),
     install: [...install, ...imports],
     usage: detail.component.example,
     notes: [
       detail.component.accessibility,
       ...detail.component.knownLimitations.map((limitation) => `Limitation: ${limitation}`),
     ],
+    registryDependencies: isComponent ? [] : detail.component.registryDependencies,
   }
 }
 

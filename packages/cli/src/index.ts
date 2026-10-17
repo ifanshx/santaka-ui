@@ -39,7 +39,15 @@ export {
   findItem,
   loadBundledRegistry,
   readRegistryConfig,
+  resolveClosure,
   resolveItemFiles,
+  typeCounts,
   writeRegistryConfig,
 } from "./registry.js"
-export type { LoadedRegistry, RegistrySource, ResolvedFile } from "./registry.js"
+export type {
+  ClosureResult,
+  LoadedRegistry,
+  MissingDependency,
+  RegistrySource,
+  ResolvedFile,
+} from "./registry.js"

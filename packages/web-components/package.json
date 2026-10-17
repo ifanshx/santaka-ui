@@ -20,7 +20,8 @@
   "files": [
     "dist/",
     "loader/",
-    "src/components"
+    "src/components",
+    "src/blocks"
   ],
   "exports": {
     ".": {

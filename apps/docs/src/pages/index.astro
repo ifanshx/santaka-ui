@@ -7,13 +7,14 @@
  * rather than from an author's heading (ADR-006).
  */
 import Layout from "../layouts/Layout.astro"
-import { componentPages, stabilityGroups } from "../lib/components"
+import { blockPages, componentPages, stabilityGroups } from "../lib/components"
 
 const pages = componentPages()
 const groups = stabilityGroups()
+const blocks = blockPages()
 ---
 
-<Layout title="Components" description={`${pages.length} Santaka UI components, generated from the registry.`}>
+<Layout title="Components" description={`${pages.length} Santaka UI components and ${blocks.length} blocks, generated from the registry.`}>
   <h1>Components</h1>
   <p class="lede">
     Every page below is generated from the same registry entry the CLI installs from, the MCP server answers from, and
@@ -39,6 +40,34 @@ const groups = stabilityGroups()
       </ul>
     </section>
   ))}
+
+  {
+    // Blocks are not components: they have no tag, no props, and no page-sized
+    // preview (ADR-022), so they get their own section rather than a card in a
+    // stability group where a reader would look for an element to import.
+    blocks.length > 0 && (
+      <section class="group" id="blocks">
+        <h2>
+          <span class="badge">blocks</span>
+          <span class="count">{blocks.length}</span>
+        </h2>
+        <p class="hint">
+          Page compositions: markup that uses the components above, plus layout CSS. <code>santaka add</code> installs a
+          block together with every component it composes.
+        </p>
+        <ul class="cards">
+          {blocks.map((page) => (
+            <li class="card">
+              <a href={`/blocks/${page.name}/`}>
+                <strong>{page.name}</strong>
+                <span class="summary">{page.summary}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 
   <footer class="note">
     <p>
@@ -108,5 +137,10 @@ const groups = stabilityGroups()
     margin-block-start: 3rem;
     font-size: 0.9rem;
     color: var(--muted);
+  }
+  .hint {
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-inline-size: 65ch;
   }
 </style>

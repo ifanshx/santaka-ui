@@ -388,7 +388,7 @@ check("no CommonJS is reachable through any export (ADR-012)", () => {
   if (!out.includes("ok")) throw new Error(out)
 })
 
-check("the CLI runs from the tarball and installs a component", () => {
+check("the CLI runs from the tarball and installs a component and a block", () => {
   const bin = join(scratch, "node_modules", "@santaka-ui", "cli", "dist", "cli.js")
   if (!existsSync(bin)) throw new Error(`no CLI bin at ${bin}`)
 
@@ -412,6 +412,31 @@ check("the CLI runs from the tarball and installs a component", () => {
   }
   const manifest = JSON.parse(readFileSync(join(target, "santaka-manifest.json"), "utf8"))
   if (!manifest.items.button) throw new Error("the CLI did not record the install")
+
+  // A block installs through the same path, and the point of ADR-022 is that it
+  // brings the components it composes: markup whose elements the project does
+  // not have renders as nothing. Both halves are checked from the tarball —
+  // the block's own files must be *published* (it is not a component, so
+  // nothing else would have caught a missing `files` entry), and the
+  // dependency closure must be real.
+  const addedBlock = run(process.execPath, [bin, "add", "settings", "--cwd", target])
+  const blockMarkup = join(target, "src/blocks/settings/settings.html")
+  if (!existsSync(blockMarkup)) {
+    throw new Error(`the block's markup did not install from the tarball:\n${addedBlock}`)
+  }
+  const afterBlock = JSON.parse(readFileSync(join(target, "santaka-manifest.json"), "utf8"))
+  if (!afterBlock.items.settings) throw new Error("the CLI did not record the block install")
+  const blockEntry = JSON.parse(
+    readFileSync(
+      join(scratch, "node_modules", "@santaka-ui", "core", "registry", "settings.json"),
+      "utf8",
+    ),
+  )
+  for (const dependency of blockEntry.registryDependencies) {
+    if (!afterBlock.items[dependency]) {
+      throw new Error(`installing the block did not install "${dependency}"`)
+    }
+  }
 })
 
 check("the MCP server answers over a real transport, from the tarball", () => {

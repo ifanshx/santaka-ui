@@ -1,0 +1,194 @@
+---
+/**
+ * One block page, generated (ADR-006, ADR-022).
+ *
+ * A block is not a component: it is markup that uses components, plus layout
+ * CSS. So this page does not pretend to preview it in isolation — a page
+ * composition is only honest at page size — and it makes the two things a block
+ * page can get wrong explicit: which components the block composes, and what
+ * `santaka add` will write into the project.
+ */
+import Layout from "../../layouts/Layout.astro"
+import { blockPages } from "../../lib/components"
+
+export function getStaticPaths() {
+  return blockPages().map((page) => ({
+    params: { name: page.name },
+    props: { page },
+  }))
+}
+
+const { page } = Astro.props
+---
+
+<Layout title={`${page.name} block — Santaka UI`} description={page.summary}>
+  <p class="crumbs"><a href="/#blocks">Blocks</a> / {page.name}</p>
+
+  <header class="head">
+    <h1>{page.name}</h1>
+    <span class={`badge badge--${page.stability}`}>{page.stability}</span>
+  </header>
+
+  <p class="summary">{page.summary}</p>
+
+  <div class="meta">
+    <div><span>Version</span><strong>{page.version}</strong></div>
+    <div><span>Locales</span><strong>{page.locales.join(", ") || "none"}</strong></div>
+    <div><span>Composes</span><strong>{page.composes.length} components</strong></div>
+    <div><span>Files</span><strong>{page.files.length}</strong></div>
+  </div>
+
+  <section>
+    <h2>Install</h2>
+    <pre><code>{`npx santaka add ${page.name}`}</code></pre>
+    <p class="hint">
+      This writes the block's markup and layout CSS into your project, and installs every
+      component the block composes — the list below — because markup whose elements are missing
+      from the project renders as nothing. Existing files are never overwritten without a diff.
+      The paths are relative to your project root, so {page.files[0]?.split("/").slice(0, 2).join("/")}
+      / is where the block lands.
+    </p>
+  </section>
+
+  <section>
+    <h2>Composes</h2>
+    <ul class="composes">
+      {page.composes.map((name) => (
+        <li><a href={`/components/${name}/`}><code>sk-{name}</code></a></li>
+      ))}
+    </ul>
+  </section>
+
+  <section>
+    <h2>When to use</h2>
+    <ul>{page.whenToUse.map((entry) => <li>{entry}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2>When not to use</h2>
+    <ul>{page.whenNotToUse.map((entry) => <li>{entry}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2>Markup</h2>
+    <p class="hint">
+      The block as it ships. Every element in it is a registered custom element once you import
+      the elements, so the markup is the whole of the block's behaviour.
+    </p>
+    <pre><code>{page.example}</code></pre>
+  </section>
+
+  <section>
+    <h2>Accessibility</h2>
+    <p>{page.accessibility}</p>
+  </section>
+
+  {page.limitations.length > 0 && (
+    <section>
+      <h2>Known limitations</h2>
+      <ul>{page.limitations.map((limitation) => <li>{limitation}</li>)}</ul>
+    </section>
+  )}
+
+  {page.cssVariables.length > 0 && (
+    <section>
+      <h2>CSS variables it reads</h2>
+      <p class="hint">
+        Tokens the block's stylesheet consumes. They come from the token layer, so the block
+        needs no styling of its own beyond layout.
+      </p>
+      <ul class="vars">{page.cssVariables.map((name) => <li><code>{name}</code></li>)}</ul>
+    </section>
+  )}
+
+  <footer class="note">
+    <p>
+      This page is generated from <a href={`/registry/${page.name}.json`}>{`registry/${page.name}.json`}</a>.
+      The block's own files are listed there with their checksums.
+    </p>
+  </footer>
+</Layout>
+
+<style>
+  .crumbs {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .summary {
+    font-size: 1.1rem;
+    max-inline-size: 65ch;
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.75rem;
+    margin-block: 1.5rem;
+    padding: 0;
+  }
+  .meta div {
+    border: var(--stroke) solid var(--edge);
+    padding: 0.5rem 0.75rem;
+  }
+  .meta span {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .composes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+  .vars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    padding: 0;
+  }
+  .vars li {
+    font-size: 0.8rem;
+    border: 1px solid var(--edge);
+    padding: 0.1rem 0.4rem;
+  }
+  .hint {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid currentColor;
+  }
+  .badge--stable {
+    color: #0d9488;
+  }
+  .badge--preview,
+  .badge--experimental {
+    color: #b45309;
+  }
+  .badge--deprecated {
+    color: #b91c1c;
+  }
+  .note {
+    margin-block-start: 3rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>

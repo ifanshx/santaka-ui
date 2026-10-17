@@ -1,0 +1,27 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // The browser suites serve this package's `dist/` and `loader/` straight
+    // from disk (`scripts/serve-examples.mjs`), so they are tests of build
+    // output, not of source. The root `test` task depends only on `^build` —
+    // the *dependencies'* builds — which says nothing about this package's own.
+    //
+    // That gap was not theoretical. Under `verify`, `apps/storybook:test` and
+    // `apps/docs:test` pull `web-components#build` in through their own
+    // `^build`, while `web-components#test` was free to start at the same time.
+    // The build begins with `rimraf dist loader`, so the suite served a
+    // directory that was being deleted: module requests 404ed, no custom
+    // element registered, and the hydration wait in `a11y.e2e.ts` spun to its
+    // 60 s timeout. The report said "Timeout exceeded" for what was really a
+    // missing bundle, and it only reproduced under `verify` — running this
+    // package's tests alone always passed.
+    //
+    // `build` (this package's own) is added, so turbo orders utilities, then
+    // this build, then the suites.
+    "test": {
+      "dependsOn": ["^build", "build"],
+      "outputs": ["coverage/**", "playwright-report/**", "test-results/**"]
+    }
+  }
+}

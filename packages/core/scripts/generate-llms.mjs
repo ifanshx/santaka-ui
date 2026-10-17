@@ -7,8 +7,9 @@
  *   - `llms.txt` — a curated index: what the system is, the token contract, and
  *     the component list with one-line summaries. Short, for an agent deciding
  *     whether this library is relevant before reading anything long.
- *   - `llms-full.txt` — the full reference in one file: every component's props,
- *     variants, accessibility notes, and example.
+ *   - `llms-full.txt` — the full reference in one file: every entry's metadata,
+ *     a component's props with types and defaults, and a block's composed
+ *     components.
  *
  * Both are derived from data the repository already treats as its source of
  * truth, so neither can drift from the components:
@@ -77,6 +78,17 @@ function readEntries() {
 /** The component's custom-element tag: `button` → `sk-button`. */
 const tagOf = (entry) => `sk-${entry.name}`
 
+/**
+ * How an entry is addressed in the generated documents.
+ *
+ * A block has no custom-element tag: it is markup that *uses* elements, so
+ * `sk-dashboard` would name an element that does not exist and that nothing can
+ * import. The entry's own name is the identifier (ADR-022).
+ */
+const labelOf = (entry) => (entry.type === "block" ? entry.name : tagOf(entry))
+
+const isBlock = (entry) => entry.type === "block"
+
 function renderIndex(entries, tokens) {
   const lines = []
   lines.push("# Santaka UI")
@@ -130,14 +142,31 @@ function renderIndex(entries, tokens) {
   lines.push("")
   lines.push("## Components")
   lines.push("")
-  for (const entry of entries) {
-    lines.push(`- **${tagOf(entry)}** (${entry.stability}) — ${entry.ai.summary}`)
+  for (const entry of entries.filter((entry) => !isBlock(entry))) {
+    lines.push(`- **${labelOf(entry)}** (${entry.stability}) — ${entry.ai.summary}`)
   }
   lines.push("")
+  const blocks = entries.filter(isBlock)
+  if (blocks.length > 0) {
+    // Blocks are addressed by name, not by tag, and the difference is worth
+    // stating in the agent-facing document: `santaka add dashboard` also
+    // installs the components the block composes.
+    lines.push("## Blocks")
+    lines.push("")
+    lines.push("Page compositions: markup that uses the elements above, plus layout CSS. They")
+    lines.push("ship no JavaScript and no props. `santaka add <name>` installs the block together")
+    lines.push("with every component it composes.")
+    lines.push("")
+    for (const entry of blocks) {
+      lines.push(`- **${labelOf(entry)}** (${entry.stability}) — ${entry.ai.summary}`)
+    }
+    lines.push("")
+  }
   lines.push("## Full reference")
   lines.push("")
-  lines.push("- [llms-full.txt](./llms-full.txt) — every component's props, variants,")
-  lines.push("  accessibility notes, and example, in one file.")
+  lines.push("- [llms-full.txt](./llms-full.txt) — every entry in full: a component's props,")
+  lines.push("  variants, accessibility notes, and example; a block's markup and the")
+  lines.push("  components it composes.")
   lines.push("")
   lines.push("## Machine-readable registry")
   lines.push("")
@@ -170,14 +199,20 @@ function renderFull(entries, propTypes) {
   lines.push("")
   lines.push("Generated from the registry metadata and the component type declarations.")
   lines.push("Every component below is a custom element; the React/Vue/Svelte/Angular")
-  lines.push("packages are adapters over the same element.")
+  lines.push("packages are adapters over the same element. Blocks are page compositions")
+  lines.push("that use those elements: they are markup and layout CSS, with no props and")
+  lines.push("no events of their own.")
   lines.push("")
 
   for (const entry of entries) {
-    const tag = tagOf(entry)
+    const block = isBlock(entry)
     const ai = entry.ai
-    lines.push(`## ${tag}`)
+    lines.push(`## ${labelOf(entry)}`)
     lines.push("")
+    if (block) {
+      lines.push(`- Type: block (${entry.files.length} files, no custom element)`)
+      lines.push(`- Composes: ${(entry.registryDependencies ?? []).join(", ")}`)
+    }
     lines.push(`- Stability: ${entry.stability}`)
     lines.push(`- Framework packages: ${(entry.frameworks ?? []).join(", ")}`)
     lines.push(`- Locales covered: ${(entry.localesCovered ?? []).join(", ") || "none"}`)
@@ -293,4 +328,4 @@ for (const file of files) {
   writeFileSync(file.path, file.content)
   console.log(`[llms] wrote ${file.path}`)
 }
-console.log(`[llms] ${entries.length} components, ${tokens.total} tokens per theme`)
+console.log(`[llms] ${entries.length} entries, ${tokens.total} tokens per theme`)

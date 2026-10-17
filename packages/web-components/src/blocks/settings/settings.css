@@ -1,0 +1,35 @@
+/*
+ * Santaka UI — settings starter block, layout.
+ *
+ * Layout only: one column of stacked sections with a comfortable measure.
+ * Logical properties and spacing tokens; no color or stroke decisions.
+ */
+.sk-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-8);
+  max-inline-size: 44rem;
+}
+
+.sk-settings__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sk-space-4);
+}
+
+.sk-settings__title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1);
+}
+
+.sk-settings__stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4);
+  padding: 0;
+  margin: 0;
+  border: 0;
+}

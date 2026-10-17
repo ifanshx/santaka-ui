@@ -29,6 +29,14 @@ const entries = entryFiles.map((name) => ({
   parsed: JSON.parse(readFileSync(join(registryDir, name), "utf8")),
 }))
 
+// Two item types ship today, and they do not have the same contract: a component
+// ships an element and therefore props, events, and behavior; a block ships
+// markup that composes elements and owns none of those (ADR-022). Assertions
+// that describe one type are scoped to it rather than skipped for the other —
+// "every entry has props" was a claim about the item set that blocks make false.
+const components = entries.filter((entry) => entry.parsed.type === "component")
+const blocks = entries.filter((entry) => entry.parsed.type === "block")
+
 describe("shipped registry entries", () => {
   it("ships at least one entry", () => {
     expect(entries.length).toBeGreaterThan(0)
@@ -85,14 +93,19 @@ describe("shipped registry entries", () => {
     },
   )
 
-  it("gives every component a unique name", () => {
+  it("gives every entry a unique name", () => {
     const names = entries.map((entry) => entry.parsed.name)
     expect(new Set(names).size).toBe(names.length)
   })
 
-  it("records the web components package as the behavior owner", () => {
-    for (const entry of entries) {
-      expect(entry.parsed.behaviorOwner).toBe("web-components")
+  it("names the behavior owner the item type actually has", () => {
+    for (const entry of components) {
+      expect(entry.parsed.behaviorOwner, `${entry.name} owner`).toBe("web-components")
+    }
+    // A block composes elements and handles nothing itself, so it may not claim
+    // the element package as its behavior owner (ADR-022).
+    for (const entry of blocks) {
+      expect(entry.parsed.behaviorOwner, `${entry.name} owner`).toBe("framework-neutral")
     }
   })
 
@@ -103,11 +116,26 @@ describe("shipped registry entries", () => {
     }
   })
 
+  it("gives a block a dependency for the components it composes, and resolves each one", () => {
+    // `registryDependencies` is load-bearing for a block and inert for the
+    // components that ship today, so it is asserted where it means something: a
+    // block whose dependencies do not resolve installs markup whose elements do
+    // not exist in the consumer's project.
+    const names = new Set(entries.map((entry) => entry.parsed.name))
+    for (const entry of blocks) {
+      const dependencies: string[] = entry.parsed.registryDependencies
+      expect(dependencies.length, `${entry.name} declares no dependency`).toBeGreaterThan(0)
+      for (const dependency of dependencies) {
+        expect(names.has(dependency), `${entry.name} -> ${dependency} resolves`).toBe(true)
+      }
+    }
+  })
+
   it("reports the props and events the component actually has", () => {
     // The public surface the MCP server's `get_component` reports (section 11).
     // Derived from the committed type declarations and component sources, so a
     // rename in either is a test failure here rather than a stale document.
-    for (const entry of entries) {
+    for (const entry of components) {
       const { props, events } = entry.parsed
       expect(Array.isArray(props), `${entry.name} props`).toBe(true)
       expect(Array.isArray(events), `${entry.name} events`).toBe(true)
@@ -118,6 +146,15 @@ describe("shipped registry entries", () => {
       for (const event of events) {
         expect(event.startsWith("sk-"), `${entry.name} event ${event}`).toBe(true)
       }
+    }
+  })
+
+  it("leaves props and events off a block", () => {
+    // Optional in the schema for exactly this item (ADR-022). An empty array
+    // would read as "this block has no props yet", which is a different claim.
+    for (const entry of blocks) {
+      expect(entry.parsed.props, `${entry.name} props`).toBeUndefined()
+      expect(entry.parsed.events, `${entry.name} events`).toBeUndefined()
     }
   })
 
@@ -137,7 +174,7 @@ describe("the generated registry index", () => {
   const indexPath = join(registryDir, "index.json")
   const index = JSON.parse(readFileSync(indexPath, "utf8"))
 
-  it("contains every per-component entry, and nothing else", () => {
+  it("contains every entry, and nothing else", () => {
     const indexed = index.items.map((item: { name: string }) => item.name).sort()
     const onDisk = entries.map((entry) => entry.parsed.name).sort()
     expect(indexed).toEqual(onDisk)

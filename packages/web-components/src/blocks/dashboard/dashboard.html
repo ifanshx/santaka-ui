@@ -1,0 +1,185 @@
+<!--
+ * Santaka UI — dashboard starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022), and a
+ * hand-kept copy of that list was already missing one before this comment
+ * replaced it. `packages/core/registry/dashboard.json` is the list, and
+ * `santaka add dashboard` installs exactly it.
+ *
+ * Layout only lives in dashboard.css, which loads alongside this file. The
+ * data the consumer owns is a small, obviously-placeholder set; every element
+ * below is a shipped sk-* component in a documented state.
+ -->
+<main class="sk-dashboard">
+  <header class="sk-dashboard__header">
+    <div class="sk-dashboard__title">
+      <sk-text variant="2xl" family="display">
+        <h1>Deploy console</h1>
+      </sk-text>
+      <sk-text variant="sm" muted>
+        <p>Production workspace · eu-west-1 · last deploy 14:02 UTC</p>
+      </sk-text>
+    </div>
+    <div class="sk-cluster">
+      <sk-icon-button label="Refresh now" variant="outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6" />
+        </svg>
+      </sk-icon-button>
+      <sk-icon-button label="Workspace settings" variant="outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2" />
+        </svg>
+      </sk-icon-button>
+      <sk-button variant="primary">New deployment</sk-button>
+    </div>
+  </header>
+
+  <section aria-labelledby="stats-heading" class="sk-dashboard__stats">
+    <h2 id="stats-heading" class="sk-visually-hidden">Deployment statistics</h2>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Active deployments</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>12</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="success">Live</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>+2 since yesterday</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Queued builds</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>3</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="warning">Pending</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>oldest waiting 4m</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card>
+      <sk-text variant="sm" muted>Failed builds</sk-text>
+      <sk-text variant="3xl" family="display">
+        <p>1</p>
+      </sk-text>
+      <div class="sk-cluster">
+        <sk-badge variant="danger">Failed</sk-badge>
+        <sk-text variant="xs" muted>
+          <span>build 4820</span>
+        </sk-text>
+      </div>
+    </sk-card>
+  </section>
+
+  <section aria-labelledby="deploys-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="deploys-heading">Recent deployments</h2>
+    </sk-text>
+
+    <!--
+      The table is the consumer's own markup — caption, thead, th scope — and
+      sk-table contributes the container, the overflow handling, and style.
+    -->
+    <sk-table label="Recent deployments">
+      <table>
+        <caption>
+          Deployments in the last 24 hours
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Build</th>
+            <th scope="col">Environment</th>
+            <th scope="col">Status</th>
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4823</td>
+            <td>staging</td>
+            <td><sk-badge variant="warning">Pending</sk-badge></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>4821</td>
+            <td>production</td>
+            <td><sk-badge variant="success">Live</sk-badge></td>
+            <td>42s</td>
+          </tr>
+          <tr>
+            <td>4820</td>
+            <td>production</td>
+            <td><sk-badge variant="danger">Failed</sk-badge></td>
+            <td>1m 05s</td>
+          </tr>
+        </tbody>
+      </table>
+    </sk-table>
+  </section>
+
+  <section aria-labelledby="usage-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="usage-heading">Build usage</h2>
+    </sk-text>
+
+    <div class="sk-dashboard__usage">
+      <sk-card>
+        <sk-progress label="Build minutes, this cycle" value="68" size="lg"></sk-progress>
+        <sk-progress label="Artifact storage" value="40"></sk-progress>
+        <sk-text variant="sm" muted>
+          <p>Usage resets on the first of every month.</p>
+        </sk-text>
+      </sk-card>
+
+      <sk-card>
+        <sk-alert variant="warning" heading="Quota nearly full">
+          Your workspace has used 68% of its build minutes.
+          <sk-button slot="actions" variant="secondary" size="sm">View usage</sk-button>
+        </sk-alert>
+        <sk-separator decorative></sk-separator>
+        <sk-text variant="sm" muted>
+          <p>Approved reviewers see usage per runner in the audit log.</p>
+        </sk-text>
+      </sk-card>
+    </div>
+  </section>
+
+  <section aria-labelledby="queue-heading" class="sk-dashboard__section">
+    <sk-text variant="lg" family="display">
+      <h2 id="queue-heading">Waiting on the queue</h2>
+    </sk-text>
+
+    <sk-card>
+      <sk-skeleton variant="text" style="inline-size: 70%"></sk-skeleton>
+      <sk-skeleton variant="text" style="inline-size: 55%"></sk-skeleton>
+      <div class="sk-cluster">
+        <sk-spinner label="Refreshing queue" size="sm"></sk-spinner>
+        <sk-text variant="sm" muted>
+          <span>Queue refreshes every 30 seconds.</span>
+        </sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card variant="bare">
+      <!--
+        The empty state for the one gap in the data: the resting state, not a
+        pretend load. Composing it next to a loading card covers both.
+      -->
+      <sk-empty-state
+        heading="No deploy previews yet"
+        description="Open a pull request and a preview build starts on its own."
+      >
+        <sk-button slot="actions" size="sm">Open PRs</sk-button>
+      </sk-empty-state>
+    </sk-card>
+  </section>
+</main>

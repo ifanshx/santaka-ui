@@ -52,6 +52,9 @@ const headingOf = (html) => {
 
 let registry
 let pages
+/** The two item types, asserted separately: a block has no tag, no props, and no element (ADR-022). */
+let components
+let blocks
 
 describe("the built documentation site", () => {
   before(() => {
@@ -61,26 +64,58 @@ describe("the built documentation site", () => {
     )
     registry = JSON.parse(readFileSync(registryPath, "utf8"))
     pages = readdirSync(join(dist, "components"))
+    components = registry.items.filter((item) => item.type === "component")
+    blocks = registry.items.filter((item) => item.type === "block")
   })
 
   it("builds one page per registry entry, plus the index", () => {
-    for (const item of registry.items) {
+    for (const item of components) {
       assert.ok(
         existsSync(join(dist, "components", item.name, "index.html")),
         `no page built for ${item.name}`,
+      )
+    }
+    for (const item of blocks) {
+      assert.ok(
+        existsSync(join(dist, "blocks", item.name, "index.html")),
+        `no block page built for ${item.name}`,
       )
     }
     assert.ok(existsSync(join(dist, "index.html")), "no index page")
   })
 
   it("every component page carries the registry's prose", () => {
-    for (const item of registry.items) {
+    for (const item of components) {
       const html = readFileSync(join(dist, "components", item.name, "index.html"), "utf8")
       assert.equal(headingOf(html), `sk-${item.name}`, `${item.name}: wrong heading`)
       const text = textOf(html)
       assert.ok(text.includes(item.ai.summary), `${item.name}: summary missing`)
       assert.ok(text.includes(item.ai.accessibility), `${item.name}: accessibility missing`)
       assert.ok(text.includes(item.stability), `${item.name}: stability label missing`)
+    }
+  })
+
+  it("every block page carries the registry's prose and states what it composes", () => {
+    for (const item of blocks) {
+      const html = readFileSync(join(dist, "blocks", item.name, "index.html"), "utf8")
+      // A block is addressed by name: `sk-dashboard` would name an element that
+      // does not exist.
+      assert.equal(headingOf(html), item.name, `${item.name}: wrong heading`)
+      const text = textOf(html)
+      assert.ok(text.includes(item.ai.summary), `${item.name}: summary missing`)
+      assert.ok(text.includes(item.ai.accessibility), `${item.name}: accessibility missing`)
+      assert.ok(text.includes(`npx santaka add ${item.name}`), `${item.name}: no install command`)
+      for (const dependency of item.registryDependencies) {
+        // Every component the CLI installs alongside the block is reachable from
+        // the block's page — the page and the install are the same list.
+        assert.ok(
+          html.includes(`href="/components/${dependency}/"`),
+          `${item.name}: does not link the ${dependency} component it composes`,
+        )
+      }
+      for (const limitation of item.ai.knownLimitations ?? []) {
+        assert.ok(text.includes(limitation), `${item.name}: a known limitation is missing`)
+      }
     }
   })
 
@@ -92,7 +127,7 @@ describe("the built documentation site", () => {
     // still agree. So the tests below assert the direction that *can* fail: that
     // the published payload equals the registry, and that no prop appears on a
     // page that no component declares. Together they pin both ends.
-    for (const item of registry.items) {
+    for (const item of components) {
       if (!item.props || item.props.length === 0) continue
       const text = textOf(readFileSync(join(dist, "components", item.name, "index.html"), "utf8"))
       for (const prop of item.props) {
@@ -112,7 +147,7 @@ describe("the built documentation site", () => {
     // text, never matched a real row, and passed while a prop the component never
     // declared was sitting in the table: a test that reports safety it has not
     // checked.
-    for (const item of registry.items) {
+    for (const item of components) {
       if (!item.props || item.props.length === 0) continue
       const html = readFileSync(join(dist, "components", item.name, "index.html"), "utf8")
       const declared = new Set(item.props.map((prop) => prop.name))
@@ -130,7 +165,7 @@ describe("the built documentation site", () => {
   })
 
   it("events and known limitations reach the page too", () => {
-    for (const item of registry.items) {
+    for (const item of components) {
       const text = textOf(readFileSync(join(dist, "components", item.name, "index.html"), "utf8"))
       for (const event of item.events ?? []) {
         assert.ok(text.includes(event), `${item.name}: event ${event} missing`)

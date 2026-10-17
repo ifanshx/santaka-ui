@@ -88,10 +88,21 @@ stylesheet.
 - **sk-toast** (stable) — A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.
 - **sk-tooltip** (stable) — A short description of something the user can already see: shows on hover and keyboard focus, announced on demand via aria-describedby.
 
+## Blocks
+
+Page compositions: markup that uses the elements above, plus layout CSS. They
+ship no JavaScript and no props. `santaka add <name>` installs the block together
+with every component it composes.
+
+- **authentication** (stable) — A centred sign-in card: an email and password field, a remember-me checkbox, a submit button, a recovery link, and an error alert.
+- **dashboard** (stable) — An application shell with a navigation sidebar, a search header, summary cards, and a table of recent activity.
+- **settings** (stable) — A settings form grouping account fields, a select, switches, and a checkbox, with a save action and an inline alert.
+
 ## Full reference
 
-- [llms-full.txt](./llms-full.txt) — every component's props, variants,
-  accessibility notes, and example, in one file.
+- [llms-full.txt](./llms-full.txt) — every entry in full: a component's props,
+  variants, accessibility notes, and example; a block's markup and the
+  components it composes.
 
 ## Machine-readable registry
 

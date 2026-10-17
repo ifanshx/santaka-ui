@@ -1276,6 +1276,82 @@ const COMPONENTS = [
   },
 ]
 
+/**
+ * The starter blocks (ADR-022).
+ *
+ * A block is a page composition, not an element: markup that uses the custom
+ * elements plus a stylesheet limited to layout. Only the prose is authored here.
+ * The files, their checksums, the CSS variables the stylesheet reads, and — the
+ * point — `registryDependencies` are all read from the block's own files, so an
+ * entry cannot describe a block that is not there and a block cannot compose a
+ * component it does not declare.
+ */
+const BLOCKS = [
+  {
+    name: "dashboard",
+    ai: {
+      summary:
+        "An application shell with a navigation sidebar, a search header, summary cards, and a table of recent activity.",
+      whenToUse: [
+        "The first screen of an internal tool, where the shell matters more than any one panel",
+        "You want the layout, the sidebar behaviour, and the responsive breakpoints already settled",
+      ],
+      whenNotToUse: [
+        "It is a marketing page — use Button and link components, not the sidebar shell",
+        "You only need the summary cards — take Card and write the grid yourself",
+      ],
+      accessibility:
+        "The block is plain markup: the landmarks are the ones it writes (`<header>`, `<nav aria-label>`, `<main>`, `<section aria-labelledby>`), and the table carries a `<caption>`. Nothing in the block is keyboard-reachable that is not also labelled; the sidebar's links are real `<sk-link>` elements wrapping real `<a href>`, so they are in the tab order as links rather than as clickable boxes.",
+      knownLimitations: [
+        "The rows, counts, and progress values are placeholder markup: the block fetches nothing",
+        "The sidebar is not collapsible and the block ships no JavaScript to make it so",
+      ],
+    },
+  },
+  {
+    name: "settings",
+    ai: {
+      summary:
+        "A settings form grouping account fields, a select, switches, and a checkbox, with a save action and an inline alert.",
+      whenToUse: [
+        "A preferences or account screen where the grouping and the save affordance are the work",
+        "You want the label, description, and error wiring for each field already correct",
+      ],
+      whenNotToUse: [
+        "A single field — use Input with a Label",
+        "A multi-step flow — the block is one form and no wizard state",
+      ],
+      accessibility:
+        'Every control is a labelled `<sk-input>`, `<sk-select>`, `<sk-switch>`, or `<sk-checkbox>`; the switches are named by the visible label and explained by the description text beside them rather than by a title attribute. The alert is a live region, so a validation message is announced when it appears. The save button is a real `<button type="submit">`, so Enter in a field submits the form.',
+      knownLimitations: [
+        "The form has no validation logic and no submit handler: the values are markup, not state",
+        "Saving is not implemented — the button is a submit button waiting for the consumer's handler",
+      ],
+    },
+  },
+  {
+    name: "authentication",
+    ai: {
+      summary:
+        "A centred sign-in card: an email and password field, a remember-me checkbox, a submit button, a recovery link, and an error alert.",
+      whenToUse: [
+        "A sign-in, sign-up, or password-reset screen that needs the card, the fields, and the error state",
+        "You want the error alert and the recovery link placed where a user looks for them",
+      ],
+      whenNotToUse: [
+        "An in-app login dialog — use Alert Dialog",
+        "A settings screen for an already signed-in user — use the settings block",
+      ],
+      accessibility:
+        'The card is a single `<form>` with an accessible name from its heading; each field is labelled by a `<sk-label>` bound to it, and the password field declares `autocomplete="current-password"` so password managers and assistive technology recognise it. The error alert is a live region placed before the fields, and the recovery link is a real link rather than a button styled as one.',
+      knownLimitations: [
+        "Nothing is submitted and nothing is validated: the error alert demonstrates the state, it is not wired to a response",
+        "There is no second-factor step, no OAuth buttons, and no password-strength meter",
+      ],
+    },
+  },
+]
+
 for (const component of COMPONENTS) {
   // A component may ship more than one element: an accordion is useless without
   // its items, and tabs without a tab and a panel. `elements` names those extra
@@ -1337,3 +1413,118 @@ for (const component of COMPONENTS) {
 }
 
 console.log(`[registry] ${COMPONENTS.length} components at version ${version}`)
+
+/**
+ * Tag to entry name, for the main element and every compound part: a block that
+ * writes `<sk-tab>` depends on the `tabs` entry, not on an entry called `tab`.
+ */
+const entryNameForTag = new Map()
+for (const component of COMPONENTS) {
+  entryNameForTag.set(component.tag, component.name)
+  for (const element of component.elements ?? []) entryNameForTag.set(element.tag, component.name)
+}
+
+/** Every custom element the markup opens, in document order, without repeats. */
+const composedTags = (html) => [
+  ...new Set([...html.matchAll(/<(sk-[a-z0-9-]+)[\s>]/g)].map((match) => match[1])),
+]
+
+for (const block of BLOCKS) {
+  const dir = join(wcRoot, "src", "blocks", block.name)
+  const htmlPath = join(dir, `${block.name}.html`)
+  const cssPath = join(dir, `${block.name}.css`)
+
+  if (!existsSync(htmlPath)) {
+    throw new Error(`[registry] block "${block.name}": no markup at ${htmlPath}`)
+  }
+  const html = readFileSync(htmlPath, "utf8")
+
+  // Read from the markup rather than from a list beside it. A block that starts
+  // composing a component and does not declare it is the drift this derivation
+  // makes impossible, and a block that names an element with no entry is a block
+  // that cannot be installed — both are build failures, not silent entries.
+  const tags = composedTags(html)
+  if (tags.length === 0) {
+    throw new Error(`[registry] block "${block.name}": composes no custom elements`)
+  }
+  const dependencies = [
+    ...new Set(
+      tags.map((tag) => {
+        const name = entryNameForTag.get(tag)
+        if (!name) {
+          throw new Error(
+            `[registry] block "${block.name}": composes <${tag}>, which is not a registry entry`,
+          )
+        }
+        return name
+      }),
+    ),
+  ].sort()
+
+  const files = [
+    {
+      path: `src/blocks/${block.name}/${block.name}.html`,
+      type: "registry:block",
+      checksum: sha256(htmlPath),
+    },
+    // The stylesheet is optional so a markup-only block can exist without an
+    // empty file to satisfy the generator.
+    ...(existsSync(cssPath)
+      ? [
+          {
+            path: `src/blocks/${block.name}/${block.name}.css`,
+            type: "registry:style",
+            checksum: sha256(cssPath),
+          },
+        ]
+      : []),
+  ]
+
+  // The tokens the stylesheet reads, scanned rather than authored: a hand-kept
+  // list next to a stylesheet is a list that is wrong after the second edit.
+  const cssVariables = existsSync(cssPath)
+    ? [
+        ...new Set(
+          [...readFileSync(cssPath, "utf8").matchAll(/var\((--sk-[a-z0-9-]+)/g)].map(
+            (match) => match[1],
+          ),
+        ),
+      ].sort()
+    : []
+
+  const entry = {
+    $schema: "https://santaka.dev/schema/registry-item-v1.json",
+    schemaVersion: 1,
+    name: block.name,
+    namespace: null,
+    type: "block",
+    // HTML markup and layout CSS. A framework consumer can use it — the elements
+    // are the same everywhere — but attribute names are not transformed for
+    // JSX/Vue templates, so claiming per-framework support would overstate what
+    // is shipped (ADR-022).
+    frameworks: ["web-components"],
+    stability: "stable",
+    // A block owns no behavior: the elements it composes do (ADR-003).
+    behaviorOwner: "framework-neutral",
+    version,
+    dependencies: {},
+    peerDependencies: {},
+    registryDependencies: dependencies,
+    files,
+    cssVariables,
+    localesCovered: ["en-US"],
+    license: "MIT",
+    // No props and no events: both are optional in the schema for exactly this
+    // item. The example is the block's own markup, so the entry cannot show a
+    // page that has drifted from the one being installed.
+    ai: { ...block.ai, example: html, localesCovered: ["en-US"] },
+  }
+
+  mkdirSync(outDir, { recursive: true })
+  writeFileSync(join(outDir, `${block.name}.json`), `${JSON.stringify(entry, null, 2)}\n`)
+  console.log(
+    `[registry] wrote ${block.name}.json (${files.length} files, ${dependencies.length} dependencies)`,
+  )
+}
+
+console.log(`[registry] ${BLOCKS.length} blocks at version ${version}`)

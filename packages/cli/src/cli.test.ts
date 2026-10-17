@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest"
+import type { RegistryItem } from "@santaka-ui/core"
 import { diffLines, isIdentical, renderDiff } from "./diff.js"
 import { detectProject, isFramework, resolveFramework, SUPPORTED_FRAMEWORKS } from "./detect.js"
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { applyWrites, checksumOfBytes, resolveInside } from "./fs-safe.js"
+import { resolveClosure, typeCounts, type LoadedRegistry } from "./registry.js"
 import {
   compareFiles,
   conflictsOf,
@@ -187,6 +189,24 @@ describe("manifest and conflicts", () => {
   })
 })
 
+describe("list type counts", () => {
+  it("reports counts per type, including a type it has never seen", () => {
+    // A type the codebase has never shipped (`mystery`) proves the count is
+    // derived from the entries, not from a fixed list of type names (ADR-022).
+    const items: RegistryItem[] = [
+      syntheticItem("a", []),
+      syntheticItem("b", []),
+      { ...syntheticItem("c", []), type: "block" as RegistryItem["type"] },
+      { ...syntheticItem("d", []), type: "mystery" as RegistryItem["type"] },
+    ]
+    expect(typeCounts(items)).toBe("2 components, 1 block, 1 mystery")
+  })
+
+  it("uses the singular for a count of one", () => {
+    expect(typeCounts([syntheticItem("a", [])])).toBe("1 component")
+  })
+})
+
 describe("project detection", () => {
   it("detects react-vite from vite plus react", () => {
     const dir = tempProject({
@@ -314,5 +334,104 @@ describe("unified diff", () => {
     const after = before.replace("line1", "CHANGED").replace("line38", "ALSO")
     const rendered = renderDiff(before, after, { old: "a", new: "b" })
     expect(rendered.match(/@@ /g)).toHaveLength(2)
+  })
+})
+
+/** A self-contained registry item for the closure tests: nothing is read from disk. */
+function syntheticItem(name: string, registryDependencies: string[]): RegistryItem {
+  return {
+    $schema: "https://santaka.dev/schema/registry-item-v1.json",
+    schemaVersion: 1,
+    name,
+    namespace: null,
+    type: "component",
+    frameworks: ["web-components"],
+    stability: "stable",
+    behaviorOwner: "web-components",
+    version: "0.1.0",
+    dependencies: {},
+    peerDependencies: {},
+    registryDependencies,
+    files: [{ path: `src/${name}.tsx`, type: "registry:component", checksum: "sha256-0" }],
+    cssVariables: [],
+    localesCovered: ["en-US"],
+    license: "MIT",
+    ai: {
+      summary: `${name} summary`,
+      whenToUse: ["when"],
+      whenNotToUse: ["when not"],
+      accessibility: "accessibility",
+      example: "<example />",
+      localesCovered: ["en-US"],
+      knownLimitations: [],
+    },
+  }
+}
+
+function syntheticRegistry(items: RegistryItem[]): LoadedRegistry {
+  return { items, sources: [{ name: "test", url: null }], rejected: [] }
+}
+
+describe("dependency closure", () => {
+  it("walks a chain depth-first: a → b → c installs c, b, a", () => {
+    const registry = syntheticRegistry([
+      syntheticItem("a", ["b"]),
+      syntheticItem("b", ["c"]),
+      syntheticItem("c", []),
+    ])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.items.map((item) => item.name)).toEqual(["c", "b", "a"])
+    expect(result.missing).toEqual([])
+  })
+
+  it("installs a diamond's shared dependency once", () => {
+    const registry = syntheticRegistry([
+      syntheticItem("a", ["b", "c"]),
+      syntheticItem("b", ["d"]),
+      syntheticItem("c", ["d"]),
+      syntheticItem("d", []),
+    ])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.items.map((item) => item.name)).toEqual(["d", "b", "c", "a"])
+  })
+
+  it("refuses a self-cycle with the chain in the error", () => {
+    const registry = syntheticRegistry([syntheticItem("s", ["s"])])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.reason).toBe("s → s")
+  })
+
+  it("refuses a mutual cycle with the chain in the error", () => {
+    const registry = syntheticRegistry([syntheticItem("m1", ["m2"]), syntheticItem("m2", ["m1"])])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.reason).toBe("m1 → m2 → m1")
+  })
+
+  it("reports a missing dependency and names the parent that asked for it", () => {
+    const registry = syntheticRegistry([syntheticItem("a", ["ghost"])])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(true)
+    expect(result.missing).toEqual([{ name: "ghost", requestedBy: "a" }])
+  })
+
+  it("installing a dependency-free item reports exactly the item's own files", () => {
+    // The honest no-regression assertion for the 26 shipped components: with
+    // `registryDependencies` empty everywhere, the plan is the named item alone.
+    const registry = syntheticRegistry([syntheticItem("button", [])])
+    const result = resolveClosure(registry, [registry.items[0]!])
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.items).toHaveLength(1)
+    expect(result.items[0]?.name).toBe("button")
+    expect(result.items[0]?.files).toEqual(registry.items[0]?.files)
+    expect(result.missing).toEqual([])
   })
 })

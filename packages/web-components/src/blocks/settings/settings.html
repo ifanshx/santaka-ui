@@ -1,0 +1,125 @@
+<!--
+ * Santaka UI — settings starter block.
+ *
+ * Which components it composes is not listed here: the registry entry derives
+ * `registryDependencies` from the elements this markup opens (ADR-022), and a
+ * hand-kept copy of that list drifted from it twice before this comment
+ * replaced it. `packages/core/registry/settings.json` is the list, and
+ * `santaka add settings` installs exactly it.
+ *
+ * Layout only lives in settings.css. The elements own their behavior
+ * (ADR-003), so there is no script here: form submission, validation, and the
+ * switches act immediately without help from the block.
+ -->
+<main class="sk-settings">
+  <header class="sk-settings__header">
+    <div class="sk-settings__title">
+      <sk-text variant="2xl" family="display">
+        <h1>Workspace settings</h1>
+      </sk-text>
+      <sk-text variant="sm" muted>
+        <p>Changes apply to everyone in the workspace.</p>
+      </sk-text>
+    </div>
+    <sk-badge variant="primary">Free plan</sk-badge>
+  </header>
+
+  <nav aria-label="Settings sections" class="sk-cluster">
+    <sk-button variant="secondary" size="sm">General</sk-button>
+    <sk-button variant="ghost" size="sm">Members</sk-button>
+    <sk-button variant="ghost" size="sm">Billing</sk-button>
+  </nav>
+
+  <form id="settings-profile" class="sk-settings__stack">
+    <section aria-labelledby="profile-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="profile-heading">Profile</h2>
+      </sk-text>
+
+      <sk-input
+        name="workspace-name"
+        label="Workspace name"
+        description="Shown on every deploy page."
+        value="Acme Platform"
+        required
+      ></sk-input>
+
+      <sk-input
+        name="workspace-slug"
+        label="URL slug"
+        description="The subdomain of your workspace."
+        value="acme"
+        required
+      ></sk-input>
+
+      <sk-textarea
+        name="description"
+        label="Description"
+        rows="3"
+        description="A short summary shown in the directory."
+      ></sk-textarea>
+
+      <sk-select
+        name="region"
+        label="Default region"
+        description="Where new builds run."
+        value="eu"
+        options='[{"value":"eu","label":"EU West"},{"value":"us","label":"US East"},{"value":"ap","label":"Asia Pacific"}]'
+      ></sk-select>
+
+      <sk-radio-group
+        name="visibility"
+        label="Workspace visibility"
+        description="Who can see deployments."
+        value="private"
+        options='[{"value":"private","label":"Private"},{"value":"team","label":"Team"},{"value":"public","label":"Public"}]'
+      ></sk-radio-group>
+    </section>
+
+    <sk-separator decorative></sk-separator>
+
+    <section aria-labelledby="notifications-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="notifications-heading">Notifications</h2>
+      </sk-text>
+
+      <sk-switch
+        name="deploy-email"
+        label="Email me when a deploy finishes"
+        description="One message per deploy, grouped by build."
+        checked
+      ></sk-switch>
+
+      <sk-switch
+        name="failure-banner"
+        label="Show a failure banner in the console"
+        checked
+      ></sk-switch>
+
+      <sk-checkbox name="weekly-digest" label="Send a weekly digest of usage"> </sk-checkbox>
+
+      <sk-checkbox name="product-updates" label="Email me about product updates" checked>
+      </sk-checkbox>
+    </section>
+
+    <sk-separator decorative></sk-separator>
+
+    <section aria-labelledby="danger-heading" class="sk-settings__stack">
+      <sk-text variant="lg" family="display">
+        <h2 id="danger-heading">Danger zone</h2>
+      </sk-text>
+
+      <sk-alert variant="danger" heading="Deleting the workspace is permanent">
+        <p>Every build, log, and secret is removed. There is no undo.</p>
+        <sk-button slot="actions" variant="danger" size="sm">Delete workspace</sk-button>
+      </sk-alert>
+
+      <sk-input name="confirm-slug" label="Type acme to confirm" placeholder="acme"></sk-input>
+    </section>
+
+    <div class="sk-cluster" role="group" aria-label="Form actions">
+      <sk-button type="submit" variant="primary">Save changes</sk-button>
+      <sk-button type="reset" variant="ghost">Discard changes</sk-button>
+    </div>
+  </form>
+</main>

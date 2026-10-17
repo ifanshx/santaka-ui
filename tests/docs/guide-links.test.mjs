@@ -15,7 +15,7 @@
  * `node --test`, no dependencies.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs"
-import { dirname, join, relative, resolve } from "node:path"
+import { join, relative, resolve } from "node:path"
 import { it } from "node:test"
 import assert from "node:assert/strict"
 
