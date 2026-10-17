@@ -78,11 +78,28 @@ and never gated.
 
 **This is a budget change, and §12 requires an ADR for one. This is that ADR.**
 
+## Decision 3: the React overhead row is measured now
+
+`@santaka-ui/react` had no size task, so §12's fourth row (≤ 15 KB) was absent
+from the report rather than passing. It is measured by
+`packages/react/scripts/measure-bundle.mjs`, which bundles all 37 wrappers with
+the peers a consumer already has — `react`, `react-dom`,
+`@santaka-ui/web-components`, `@santaka-ui/utilities` — external, so the figure
+is this package's overhead rather than the application's.
+
+| Artifact | Budget | Measured |
+|---|---|---|
+| `@santaka-ui/react` runtime overhead | 15 KB | **2.77 KB** |
+
+The measurement is sensitive to the thing the row exists to catch. Removing the
+externals raises it to 5.95 KB, and lowering the budget to 2 KB exits 1. That
+second check matters more than the first: a gate that cannot fail is a printed
+number, not a gate.
+
 ## What is still unmeasured
 
-`@santaka-ui/react` runtime overhead (≤ 15 KB) has no size script. `packages/react`
-is a thin wrapper over the custom elements and has no `size` task, so the row
-remains unmeasured rather than passing. It is not claimed anywhere as met.
+Nothing in the §12 table. All four rows are measured and gated, with the
+ten-component row gated at 27 KB as described above.
 
 ## Consequences
 

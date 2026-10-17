@@ -791,9 +791,11 @@ fails two checks, and the harness was verified to pass only after the fix.
   row was also measured for the first time and could not be met at 25 KB by any
   selection of ten (floor 25.76 KB); it is gated at 27 KB. Both recorded in
   ADR-023.
-- **`@santaka-ui/react` runtime overhead (≤ 15 KB) is unmeasured.** There is no
-  `size` task in that package, so the row is absent from the report rather than
-  passing.
+- ~~**`@santaka-ui/react` runtime overhead (≤ 15 KB) is unmeasured.**~~
+  **Measured: 2.77 KB of 15** across all 37 wrappers, with the peers a consumer
+  already has held external. The gate was negative-tested by lowering it to 2 KB
+  (exit 1) and by removing the externals (5.95 KB), so the number responds to
+  what the row exists to catch. All four §12 rows are now measured.
 
 ### Toolchain deviations
 

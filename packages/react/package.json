@@ -32,7 +32,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm",
+    "size": "node scripts/measure-bundle.mjs"
   },
   "dependencies": {
     "@santaka-ui/utilities": "workspace:^"
@@ -43,11 +44,12 @@
     "react-dom": "^18.2.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@santaka-ui/web-components": "workspace:^",
     "@testing-library/react": "16.3.0",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@santaka-ui/web-components": "workspace:^",
     "@vitejs/plugin-react": "6.1.2",
+    "esbuild": "0.25.10",
     "eslint": "9.39.5",
     "jsdom": "30.1.2",
     "publint": "0.3.25",
