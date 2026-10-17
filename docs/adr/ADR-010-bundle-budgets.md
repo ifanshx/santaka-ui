@@ -1,9 +1,10 @@
 # ADR-010: Bundle budgets and how they are enforced
 
 - **Status:** Accepted (amends the token theme budget set in the neo-brutalist
-  and glass token work)
+  and glass token work; amended by ADR-023, which measures the row this ADR
+  recorded as unmeasured and moves the ten-component budget)
 - **Date:** 2026-10-12
-- **Related:** ADR-017, which is what made the change necessary
+- **Related:** ADR-017, which is what made the change necessary; ADR-023
 
 ## Context
 
@@ -89,10 +90,14 @@ raised instead, and the descriptions stayed.
 
 - **The budget row is now 1.5 KB of headroom, not 0.** A future token addition
   up to 13 KB ships without a PR note. A larger addition needs one.
-- **`@santaka-ui/tokens + @santaka-ui/core` at ≤ 8 KB is still unmeasured.**
-  The script measures the compiled theme CSS, not the token package's JS or the
-  core registry runtime. That budget is enforced on paper only, which is a gap
-  worth closing before the CLI ships — the registry is what CLI commands load.
+- ~~**`@santaka-ui/tokens + @santaka-ui/core` at ≤ 8 KB is still unmeasured.**~~
+  **Closed by ADR-023.** The script measures the compiled theme CSS, not the
+  token package's JS or the core registry runtime. That budget was enforced on
+  paper only, which was worth closing before the CLI shipped — the registry is
+  what CLI commands load. Measuring it was the right call: the row failed at
+  41.2 KB, because `core` compiled an Ajv schema at module load, and passes at
+  7.44 KB after the validator moved to build time. ADR-023 also records that the
+  ten-component row could not be met at 25 KB by any selection of ten.
 
 ## What would reverse this
 

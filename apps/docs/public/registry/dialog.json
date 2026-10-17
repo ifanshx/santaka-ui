@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-dialog/sk-dialog.css",
       "type": "registry:style",
-      "checksum": "sha256-0bb2ef987e74aa2675ba866533309816aaf72c14635837408ba522b30845f71b"
+      "checksum": "sha256-d734fa0b5c2f4c4ee6561c959348edcaaa863456afd331a8de1d64c1fac1b061"
     }
   ],
   "cssVariables": [

@@ -32,19 +32,22 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs && node scripts/generate-registry.mjs && node scripts/build-registry-index.mjs && node scripts/build-registry-payload.mjs",
+    "build": "node scripts/emit-schema.mjs && node scripts/build-validator.mjs && tsc -p tsconfig.build.json && node scripts/generate-registry.mjs && node scripts/build-registry-index.mjs && node scripts/build-registry-payload.mjs",
     "clean": "rimraf dist schema",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
     "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm",
     "generate:llms": "node scripts/generate-llms.mjs",
-    "llms:check": "node scripts/generate-llms.mjs --check"
+    "llms:check": "node scripts/generate-llms.mjs --check",
+    "buildValidator": "node scripts/build-validator.mjs",
+    "pretypecheck": "node scripts/build-validator.mjs",
+    "pretest": "node scripts/build-validator.mjs"
   },
-  "dependencies": {
-    "ajv": "8.20.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "ajv": "8.20.0",
+    "esbuild": "0.25.10",
     "eslint": "9.39.5",
     "publint": "0.3.25",
     "rimraf": "6.0.1",

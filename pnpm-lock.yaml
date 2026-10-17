@@ -326,11 +326,13 @@ importers:
         version: 4.1.11(@types/node@22.20.2)(@vitest/browser-playwright@4.1.11)(jsdom@30.1.2)(vite@8.3.4(@types/node@22.20.2)(yaml@2.9.1))
 
   packages/core:
-    dependencies:
+    devDependencies:
       ajv:
         specifier: 8.20.0
         version: 8.20.0
-    devDependencies:
+      esbuild:
+        specifier: 0.25.10
+        version: 0.25.10
       eslint:
         specifier: 9.39.5
         version: 9.39.5
@@ -345,7 +347,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 4.1.11
-        version: 4.1.11(@types/node@22.20.2)(@vitest/browser-playwright@4.1.11)(jsdom@30.1.2)(vite@8.3.4(@types/node@22.20.2)(yaml@2.9.1))
+        version: 4.1.11(@types/node@22.20.2)(@vitest/browser-playwright@4.1.11)(jsdom@30.1.2)(vite@8.3.4(@types/node@22.20.2)(esbuild@0.25.10)(yaml@2.9.1))
 
   packages/mcp:
     dependencies:

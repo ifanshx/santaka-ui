@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-toast/sk-toast.css",
       "type": "registry:style",
-      "checksum": "sha256-0c82a2e39d7eb82672e7c1e3dbc0f28dcabe25d3532b0bf51779bb01e58ee5a5"
+      "checksum": "sha256-76c23a30c33e26f77d9fb41b56836d71eb11c355d0000fc8ac293d2e8cce0ee4"
     }
   ],
   "cssVariables": [

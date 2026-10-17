@@ -784,9 +784,16 @@ fails two checks, and the harness was verified to pass only after the fix.
 
 ### Unmeasured
 
-- **`@santaka-ui/tokens + @santaka-ui/core` at ≤ 8 KB has no measurement.**
-  `measure-bundle.mjs` measures compiled theme CSS, not the token package's JS or
-  the core registry runtime. Recorded in ADR-010 as a gap.
+- ~~**`@santaka-ui/tokens + @santaka-ui/core` at ≤ 8 KB has no measurement.**~~
+  **Measured, and it failed.** `core` bundled to 41.2 KB because
+  `validateRegistryItem` compiled an Ajv schema at module load. The validator is
+  generated at build time now and the row reads 7.44 KB of 8. The ten-component
+  row was also measured for the first time and could not be met at 25 KB by any
+  selection of ten (floor 25.76 KB); it is gated at 27 KB. Both recorded in
+  ADR-023.
+- **`@santaka-ui/react` runtime overhead (≤ 15 KB) is unmeasured.** There is no
+  `size` task in that package, so the row is absent from the report rather than
+  passing.
 
 ### Toolchain deviations
 

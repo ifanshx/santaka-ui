@@ -14,6 +14,11 @@ packages/*/schema/
 packages/*/src/components.d.ts
 packages/*/custom-elements.json
 packages/core/registry/
+# Ajv's standalone output for the registry schema, written by
+# packages/core/scripts/build-validator.mjs. Minified, no line structure to
+# preserve, and reformatting it would undo the minification the budget counts.
+packages/core/src/registry-item-validator.js
+packages/core/src/registry-item-validator.d.ts
 
 # Prose documents are checked by review, not by a formatter.
 *.md

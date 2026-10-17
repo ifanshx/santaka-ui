@@ -27,6 +27,9 @@ export default tseslint.config(
       "**/.turbo/**",
       "**/generated/**",
       "**/*.d.ts",
+      // Ajv standalone output (packages/core/scripts/build-validator.mjs).
+      // Linting minified generated code says nothing about this project.
+      "packages/core/src/registry-item-validator.js",
       "**/storybook-static/**",
       // Next.js build output: generated, never linted (the same reason .turbo is
       // here, and the same rule .prettierignore already states for this directory).

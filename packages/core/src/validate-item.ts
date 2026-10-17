@@ -1,5 +1,5 @@
-import Ajv2020, { type ErrorObject } from "ajv/dist/2020.js"
-import { registryItemSchema } from "./registry-item-schema.js"
+import type { ErrorObject } from "ajv/dist/2020.js"
+import validateSchema from "./registry-item-validator.js"
 import type { RegistryItem } from "./types.js"
 
 /**
@@ -18,16 +18,14 @@ export type ValidationOutcome =
   { ok: true; item: RegistryItem } | { ok: false; errors: ValidationError[] }
 
 /**
- * One Ajv instance, compiled once at module load. Recompiling the schema per
- * call would dominate the cost of validating a single entry.
- */
-const ajv = new Ajv2020({ allErrors: true, strict: true })
-const validateSchema = ajv.compile(registryItemSchema)
-
-/**
- * A stable component must tell an agent (or a person) what to use instead.
- * JSON Schema cannot express "this string names another component", so it is
- * checked here against the already-typed item.
+ * The compiled validator is generated at build time by
+ * `scripts/build-validator.mjs` from the same schema in
+ * `registry-item-schema.ts` — the schema remains the single source of truth.
+ *
+ * It used to be `new Ajv2020(...).compile(...)` here, which put a 41.2 KB
+ * gzipped JSON Schema engine in front of every consumer for one schema that
+ * cannot change at runtime. The generated module is Ajv's own output, so the
+ * behavior is identical; `validate-item.test.ts` is the proof, not the claim.
  */
 const ALTERNATIVE_HINT = /\b(use|instead|prefer|avoid)\b/i
 

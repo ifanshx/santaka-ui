@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-tooltip/sk-tooltip.css",
       "type": "registry:style",
-      "checksum": "sha256-43bc365571f6d61526140767c6f608a8b54b1a19ef0eec47f8e3193906211f29"
+      "checksum": "sha256-477c8f8aea457864fef6d0aaf8e2022d868f6157f1df0a237b46232eb214c3da"
     }
   ],
   "cssVariables": [
