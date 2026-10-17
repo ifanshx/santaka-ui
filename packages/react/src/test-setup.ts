@@ -363,6 +363,43 @@ beforeAll(() => {
     )
   }
 
+  // Checkbox joins them after the fact: the adapter shipped with no definition
+  // here, so React treated `sk-checkbox` as a plain element and wrote every prop
+  // as an attribute. Attribute assertions passed, and the property channel —
+  // `checked`, `defaultChecked`, the ones the controlled/uncontrolled contract
+  // rides on — was never tested. The stub mirrors the shipped prop surface, with
+  // `checked` reflecting from its attribute and `default-checked` mapping to
+  // `defaultChecked`, the way Stencil's reflection does.
+  if (!customElements.get("sk-checkbox")) {
+    customElements.define(
+      "sk-checkbox",
+      class extends HTMLElement {
+        variant = "default"
+        size = "md"
+        label = ""
+        description = ""
+        error = ""
+        invalid = false
+        disabled = false
+        required = false
+        form?: string
+        checked = false
+        defaultChecked = false
+        value = "on"
+        indeterminate = false
+
+        static get observedAttributes() {
+          return ["checked", "default-checked"]
+        }
+
+        attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+          if (name === "checked") this.checked = value !== null
+          if (name === "default-checked") this.defaultChecked = value !== null
+        }
+      },
+    )
+  }
+
   if (!customElements.get("sk-radio-group")) {
     customElements.define(
       "sk-radio-group",

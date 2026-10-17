@@ -32,8 +32,7 @@ export type SkRadioGroupElement = HTMLElement & {
   form: string | undefined
   name: string
   value: string
-  /** Fired when the user selects an option. */
-  onValueChange: ((value: string) => void) | undefined
+  defaultValue: string
 }
 
 export type RadioGroupProps = {

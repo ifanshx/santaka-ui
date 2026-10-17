@@ -25,6 +25,8 @@ export type SkTextareaElement = HTMLElement & {
   disabled: boolean
   readOnly: boolean
   required: boolean
+  placeholder: string
+  form: string | undefined
   value: string
   defaultValue: string
   minLength?: number

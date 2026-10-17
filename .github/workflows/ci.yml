@@ -48,6 +48,15 @@ jobs:
       - name: Verify
         run: pnpm run verify
 
+      # The adapter element types are a hand-written copy of the custom elements,
+      # and a drifted copy compiles while being wrong. This reads the components
+      # and the three adapters, so it cannot live inside `pnpm run verify`: that
+      # runs each package's own test script, and this compares across packages.
+      # It runs after the build because TypeScript is what would otherwise catch
+      # a type disagreement — and it does not, because the copies are independent.
+      - name: Declaration drift
+        run: pnpm run test:declarations
+
       - name: Bundle budget report
         if: always()
         run: pnpm run size

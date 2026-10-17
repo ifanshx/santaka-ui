@@ -1,4 +1,22 @@
 import type { DetailedHTMLProps, HTMLAttributes } from "react"
+import type {
+  AlertVariant,
+  BadgeSize,
+  BadgeVariant,
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+  CheckboxSize,
+  CheckboxVariant,
+  EmptyStateSize,
+  EmptyStateVariant,
+  InputType,
+  ProgressSize,
+  RadioGroupSize,
+  RadioGroupVariant,
+  SwitchSize,
+  SwitchVariant,
+} from "./index.js"
 
 /**
  * JSX declarations for the Santaka custom elements.
@@ -14,11 +32,11 @@ import type { DetailedHTMLProps, HTMLAttributes } from "react"
  */
 
 type ButtonElement = HTMLElement & {
-  variant: string
-  size: string
+  variant: ButtonVariant
+  size: ButtonSize
   disabled: boolean
   loading: boolean
-  type: string
+  type: ButtonType
 }
 
 type BaseCustomElement<T extends HTMLElement> = Omit<
@@ -29,11 +47,11 @@ type BaseCustomElement<T extends HTMLElement> = Omit<
 }
 
 type ButtonPropsOf<T extends HTMLElement> = BaseCustomElement<T> & {
-  variant?: string
-  size?: string
+  variant?: ButtonVariant
+  size?: ButtonSize
   disabled?: boolean
   loading?: boolean
-  type?: string
+  type?: ButtonType
 }
 
 type LinkElement = HTMLElement & {
@@ -46,16 +64,16 @@ type LinkElement = HTMLElement & {
 }
 
 type BadgeElement = HTMLElement & {
-  variant: string
-  size: string
+  variant: BadgeVariant
+  size: BadgeSize
   dot: boolean
   statusLabel: string
 }
 
 type InputElement = HTMLElement & {
-  type: string
-  variant: string
-  size: string
+  type: InputType
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
   label: string
   description: string
   error: string
@@ -63,6 +81,9 @@ type InputElement = HTMLElement & {
   disabled: boolean
   readOnly: boolean
   required: boolean
+  autocomplete?: string
+  placeholder: string
+  form?: string | undefined
   value: string
   defaultValue: string
   minLength?: number
@@ -73,7 +94,7 @@ type InputElement = HTMLElement & {
 type TextareaElement = HTMLElement & {
   rows: number
   cols?: number
-  variant: string
+  variant: "default" | "quiet"
   label: string
   description: string
   error: string
@@ -81,6 +102,8 @@ type TextareaElement = HTMLElement & {
   disabled: boolean
   readOnly: boolean
   required: boolean
+  placeholder: string
+  form?: string | undefined
   value: string
   defaultValue: string
   minLength?: number
@@ -120,6 +143,7 @@ type LabelElement = HTMLElement & {
 type SeparatorElement = HTMLElement & {
   orientation: "horizontal" | "vertical"
   decorative: boolean
+  label: string
 }
 
 type DialogElement = HTMLElement & {
@@ -158,6 +182,7 @@ type SelectElement = HTMLElement & {
   disabled: boolean
   required: boolean
   placeholder: string
+  form?: string | undefined
   value: string
   defaultValue: string
 }
@@ -219,10 +244,11 @@ type CheckboxElement = HTMLElement & {
   invalid: boolean
   disabled: boolean
   required: boolean
-  form: string | undefined
+  form?: string | undefined
   checked: boolean
+  defaultChecked: boolean
+  value: string
   indeterminate: boolean
-  onValueChange: ((checked: boolean) => void) | undefined
 }
 
 type SwitchElement = HTMLElement & {
@@ -234,10 +260,10 @@ type SwitchElement = HTMLElement & {
   invalid: boolean
   disabled: boolean
   required: boolean
-  form: string | undefined
+  form?: string | undefined
+  value: string
   checked: boolean
   defaultChecked: boolean
-  onValueChange: ((checked: boolean) => void) | undefined
 }
 
 type RadioGroupElement = HTMLElement & {
@@ -250,10 +276,10 @@ type RadioGroupElement = HTMLElement & {
   invalid: boolean
   disabled: boolean
   required: boolean
-  form: string | undefined
+  form?: string | undefined
   name: string
   value: string
-  onValueChange: ((value: string) => void) | undefined
+  defaultValue: string
 }
 
 declare module "react" {
@@ -270,15 +296,15 @@ declare module "react" {
         download?: string
       }
       "sk-badge": BaseCustomElement<BadgeElement> & {
-        variant?: string
-        size?: string
+        variant?: BadgeVariant
+        size?: BadgeSize
         dot?: boolean
         "status-label"?: string
       }
       "sk-input": BaseCustomElement<InputElement> & {
-        type?: string
-        variant?: string
-        size?: string
+        type?: InputType
+        variant?: "default" | "quiet"
+        size?: "sm" | "md" | "lg"
         label?: string
         description?: string
         error?: string
@@ -300,7 +326,7 @@ declare module "react" {
       "sk-textarea": BaseCustomElement<TextareaElement> & {
         rows?: number
         cols?: number
-        variant?: string
+        variant?: "default" | "quiet"
         label?: string
         description?: string
         error?: string

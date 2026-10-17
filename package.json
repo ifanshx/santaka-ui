@@ -28,6 +28,7 @@
     "test:registry": "node --test tests/registry/*.test.mjs",
     "test:security": "node --test tests/security/*.test.mjs",
     "test:docs": "node --test tests/docs/*.test.mjs",
+    "test:declarations": "node --test tests/declarations/*.test.mjs",
     "framework-support": "node scripts/generate-framework-support.mjs",
     "framework-support:check": "node scripts/generate-framework-support.mjs --check",
     "audit:licenses": "node scripts/audit-licenses.mjs --write",

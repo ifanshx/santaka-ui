@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { Checkbox } from "./checkbox.js"
+import { Checkbox, type SkCheckboxElement } from "./checkbox.js"
 import { Select } from "./select.js"
 import { Switch } from "./switch.js"
 
@@ -70,10 +70,16 @@ describe("the React adapters forward `name`", () => {
     // React. Switch forwarded its own `value` the whole time; this asserts the
     // same prop now exists on the checkbox path, and that the default still
     // matches a native checkbox rather than becoming `undefined`.
+    //
+    // Read as a property, not an attribute. `sk-checkbox` had no definition in
+    // `test-setup.ts`, so React treated it as a plain element and wrote
+    // attributes; with the stub in place React takes the upgraded path, which is
+    // the path a browser takes, and writes the property the element declares.
     const { container } = render(<Checkbox name="terms" label="Accept" value="accepted" />)
-    expect(container.querySelector("sk-checkbox")?.getAttribute("value")).toBe("accepted")
+    const element = container.querySelector("sk-checkbox") as SkCheckboxElement
+    expect(element.value).toBe("accepted")
 
     const { container: defaulted } = render(<Checkbox name="terms" label="Accept" />)
-    expect(defaulted.querySelector("sk-checkbox")?.getAttribute("value")).toBe("on")
+    expect((defaulted.querySelector("sk-checkbox") as SkCheckboxElement).value).toBe("on")
   })
 })

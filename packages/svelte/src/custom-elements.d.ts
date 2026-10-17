@@ -33,11 +33,11 @@ import type { HTMLAttributes } from "svelte/elements"
  */
 
 export type SkButtonElement = HTMLElement & {
-  variant: string
-  size: string
+  variant: "primary" | "secondary" | "outline" | "ghost" | "danger"
+  size: "sm" | "md" | "lg"
   disabled: boolean
   loading: boolean
-  type: string
+  type: "button" | "submit" | "reset"
 }
 
 export type SkIconButtonElement = SkButtonElement & {
@@ -54,16 +54,16 @@ export type SkLinkElement = HTMLElement & {
 }
 
 export type SkBadgeElement = HTMLElement & {
-  variant: string
-  size: string
+  variant: "neutral" | "primary" | "success" | "warning" | "danger"
+  size: "sm" | "md"
   dot: boolean
   statusLabel: string
 }
 
 export type SkInputElement = HTMLElement & {
-  type: string
-  variant: string
-  size: string
+  type: "text" | "email" | "password" | "search" | "tel" | "url" | "number"
+  variant: "default" | "quiet"
+  size: "sm" | "md" | "lg"
   label: string
   description: string
   error: string
@@ -71,6 +71,9 @@ export type SkInputElement = HTMLElement & {
   disabled: boolean
   readOnly: boolean
   required: boolean
+  autocomplete?: string
+  placeholder: string
+  form: string | undefined
   value: string
   defaultValue: string
   minLength?: number
@@ -81,7 +84,7 @@ export type SkInputElement = HTMLElement & {
 export type SkTextareaElement = HTMLElement & {
   rows: number
   cols?: number
-  variant: string
+  variant: "default" | "quiet"
   label: string
   description: string
   error: string
@@ -89,6 +92,8 @@ export type SkTextareaElement = HTMLElement & {
   disabled: boolean
   readOnly: boolean
   required: boolean
+  placeholder: string
+  form: string | undefined
   value: string
   defaultValue: string
   minLength?: number
@@ -128,6 +133,7 @@ export type SkLabelElement = HTMLElement & {
 export type SkSeparatorElement = HTMLElement & {
   orientation: "horizontal" | "vertical"
   decorative: boolean
+  label: string
 }
 
 export type SkDialogElement = HTMLElement & {
@@ -166,6 +172,7 @@ export type SkSelectElement = HTMLElement & {
   disabled: boolean
   required: boolean
   placeholder: string
+  form: string | undefined
   value: string
   defaultValue: string
 }
@@ -234,8 +241,9 @@ export type SkCheckboxElement = HTMLElement & {
   required: boolean
   form: string | undefined
   checked: boolean
+  defaultChecked: boolean
+  value: string
   indeterminate: boolean
-  onValueChange: ((checked: boolean) => void) | undefined
 }
 
 export type SkSwitchElement = HTMLElement & {
@@ -250,7 +258,7 @@ export type SkSwitchElement = HTMLElement & {
   form: string | undefined
   checked: boolean
   defaultChecked: boolean
-  onValueChange: ((checked: boolean) => void) | undefined
+  value: string
 }
 
 export type SkRadioGroupElement = HTMLElement & {
@@ -266,7 +274,7 @@ export type SkRadioGroupElement = HTMLElement & {
   form: string | undefined
   name: string
   value: string
-  onValueChange: ((value: string) => void) | undefined
+  defaultValue: string
 }
 
 /**
@@ -277,19 +285,19 @@ export type SkRadioGroupElement = HTMLElement & {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars — one per element, used by the module augmentation below.
 export type SkButtonAttributes = HTMLAttributes<SkButtonElement> & {
-  variant?: string
-  size?: string
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger"
+  size?: "sm" | "md" | "lg"
   disabled?: boolean
   loading?: boolean
-  type?: string
+  type?: "button" | "submit" | "reset"
 }
 
 export type SkIconButtonAttributes = HTMLAttributes<SkIconButtonElement> & {
-  variant?: string
-  size?: string
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger"
+  size?: "sm" | "md" | "lg"
   disabled?: boolean
   loading?: boolean
-  type?: string
+  type?: "button" | "submit" | "reset"
   label?: string
 }
 
@@ -303,16 +311,16 @@ export type SkLinkAttributes = HTMLAttributes<SkLinkElement> & {
 }
 
 export type SkBadgeAttributes = HTMLAttributes<SkBadgeElement> & {
-  variant?: string
-  size?: string
+  variant?: "neutral" | "primary" | "success" | "warning" | "danger"
+  size?: "sm" | "md"
   dot?: boolean
   "status-label"?: string
 }
 
 export type SkInputAttributes = HTMLAttributes<SkInputElement> & {
-  type?: string
-  variant?: string
-  size?: string
+  type?: "text" | "email" | "password" | "search" | "tel" | "url" | "number"
+  variant?: "default" | "quiet"
+  size?: "sm" | "md" | "lg"
   label?: string
   description?: string
   error?: string
@@ -335,7 +343,7 @@ export type SkInputAttributes = HTMLAttributes<SkInputElement> & {
 export type SkTextareaAttributes = HTMLAttributes<SkTextareaElement> & {
   rows?: number
   cols?: number
-  variant?: string
+  variant?: "default" | "quiet"
   label?: string
   description?: string
   error?: string

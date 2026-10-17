@@ -24,12 +24,9 @@ export type SkSwitchElement = HTMLElement & {
   disabled: boolean
   required: boolean
   form: string | undefined
-  /** The field's name in the form submission. */
-  name: string | undefined
   checked: boolean
   defaultChecked: boolean
-  /** Fired when the user toggles the switch. */
-  onValueChange: ((checked: boolean) => void) | undefined
+  value: string
 }
 
 export type SwitchProps = {

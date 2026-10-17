@@ -12,6 +12,7 @@ import { cn } from "@santaka-ui/utilities"
 export type SkSeparatorElement = HTMLElement & {
   orientation: "horizontal" | "vertical"
   decorative: boolean
+  label: string
 }
 
 export type SeparatorProps = {

@@ -38,10 +38,9 @@ export type SkCheckboxElement = HTMLElement & {
   disabled: boolean
   required: boolean
   form: string | undefined
-  /** The field's name in the form submission. */
-  name: string | undefined
   checked: boolean
   defaultChecked: boolean
+  value: string
   indeterminate: boolean
 }
 

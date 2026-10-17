@@ -31,8 +31,7 @@ export type SkSelectElement = HTMLElement & {
   disabled: boolean
   required: boolean
   placeholder: string
-  /** The field's name in the form submission. */
-  name: string | undefined
+  form: string | undefined
   value: string
   defaultValue: string
 }
