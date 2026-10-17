@@ -28,6 +28,14 @@ const repoRoot = resolve(here, "..", "..")
 const CLI = join(repoRoot, "packages", "cli", "dist", "cli.js")
 const PAYLOAD = join(repoRoot, "apps", "docs", "public", "registry")
 
+/**
+ * How many entries the payload publishes. Read rather than hardcoded: the CLI has
+ * to report every entry it is served, and three assertions here used to name the
+ * count of the day (`21`), which is how they went stale while the component set
+ * grew to twenty-six — a grep for a number, not a check on the CLI.
+ */
+const PAYLOAD_COUNT = JSON.parse(readFileSync(join(PAYLOAD, "index.json"), "utf8")).items.length
+
 const quote = (value) => (/\s/.test(value) ? `"${value}"` : value)
 /**
  * Run the CLI asynchronously.
@@ -154,7 +162,7 @@ describe("a registry over HTTP", () => {
       const result = await run(["registry", `http://127.0.0.1:${port}/index.json`], dir)
       assert.equal(result.status, 0, result.stdout + result.stderr)
       assert.match(result.stdout, /registered http:\/\/127\.0\.0\.1/)
-      assert.match(result.stdout, /21 valid entries/)
+      assert.match(result.stdout, new RegExp(`${PAYLOAD_COUNT} valid entries`))
       // The trust sentence is the point of ADR-007 and must be printed.
       assert.match(result.stdout, /untrusted until you have reviewed it/)
 
@@ -203,7 +211,7 @@ describe("a registry over HTTP", () => {
       const result = await run(["registry", `http://127.0.0.1:${port}/index.json`], dir)
       assert.equal(result.status, 0, result.stdout + result.stderr)
       assert.match(result.stdout, /invalid/)
-      assert.match(result.stdout, /20 valid entries/)
+      assert.match(result.stdout, new RegExp(`${PAYLOAD_COUNT - 1} valid entries`))
     } finally {
       await close()
     }
@@ -237,8 +245,8 @@ describe("a registry over HTTP", () => {
 
       const listed = await run(["list"], scoped)
       assert.equal(listed.status, 0, listed.stdout + listed.stderr)
-      // The remote entries are visible: 21 from the payload.
-      assert.match(listed.stdout, /21 components/)
+      // The remote entries are visible: every one the payload publishes.
+      assert.match(listed.stdout, new RegExp(`${PAYLOAD_COUNT} components`))
 
       const added = await run(["add", "badge"], scoped)
       assert.equal(added.status, 0, added.stdout + added.stderr)
