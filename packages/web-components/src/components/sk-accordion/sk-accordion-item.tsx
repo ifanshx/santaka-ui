@@ -43,6 +43,13 @@ export class SkAccordionItem {
 
   private detailsEl?: HTMLDetailsElement
 
+  /**
+   * The value this item last reported through `sk-open-change`, which is what a
+   * toggle is compared against. It starts as the authored state, because an item
+   * that renders open was never reported as opening.
+   */
+  private reportedOpen = false
+
   componentWillLoad() {
     // A consumer's static `open` attribute is the parsed property already; this
     // only closes the gap when a renderer left the attribute without the value.
@@ -77,8 +84,11 @@ export class SkAccordionItem {
     this.detailsEl?.removeEventListener("toggle", this.onToggle)
     this.detailsEl = details
     details.addEventListener("toggle", this.onToggle)
-    // The first render has to sync the node before the listener can matter.
+    // The first render has to sync the node before the listener can matter, and
+    // the value it lands on is the baseline a toggle is measured against: the
+    // authored state was never reported, so it must not be reported now.
     this.openChanged()
+    this.reportedOpen = details.open
   }
 
   /**
@@ -98,11 +108,25 @@ export class SkAccordionItem {
    * A toggle of the native `<details>` — by the user, or asynchronously after a
    * programmatic write, because the platform queues a `toggle` for both. The
    * state is written back to the reflected property and the item reports once.
-   * A programmatic write therefore also re-reports, with the value it was just
-   * given: the write is idempotent, and the group ignores the close it caused.
+   *
+   * A toggle for the value the item already had is not a change, and reporting
+   * it lied to consumers: WebKit fires one for the sibling a click in a
+   * single-open group is about to close, and it reads the stale `true` because
+   * the close has not reached that node yet. That made one click look like three
+   * events, one of them for an item that never opened.
+   *
+   * The comparison is against {@link reportedOpen}, not against `open`: the
+   * group's close is a programmatic write, so by the time the platform's toggle
+   * for it arrives, `open` already says `false` — the close must still report.
    */
   private onToggle = () => {
     const next = this.detailsEl?.open ?? false
+    // The first test is what makes WebKit's stale toggle noise. The second is
+    // what keeps the guard from swallowing a real change: if the node and the
+    // property disagree, this toggle is the notification, not noise, whatever
+    // `reportedOpen` says.
+    if (next === this.reportedOpen && next === this.open) return
+    this.reportedOpen = next
     this.open = next
     // Bubbling and composed, the shape of `sk-value-change` on the form
     // controls — a consumer listens on an ancestor, not the item.

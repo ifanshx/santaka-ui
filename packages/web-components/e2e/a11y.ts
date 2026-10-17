@@ -40,7 +40,34 @@ export async function expectNoAxeViolations(
     })
     .join("\n")
 
-  expect(violations, `${label}: axe found accessibility violations:\n${reported}`).toEqual([])
+  // A violation is only actionable with the state that produced it: a scan whose
+  // page was half-upgraded or mid-transition reports wiring the settled page does
+  // not have, and the difference is invisible in the violation itself. The
+  // fixture waits for both now, so a recurrence here means something else.
+  const state = violations.length
+    ? await page.evaluate(() => {
+        const custom = Array.from(document.querySelectorAll<HTMLElement>("*")).filter((el) => {
+          const tag = el.tagName.toLowerCase()
+          return tag.includes("-") && customElements.get(tag) !== undefined
+        })
+        const running = document
+          .getAnimations()
+          .filter((animation) => animation.playState === "running")
+          .map((animation) => {
+            const timing = (animation.effect as KeyframeEffect | null)?.getTiming()
+            return `${animation.effect?.target?.tagName ?? "?"} x${String(timing?.iterations)}`
+          })
+        return [
+          `  upgraded: ${custom.filter((el) => el.classList.contains("hydrated")).length}/${custom.length} custom elements`,
+          `  running animations: ${running.length ? running.join(", ") : "none"}`,
+        ].join("\n")
+      })
+    : ""
+
+  expect(
+    violations,
+    `${label}: axe found accessibility violations:\n${reported}${state ? `\nscan-time state:\n${state}` : ""}`,
+  ).toEqual([])
 }
 
 export { AxeBuilder }

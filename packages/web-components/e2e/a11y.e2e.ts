@@ -14,8 +14,34 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/examples/vanilla-html/index.html")
   // Every custom element must be upgraded before a scan: an inert <sk-input>
   // renders no label wiring, and axe would report violations the upgraded
-  // element does not have.
-  await page.waitForSelector(".hydrated", { timeout: 15_000 })
+  // element does not have. Waiting for *the first* `.hydrated` — then a fixed
+  // 500 ms — is not the same thing as waiting for all of them: on a loaded
+  // machine the rest upgrade later and the scan reads a half-upgraded page.
+  // Measured, not assumed: the two whole-page scans failed once under `verify`'s
+  // parallel task load (the only failure in that run), and pass in isolation —
+  // 36 repeats under four workers, three engines clean. This waits for the
+  // fixture, which is deterministic; it does not retry the assertion.
+  await page.waitForFunction(() => {
+    // Registered custom elements only: `slot-fb` is Stencil's slot fallback, a
+    // hyphenated tag that is never defined and never hydrates — requiring it
+    // hung this wait in every engine until the test timed out.
+    const custom = Array.from(document.querySelectorAll<HTMLElement>("*")).filter((el) => {
+      const tag = el.tagName.toLowerCase()
+      return tag.includes("-") && customElements.get(tag) !== undefined
+    })
+    return custom.length > 0 && custom.every((el) => el.classList.contains("hydrated"))
+  })
+  // Transitions and finite animations still have to land: axe reads computed
+  // styles, and a mid-transition read is a state the page never rests in.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .filter((animation) => {
+        const timing = (animation.effect as KeyframeEffect | null)?.getTiming()
+        return timing?.iterations !== Infinity
+      })
+      .every((animation) => animation.playState !== "running"),
+  )
   await page.waitForTimeout(500)
 })
 

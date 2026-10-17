@@ -68,7 +68,7 @@ with browser tests against real Chromium:
 | `sk-alert` | role follows the variant — `status` or `alert` — without overwriting the consumer's, glyph aria-hidden, the actions row disappears when empty |
 | `sk-empty-state` | heading and description at their hooks, `bare` drops fill/stroke/shadow, no role and no focus stop |
 | `sk-progress` | `aria-valuenow` omitted when indeterminate rather than sent as `0`, size scales the track only, the sweep stops under reduced motion with the state still visible |
-| `sk-accordion` | real <details>/<summary> pair, Enter/Space activation, the marker swap is a drawn stroke rather than a class, `multiple` governs sibling exclusion, `sk-open-change` bubbles with `detail.open` |
+| `sk-accordion` | real <details>/<summary> pair, Enter/Space activation, the marker swap is a drawn stroke rather than a class, `multiple` governs sibling exclusion, `sk-open-change` bubbles with `detail.open` and reports changes only — WebKit's extra `toggle` for the sibling a group closes is not reported |
 | `sk-table` | the consumer's table semantics survive untouched, the scroll region is the keyboard stop and carries the group name, `striped` and `compact`, `plain` leaves the stroke unpainted without changing its width |
 
 **328 Playwright tests** plus the barrel-export contract tests. Chrome carries
@@ -159,8 +159,8 @@ failure ADR-005's R2 names.
 
 ### Storybook
 
-§10's workshop now exists: `apps/storybook`, `@storybook/react-vite`, twenty-one
-story files covering all twenty-one shipped components — **155 stories** with the
+§10's workshop now exists: `apps/storybook`, `@storybook/react-vite`, twenty-six
+story files covering all twenty-six shipped components — **181 stories** with the
 documented variants (default, sizes, disabled, loading, error/invalid, long
 content), a light/dark theme toolbar, and the a11y addon. The framework choice
 and, more importantly, **what it cannot host** are recorded in ADR-020 rather
@@ -201,7 +201,7 @@ Writing them found things a rendering-only story cannot:
 One §10 bullet is satisfied structurally rather than by a new artifact: **visual
 regression for key stories**. ADR-019 photographs the vanilla example page —
 every component in its documented states, in light/ltr, light/rtl, and dark/ltr,
-57 baselines owned by the pinned Playwright image — and deliberately keeps that
+72 baselines owned by the pinned Playwright image — and deliberately keeps that
 out of `verify`. Story screenshots would add a second baseline set owned by
 whoever ran `--update-snapshots` last, which is the failure ADR-019 exists to
 prevent.
@@ -211,7 +211,7 @@ prevent.
 §17 asks for license and security review; both are now scripts in CI rather than
 a task someone remembers.
 
-**Licenses** — 526 packages across 13 expressions, none denied. Three are flagged
+**Licenses** — 720 packages across 13 expressions, none denied. Three are flagged
 for review, and they are precisely the ones a string match cannot judge: a
 compound SPDX expression (`Apache-2.0 AND LGPL-3.0-or-later`), weak copyleft
 (`MPL-2.0`), and a data license (`CC-BY-4.0`). They are listed with the packages
@@ -336,8 +336,8 @@ stable across re-renders.
 ### Vue package
 
 `@santaka-ui/vue` is a Vue 3 adapter over the same custom elements, exporting
-the same names in the same order as the React adapter — 21 components plus
-`ThemeScript` / `useTheme`. **95 tests** cover prop mapping, the class merge, the
+the same names in the same order as the React adapter — 26 components plus
+`ThemeScript` / `useTheme`. **122 tests** cover prop mapping, the class merge, the
 exposed ref, form `name` wiring, and the no-slot boundary. Behavior stays owned
 and proven in `@santaka-ui/web-components`.
 
@@ -503,6 +503,45 @@ transitions `color` or `background-color` — the transitions in the component C
 are `box-shadow` and `transform`, neither of which a contrast rule reads. Nothing
 was changed on the strength of a hypothesis the runs did not support.
 
+A second full cross-engine run, after the suite had grown to **328 tests per
+engine**, reported 654 of 656 passed with two accordion failures. Neither was the
+a11y flake above, and neither survived: one was a genuine defect in the component
+(WebKit fires an extra `toggle` for the sibling a single-open group is about to
+close, and the item reported it as an `open: true` that never happened — three
+events for one click there, two in Chromium), the other an assertion that had
+pinned the order of those two events, which the platform does not contract.
+Both are fixed in `sk-open-change`'s reporting and in the test, and the accordion
+suite has since run **135 times** across the three engines with retries off and
+no flakes.
+
+Then `verify` itself failed once, on the two whole-page axe scans — light *and*
+dark, Chromium — and passed on rerun. That gave the older a11y pass-on-retry a
+mechanism the earlier hypothesis had missed: it is not contrast, it is the
+fixture. The `beforeEach` waited for the *first* `.hydrated` element and then a
+fixed 500 ms, while ADR-008 requires **every** custom element to be upgraded
+before a scan — and the scan's own comment says why (an inert `<sk-input>` renders
+no label wiring, so axe reports violations the upgraded element does not have).
+Under `verify`'s parallel task load the remaining elements upgrade after those
+500 ms, and the scan reads a half-upgraded page. Reproduced by construction rather
+than argued: 36 repeats of the three scans under four workers passed, which is why
+this stayed invisible, and `verify` still fails intermittently. The wait now
+requires every registered custom element to be hydrated and every finite animation
+to have landed, and `expectNoAxeViolations` prints the scan-time state with a
+violation so the next one names its own cause. Whether the Firefox/dark
+occurrence above was this same window is not known — nothing recorded its
+violations — but the window is gone either way.
+
+One more failure has no cause attached: a forced `turbo run test` (every task
+re-run at once, for stronger evidence than a cache hit) failed in
+`@santaka-ui/storybook#test`, and the log line that would have named the failing
+test was cut by the reporter's tail before it was read — so the mode is unknown.
+It did not recur: the package passes standalone (**181 tests**), the immediate
+forced re-run passed, and `verify` passes. `apps/storybook/vitest.config.ts`
+already bounds its pool to two Chromium workers for exactly this class of
+oversubscription, so nothing was changed on the strength of a failure whose text
+nobody has. It is recorded because a run that fails and is then not looked at is
+how the previous three entries in this section started.
+
 ### Framework support matrix
 
 `docs/framework-support.md` is the other half of the §17 gate, and it is
@@ -591,7 +630,7 @@ The decisions are recorded in ADR-015.
 
 All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB with the rationale recorded in measure-bundle.mjs: twelve components where 12 KB covered eight, and the per-component CSS average *fell* from 2.45 to 2.11 KB.
 - ~~**No Storybook.**~~ **Done** — `apps/storybook`, `@storybook/react-vite`,
-  ADR-020. Twenty-one story files, 155 stories, nine `play` functions that run as
+  ADR-020. Twenty-six story files, 181 stories, fourteen `play` functions that run as
   real Chromium tests through `@storybook/addon-vitest`, and the a11y addon. The
   framework decision names what it cannot host (Vue, Svelte, Angular adapters)
   instead of pretending one setup covers them. The `visual` bullet above is
@@ -615,7 +654,7 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   existed but nothing ran it, so nothing defended it against regression.
 - ~~**No visual regression in RTL.**~~ **Done** — ADR-019; a dedicated `visual`
   Playwright project photographs every example-page section in light/ltr,
-  light/rtl, and dark/ltr (57 baselines), so §17's per-component RTL case is a
+  light/rtl, and dark/ltr (72 baselines), so §17's per-component RTL case is a
   property of the spec rather than a per-file promise. It is deliberately not a
   CI gate: a screenshot diff needs a reviewer, not a red build, and the
   baselines are owned by the pinned Playwright image

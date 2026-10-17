@@ -68,16 +68,17 @@ changes get a pointer to [MIGRATIONS.md](./docs/MIGRATIONS.md).
 - **`llms.txt` and `llms-full.txt`**, generated from the registry and verified in
   CI (§11).
 - **Browser support matrix**, generated from the Playwright projects that actually
-  run. First cross-engine evidence: 261 tests pass on Chromium, 260 + 1 flaky on
-  Firefox, 261 on WebKit.
+  run. First cross-engine evidence: 328 tests pass on Chromium, 328 on Firefox, and
+  328 on WebKit — and that same run is what found the two accordion flakes the
+  Fixed section records, which is the reason to run it rather than claim it.
 - **Visual regression.** A dedicated `visual` project photographs every
-  example-page section in light/ltr, light/rtl, and dark/ltr — 57 baselines.
+  example-page section in light/ltr, light/rtl, and dark/ltr — 72 baselines.
   Deliberately not a CI gate, because a screenshot diff needs a reviewer
   (ADR-019).
 - **Consumer fixture.** Packs all eight packages, installs the tarballs into a
   scratch project outside the workspace, and runs 11 checks (§17).
-- **Touch-target coverage** for all ten interactive components, with the threshold
-  read from `--sk-touch-min` rather than asserted as 44 (§17).
+- **Touch-target coverage** for all eleven interactive components — 15 tests, with
+  the threshold read from `--sk-touch-min` rather than asserted as 44 (§17).
 - **Dependency license and security audits** (§17).
 - **Registry `props` and `events`**, derived from the committed declarations and
   component sources rather than authored — which is what lets `get_component` and
@@ -102,6 +103,35 @@ changes get a pointer to [MIGRATIONS.md](./docs/MIGRATIONS.md).
 - **The tooltip hover assertion** no longer bounds a 300ms component delay with a
   1000ms timeout, which measured the scheduler under parallel load rather than the
   component. The negative assertion at 120ms is what proves the delay is real.
+- **`sk-open-change` no longer reports a toggle that changed nothing.** WebKit
+  fires an extra `toggle` for the sibling a single-open group is about to close,
+  and it reads that node before the close has reached it — so the item reported
+  `open: true` for an item that was closed and stayed closed, and one click
+  produced three events there and two in Chromium. The item now compares against
+  the value it last reported rather than against its `open` property, which is
+  already `false` by the time the platform's toggle for the group's close arrives:
+  that comparison swallowed the close instead of the lie. Found by the first
+  cross-engine run.
+- **Two flaky browser tests fixed at their cause, not with a retry.** The
+  accordion's marker assertion sampled a computed style once, immediately after
+  the property changed, while the rule it reads keys off the reflected
+  `data-open` attribute written a render later. Its event assertion pinned the
+  *order* of the two `sk-open-change` events, which is not contracted — WebKit
+  nests the sibling's close inside the open's own dispatch, Chromium queues it —
+  so the assertion was asserting one engine's timing as the contract. The reads
+  retry now, the events are found by heading, and the count pins the contract.
+- **The axe scans now wait for the fixture instead of a fixed delay.** The
+  `beforeEach` resolved on the *first* `.hydrated` and then slept 500 ms, which is
+  not the same as every custom element being upgraded — ADR-008 requires that, and
+  on a loaded machine the rest upgrade later, so the scan read a half-upgraded
+  page and reported wiring the upgraded element does not have. Measured: the two
+  whole-page scans failed once under `verify`'s parallel task load (the only
+  failure in that run) and pass in isolation, 36 repeats under four workers. The
+  wait now requires every *registered* custom element to be hydrated — `slot-fb`,
+  Stencil's slot fallback, is hyphenated and never hydrates, so an unfiltered
+  version of this wait hangs — and for finite animations to have landed, since axe
+  reads computed styles. A failure message now carries the scan-time state, so the
+  next occurrence names its own cause instead of becoming another mystery.
 - **`web-components` now publishes `src/components`**, so the CLI's source mode
   works for a consumer and not only inside this repository.
 

@@ -36,7 +36,7 @@
         {
           "path": "src/components/sk-accordion/sk-accordion-item.tsx",
           "type": "registry:component",
-          "checksum": "sha256-13c19c35d63307f9ea93ce798e10dd6564c34b1c55d1c59bf36f10fa72b7dd16"
+          "checksum": "sha256-8cdc81df2795aaf8f55e5a6524c04f33ba44065bab92ca8f6a339930c667976b"
         }
       ],
       "cssVariables": [

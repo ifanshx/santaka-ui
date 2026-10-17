@@ -114,6 +114,9 @@ test("a user toggle dispatches sk-open-change with detail.open, bubbling to the 
           heading: string | null
           detail: { open: boolean } | undefined
         }> = []
+        // Resolved when both events have arrived rather than after a fixed
+        // delay: 50 ms made the test depend on how fast the engine is.
+        const settle = setTimeout(() => resolve(seen), 5_000)
         host.addEventListener("sk-open-change", (event) => {
           const custom = event as CustomEvent<{ open: boolean } | undefined>
           seen.push({
@@ -124,26 +127,39 @@ test("a user toggle dispatches sk-open-change with detail.open, bubbling to the 
             heading: (event.target as HTMLElement).getAttribute("heading"),
             detail: custom.detail,
           })
+          if (seen.length === 2) {
+            clearTimeout(settle)
+            resolve(seen)
+          }
         })
         // The second item, which is closed in the markup. Clicking the first
         // would close it — it is authored `open` — and the event would then
         // report the close, not the open this test is about.
         const summary = document.querySelectorAll("#accordion-basic sk-accordion-item summary")[1]!
         summary.click()
-        // Resolved on a later turn, after the bubbling has finished.
-        setTimeout(() => resolve(seen), 50)
       }),
   )
 
   // Two events, and both are the contract: the clicked item opened, and the
   // group closed its sibling — the exclusion policy is observable through the
-  // same stream a consumer listens to, not only through the final state.
+  // same stream a consumer listens to, not only through the final state. The
+  // count is also the regression test for the stale report the component used
+  // to make: WebKit's extra toggle for the closing sibling carried `open: true`
+  // and made this stream three events long, one of them a lie.
+  //
+  // The two events' *order* is not asserted, because it is not contracted. The
+  // sibling's close rides on a `toggle` the platform fires when the group writes
+  // the sibling's `open`, and whether that lands inside the open's own dispatch
+  // or after it differs by engine — WebKit nests it, Chromium queues it. So the
+  // events are found, not sequenced.
   expect(events).toHaveLength(2)
-  expect(events[0].target).toBe("SK-ACCORDION-ITEM")
-  expect(events[0].heading).toBe("Does it need a framework?")
-  expect(events[0].detail?.open).toBe(true)
-  expect(events[1].heading).toBe("What is Santaka UI?")
-  expect(events[1].detail?.open).toBe(false)
+  const byHeading = (heading: string) => events.find((event) => event.heading === heading)
+  const opened = byHeading("Does it need a framework?")
+  const closed = byHeading("What is Santaka UI?")
+  expect(opened?.target).toBe("SK-ACCORDION-ITEM")
+  expect(opened?.detail?.open).toBe(true)
+  expect(closed?.target).toBe("SK-ACCORDION-ITEM")
+  expect(closed?.detail?.open).toBe(false)
 })
 
 test("the drawn marker differs between open and closed, and is aria-hidden", async ({ page }) => {
@@ -163,7 +179,11 @@ test("the drawn marker differs between open and closed, and is aria-hidden", asy
   const closedStroke = await strokeDrawn(second.locator('[data-slot="marker"]'))
   await second.locator("summary").click()
   await expect(second).toHaveJSProperty("open", true)
-  const openStroke = await strokeDrawn(second.locator('[data-slot="marker"]'))
+  // Retried rather than sampled. The rule that drops the vertical stroke keys
+  // off `[data-open="true"]` — the reflected attribute, written one render after
+  // the property this test just waited for — so a one-shot read caught the
+  // closed marker in Firefox and flaked.
+  await expect.poll(() => strokeDrawn(second.locator('[data-slot="marker"]'))).toBe(false)
   const minusStillDrawn = await second
     .locator('[data-slot="marker"]')
     .evaluate((el) => getComputedStyle(el, "::before").display !== "none")
@@ -172,7 +192,6 @@ test("the drawn marker differs between open and closed, and is aria-hidden", asy
   // closed marker draws both strokes, the open one draws only the horizontal,
   // and that stroke is still painted.
   expect(closedStroke).toBe(true)
-  expect(openStroke).toBe(false)
   expect(minusStillDrawn).toBe(true)
 })
 
