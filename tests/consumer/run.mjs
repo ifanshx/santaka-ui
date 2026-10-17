@@ -19,7 +19,7 @@
  * `attw --pack` and `publint` are the strongest checks available without a
  * consumer, and they are not this: both inspect the tarball, and neither can say
  * whether `import "@santaka-ui/react"` actually loads in a project that is not
- * this one. So this script packs all nine packages, installs the tarballs into
+ * this one. So this script packs all ten packages, installs the tarballs into
  * a scratch project outside the workspace, and exercises them the way a consumer
  * would.
  *
@@ -48,6 +48,7 @@ const PACKAGES = [
   "web-components",
   "react",
   "vue",
+  "svelte",
   "mcp",
   "cli",
 ]
@@ -140,7 +141,7 @@ function packAll(tarballDir) {
  * consumer will be in after the first release and nothing more.
  */
 function writeConsumerProject(dir, tarballDir) {
-  const dependency = (name) => `file:${join(tarballDir, `santaka-ui-${name}-0.1.0.tgz`)}`
+  const dependency = (name) => `file:${join(tarballDir, tarballName(name))}`
   const dependencies = {}
   const overrides = {}
   for (const name of PACKAGES) {
@@ -152,6 +153,10 @@ function writeConsumerProject(dir, tarballDir) {
   // Vue is a peer of `@santaka-ui/vue`, so a consumer installing the adapter
   // brings it — the fixture declares it for the same reason it declares React.
   dependencies.vue = "^3.5.0"
+  // Svelte is a peer of `@santaka-ui/svelte`, so a consumer installing the
+  // adapter brings it — the fixture declares it for the same reason it declares
+  // Vue, and the store types the package ships import `svelte/store` directly.
+  dependencies.svelte = "^5.0.0"
   // The MCP client used by the fixture is the consumer's own dependency, not a
   // re-export of `@santaka-ui/mcp`. A consumer that mounts the server on a
   // transport imports the SDK directly, so the fixture does too — and pinning it
@@ -183,7 +188,18 @@ function writeConsumerProject(dir, tarballDir) {
 // Checks
 // ---------------------------------------------------------------------------
 
-/** The subpaths every package promises, with the file each must resolve to. */
+/**
+ * The tarball name for a package, as `pnpm pack` writes it: the scope is
+ * stripped and the special characters are folded to dashes, so `@santaka-ui/mcp`
+ * packs as `santaka-ui-mcp-0.1.0.tgz`.
+ */
+function tarballName(name) {
+  return `santaka-ui-${name}-0.1.0.tgz`
+}
+
+/**
+ * The subpaths every package promises, with the file each must resolve to.
+ */
 const EXPORT_SUBPATHS = [
   "@santaka-ui/tokens/css",
   "@santaka-ui/tokens/css/light.css",
@@ -207,6 +223,13 @@ const EXPORT_SUBPATHS = [
   "@santaka-ui/react/jsx",
   "@santaka-ui/vue",
   "@santaka-ui/vue/styles.css",
+  // The Svelte adapter's `./elements` subpath is types-only by design: it
+  // augments `svelte/elements` and has no runtime module, the same arrangement
+  // `@santaka-ui/react/jsx` uses. `import.meta.resolve` on it resolves the
+  // declaration file; the runtime import check below deliberately excludes it.
+  "@santaka-ui/svelte",
+  "@santaka-ui/svelte/elements",
+  "@santaka-ui/svelte/styles.css",
   "@santaka-ui/mcp",
   "@santaka-ui/cli",
 ]
@@ -237,6 +260,7 @@ check("the ESM entrypoints actually import, and export what they claim", () => {
     import * as cli from "@santaka-ui/cli"
     import * as react from "@santaka-ui/react"
     import * as vue from "@santaka-ui/vue"
+    import * as svelte from "@santaka-ui/svelte"
 
     const problems = []
     const expect = (condition, message) => { if (!condition) problems.push(message) }
@@ -258,6 +282,22 @@ check("the ESM entrypoints actually import, and export what they claim", () => {
     // encode React's shape onto Vue's and fail on a correct package.
     expect(typeof vue.ThemeScript === "object", "vue.ThemeScript is not exported")
     expect(typeof vue.useTheme === "function", "vue.useTheme is not a function")
+
+    // The Svelte entry exports the §6 theme contract as stores, not components —
+    // the package ships no wrappers, so its runtime surface is exactly five
+    // values. \`theme\` and \`preference\` are Svelte stores, which are objects
+    // exposing \`subscribe\`.
+    expect(typeof svelte.theme?.subscribe === "function", "svelte.theme is not a store")
+    expect(typeof svelte.preference?.subscribe === "function", "svelte.preference is not a store")
+    expect(typeof svelte.setTheme === "function", "svelte.setTheme is not a function")
+    expect(typeof svelte.THEME_INIT_SCRIPT === "string", "svelte.THEME_INIT_SCRIPT is not a string")
+    expect(
+      svelte.THEME_INIT_SCRIPT === vue.THEME_INIT_SCRIPT,
+      "svelte.THEME_INIT_SCRIPT disagrees with vue.THEME_INIT_SCRIPT — the §6 snippet has one copy per package, and they drifted",
+    )
+    expect(svelte.THEME_INIT_SCRIPT.includes("'sk-theme'"), "svelte.THEME_INIT_SCRIPT does not read THEME_STORAGE_KEY by name")
+    expect(svelte.THEME_INIT_SCRIPT.includes("data-sk-theme"), "svelte.THEME_INIT_SCRIPT does not set data-sk-theme")
+    expect(typeof svelte.THEME_STORAGE_KEY === "string", "svelte.THEME_STORAGE_KEY is not a string")
 
     // The registry aggregate must be readable through its subpath, not only
     // through the package root — that subpath is what the CLI and MCP use.
@@ -436,7 +476,7 @@ check("the universal packages typecheck without @types/node", () => {
       jsx: "react-jsx",
       types: [],
     },
-    include: ["consumer.ts", "consumer.tsx", "consumer-vue.ts"],
+    include: ["consumer.ts", "consumer.tsx", "consumer-vue.ts", "consumer-svelte.ts"],
   }
   writeFileSync(join(scratch, "tsconfig.json"), `${JSON.stringify(tsconfig, null, 2)}\n`)
 
@@ -504,6 +544,43 @@ export const App = defineComponent({
     ])
   },
 })
+`,
+  )
+
+  writeFileSync(
+    join(scratch, "consumer-svelte.ts"),
+    `// A Svelte consumer of the shipped declarations, written against the tarball's
+// .d.ts files under NodeNext — the same contract \`consumer-vue.ts\` proves for
+// Vue. An SFC is not used because compiling one needs the Svelte compiler,
+// which is a consumer's build tooling; plain TypeScript is what the check
+// covers. The adapter ships no component wrappers (the compiler writes props
+// and listens to events directly), so its surface is the theme stores plus the
+// \`./elements\` type-only subpath, which both get used here.
+import { theme, preference, setTheme, THEME_INIT_SCRIPT, THEME_STORAGE_KEY, type ResolvedTheme, type ThemePreference } from "@santaka-ui/svelte"
+import type { SkInputAttributes } from "@santaka-ui/svelte/elements"
+
+const resolved: ResolvedTheme = "light"
+const choice: ThemePreference = "system"
+
+// The stores are Svelte's \`Readable<T>\`. \`theme.subscribe(fn)\` returns an
+// unsubscribe function, so the value type survives the call site: a drift in
+// the shipped declaration fails here rather than in a consumer's template.
+const unsubscribeTheme: () => void = theme.subscribe(() => {})
+unsubscribeTheme()
+const unsubscribePreference: () => void = preference.subscribe(() => {})
+unsubscribePreference()
+
+setTheme("dark")
+const snippet: string = THEME_INIT_SCRIPT
+const key: string = THEME_STORAGE_KEY
+
+// The attribute type comes from \`@santaka-ui/svelte/elements\`: the module
+// augmentation makes \`sk-input\` a known element in Svelte templates, and the
+// attribute interface carries the props the docs promise.
+const inputAttrs: SkInputAttributes = { placeholder: "Search" }
+const placeholder: string | number | undefined = inputAttrs.placeholder
+
+export { resolved, choice, snippet, key, placeholder }
 `,
   )
 
@@ -681,6 +758,80 @@ check("the Vue adapter renders the element it wraps, server-side", () => {
     console.log("ok")
   `
   const out = runScript("vue-ssr", script)
+  if (!out.includes("ok")) throw new Error(out)
+})
+
+check("the Svelte stores and the pre-paint snippet work in Node, from the tarball", () => {
+  // The Svelte adapter ships stores rather than component wrappers, so the
+  // equivalent of the React/Vue SSR checks is proving the runtime surface works
+  // without a DOM at all: the stores must expose `theme` resolved from the
+  // document attribute (`system` falls back to light when the browser API is
+  // absent), `setTheme` writes the one storage key and the one attribute, and
+  // the snippet is byte-identical to the one Vue and React ship — §6 has one
+  // contract, not three copies that drift. Hydration against a real render is
+  // covered by `examples/svelte-vite`'s Playwright suite; this check covers what
+  // a Node consumer of the tarball can reach.
+  const script = `
+    // \`setTheme\` writes the real \`localStorage\` and the real document
+    // attribute — which bare Node has neither of, so the script supplies them
+    // the way any Node-side test of a DOM-touching store does. The store's
+    // attribute observer needs MutationObserver, and "system" fallback needs
+    // matchMedia; a stub without listeners resolves system to light, which is
+    // exactly the resolved value the store must report in an SSR context.
+    const backing = {}
+    globalThis.document ??= {
+      documentElement: {
+        getAttribute: (name) => backing[name] ?? null,
+        setAttribute: (name, value) => { backing[name] = value },
+      },
+    }
+    globalThis.localStorage ??= {
+      getItem: (key) => backing[key] ?? null,
+      setItem: (key, value) => { backing[key] = value },
+      removeItem: (key) => { delete backing[key] },
+    }
+
+    globalThis.MutationObserver ??= class {
+      disconnect() {}
+      observe() {}
+    }
+    globalThis.matchMedia ??= () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} })
+
+    const { theme, preference, setTheme, THEME_INIT_SCRIPT, THEME_STORAGE_KEY } = await import("@santaka-ui/svelte")
+
+    const seen = []
+    const unsubscribe = theme.subscribe((value) => seen.push(value))
+    if (seen.length === 0) throw new Error("theme.subscribe did not emit the current value immediately")
+    if (seen[seen.length - 1] !== "light") {
+      throw new Error("theme is " + seen[seen.length - 1] + ", expected light (no attribute, storage empty, and matchMedia absent means system resolves to light)")
+    }
+    unsubscribe()
+
+    const prefs = []
+    preference.subscribe((value) => prefs.push(value))()
+    if (prefs[prefs.length - 1] !== "system") throw new Error("preference is " + prefs[prefs.length - 1] + ", expected system")
+
+    setTheme("dark")
+    if (document.documentElement.getAttribute("data-sk-theme") !== "dark") {
+      throw new Error("setTheme did not write data-sk-theme: " + document.documentElement.getAttribute("data-sk-theme"))
+    }
+    if (localStorage.getItem(THEME_STORAGE_KEY) !== "dark") {
+      throw new Error("setTheme wrote " + localStorage.getItem(THEME_STORAGE_KEY) + " to " + THEME_STORAGE_KEY + ", expected dark")
+    }
+    {
+      // A fresh subscription emits the current value, so it observes the write
+      // setTheme("dark") just performed — the store reads the document
+      // attribute, not its own closure.
+      const reopened = []
+      theme.subscribe((value) => reopened.push(value))()
+      if (reopened[reopened.length - 1] !== "dark") {
+        throw new Error("theme is " + reopened[reopened.length - 1] + " after setTheme('dark'), expected dark")
+      }
+    }
+
+    console.log("ok")
+  `
+  const out = runScript("svelte-theme", script)
   if (!out.includes("ok")) throw new Error(out)
 })
 

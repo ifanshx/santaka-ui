@@ -19,7 +19,7 @@ nothing has been built. No target is currently at Preview.
 | Plain HTML / JavaScript | **Stable** | Web Components + CSS, no framework runtime requirement | Browser tests in a minimal HTML fixture | `browsers` CI job |
 | Vue 3 + Vite | **Stable** | Vue wrappers/adapters and/or direct Web Components use | Props, emitted events, forms, styling, production build | `vue-example` CI job |
 | Nuxt | **Planned** | Vue integration with SSR/hydration guidance | Server rendering, hydration, route-level example | — |
-| Svelte / SvelteKit | **Planned** | Native wrappers where needed and Web Components usage path | Props/events, SSR and hydration tests | — |
+| Svelte / SvelteKit | **Stable** | Elements used directly, plus a types-only subpath and a theme store | Props/events, form submission, SSR markup and hydration, theme contract | `svelte-example` CI job |
 | Angular | **Planned** | Angular integration package and typing | Inputs, outputs, forms, production build and accessibility tests | — |
 | Astro | **Planned** | Web Components integration and framework-island examples | Static build, client hydration paths and custom-element loading | — |
 | Solid, Preact, Qwik and others | **Planned** | Community or official adapters after validation | Framework-specific compatibility suite | — |
@@ -71,16 +71,30 @@ Vue chooses between a property and an attribute per component, so the adapter ca
 route React never takes; the example is a separate CI job for that reason, not a second
 step in the React job.
 
+### Svelte / SvelteKit
+
+- Adapter: `packages/svelte`
+- Example: `examples/svelte-vite`
+- Test: `pnpm --filter @santaka-ui/example-svelte-vite test`
+- CI job: `svelte-example`
+
+No wrapper components, and that is measured: Svelte 5 already decides per write whether
+a prop reaches the element's property or its attribute — the setters the element exposes
+once it is registered, an object-valued prop as a property while it is not — so the
+package ships the two things Svelte cannot supply, `@santaka-ui/svelte/elements` for
+types and a theme store for section 6, and nothing else (ADR-021). Server rendering
+turned up a rule the whole repository now shares: because the elements are scoped and
+have no shadow root (ADR-011), registering them *before* hydration mutates the tree
+being hydrated, Svelte abandons the server's markup and mounts again. Register after
+hydration. The example's test asserts both the node identity and the hydration markers,
+so the order cannot regress silently. SvelteKit's own server entry is not tested here;
+the Vite SSR build is what the gate names.
+
 ## Why each Planned target is Planned
 
 **Nuxt.** Nothing exists. Nuxt is the SSR path for the Vue adapter, which is Stable on
 its own; the missing piece is the server-render and hydration proof, the same class of
 evidence `examples/nextjs` provides for React.
-
-**Svelte / SvelteKit.** Nothing exists. Svelte can consume the custom elements directly
-today — that is the point of the universal package — but a *claimed* integration needs
-the wrappers, the example, and the SSR/hydration proof, and none of the three is
-written.
 
 **Angular.** Nothing exists. Angular's forms integration and its production build are
 the parts that need proving, because both are where an adapter over custom elements

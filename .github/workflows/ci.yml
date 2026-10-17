@@ -165,6 +165,47 @@ jobs:
           path: examples/vue-vite/playwright-report/
           retention-days: 7
 
+  svelte-example:
+    name: Svelte server-renders, hydrates clean and submits a form
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @santaka-ui/example-svelte-vite exec playwright install --with-deps chromium
+
+      # The same reason as the React and Vue jobs: `dist/` is gitignored, and the
+      # example resolves `@santaka-ui/svelte` and `@santaka-ui/web-components`
+      # through their published `exports` maps, so the workspace has to be built.
+      - name: Build the workspace packages
+        run: pnpm run build
+
+      # Section 3's Svelte gate is props, events, SSR and hydration, and this job
+      # exists for the third and fourth: the example serves a real server-rendered
+      # page, hydrates it, and the suite checks that hydration *reused* the
+      # server's nodes instead of replacing them. Registering the elements before
+      # hydration passes every other test in the file and fails only that one,
+      # which is why the ordering is asserted rather than described (ADR-021).
+      - name: Build the example and run its browser tests
+        run: pnpm --filter @santaka-ui/example-svelte-vite test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: svelte-example-report
+          path: examples/svelte-vite/playwright-report/
+          retention-days: 7
+
   nextjs-example:
     name: Next.js renders on the server and hydrates clean
     runs-on: ubuntu-latest

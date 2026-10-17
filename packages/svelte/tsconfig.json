@@ -1,0 +1,14 @@
+{
+  "extends": "../../tooling/typescript/library.json",
+  "compilerOptions": {
+    // `library.json` deliberately carries no DOM lib: the Node packages (cli,
+    // core, mcp, utilities) extend it and must not see browser globals. This
+    // package types custom elements (`HTMLElement`) and the theme attribute on
+    // `document`, so it adds the lib the same way the other browser packages do,
+    // rather than widening the shared preset for everyone.
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+}

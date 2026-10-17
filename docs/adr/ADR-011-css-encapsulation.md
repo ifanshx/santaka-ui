@@ -74,6 +74,17 @@ component that reaches for a shadow root fails the suite rather than shipping.
   is the property the decision was made for.
 - The Stencil config's `scoped: true` and this ADR must change together; the
   config comment cites this record.
+- *Amended when Svelte support was built (ADR-021):* "renders into the light DOM"
+  has a consequence beyond styling. A component that renders into its own light
+  DOM mutates the tree a framework is hydrating, so an upgraded element breaks a
+  server-rendered page unless the elements are registered **after** hydration.
+  Measured in `examples/svelte-vite`: registering first produced
+  `HierarchyRequestError` inside Svelte's hydration walk, which Svelte answers by
+  discarding the server's markup. The same ordering is why ADR-005 defines the
+  elements inside a React effect. Reversing *this* decision — real shadow roots —
+  would remove that constraint as a side effect, and it would also remove every
+  consumer's ability to style component internals, which is the trade this ADR
+  already made.
 
 ## What would reverse this
 

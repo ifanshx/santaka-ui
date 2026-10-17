@@ -27,6 +27,7 @@ public.**
 | `@santaka-ui/web-components` | yes | Custom elements, eagerly registered; `/loader` for SSR |
 | `@santaka-ui/react` | yes | React adapters over the custom elements |
 | `@santaka-ui/vue` | yes | Vue 3 adapters over the same custom elements |
+| `@santaka-ui/svelte` | yes | Svelte 5 support: element types and the theme store, no wrappers (ADR-021) |
 | `@santaka-ui/mcp` | yes | MCP server over the registry metadata. No model, no network |
 | `@santaka-ui/cli` | yes | The `santaka` CLI: project detection, install, diagnostics |
 

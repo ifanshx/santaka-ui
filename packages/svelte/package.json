@@ -1,0 +1,58 @@
+{
+  "name": "@santaka-ui/svelte",
+  "version": "0.1.0",
+  "description": "Svelte 5 support for Santaka UI components.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./elements": "./dist/custom-elements.d.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "validate:package": "publint . && attw --pack --profile esm-only --ignore-rules no-resolution cjs-resolves-to-esm"
+  },
+  "dependencies": {
+    "@santaka-ui/utilities": "workspace:^"
+  },
+  "peerDependencies": {
+    "@santaka-ui/web-components": "workspace:^",
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "@santaka-ui/web-components": "workspace:^",
+    "@testing-library/svelte": "5.4.2",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "eslint": "9.39.5",
+    "jsdom": "30.1.2",
+    "publint": "0.3.25",
+    "rimraf": "6.0.1",
+    "svelte": "5.57.2",
+    "svelte-check": "4.7.7",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "vitest": "4.1.11"
+  }
+}

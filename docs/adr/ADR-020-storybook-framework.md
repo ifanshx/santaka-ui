@@ -15,7 +15,8 @@ host every adapter without configuration."**
 That sentence is the reason this ADR exists rather than a README paragraph. The
 repository is not a single-framework library. It is one universal package plus
 per-framework adapters, and the adapters are at different levels of maturity:
-React and Vue are published, Svelte and Angular do not exist. A "Storybook
+React and Vue are published, Svelte exists as of ADR-021 but has no stories
+here, and Angular does not exist. A "Storybook
 setup" is not one decision here; it is a decision about *which adapter the
 workshop renders*, and that decision is only honest if it names what is not
 being hosted.
@@ -100,7 +101,8 @@ that is correct everywhere, and it is what the workshop uses.
 ### What this workshop does not host
 
 - **Vue, Svelte, and Angular adapters.** Vue is published but has no stories
-  here yet; Svelte and Angular do not exist. `plan.md` §7 is explicit that
+  here yet; Svelte is published too as of ADR-021 and likewise has none; Angular
+  does not exist. `plan.md` §7 is explicit that
   component and integration counts are planning targets, not a promise that
   every item ships in v1.0, so an absent renderer is recorded as absent rather
   than implied by a "universal" workshop that renders one framework.

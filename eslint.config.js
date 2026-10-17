@@ -91,6 +91,17 @@ export default tseslint.config(
     },
   },
   {
+    // An example's own server process. `examples/svelte-vite/server.mjs` serves
+    // the built client assets and renders the page per request, so it is Node
+    // code — but it lives next to the example's browser code, not under
+    // `**/scripts/**`, so without this it would be linted as a browser script and
+    // fail on `process` being undefined.
+    files: ["examples/**/server.mjs"],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
+  {
     // CLI end-to-end tests and the consumer fixture run real processes, so they
     // use `process`, `console`, and `node:*` directly. They are `.mjs`, which the
     // TypeScript block above does not cover, so they would otherwise be linted as

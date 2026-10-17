@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-sk-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Santaka UI — Svelte + Vite (SSR)</title>
+    <script>
+      // Read the same storage key the theme store and the docs use, and set the
+      // attribute before first paint so the page does not flash. This is the
+      // snippet documented in section 6, written out because an HTML file cannot
+      // import it. An e2e test asserts the served snippet still matches the
+      // exported `THEME_INIT_SCRIPT` ignoring whitespace (a formatter rewrites
+      // this file, so whitespace cannot be part of the contract) and then
+      // asserts what the snippet does in both branches, which is what makes the
+      // drift visible rather than silent.
+      try {
+        var v = localStorage.getItem("sk-theme") || "system"
+        var d =
+          v === "dark" || (v === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+        document.documentElement.setAttribute("data-sk-theme", d ? "dark" : "light")
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <!-- The server replaces this comment with the rendered markup. It is a
+         separate file from the built HTML on purpose: Vite owns `dist/client`
+         and writes this exact file into it with the hashed stylesheet and module
+         tags already injected. -->
+    <div id="app"><!--app-html--></div>
+    <script type="module" src="/src/entry-client.ts"></script>
+  </body>
+</html>

@@ -43,6 +43,44 @@ defineCustomElements()`}</code></pre>
   </section>
 
   <section>
+    <h2>Register after hydration</h2>
+    <p>
+      Whichever path you choose, the call that defines the elements has to happen <em>after</em> the framework has
+      hydrated the server's markup. Santaka UI components use scoped styles and no shadow root, so an upgraded element
+      renders into its own light DOM — it inserts nodes into the very tree the framework is walking. A framework that
+      hydrates by matching the server's nodes against a template then finds a tree that no longer matches.
+    </p>
+    <p>
+      React has always done the right thing here, which is why the Next.js example defines the elements inside an
+      effect: effects run after hydration (ADR-005). Svelte makes the mistake visible instead of silent — hydrating a
+      tree that changed throws, and Svelte answers by clearing the target and mounting the application again, so the
+      page looks correct while the server rendering is gone. The Svelte example measures both orders and asserts the
+      difference (ADR-021).
+    </p>
+    <pre><code>{`// client entry — the call order is the whole point
+hydrate(App, { target: document.getElementById("app") })
+void defineCustomElements()   // after hydration, never before`}</code></pre>
+  </section>
+
+  <section>
+    <h2>Svelte</h2>
+    <p>
+      The <a href="https://github.com/santaka-ui/santaka-ui/tree/main/examples/svelte-vite">Svelte example</a> serves a
+      real server-rendered page from a small Node server and hydrates it in the browser. Its tests assert that
+      hydration reused the server's nodes rather than replacing them, that props and the element's own
+      <code>sk-value-change</code> event reach the application, and that all six form controls submit through the
+      browser's own <code>FormData</code>.
+    </p>
+    <p>
+      <code>@santaka-ui/svelte</code> ships no components. Svelte's compiler already writes a prop as a property when
+      the element declares it and as an attribute when it does not, so the package supplies what Svelte cannot: the
+      <code>./elements</code> types (so a misspelled attribute fails <code>svelte-check</code> instead of being dropped)
+      and the theme store this section's pre-paint snippet belongs to. SvelteKit's own server entry is not covered by
+      that example, because its peer requirements need a TypeScript major the workspace does not pin (ADR-021).
+    </p>
+  </section>
+
+  <section>
     <h2>Next.js</h2>
     <p>
       The <a href="https://github.com/santaka-ui/santaka-ui/tree/main/examples/nextjs">Next.js example</a> proves the

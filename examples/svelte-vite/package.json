@@ -1,0 +1,28 @@
+{
+  "name": "@santaka-ui/example-svelte-vite",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && vite build --ssr src/entry-server.ts --outDir dist/server",
+    "dev": "vite",
+    "start": "node server.mjs",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint .",
+    "test": "pnpm run build && playwright test"
+  },
+  "dependencies": {
+    "@santaka-ui/styles": "workspace:*",
+    "@santaka-ui/svelte": "workspace:*",
+    "@santaka-ui/tokens": "workspace:*",
+    "@santaka-ui/web-components": "workspace:*",
+    "svelte": "5.57.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "svelte-check": "4.7.7",
+    "typescript": "5.9.3",
+    "vite": "8.3.4"
+  }
+}
