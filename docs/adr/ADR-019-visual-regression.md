@@ -41,9 +41,13 @@ pinned Docker image.**
 
 - Baselines are generated and verified inside
   `mcr.microsoft.com/playwright:v1.64.0-noble` — the same version as the
-  `@playwright/test` dependency. `scripts/visual-baseline-docker.sh` is the
-  only sanctioned way to write a baseline: `--update` to rewrite, no argument
-  to verify. A baseline committed from a laptop is a diff waiting to happen.
+  `@playwright/test` dependency. `packages/web-components/scripts/visual-baseline-docker.mjs`
+  is the only sanctioned way to write a baseline: `--update` to rewrite, no
+  argument to verify. A baseline committed from a laptop is a diff waiting to
+  happen. It is Node rather than a shell script because `bash` on a Windows
+  checkout is often the WSL relay with no distribution installed; the shell
+  logic it spawns lives in `visual-baseline-entrypoint.sh`, which runs inside
+  the container where bash is guaranteed.
 - **Bumping `@playwright/test` without bumping the image tag is the failure
   mode to watch for.** A Chromium update changes text rendering, and the
   baselines must be regenerated in the new image in the same commit as the
