@@ -1,0 +1,270 @@
+---
+/**
+ * The CLI (plan.md §15: "Document supported setups and errors").
+ *
+ * Every claim here is read from `packages/cli/src` — the exit codes from
+ * `commands.ts` (`EXIT`), the messages from where they are emitted, and the
+ * guarantees from the headers of `fs-safe.ts` and `manifest.ts`. The refusals
+ * are quoted rather than paraphrased, because a reader searching an error
+ * message has to find the same string here.
+ */
+import Layout from "../../layouts/Layout.astro"
+---
+
+<Layout
+  title="The CLI"
+  description="Install, update, and troubleshoot Santaka UI components with the santaka CLI."
+>
+  <h1>The CLI</h1>
+
+  <p class="lede">
+    <code>santaka</code> copies component source into your project. It reads JSON, writes files, and
+    runs nothing: there is no field in the registry schema that names a script, and the CLI never
+    invokes your package manager.
+  </p>
+
+  <section>
+    <h2>Install modes</h2>
+    <p>
+      <strong>Source mode</strong> is the default and the mode this guide is about: the files the
+      registry entry describes are copied into your repository, so you own them from that moment on.
+      Every file is checked against the checksum the entry declares before it is written.
+    </p>
+    <p>
+      <strong>Package mode</strong> prints the install commands for the published packages instead
+      of running them. A scaffolder that shells out to a package manager cannot tell a network
+      failure from a permissions failure from a version conflict, so it does not try.
+    </p>
+  </section>
+
+  <section>
+    <h2>Supported setups</h2>
+    <p>
+      <code>init</code> and <code>add</code> detect the project from the files in the directory they
+      run against, and report the evidence for each conclusion rather than asking you to trust it.
+    </p>
+    <table>
+      <thead>
+        <tr><th>What</th><th>Detected from</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Framework</td>
+          <td>
+            <code>react-vite</code>, <code>nextjs</code>, <code>vue</code>, <code>nuxt</code>,
+            <code>svelte</code>, <code>astro</code>, or <code>vanilla</code>, from dependencies and
+            config files.
+          </td>
+        </tr>
+        <tr>
+          <td>Package manager</td>
+          <td><code>pnpm</code>, <code>npm</code>, <code>yarn</code>, or <code>bun</code>, from the lockfile. With no lockfile in sight it says so and assumes <code>npm</code>.</td>
+        </tr>
+        <tr>
+          <td>TypeScript</td>
+          <td>A <code>tsconfig.json</code>, or a <code>typescript</code> dependency.</td>
+        </tr>
+        <tr>
+          <td>Styling</td>
+          <td>Whatever styling setup it finds, reported as evidence.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <code>--framework &lt;name&gt;</code> overrides detection without silencing it — the report
+      still shows what was found and what was overridden. An unknown value fails with the supported
+      list rather than guessing a near match.
+    </p>
+  </section>
+
+  <section>
+    <h2>Commands</h2>
+    <table>
+      <thead>
+        <tr><th>Command</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>init</code></td>
+          <td>Detects the framework, reports the evidence, and prints the install commands for the chosen mode.</td>
+        </tr>
+        <tr>
+          <td><code>add &lt;component…&gt;</code></td>
+          <td>Copies component source. Resolves registry dependencies, refuses paths that escape the project, verifies checksums, and stops on a conflict.</td>
+        </tr>
+        <tr>
+          <td><code>list</code></td>
+          <td>Lists the available components and what is already installed.</td>
+        </tr>
+        <tr>
+          <td><code>doctor</code></td>
+          <td>Reports what the CLI can see in the project and what looks wrong.</td>
+        </tr>
+        <tr>
+          <td><code>diff [component]</code></td>
+          <td>Compares installed files against the manifest and prints a unified diff.</td>
+        </tr>
+        <tr>
+          <td><code>update</code></td>
+          <td>Reinstalls every component the manifest records.</td>
+        </tr>
+        <tr>
+          <td><code>theme init</code></td>
+          <td>Writes <code>santaka-theme.css</code> and tells you where to import it.</td>
+        </tr>
+        <tr>
+          <td><code>registry [url]</code></td>
+          <td>Lists registry sources, or adds one.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <code>--dry-run</code> shows what would change and writes nothing, on every command that
+      writes. <code>--cwd &lt;dir&gt;</code> runs against another directory. <code>--overwrite</code>
+      and <code>--skip</code> resolve a conflict, and they are the only way past one.
+    </p>
+  </section>
+
+  <section>
+    <h2>Exit codes</h2>
+    <table>
+      <thead>
+        <tr><th>Code</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>0</code></td><td>Success. Also a dry run, and also "already up to date" — nothing to do is not a failure.</td></tr>
+        <tr><td><code>1</code></td><td>Error: an unusable framework, an unknown component, a refused path, a failed checksum, a registry that would not load.</td></tr>
+        <tr><td><code>2</code></td><td>Conflict. Files already exist and have been edited since the CLI wrote them, or <code>diff</code> found drift.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The distinction is deliberate: <code>2</code> means the CLI stopped because a decision is
+      yours, not because something broke. It is the code <code>diff</code> uses in CI to mean
+      "installed files no longer match what was installed".
+    </p>
+  </section>
+
+  <section>
+    <h2>What it refuses to do</h2>
+    <p>
+      A registry entry is untrusted input. Its <code>files[].path</code> is a string a third party
+      wrote, so it is resolved, normalized, and confirmed to stay inside the target directory before
+      anything is written. A path like <code>../../.ssh/authorized_keys</code> is refused, not
+      sanitized:
+    </p>
+    <ul>
+      <li><code>path "…" contains a traversal segment</code></li>
+      <li><code>path "…" resolves outside the target directory</code></li>
+      <li><code>path contains a null byte</code></li>
+    </ul>
+    <p>It also refuses to install a file it cannot verify:</p>
+    <ul>
+      <li><code>&lt;item&gt;: source file &lt;path&gt; is not present in the published package</code></li>
+      <li><code>&lt;item&gt;: checksum mismatch for &lt;path&gt; — the published file is not the one the entry describes</code></li>
+    </ul>
+    <p>
+      And it does not overwrite your work. The CLI records the hash of what it wrote in
+      <code>santaka-manifest.json</code>; if a file's bytes have changed since, it stops and prints
+      what it found:
+    </p>
+    <pre><code>Nothing was written. Choose one:
+  --overwrite   replace the files above with the registry copy
+  --skip        leave them and install everything else</code></pre>
+  </section>
+
+  <section>
+    <h2>Errors, and what to do about them</h2>
+    <table>
+      <thead>
+        <tr><th>Message</th><th>Cause and fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Could not determine a framework.</code></td>
+          <td>Nothing in the directory looks like a supported project. Pass <code>--framework</code> with one of the supported names.</td>
+        </tr>
+        <tr>
+          <td><code>Unknown framework "…". Supported: …</code></td>
+          <td>The override is not a supported value. The list in the message is the whole set.</td>
+        </tr>
+        <tr>
+          <td><code>Name at least one component: santaka add button dialog</code></td>
+          <td><code>add</code> was run with no component names.</td>
+        </tr>
+        <tr>
+          <td><code>Unknown component(s): …</code></td>
+          <td>The name is not in the registry. The same output lists what is available; <code>list</code> shows it with install state.</td>
+        </tr>
+        <tr>
+          <td><code>registry &lt;url&gt; returned &lt;status&gt;</code></td>
+          <td>A remote registry source did not answer with a usable payload. Check the URL, and that it serves the registry JSON.</td>
+        </tr>
+        <tr>
+          <td>An entry was rejected during validation</td>
+          <td>A remote registry's entry does not match <code>registry-item-v1</code>. The rejected entry and the failing pointers are printed; the others still load.</td>
+        </tr>
+        <tr>
+          <td>Exit <code>2</code> with a list of paths</td>
+          <td>Those files have been edited since they were installed. Pass <code>--skip</code> to keep them, or <code>--overwrite</code> to replace them with the registry copy.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <code>doctor</code> is the fastest way to see which of these applies: it reports the detected
+      framework, package manager, TypeScript, styling, and config files, with the evidence for each,
+      and exits non-zero when it finds a problem.
+    </p>
+  </section>
+
+  <section>
+    <h2>What a failed run leaves behind</h2>
+    <p>
+      Nothing. Writes go through a journal: every file is copied aside before it is replaced, and a
+      failure replays the journal backwards. A half-installed component is worse than an uninstalled
+      one, because you cannot tell which half you have. The manifest is left untouched on failure
+      too, so a failed run is always safe to repeat.
+    </p>
+  </section>
+
+  <section>
+    <h2>Registry sources</h2>
+    <p>
+      The CLI ships with the bundled registry and can be pointed at others. A source is a URL to a
+      static registry index — the same JSON shape the published registry has, so a private registry
+      is the same artifact in another place, not a second format.
+    </p>
+    <p>
+      Sources live in <code>santaka-registries.json</code> in the project. Adding one is a deliberate
+      act: the source URL is printed before anything is written, so you know which third party you
+      are about to install from.
+    </p>
+    <p>
+      An entry that passes the schema is <em>well-formed</em>, not <em>trusted</em> — validating JSON
+      is not reviewing code. Schema validation always uses the copy of <code>registry-item-v1</code>
+      that ships with the CLI, never a schema fetched over the network.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+  table {
+    border-collapse: collapse;
+    inline-size: 100%;
+    margin-block: 1rem;
+  }
+  th,
+  td {
+    border: var(--stroke) solid var(--edge);
+    padding: 0.5rem 0.75rem;
+    text-align: start;
+    vertical-align: top;
+  }
+</style>

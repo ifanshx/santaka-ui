@@ -1,0 +1,199 @@
+---
+/**
+ * Forms guide.
+ *
+ * The behavior documented here is owned by the web components and proven by
+ * the test files named inline; every claim below is copied from that code and
+ * those comments, plus the FACE contract on `form-control-base.ts`.
+ */
+import Layout from "../../layouts/Layout.astro"
+---
+
+<Layout title="Forms" description="How Santaka UI form controls participate in a plain HTML form.">
+  <h1>Forms</h1>
+
+  <p class="lede">
+    A form control in this system participates in a plain <code>&lt;form&gt;</code>. The framework
+    adapter must not be what makes submission work: if a form only submits when React, Vue, or a
+    helper library collects the values, the control is broken.
+  </p>
+
+  <section>
+    <h2>Name and value</h2>
+    <p>
+      The platform is what submits, so the platform's rules are the contract. <code>name</code> is
+      what the form looks up; <code>value</code> is what arrives. A form-associated custom element
+      with no <code>name</code> is unnamed, and an unnamed control contributes nothing to
+      <code>FormData</code> — it is not submitted empty, it is not submitted at all.
+    </p>
+    <p>
+      This is not a hypothetical failure. Three of the React adapters (<code>Checkbox</code>,
+      <code>Switch</code>, <code>Select</code>) dropped <code>name</code> in an earlier revision.
+      The failure was invisible from inside React: the field rendered, took focus, validated, and
+      reported its value through <code>onValueChange</code>, and the form submitted without it. The
+      adapters' own tests run under jsdom, which has no form submission and no form-associated
+      custom element implementation, so nothing looked at <code>name</code> and nothing caught it.
+      An empty <code>name</code> is not a safe fallback either: the platform treats
+      <code>name=""</code> as a name and submits the control under it, so the adapters omit the
+      attribute entirely when no name is given.
+    </p>
+    <p>
+      The regression story and the fix are documented in
+      <code>packages/react/src/form-name.test.tsx</code>. That file is the jsdom half — it asserts
+      the adapters put <code>name</code> on the element. The browser half, where the claim is real,
+      is <code>examples/react-vite/e2e/form-submission.e2e.ts</code>: it renders every control
+      through <code>@santaka-ui/react</code>, submits a plain <code>&lt;form&gt;</code>, and reads
+      the entries from the browser's own <code>FormData</code>, not from React state.
+    </p>
+  </section>
+
+  <section>
+    <h2>Validation</h2>
+    <p>
+      <code>required</code>, <code>minlength</code>, <code>maxlength</code>, and
+      <code>pattern</code> become real attributes on the inner native control, so the browser does
+      the checking, the error bubble appears in the browser's own language, and <code>:invalid</code>
+      styling works without JavaScript. Constraint validation is never suppressed by the
+      component.
+    </p>
+    <p>
+      The consumer still owns the cases native validation cannot express — cross-field checks,
+      async checks — through two independent props. <code>invalid</code> marks the field invalid
+      before the reason is known; <code>error</code> carries the message. They are separate on
+      purpose: a field can be invalid before the consumer knows why, and an error message can be
+      present without the field being in an error state, such as a form-level summary listing
+      several fields. A field is invalid from either signal, and <code>error</code>'s presence
+      drives <code>aria-invalid</code>.
+    </p>
+    <p>
+      What the component does not do is block submission: the browser blocks submission on a
+      <code>required</code> field; the component does not, and React does not — that split is
+      asserted in <code>examples/react-vite/e2e/form-submission.e2e.ts</code>.
+    </p>
+  </section>
+
+  <section>
+    <h2>The FACE callbacks</h2>
+    <p>
+      <code>sk-input</code>, <code>sk-textarea</code>, and <code>sk-checkbox</code> are
+      form-associated custom elements: they call <code>attachInternals()</code>, push value and
+      validity with <code>setFormValue()</code>, and implement three callbacks.
+    </p>
+    <ul>
+      <li>
+        <code>formResetCallback()</code> — reset restores the initial value, the one the adapter
+        rendered, not the last typed one.
+      </li>
+      <li>
+        <code>formDisabledCallback(disabled)</code> — reflects a disabled ancestor
+        <code>fieldset</code>. A disabled control withholds its field from submission, which is why
+        the submission evidence tests name the paths that are withheld rather than submitted
+        empty.
+      </li>
+      <li>
+        <code>formStateRestoreCallback(state, mode)</code> — restores values after a browser
+        session restore or autocomplete refill.
+      </li>
+    </ul>
+    <p>
+      <strong>The bfcache caveat, exactly as the test file documents it:</strong> the obvious
+      candidate trigger, the back/forward cache, does not call the callback. Measured in Chromium,
+      navigating away and calling <code>page.goBack()</code> restores the DOM intact, so the value
+      survives without <code>formStateRestoreCallback</code> running once — a test built on that
+      navigation would pass with the callback deleted. No session restore or autocomplete refill is
+      drivable from a page test either. So
+      <code>packages/web-components/e2e/form-state-restore.e2e.ts</code> invokes the callback
+      directly — <code>el.formStateRestoreCallback(state, "restore")</code> — the exact call the
+      platform makes, with the exact arguments. What that suite does <em>not</em> prove is that the
+      platform calls it; that is the browser's contract, not this library's. What it proves is the
+      part that is this library's: that when the call arrives, the value lands in the prop, in the
+      rendered control, and in <code>FormData</code>; that it fires no <code>sk-value-change</code>
+      (a restore is not a user action); and that a mode other than <code>"restore"</code> is
+      ignored.
+    </p>
+  </section>
+
+  <section>
+    <h2>The checkbox is a boolean, not a string</h2>
+    <p>
+      The shared text base speaks strings, so <code>sk-checkbox</code> owns its own boolean path
+      while reusing the field wiring. The native <code>change</code> event carries the same
+      <code>value</code> attribute whether the box was just checked or unchecked; translating at
+      the accessor boundary was the first attempt and got unchecking wrong — every toggle read back
+      as checked. So the component maps the boolean itself: a checked box submits its
+      <code>value</code> (<code>"on"</code> by default, the platform default), an unchecked box is
+      withheld entirely rather than submitted empty.
+    </p>
+    <p>
+      <code>indeterminate</code> is visual state, not form state. It is property-only on the
+      platform — there is no attribute — so the prop is written to the DOM node after each render.
+      An indeterminate checkbox submits as unchecked, which is what the platform does: a
+      half-answer is not an answer.
+    </p>
+  </section>
+
+  <section>
+    <h2>Using the controls in React</h2>
+    <p>
+      The adapter's channel for value changes is <code>onValueChange</code>, not
+      <code>onChange</code>. The element fires <code>sk-value-change</code>
+      <strong>only for user-initiated changes</strong>, never for a programmatic update, and the
+      adapter forwards that event's detail: a string for <code>Input</code>,
+      <code>Textarea</code>, <code>Select</code>, and <code>RadioGroup</code>; a boolean for
+      <code>Switch</code>'s <code>checked</code>. The event carries a <code>CustomEvent</code>
+      detail, which is what makes <code>onValueChange=&#123;(value) => &#123;…&#125;&#125;</code>
+      typed rather than an <code>onChange</code> passthrough.
+    </p>
+    <p>
+      Name and submitted value stay consumer-owned through ordinary props: <code>name</code>
+      reaches the element as an attribute (omitted, never empty, when unspecified), and
+      <code>value</code> chooses what the form receives — the checkbox test asserts
+      <code>value="accepted"</code> reads back as a property with the default still
+      <code>"on"</code>, matching a native checkbox.
+    </p>
+    <pre><code>import &#123; Input &#125; from "@santaka-ui/react"
+
+&#60;form name="signup"&#62;
+  &#60;Input
+    name="email"
+    type="email"
+    required
+    label="Email"
+    error=&#123;errors.email&#125;
+    onValueChange=&#123;(value) =&#62; setEmail(value)&#125;
+  /&#62;
+&#60;/form&#62;</code></pre>
+  </section>
+
+  <section>
+    <h2>What is proven where</h2>
+    <ul>
+      <li>
+        <code>packages/react/src/form-name.test.tsx</code> — the adapters forward <code>name</code>
+        and omit it entirely when unspecified; that file is where the regression is caught.
+      </li>
+      <li>
+        <code>examples/react-vite/e2e/form-submission.e2e.ts</code> — every control submits through
+        the browser's own <code>FormData</code>; unchecked/off controls are withheld; the browser
+        blocks on <code>required</code>; reset restores initial values; values reach
+        <code>FormData</code>, not React state.
+      </li>
+      <li>
+        <code>packages/web-components/e2e/form-state-restore.e2e.ts</code> —
+        <code>formStateRestoreCallback</code> for all six form-associated controls, including the
+        bfcache caveat and the non-<code>"restore"</code> mode being ignored.
+      </li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+</style>

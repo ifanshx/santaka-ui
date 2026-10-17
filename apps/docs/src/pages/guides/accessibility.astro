@@ -1,0 +1,155 @@
+---
+/**
+ * Accessibility (ADR-008, plan.md §17).
+ *
+ * What is automated here is what the e2e suite measures, not what the library
+ * intends. The manual gate at the end stays open on purpose.
+ */
+import Layout from "../../layouts/Layout.astro"
+---
+
+<Layout title="Accessibility" description="What Santaka UI's accessibility tests measure, and what automation cannot cover.">
+  <h1>Accessibility</h1>
+
+  <p class="lede">
+    Santaka UI's accessibility evidence is measurement: every shipped component is scanned
+    and measured in a real browser on every run. That catches regressions the moment they
+    land. It does not certify a component — the parts of WCAG that need a person are listed
+    at the end, and one of those gates is deliberately still open.
+  </p>
+
+  <section>
+    <h2>What the automated suite scans</h2>
+    <p>
+      The axe scans (<code>e2e/a11y.e2e.ts</code>) run against the vanilla example page,
+      which mounts every component in its documented states, so a violation names a shipped
+      component rather than a test fixture. The ruleset is pinned to <code>wcag2a</code>,
+      <code>wcag21a</code>, <code>wcag2aa</code>, and <code>wcag21aa</code> — the WCAG
+      2.0/2.1 A+AA rules axe implements — so an axe release that adds rules cannot silently
+      change what "passing" means, and no rule is disabled. Three whole-page passes run:
+      light theme, dark theme (the same markup against the dark palette, so contrast
+      re-evaluates), and again after an intentionally invalid form submission — the state
+      where label wiring and error contrast matter most and a rest-state scan never looks.
+    </p>
+  </section>
+
+  <section>
+    <h2>Touch targets are measured, not hardcoded</h2>
+    <p>
+      WCAG 2.2 SC 2.5.8 (Target Size, Minimum) asks for a 24×24 CSS-pixel target. Santaka
+      sets its own minimum well above that: <code>--sk-touch-min</code> is <code>2.75rem</code>
+      (44px). The touch-target suite (<code>e2e/touch-target.e2e.ts</code>) asserts the
+      token, not the number: the minimum is read from the root element's computed style and
+      resolved to pixels in the browser before any comparison. This matters because
+      asserting <code>&gt;= 44</code> keeps passing even if the token changes — nine
+      assertions across the suite do exactly that, and the file records them as follow-up
+      migration work rather than pretending the guard is airtight.
+    </p>
+    <p>
+      Every interactive component has its activation box measured against the token:
+      button, icon-button, input, textarea, select, checkbox, switch, radio-group, and the
+      accordion summary (the summary is the activation target; the drawn marker and heading
+      sit inside it). Two are deliberately exempt from the 44px commitment, and the reasons
+      are WCAG, not convenience:
+    </p>
+    <ul>
+      <li>
+        <strong>link</strong> — SC 2.5.8 exempts a target whose size is constrained by the
+        line of text it sits in. Would be non-compliant by spec if measured against 44px.
+        It is still measured, and held to the WCAG floor of 24px.
+      </li>
+      <li>
+        <strong>tabs</strong> — <code>sk-tab</code> measures 39px: above the WCAG 24px
+        minimum, below the 44px commitment. The test records this as a finding rather than
+        rounding it away.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Focus: what happens when a dialog closes</h2>
+    <p>
+      The dialog and alert-dialog browser tests assert the focus behavior directly.
+      On open, initial focus lands inside the panel — a keyboard user is somewhere the
+      moment it appears. While open, focus stays trapped in the <code>&lt;dialog&gt;</code>.
+      On close (Escape, the action buttons, or the alert dialog's confirm path), focus
+      returns to the invoker — the trigger button that opened it. The comment in
+      <code>dialog.e2e.ts</code> states why this is the assertion that matters most:
+      without it, a keyboard user is dropped at the top of the document after every
+      dialog. <code>alert-dialog.e2e.ts</code> records the opposite hard case honestly:
+      because it renders no host slot for a trigger, nothing at the host level can act as
+      an invoker besides page code.
+    </p>
+  </section>
+
+  <section>
+    <h2>Reduced motion and forced colors, in CSS</h2>
+    <p>
+      Both are handled in the stylesheets rather than left to chance. By file count
+      (verified): <code>prefers-reduced-motion</code> appears in 13 of the component CSS
+      files plus <code>glass.css</code>, <code>primitives.css</code>, and
+      <code>reset.css</code>; <code>forced-colors</code> appears in 23 of the component CSS
+      files plus <code>glass.css</code> and <code>primitives.css</code>. The
+      reduced-motion blocks do not merely shorten the animation — in the button, for
+      instance, they set <code>translate: none</code>, removing the press transform
+      entirely rather than letting a fast frame of it through.
+    </p>
+  </section>
+
+  <section>
+    <h2>Responsive and RTL at narrow widths</h2>
+    <p>
+      The responsive audit (<code>e2e/responsive.e2e.ts</code>) turns the fluid-by-
+      construction design into a checked claim. At 320, 360, and 768px, the page does not
+      scroll sideways — horizontally within one pixel of the viewport width. A real
+      section of the example page survives being squeezed to 240px: nothing inside pushes
+      it wider. The narrow end of the phones the supported tiers name — 320px — is the
+      floor, not a device census.
+    </p>
+    <p>
+      In RTL, at 320px, the page still does not scroll sideways, and the accordion marker
+      mirrors: measured as the same distance from its summary's inline-start edge in both
+      directions, which is what mirroring means here rather than a visual check. The touch
+      target also still clears <code>--sk-touch-min</code> at the narrowest width, with the
+      box measured and asserted not to have been pushed off the edge of the viewport.
+    </p>
+  </section>
+
+  <section>
+    <h2>What automation cannot cover</h2>
+    <p>
+      The axe helper itself (<code>e2e/a11y.ts</code>) records the limit plainly: axe-core
+      covers what a rule can check — semantic names, contrast, ARIA wiring, landmark
+      structure — and cannot check keyboard flow or screen-reader output. It is a
+      regression net across the whole example page on every commit; the per-component
+      browser tests remain the keyboard-and-behavior evidence. plan.md §17 marks
+      "Keyboard navigation and focus management have been manually reviewed" as unchecked
+      — that gate needs a human, and this guide does not claim it. The per-component
+      browser tests remain the keyboard-and-behavior evidence: dialogs trap and
+      return focus, and the other interaction tests assert keyboard and ARIA
+      behavior in a real browser rather than inferring it from source.
+    </p>
+  </section>
+
+  <section>
+    <h2>Source files</h2>
+    <pre><code>packages/web-components/e2e/a11y.ts
+packages/web-components/e2e/a11y.e2e.ts
+packages/web-components/e2e/touch-target.e2e.ts
+packages/web-components/e2e/responsive.e2e.ts
+packages/web-components/e2e/conventions.e2e.ts
+packages/web-components/e2e/dialog.e2e.ts
+packages/web-components/e2e/alert-dialog.e2e.ts</code></pre>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+</style>

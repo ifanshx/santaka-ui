@@ -1,0 +1,202 @@
+---
+/**
+ * Theming and design tokens (ADR-002).
+ *
+ * The quick-start lists this guide because theming is the first customization
+ * most consumers attempt. The content is the token decision: semantic tokens
+ * with fallbacks, two themes, one override surface — and what is already
+ * guaranteed (contrast gates, forced colors, reduced motion) so a theme change
+ * does not have to re-earn those.
+ */
+import Layout from "../../layouts/Layout.astro"
+---
+
+<Layout title="Theming and design tokens" description="How Santaka UI themes work: token tiers, CSS custom property overrides, light/dark, and what is already guaranteed.">
+  <h1>Theming and design tokens</h1>
+
+  <p class="lede">
+    A component never hardcodes a color. It reads a semantic token with a literal
+    fallback — <code>var(--sk-color-primary, #6d28d9)</code> — so theming is
+    <em>overriding variables on a scope</em>, not patching component CSS. The
+    fallback is the reason a component still renders correctly before any theme
+    stylesheet loads; once the theme is imported, the token wins everywhere.
+  </p>
+
+  <section>
+    <h2>The three tiers</h2>
+    <p>
+      Tokens are authored in DTCG JSON under <code>packages/tokens/src</code> and
+      compiled by the pipeline described in ADR-002 (a hand-rolled Node build, no
+      style-dictionary, because the build must fail loudly on an unknown
+      reference or a failed contrast gate before writing anything).
+    </p>
+    <pre><code>color.primitives.json     primitives: `color.&lt;ramp&gt;.&lt;step&gt;`, e.g. `color.ink.800`
+dimensions.tokens.json    space, radius, border, shadow, motion, glass, type
+themes/light.tokens.json  semantic roles: `color.primary`, `color.text`, …
+themes/dark.tokens.json   the same roles, dark values</code></pre>
+    <p>
+      Primitives are internal: the build deletes them from the resolver output,
+      so <code>color.ink.800</code> never ships as a CSS variable. The semantic
+      roles are the published contract — <code>--sk-color-text</code>,
+      <code>--sk-color-primary</code>, <code>--sk-color-border-strong</code>, and
+      so on. Components consume semantic tokens plus the theme-independent
+      dimensions (<code>--sk-space-4</code>, <code>--sk-border-thick</code>,
+      <code>--sk-duration-control</code>).
+    </p>
+    <p>
+      <strong>Override the semantic tier.</strong> Redefining a primitive
+      variable changes nothing (they are not emitted); restating component CSS
+      is exactly the maintenance this design removes. One redeclaration of
+      <code>--sk-color-primary</code> re-fills the primary button, the focus
+      ring text, and every other consumer of that role.
+    </p>
+  </section>
+
+  <section>
+    <h2>Why components carry fallbacks</h2>
+    <p>
+      In <code>sk-button.css</code> the host block maps semantic tokens onto
+      component-scoped variables:
+    </p>
+    <pre><code>sk-button &#123;
+  --sk-button-bg: var(--sk-color-primary, #6d28d9);
+  --sk-button-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-button-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  ...
+&#125;</code></pre>
+    <p>
+      Each <code>var()</code> carries the token value as a literal fallback
+      (section 4 of the plan requires every semantic token to document its
+      fallback). If a theme stylesheet is missing or renamed, a component does
+      not throw — it quietly renders the fallback, which is slightly wrong but
+      never broken. This is also why a token <em>rename</em> fails silently, and
+      why the e2e suite asserts computed values rather than trusting CSS files.
+    </p>
+  </section>
+
+  <section>
+    <h2>How to theme</h2>
+    <p>
+      Redeclare a <code>--sk-*</code> variable after the token stylesheets, at
+      the scope you want it to apply:
+    </p>
+    <pre><code>:root &#123;
+  --sk-color-primary: oklch(0.62 0.19 260);
+&#125;
+
+/* or scoped to a subtree */
+[data-sk-theme="dark"] aside &#123;
+  --sk-color-surface: oklch(0.2 0.02 280);
+&#125;</code></pre>
+    <p>
+      Specificity does the rest: a component resolves
+      <code>var(--sk-color-primary)</code> at runtime from its nearest declaring
+      ancestor, so a root override themes the app and a subtree override themes
+      one panel. No build step, no theme object, no JavaScript.
+    </p>
+  </section>
+
+  <section>
+    <h2>Light and dark</h2>
+    <p>
+      The build emits one stylesheet per theme:
+      <code>light.css</code> under <code>:root</code> and <code>dark.css</code>
+      under <code>[data-sk-theme="dark"]</code>. Dark is selected by attribute,
+      so it works with server rendering and without JavaScript — set
+      <code>data-sk-theme="dark"</code> on any ancestor. Direction follows
+      <code>dir="rtl"</code> the same way; there is no RTL build and no second
+      stylesheet.
+    </p>
+    <p>
+      Run <code>theme init</code> (<code>santaka</code> CLI,
+      <code>packages/cli/src/commands.ts</code>, <code>themeInit</code>) and it
+      writes <code>santaka-theme.css</code> into your project root. The file
+      imports both theme stylesheets (<code>@santaka-ui/tokens/css/light.css</code>
+      and <code>dark.css</code>) and carries the override contract as comments:
+      the dark attribute, the <code>:root</code> override example, and the RTL
+      note. It is written once, after the token and component stylesheets, and
+      is the file you are expected to edit — not saved from anywhere. Running it
+      again is idempotent: if the file already matches, it reports "already up to
+      date".
+    </p>
+  </section>
+
+  <section>
+    <h2>Contrast is a gate, not a hope</h2>
+    <p>
+      The token build runs a contrast gate before it writes anything (<code>
+      CONTRAST_GATES</code> in <code>packages/tokens/scripts/build-tokens.mjs</code>):
+      14 pair checks per theme, 27 measured pairs total (the shadow gate is
+      light-only, since a dark-theme shadow is gated through
+      <code>color.border-strong</code>). Text pairs are held to 4.5:1, surfaces
+      and indicators to 3:1. Any failure stops the build —
+      <code>dist/css/contrast-report.txt</code> records every measured ratio,
+      e.g. <code>color.text</code> at 18.21:1 (light) and 17.54:1 (dark),
+      <code>color.text-muted</code> at 6.64:1 and 7.96:1.
+    </p>
+    <p>
+      The e2e suite asserts the shipped colors, not just the build. <code>
+      materials.e2e.ts</code> verifies glass is a real material — nonzero radius,
+      a parsed <code>blur()</code> radius of 24px, background alpha at least 0.7
+      so text stays readable even where backdrop-filter degrades — and that it
+      differs across themes. <code>text.e2e.ts</code> asserts muted text resolves
+      to a real, non-transparent color distinct from primary text: the 4.5:1
+      gate lives in the build, and the test confirms the gated color actually
+      arrives. When you override a semantic token, you inherit the plumbing but
+      not the gate — keep <code>color.text</code>-on-<code>color.surface</code>
+      at 4.5:1 or better.
+    </p>
+  </section>
+
+  <section>
+    <h2>What components already handle</h2>
+    <p>
+      A theme change does not have to re-earn accessibility behaviors the
+      components carry:
+    </p>
+    <ul>
+      <li>
+        <strong>Reduced motion:</strong> 13 component stylesheets under
+        <code>packages/web-components/src/components/*/&lt;component&gt;.css</code>
+        (<code>sk-accordion</code>, <code>sk-button</code>,
+        <code>sk-checkbox</code>, <code>sk-icon-button</code>,
+        <code>sk-input</code>, <code>sk-link</code>, <code>sk-progress</code>,
+        <code>sk-radio-group</code>, <code>sk-select</code>,
+        <code>sk-skeleton</code>, <code>sk-spinner</code>,
+        <code>sk-switch</code>, <code>sk-textarea</code>) carry
+        <code>@media (prefers-reduced-motion: reduce)</code> blocks. They remove
+        the movement — <code>translate: none</code>, <code>animation: none</code>,
+        <code>transition: none</code> — rather than shortening it, because a 1ms
+        slide is still a slide.
+      </li>
+      <li>
+        <strong>Forced colors:</strong> 22 component stylesheets carry
+        <code>@media (forced-colors: active)</code> overrides
+        (<code>sk-separator</code> is the one exception it documents itself: a
+        Canvas-colored hairline is already the forced palette's intent). The
+        pattern remaps the component's own variables to system colors —
+        <code>ButtonFace</code>/<code>ButtonText</code> for buttons,
+        <code>CanvasText</code> for borders, <code>LinkText</code> for links —
+        and drops the shadow
+        (<code>--sk-shadow-brutal-none</code>) so forced palettes do not draw a
+        second boundary.
+      </li>
+    </ul>
+    <p>
+      So theming stays what it is: redeclarations of <code>--sk-*</code>
+      variables in one file, on a scope, per theme — with the contrast gates,
+      dark mode, and media-query handling already done.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border: var(--stroke) solid var(--edge);
+  }
+</style>
