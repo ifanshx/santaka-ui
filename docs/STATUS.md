@@ -812,3 +812,36 @@ ADR-013 leaves one question unresolved: whether a boolean that toggles a
 shipped props sit on it — `sk-link.external`, `sk-link.subtle`, `sk-badge.dot`.
 The conformance test enumerates them by name, so a new unprefixed presentation
 boolean fails rather than inheriting the ambiguity.
+
+### The entrance that was never played
+
+`sk-glass-enter` was declared in `styles/src/glass.css` and referenced by
+nothing. Every overlay looked right at rest, so nothing failed: the keyframes
+were a comment with a `@keyframes` in front of it. Section 2 splits motion by
+layer — controls press on `ease-arcade`, overlays float on `ease-glass` — and a
+static overlay is that half of the split missing.
+
+The fix also exposed a second gap that a selector-level reading hides. Stencil
+scopes component CSS, so `sk-alert-dialog` did not inherit the rule written for
+`sk-dialog` even though both wear the same `.sk-dialog__panel`; the most urgent
+overlay in the system was the one that appeared with no transition. Its
+stylesheet said the reduced-motion ruling lived in `glass.css`, which was true
+of a rule that had no animation to turn off.
+
+The tests assert the animation that *started*, not the declared property — a
+rule that exists but loses the cascade still computes to `animation-name: none`
+— and they compare the duration and curve against the tokens rather than against
+literals, because an overlay that animated on the control timings would still
+animate, just on the wrong layer.
+
+Getting that assertion right took three attempts, and the two failures are worth
+recording. Sampling `getAnimations()` failed on the toast, whose 280ms entrance
+had already finished by the time a visibility assertion had polled once.
+Recording `animationstart` and reading the array immediately afterwards failed on
+every overlay after the first, because the event is dispatched on the next
+frame — and the dialog only passed because it happened to lose that race to a
+slower poll. The test now *waits* for the event.
+
+Negative-tested twice: replacing the dialog's `animation` with `none` fails with
+"declares no entrance animation", and removing the alert dialog's rule — the
+component that had none — fails with "declared but never started".

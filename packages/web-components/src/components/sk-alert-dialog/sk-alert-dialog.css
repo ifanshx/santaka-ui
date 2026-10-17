@@ -6,12 +6,33 @@
  * the danger stroke on the panel's top edge: an interruption should look like
  * one before a single word is read.
  *
- * There is no reduced-motion block here: the entrance animation's reduced
- * ruling lives in glass.css, which this panel wears.
+ * The reduced-motion ruling for the entrance sits below, beside the rule it
+ * turns off, because Stencil scopes this stylesheet and the dialog's copy
+ * cannot reach it.
  */
 
 sk-alert-dialog .sk-dialog__panel {
   border-block-start: var(--sk-border-thick, 3px) solid var(--sk-color-danger, #dc2626);
+}
+
+/*
+ * The alert dialog shares the dialog's panel, but not its stylesheet: Stencil
+ * scopes component CSS, so the entrance rule in `sk-dialog.css` does not reach
+ * here. Without this rule the most urgent overlay in the system was the one
+ * that appeared with no transition at all — the comment above used to claim
+ * otherwise, pointing at a `glass.css` reduced-motion rule that had no
+ * animation to reduce.
+ */
+sk-alert-dialog .sk-dialog__panel[open] {
+  animation: sk-glass-enter var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+/* A 1 ms scale-up is still a scale-up, so reduced motion removes it. */
+@media (prefers-reduced-motion: reduce) {
+  sk-alert-dialog .sk-dialog__panel[open] {
+    animation: none;
+  }
 }
 
 sk-alert-dialog .sk-dialog__panel .sk-alert-dialog__actions {

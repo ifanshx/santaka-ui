@@ -544,6 +544,16 @@ whose overshoot past 1.0 is what makes a press visibly spring back. Floating
 overlays use the `overlay-*` durations and `ease-glass`, which starts fast and
 settles long.
 
+> **Shipped, and what it cost.** The split is only real where something reads
+> it. `sk-glass-enter` was defined and applied by nothing until all four
+> floating components — Dialog, Alert Dialog, Toast, Tooltip — were wired to
+> `--sk-duration-overlay` and `--sk-ease-glass`. Alert Dialog needed its own
+> rule rather than inheriting Dialog's: Stencil scopes component CSS, so a
+> shared class name does not share a stylesheet. `materials.e2e.ts` now asserts
+> the *running* animation and its duration and curve, because a declared rule
+> that loses the cascade still reports `animation-name: none` and an overlay on
+> the control timings still animates — just on the wrong layer.
+
 Reduced motion is implemented once, as a global property override rather than a
 token override — the shipped mechanism is in `styles/src/reset.css`:
 

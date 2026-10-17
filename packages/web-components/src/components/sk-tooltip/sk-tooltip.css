@@ -35,6 +35,22 @@ sk-tooltip[data-state="closed"] .sk-tooltip__panel {
   display: none;
 }
 
+sk-tooltip[data-state="open"] .sk-tooltip__panel {
+  /* The float timing belongs to the floating layer, not to the control layer:
+     a tooltip is an overlay, so it enters with the glass curve and the overlay
+     duration rather than the 90–180 ms arcade timings the chrome uses. */
+  animation: sk-glass-enter var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+/* A 1 ms entrance is still an entrance — the panel would pop rather than fade —
+   so reduced motion removes the animation instead of shortening it. */
+@media (prefers-reduced-motion: reduce) {
+  sk-tooltip[data-state="open"] .sk-tooltip__panel {
+    animation: none;
+  }
+}
+
 /* Stencil's scoped-mode slot manager writes `hidden` on elements it thinks
    are empty slot fallbacks — including this panel, which hosts a `<slot>` it
    built. An open tooltip with the stray attribute must still show; the state

@@ -55,6 +55,29 @@ sk-dialog .sk-dialog__panel[hidden][open] {
   display: flex;
 }
 
+/*
+ * The dialog is a floating layer, so it enters on the glass timing: the
+ * overlay duration and the glass curve, not the 90–180 ms arcade timings the
+ * chrome uses. `sk-glass-enter` lives in `styles/src/glass.css` beside the
+ * material it belongs to.
+ *
+ * The rule keys off `[open]` because that is the platform's own signal that
+ * the dialog was shown; the panel is in the DOM from first render, so there is
+ * no re-insertion to animate on.
+ */
+sk-dialog .sk-dialog__panel[open] {
+  animation: sk-glass-enter var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+/* Reduced motion removes the entrance rather than shortening it: a 1 ms
+   scale-up is still a scale-up. */
+@media (prefers-reduced-motion: reduce) {
+  sk-dialog .sk-dialog__panel[open] {
+    animation: none;
+  }
+}
+
 /* The scrim is the platform's ::backdrop. It is translucent ink, not blur:
    the glass panel already blurs what is directly under it, and double-blurring
    the whole page is expensive and looks like a bug. */

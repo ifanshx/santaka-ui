@@ -46,8 +46,9 @@
   }
 }
 
-/* Overlay entrance, referenced by the Tier 2 floating components when they
-   land: a short scale-up with a blur crossfade rather than a hard cut. */
+/* Overlay entrance: a short scale-up with a blur crossfade rather than a hard
+   cut. Used by the floating components — `sk-dialog`, `sk-alert-dialog`,
+   `sk-toast`, and `sk-tooltip` — on the overlay timing, not the control one. */
 @keyframes sk-glass-enter {
   from {
     opacity: 0;
@@ -63,6 +64,14 @@
 /*
  * A 1ms entrance is still an entrance — the panel would pop rather than fade —
  * so reduced motion removes the animation instead of shortening it.
+ *
+ * This rule is the material's own escape hatch, but it is not what turns the
+ * overlay entrance off: `.sk-glass` is one class, and the components animate
+ * `sk-dialog .sk-dialog__panel[open]` and its siblings at a higher specificity,
+ * which a plain `.sk-glass` rule cannot outrank even inside a media query. Each
+ * component therefore carries its own `prefers-reduced-motion` block beside the
+ * rule it turns off. Keep this one for consumers who animate `.sk-glass`
+ * themselves.
  */
 @media (prefers-reduced-motion: reduce) {
   .sk-glass {

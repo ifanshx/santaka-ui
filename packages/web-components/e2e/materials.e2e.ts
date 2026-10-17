@@ -1,4 +1,4 @@
-import { expect, test, type Locator } from "@playwright/test"
+import { expect, test, type Locator, type Page } from "@playwright/test"
 
 /**
  * The neo-brutalist and glass system, asserted against real Chromium.
@@ -252,4 +252,162 @@ test("the display face and the heavy display steps exist", async ({ page }) => {
     getComputedStyle(document.documentElement).getPropertyValue("--sk-text-display-weight").trim(),
   )
   expect(Number.parseInt(weight, 10)).toBeGreaterThanOrEqual(800)
+})
+
+/**
+ * The floating layer animates, and it animates on its own timing.
+ *
+ * `sk-glass-enter` was defined in `glass.css` and referenced by nothing: the
+ * keyframes existed, every overlay looked correct at rest, and no test noticed
+ * because none asked whether opening a panel started an animation. The split in
+ * section 2 is that chrome presses on the arcade timings and overlays float on
+ * the glass ones, so a static overlay is half the design missing.
+ *
+ * The assertion is on the animation that actually started, not on the declared
+ * property: a rule that exists but loses the cascade still computes to
+ * `animation-name: none`, and a rule that wins still proves nothing about
+ * whether the element was ever rendered while it ran.
+ */
+const OVERLAYS: Array<{
+  tag: string
+  panel: string
+  open: (page: Page) => Promise<void>
+  close: (page: Page) => Promise<void>
+}> = [
+  {
+    tag: "sk-dialog",
+    panel: "sk-dialog .sk-dialog__panel",
+    open: (page) => page.locator('#example-dialog [slot="trigger"]').click(),
+    close: (page) => page.keyboard.press("Escape"),
+  },
+  {
+    // A separate element and a separate stylesheet: Stencil scopes component
+    // CSS, so this one needs its own entrance rule to animate at all.
+    //
+    // It also refuses Escape by design — an alert demands a decision — so
+    // closing it means pressing the action that keeps the repository.
+    tag: "sk-alert-dialog",
+    panel: "sk-alert-dialog .sk-dialog__panel",
+    open: (page) => page.locator("#alert-open").click(),
+    close: (page) => page.locator("#alert-cancel").click(),
+  },
+  {
+    tag: "sk-tooltip",
+    panel: 'sk-tooltip[placement="top"] .sk-tooltip__panel',
+    open: (page) => page.locator('sk-tooltip[placement="top"] [slot="trigger"]').hover(),
+    close: (page) => page.mouse.move(0, 0),
+  },
+  {
+    // Raised through the page's own helper rather than by toggling an
+    // attribute on the static fixture: this is the path a real toast takes,
+    // and it produces a fresh element whose entrance has not already played.
+    tag: "sk-toast",
+    // Scoped to the region the page fills on demand: the static fixture above
+    // it is also an sk-toast, and `.first()` was selecting that one.
+    panel: "#toast-region sk-toast .sk-toast__panel",
+    open: (page) => page.locator("#toast-error").click(),
+    close: (page) => page.locator("#toast-region sk-toast .sk-toast__close").last().click(),
+  },
+]
+
+test("opening an overlay runs the glass entrance on the overlay timing", async ({ page }) => {
+  // Record what actually started, rather than sampling "is it running now".
+  //
+  // Two earlier versions of this test were wrong in instructive ways. Sampling
+  // `getAnimations()` failed on the toast, whose 280ms entrance had already
+  // finished by the time a visibility assertion had polled. Recording
+  // `animationstart` and reading the array immediately afterwards failed on
+  // every overlay after the first: the event is dispatched on the next frame,
+  // and only the dialog happened to lose that race to a slower poll. The
+  // assertion below therefore *waits* for the event instead of reading it.
+  await page.evaluate(() => {
+    ;(window as unknown as { __entrances: string[] }).__entrances = []
+    document.addEventListener(
+      "animationstart",
+      (event) => {
+        const name = (event as AnimationEvent).animationName
+        if (name) (window as unknown as { __entrances: string[] }).__entrances.push(name)
+      },
+      true,
+    )
+  })
+
+  for (const overlay of OVERLAYS) {
+    await page.evaluate(() => {
+      ;(window as unknown as { __entrances: string[] }).__entrances = []
+    })
+
+    await overlay.open(page)
+
+    const panel = page.locator(overlay.panel).first()
+    await expect(panel, `${overlay.tag} panel did not appear`).toBeVisible({ timeout: 3000 })
+
+    await expect
+      .poll(
+        () => page.evaluate(() => (window as unknown as { __entrances: string[] }).__entrances),
+        { message: `${overlay.tag} entrance is declared but never started`, timeout: 3000 },
+      )
+      .toContain("sk-glass-enter")
+
+    const timing = await panel.evaluate((el) => {
+      const cs = getComputedStyle(el)
+      return {
+        declared: cs.animationName,
+        duration: cs.animationDuration,
+        easing: cs.animationTimingFunction,
+      }
+    })
+
+    expect(timing.declared, `${overlay.tag} declares no entrance animation`).toBe("sk-glass-enter")
+
+    // The timing is the other half of the claim: a float that entered on the
+    // control timings would still animate, just on the wrong layer. The
+    // expected values are read from the tokens rather than written as literals:
+    // a test pinning `0.28s` keeps passing after the token changes, which is
+    // the defect the touch-target suite exists to avoid.
+    const tokens = await page.evaluate(() => {
+      const root = getComputedStyle(document.documentElement)
+      return {
+        duration: root.getPropertyValue("--sk-duration-overlay").trim(),
+        easing: root.getPropertyValue("--sk-ease-glass").trim(),
+      }
+    })
+    expect(tokens.duration, "--sk-duration-overlay is missing").not.toBe("")
+    expect(tokens.easing, "--sk-ease-glass is missing").not.toBe("")
+    // Compared in milliseconds: the token says `280ms` and the computed value
+    // says `0.28s`, and both are the same duration.
+    const toMs = (value: string) =>
+      value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000
+    expect(toMs(timing.duration), `${overlay.tag} does not use --sk-duration-overlay`).toBe(
+      toMs(tokens.duration),
+    )
+    // Compared with whitespace stripped: Chromium's serialization of the curve
+    // is not required to match the token's spelling character for character,
+    // and the numbers are what the design specifies.
+    expect(timing.easing.replace(/\s/g, ""), `${overlay.tag} does not use --sk-ease-glass`).toBe(
+      tokens.easing.replace(/\s/g, ""),
+    )
+
+    // Close it again so the next overlay starts from a clean page state. Each
+    // overlay leaves by its own route; Escape alone would strand the alert.
+    await overlay.close(page)
+  }
+})
+
+test("reduced motion removes the overlay entrance rather than shortening it", async ({ page }) => {
+  // A 1ms scale-up is still a scale-up. The chrome tests assert the same thing
+  // for `translate`; this is the floating-layer half of that contract.
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.reload()
+  await page.locator('#example-dialog [slot="trigger"]').click()
+
+  const panel = page.locator("sk-dialog .sk-dialog__panel").first()
+  await expect(panel).toBeVisible({ timeout: 3000 })
+
+  const state = await panel.evaluate((el) => ({
+    declared: getComputedStyle(el).animationName,
+    running: el.getAnimations().map((animation) => animation.animationName),
+  }))
+  expect(state.declared).toBe("none")
+  expect(state.running).not.toContain("sk-glass-enter")
 })
