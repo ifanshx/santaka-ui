@@ -109,7 +109,23 @@ test.describe("API conventions (static)", () => {
   // on or off — it is first, second, or third — so there is no boolean to
   // declare, and inventing one (e.g. a decorative flag) to satisfy the
   // regex would be the vacuous pass this assertion exists to prevent.
-  const NO_BOOLEAN_PROPS = new Set(["sk-card", "sk-spinner", "sk-skeleton", "sk-tabs"])
+  //
+  // Three more arrived with the recent components, and their exemption is the
+  // same kind of claim:
+  //   sk-alert, sk-empty-state — a surface with slots. Its state is the variant
+  //   the consumer set; there is nothing inside it to toggle.
+  //   sk-progress — its state is a position, and "indeterminate" is the absence
+  //   of `value`, not a second prop. A boolean would be a second way to say
+  //   `value === undefined`, and the two could disagree.
+  const NO_BOOLEAN_PROPS = new Set([
+    "sk-card",
+    "sk-spinner",
+    "sk-skeleton",
+    "sk-tabs",
+    "sk-alert",
+    "sk-empty-state",
+    "sk-progress",
+  ])
 
   /** The props ADR-013 records as deliberately unprefixed presentation booleans. */
   const OPEN_IN_ADR_013: Record<string, Set<string>> = {
@@ -118,6 +134,10 @@ test.describe("API conventions (static)", () => {
     "sk-text": new Set(["muted"]),
     "sk-separator": new Set(["decorative"]),
     "sk-dialog": new Set(["modal", "dismissible"]),
+    "sk-table": new Set(["striped"]),
+    // Not a presentation boolean but the platform's own name for the same
+    // concept: `<select multiple>`, `<input multiple>`. ADR-013 point 5.
+    "sk-accordion": new Set(["multiple"]),
   }
 
   test("every boolean prop is an ARIA state, is/has/can prefixed, or on the ADR-013 record", () => {

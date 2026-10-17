@@ -15,6 +15,78 @@ export { RadioOption } from "./components/sk-radio-group/sk-radio-group";
 export { SelectOption } from "./components/sk-select/sk-select";
 export namespace Components {
     /**
+     * Accordion — a compound disclosure group over native `<details>`.
+     * The base is the NATIVE `<details>`/`<summary>` pair, for the reason sk-dialog
+     * uses the native `<dialog>`: the browser already owns the disclosure
+     * semantics, the focus behaviour and Enter/Space activation. A JavaScript
+     * reimplementation of that would be a second, worse one.
+     * This element holds items and owns the exclusion policy. It invents no ARIA
+     * roles: `<details>` and `<summary>` describe themselves, and adding
+     * `role="list"`/`role="listitem"` on top would invent structure the DOM does
+     * not have.
+     */
+    interface SkAccordion {
+        /**
+          * Whether several panels may be open at once. When false, opening one item closes the others.
+          * @default false
+         */
+        "multiple": boolean;
+        /**
+          * Visual dressing. `default` is the stroked container with a hard shadow; `plain` drops the container chrome for an accordion that sits inside a card — mirror of sk-card's `bare` reasoning.
+          * @default "default"
+         */
+        "variant": "default" | "plain";
+    }
+    /**
+     * Accordion item — one disclosure panel inside an `sk-accordion`.
+     * A real native `<details>`/`<summary>` pair, for the reason sk-dialog uses the
+     * native `<dialog>`: the browser already owns the semantics, the focus
+     * behaviour and Enter/Space activation, and a JavaScript reimplementation of
+     * that is a second, worse one.
+     * Known limitation, recorded rather than half-implemented: the ARIA APG
+     * accordion pattern adds roving arrow-key movement between summaries, and
+     * native `<details>` has never had it. Enter and Space are the platform's, the
+     * focus stop is the platform's, and arrow-key navigation is not built here.
+     */
+    interface SkAccordionItem {
+        /**
+          * The summary text.  A `<span>` inside the `<summary>`, not a heading element: the item does not know what level it sits at in the document outline, and a hard-coded heading inside it contradicts the surrounding structure (sk-card's stated reason for the same shape).
+          * @default ""
+         */
+        "heading": string;
+        /**
+          * Whether the panel is expanded. Mirrors `<details open>` and is reflected: a consumer can author `<sk-accordion-item open>` in HTML — including server-rendered markup for an already-expanded item — and the attribute tracks what the browser did on a user toggle, so the parent can close siblings and the consumer can read the real state.
+          * @default false
+         */
+        "open": boolean;
+    }
+    /**
+     * Alert — an inline, static status message.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * An alert is chrome, not a floating layer: it renders in the document flow,
+     * pushes content down when it appears, and never overlays anything. It is not
+     * a toast (sk-toast exists and is floating) and it is not a dialog; a message
+     * that needs to interrupt over everything on screen belongs to those
+     * components, not to this one.
+     * It owns no state and deliberately has no dismiss button: a dismissible
+     * message needs a close affordance, a focus move into that affordance, and a
+     * focus return when it goes away — which is a different component with its own
+     * contract. This component only ever states; it never hides itself.
+     */
+    interface SkAlert {
+        /**
+          * Heading text for the alert, rendered as a `<span>`.  Named `heading`, not `title`, for the reason sk-card records: `title` is a standardized `HTMLElement` member and a prop by that name is shadowed by the prototype property, so the browser would surface it as a hover tooltip on the whole alert.  A string rather than a heading element: the alert does not know what level it sits at in the document's outline, and a hard-coded heading inside it produces a level that may contradict the surrounding structure. A consumer who needs a real heading puts one in the body itself.
+          * @default ""
+         */
+        "heading": string;
+        /**
+          * Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one.
+          * @default "neutral"
+         */
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
      * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
      * rather than copied.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -305,6 +377,40 @@ export namespace Components {
          */
         "showModal": () => Promise<void>;
     }
+    /**
+     * Empty state — Tier 1 placeholder surface.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * Like sk-card, this is a surface, not a control: it owns no state, exposes no
+     * role, and is not focusable. The section outline is the document's business —
+     * the consumer labels the section with a real heading and this component
+     * renders plain text, for the same reason sk-card's heading is a `<span>`.
+     * `variant="bare"` exists for an empty state that sits inside a card: the card
+     * already draws the boundary, and a second stroke with its own shadow inside it
+     * is two competing surfaces fighting for the same wall.
+     */
+    interface SkEmptyState {
+        /**
+          * Supporting text under the heading.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Plain text in a `<span>`, not a heading element. This component does not know what level it sits at in the document's outline, and a hard-coded heading inside it contradicts the surrounding structure. Decision shared with sk-card.
+          * @default ""
+         */
+        "heading": string;
+        /**
+          * Density axis: block padding and glyph size. `md` is the default because an empty state usually fills the whole area left by the missing content.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * Visual treatment.  `default` is the stroked, shadowed surface. `bare` drops the fill, the stroke and the shadow for an empty state nested inside another surface, where two competing boundaries would fight.
+          * @default "default"
+         */
+        "variant": "default" | "bare";
+    }
     interface SkIconButton {
         /**
           * Disables interaction. Mirrors the ARIA name.
@@ -493,6 +599,42 @@ export namespace Components {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Progress — Tier 1 feedback component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A progress bar is a non-interactive status display. It takes no focus, has no
+     * press state, and declares nothing beyond `role="progressbar"` — a progress
+     * bar that eats Tab stops is a control pretending to be a status, and the
+     * existing components never confuse the two.
+     * Limitation, recorded deliberately: the component does not render percentage
+     * text. Formatting a percentage is a locale question (3,4 % vs 3.4 %, Arabic
+     * numerals, RTL considerations), and this component does not own locale policy.
+     * A consumer who wants visible text pairs the bar with their own localized
+     * label — that is why `label` exists as the accessible name and nothing
+     * overrides it.
+     */
+    interface SkProgress {
+        /**
+          * The accessible name. Rendered as `aria-label` only when non-empty AND only when the host does not already carry `aria-label` or `aria-labelledby`, because a consumer's own labelling must never be clobbered by a default.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * The scale the value is measured against. Clamped to 0..max on render.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Track height scale.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * The current value. A finite number makes the bar determinate; an absent (or non-finite) value makes it indeterminate — there is no honest percentage to report for a task whose length is unknown, so the contract says the bar sweeps instead of filling.
+         */
+        "value"?: number;
     }
     interface SkRadioGroup {
         /**
@@ -835,6 +977,43 @@ export namespace Components {
         "hidden": boolean;
     }
     /**
+     * Table — a skin over a table the consumer authors, not a table builder.
+     * The consumer writes a real `<table>` with its own `<caption>`, `<thead>`,
+     * `<th scope="col">` and `<tbody>`; this component contributes the container,
+     * the horizontal overflow handling, and the brutalist style. It takes the same
+     * position `sk-card` takes toward its content: it styles a surface, it does not
+     * invent the markup inside it. There is no column config, no data prop, and no
+     * cell rendering — the consumer's real table semantics are the component's
+     * accessibility story, not something to reimplement.
+     * KNOWN LIMITATION: sticky headers are not implemented. The scroll container's
+     * height belongs to the consumer (set `block-size` on it yourself); a
+     * `position: sticky` header only works once that height is constrained, and the
+     * component cannot assume one. A consumer who constrains the height may add
+     * `sk-table thead th { position: sticky }` from their own CSS.
+     */
+    interface SkTable {
+        /**
+          * Cell padding, not a height scale. `size` is the height scale every other component uses and a table has no intrinsic height — it is whatever its rows make it. Density is the axis a table actually varies on, and its default value is named for what it is rather than for a comfort level: `default` matches `variant`, and a table that wants tighter rows opts in.
+          * @default "default"
+         */
+        "density": "default" | "compact";
+        /**
+          * The name of the scroll region.  The viewport is focusable (`tabindex="0"`) because a scrollable region that cannot be reached from the keyboard is unreachable content (WCAG 2.1.1). With a label it also carries `role="group"` and an accessible name; with none it carries no role at all — an unnamed group is noise in the accessibility tree, not structure.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Zebra rows: even body rows take the sunken surface.
+          * @default false
+         */
+        "striped": boolean;
+        /**
+          * `default` is the stroked, shadowed container; `plain` drops the container chrome for a table sitting inside a `sk-card`.
+          * @default "default"
+         */
+        "variant": "default" | "plain";
+    }
+    /**
      * Tabs — Tier 2, and the last v1.0 component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -1072,6 +1251,60 @@ export namespace Components {
 }
 declare global {
     /**
+     * Accordion — a compound disclosure group over native `<details>`.
+     * The base is the NATIVE `<details>`/`<summary>` pair, for the reason sk-dialog
+     * uses the native `<dialog>`: the browser already owns the disclosure
+     * semantics, the focus behaviour and Enter/Space activation. A JavaScript
+     * reimplementation of that would be a second, worse one.
+     * This element holds items and owns the exclusion policy. It invents no ARIA
+     * roles: `<details>` and `<summary>` describe themselves, and adding
+     * `role="list"`/`role="listitem"` on top would invent structure the DOM does
+     * not have.
+     */
+    interface HTMLSkAccordionElement extends Components.SkAccordion, HTMLStencilElement {
+    }
+    var HTMLSkAccordionElement: {
+        prototype: HTMLSkAccordionElement;
+        new (): HTMLSkAccordionElement;
+    };
+    /**
+     * Accordion item — one disclosure panel inside an `sk-accordion`.
+     * A real native `<details>`/`<summary>` pair, for the reason sk-dialog uses the
+     * native `<dialog>`: the browser already owns the semantics, the focus
+     * behaviour and Enter/Space activation, and a JavaScript reimplementation of
+     * that is a second, worse one.
+     * Known limitation, recorded rather than half-implemented: the ARIA APG
+     * accordion pattern adds roving arrow-key movement between summaries, and
+     * native `<details>` has never had it. Enter and Space are the platform's, the
+     * focus stop is the platform's, and arrow-key navigation is not built here.
+     */
+    interface HTMLSkAccordionItemElement extends Components.SkAccordionItem, HTMLStencilElement {
+    }
+    var HTMLSkAccordionItemElement: {
+        prototype: HTMLSkAccordionItemElement;
+        new (): HTMLSkAccordionItemElement;
+    };
+    /**
+     * Alert — an inline, static status message.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * An alert is chrome, not a floating layer: it renders in the document flow,
+     * pushes content down when it appears, and never overlays anything. It is not
+     * a toast (sk-toast exists and is floating) and it is not a dialog; a message
+     * that needs to interrupt over everything on screen belongs to those
+     * components, not to this one.
+     * It owns no state and deliberately has no dismiss button: a dismissible
+     * message needs a close affordance, a focus move into that affordance, and a
+     * focus return when it goes away — which is a different component with its own
+     * contract. This component only ever states; it never hides itself.
+     */
+    interface HTMLSkAlertElement extends Components.SkAlert, HTMLStencilElement {
+    }
+    var HTMLSkAlertElement: {
+        prototype: HTMLSkAlertElement;
+        new (): HTMLSkAlertElement;
+    };
+    /**
      * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
      * rather than copied.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -1217,6 +1450,24 @@ declare global {
         prototype: HTMLSkDialogElement;
         new (): HTMLSkDialogElement;
     };
+    /**
+     * Empty state — Tier 1 placeholder surface.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * Like sk-card, this is a surface, not a control: it owns no state, exposes no
+     * role, and is not focusable. The section outline is the document's business —
+     * the consumer labels the section with a real heading and this component
+     * renders plain text, for the same reason sk-card's heading is a `<span>`.
+     * `variant="bare"` exists for an empty state that sits inside a card: the card
+     * already draws the boundary, and a second stroke with its own shadow inside it
+     * is two competing surfaces fighting for the same wall.
+     */
+    interface HTMLSkEmptyStateElement extends Components.SkEmptyState, HTMLStencilElement {
+    }
+    var HTMLSkEmptyStateElement: {
+        prototype: HTMLSkEmptyStateElement;
+        new (): HTMLSkEmptyStateElement;
+    };
     interface HTMLSkIconButtonElement extends Components.SkIconButton, HTMLStencilElement {
     }
     var HTMLSkIconButtonElement: {
@@ -1266,6 +1517,27 @@ declare global {
     var HTMLSkLinkElement: {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
+    };
+    /**
+     * Progress — Tier 1 feedback component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A progress bar is a non-interactive status display. It takes no focus, has no
+     * press state, and declares nothing beyond `role="progressbar"` — a progress
+     * bar that eats Tab stops is a control pretending to be a status, and the
+     * existing components never confuse the two.
+     * Limitation, recorded deliberately: the component does not render percentage
+     * text. Formatting a percentage is a locale question (3,4 % vs 3.4 %, Arabic
+     * numerals, RTL considerations), and this component does not own locale policy.
+     * A consumer who wants visible text pairs the bar with their own localized
+     * label — that is why `label` exists as the accessible name and nothing
+     * overrides it.
+     */
+    interface HTMLSkProgressElement extends Components.SkProgress, HTMLStencilElement {
+    }
+    var HTMLSkProgressElement: {
+        prototype: HTMLSkProgressElement;
+        new (): HTMLSkProgressElement;
     };
     interface HTMLSkRadioGroupElement extends Components.SkRadioGroup, HTMLStencilElement {
     }
@@ -1403,6 +1675,27 @@ declare global {
         new (): HTMLSkTabPanelElement;
     };
     /**
+     * Table — a skin over a table the consumer authors, not a table builder.
+     * The consumer writes a real `<table>` with its own `<caption>`, `<thead>`,
+     * `<th scope="col">` and `<tbody>`; this component contributes the container,
+     * the horizontal overflow handling, and the brutalist style. It takes the same
+     * position `sk-card` takes toward its content: it styles a surface, it does not
+     * invent the markup inside it. There is no column config, no data prop, and no
+     * cell rendering — the consumer's real table semantics are the component's
+     * accessibility story, not something to reimplement.
+     * KNOWN LIMITATION: sticky headers are not implemented. The scroll container's
+     * height belongs to the consumer (set `block-size` on it yourself); a
+     * `position: sticky` header only works once that height is constrained, and the
+     * component cannot assume one. A consumer who constrains the height may add
+     * `sk-table thead th { position: sticky }` from their own CSS.
+     */
+    interface HTMLSkTableElement extends Components.SkTable, HTMLStencilElement {
+    }
+    var HTMLSkTableElement: {
+        prototype: HTMLSkTableElement;
+        new (): HTMLSkTableElement;
+    };
+    /**
      * Tabs — Tier 2, and the last v1.0 component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -1532,16 +1825,21 @@ declare global {
         new (): HTMLSkTooltipElement;
     };
     interface HTMLElementTagNameMap {
+        "sk-accordion": HTMLSkAccordionElement;
+        "sk-accordion-item": HTMLSkAccordionItemElement;
+        "sk-alert": HTMLSkAlertElement;
         "sk-alert-dialog": HTMLSkAlertDialogElement;
         "sk-badge": HTMLSkBadgeElement;
         "sk-button": HTMLSkButtonElement;
         "sk-card": HTMLSkCardElement;
         "sk-checkbox": HTMLSkCheckboxElement;
         "sk-dialog": HTMLSkDialogElement;
+        "sk-empty-state": HTMLSkEmptyStateElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
         "sk-label": HTMLSkLabelElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-progress": HTMLSkProgressElement;
         "sk-radio-group": HTMLSkRadioGroupElement;
         "sk-select": HTMLSkSelectElement;
         "sk-separator": HTMLSkSeparatorElement;
@@ -1550,6 +1848,7 @@ declare global {
         "sk-switch": HTMLSkSwitchElement;
         "sk-tab": HTMLSkTabElement;
         "sk-tab-panel": HTMLSkTabPanelElement;
+        "sk-table": HTMLSkTableElement;
         "sk-tabs": HTMLSkTabsElement;
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
@@ -1558,6 +1857,78 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    /**
+     * Accordion — a compound disclosure group over native `<details>`.
+     * The base is the NATIVE `<details>`/`<summary>` pair, for the reason sk-dialog
+     * uses the native `<dialog>`: the browser already owns the disclosure
+     * semantics, the focus behaviour and Enter/Space activation. A JavaScript
+     * reimplementation of that would be a second, worse one.
+     * This element holds items and owns the exclusion policy. It invents no ARIA
+     * roles: `<details>` and `<summary>` describe themselves, and adding
+     * `role="list"`/`role="listitem"` on top would invent structure the DOM does
+     * not have.
+     */
+    interface SkAccordion {
+        /**
+          * Whether several panels may be open at once. When false, opening one item closes the others.
+          * @default false
+         */
+        "multiple"?: boolean;
+        /**
+          * Visual dressing. `default` is the stroked container with a hard shadow; `plain` drops the container chrome for an accordion that sits inside a card — mirror of sk-card's `bare` reasoning.
+          * @default "default"
+         */
+        "variant"?: "default" | "plain";
+    }
+    /**
+     * Accordion item — one disclosure panel inside an `sk-accordion`.
+     * A real native `<details>`/`<summary>` pair, for the reason sk-dialog uses the
+     * native `<dialog>`: the browser already owns the semantics, the focus
+     * behaviour and Enter/Space activation, and a JavaScript reimplementation of
+     * that is a second, worse one.
+     * Known limitation, recorded rather than half-implemented: the ARIA APG
+     * accordion pattern adds roving arrow-key movement between summaries, and
+     * native `<details>` has never had it. Enter and Space are the platform's, the
+     * focus stop is the platform's, and arrow-key navigation is not built here.
+     */
+    interface SkAccordionItem {
+        /**
+          * The summary text.  A `<span>` inside the `<summary>`, not a heading element: the item does not know what level it sits at in the document outline, and a hard-coded heading inside it contradicts the surrounding structure (sk-card's stated reason for the same shape).
+          * @default ""
+         */
+        "heading"?: string;
+        /**
+          * Whether the panel is expanded. Mirrors `<details open>` and is reflected: a consumer can author `<sk-accordion-item open>` in HTML — including server-rendered markup for an already-expanded item — and the attribute tracks what the browser did on a user toggle, so the parent can close siblings and the consumer can read the real state.
+          * @default false
+         */
+        "open"?: boolean;
+    }
+    /**
+     * Alert — an inline, static status message.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * An alert is chrome, not a floating layer: it renders in the document flow,
+     * pushes content down when it appears, and never overlays anything. It is not
+     * a toast (sk-toast exists and is floating) and it is not a dialog; a message
+     * that needs to interrupt over everything on screen belongs to those
+     * components, not to this one.
+     * It owns no state and deliberately has no dismiss button: a dismissible
+     * message needs a close affordance, a focus move into that affordance, and a
+     * focus return when it goes away — which is a different component with its own
+     * contract. This component only ever states; it never hides itself.
+     */
+    interface SkAlert {
+        /**
+          * Heading text for the alert, rendered as a `<span>`.  Named `heading`, not `title`, for the reason sk-card records: `title` is a standardized `HTMLElement` member and a prop by that name is shadowed by the prototype property, so the browser would surface it as a hover tooltip on the whole alert.  A string rather than a heading element: the alert does not know what level it sits at in the document's outline, and a hard-coded heading inside it produces a level that may contradict the surrounding structure. A consumer who needs a real heading puts one in the body itself.
+          * @default ""
+         */
+        "heading"?: string;
+        /**
+          * Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one.
+          * @default "neutral"
+         */
+        "variant"?: "neutral" | "primary" | "success" | "warning" | "danger";
+    }
     /**
      * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
      * rather than copied.
@@ -1856,6 +2227,40 @@ declare namespace LocalJSX {
          */
         "open"?: boolean;
     }
+    /**
+     * Empty state — Tier 1 placeholder surface.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * Like sk-card, this is a surface, not a control: it owns no state, exposes no
+     * role, and is not focusable. The section outline is the document's business —
+     * the consumer labels the section with a real heading and this component
+     * renders plain text, for the same reason sk-card's heading is a `<span>`.
+     * `variant="bare"` exists for an empty state that sits inside a card: the card
+     * already draws the boundary, and a second stroke with its own shadow inside it
+     * is two competing surfaces fighting for the same wall.
+     */
+    interface SkEmptyState {
+        /**
+          * Supporting text under the heading.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Plain text in a `<span>`, not a heading element. This component does not know what level it sits at in the document's outline, and a hard-coded heading inside it contradicts the surrounding structure. Decision shared with sk-card.
+          * @default ""
+         */
+        "heading"?: string;
+        /**
+          * Density axis: block padding and glyph size. `md` is the default because an empty state usually fills the whole area left by the missing content.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * Visual treatment.  `default` is the stroked, shadowed surface. `bare` drops the fill, the stroke and the shadow for an empty state nested inside another surface, where two competing boundaries would fight.
+          * @default "default"
+         */
+        "variant"?: "default" | "bare";
+    }
     interface SkIconButton {
         /**
           * Disables interaction. Mirrors the ARIA name.
@@ -2056,6 +2461,42 @@ declare namespace LocalJSX {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Progress — Tier 1 feedback component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The React package adapts this specification; it does not reimplement it.
+     * A progress bar is a non-interactive status display. It takes no focus, has no
+     * press state, and declares nothing beyond `role="progressbar"` — a progress
+     * bar that eats Tab stops is a control pretending to be a status, and the
+     * existing components never confuse the two.
+     * Limitation, recorded deliberately: the component does not render percentage
+     * text. Formatting a percentage is a locale question (3,4 % vs 3.4 %, Arabic
+     * numerals, RTL considerations), and this component does not own locale policy.
+     * A consumer who wants visible text pairs the bar with their own localized
+     * label — that is why `label` exists as the accessible name and nothing
+     * overrides it.
+     */
+    interface SkProgress {
+        /**
+          * The accessible name. Rendered as `aria-label` only when non-empty AND only when the host does not already carry `aria-label` or `aria-labelledby`, because a consumer's own labelling must never be clobbered by a default.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * The scale the value is measured against. Clamped to 0..max on render.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Track height scale.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * The current value. A finite number makes the bar determinate; an absent (or non-finite) value makes it indeterminate — there is no honest percentage to report for a task whose length is unknown, so the contract says the bar sweeps instead of filling.
+         */
+        "value"?: number;
     }
     interface SkRadioGroup {
         /**
@@ -2406,6 +2847,43 @@ declare namespace LocalJSX {
         "hidden"?: boolean;
     }
     /**
+     * Table — a skin over a table the consumer authors, not a table builder.
+     * The consumer writes a real `<table>` with its own `<caption>`, `<thead>`,
+     * `<th scope="col">` and `<tbody>`; this component contributes the container,
+     * the horizontal overflow handling, and the brutalist style. It takes the same
+     * position `sk-card` takes toward its content: it styles a surface, it does not
+     * invent the markup inside it. There is no column config, no data prop, and no
+     * cell rendering — the consumer's real table semantics are the component's
+     * accessibility story, not something to reimplement.
+     * KNOWN LIMITATION: sticky headers are not implemented. The scroll container's
+     * height belongs to the consumer (set `block-size` on it yourself); a
+     * `position: sticky` header only works once that height is constrained, and the
+     * component cannot assume one. A consumer who constrains the height may add
+     * `sk-table thead th { position: sticky }` from their own CSS.
+     */
+    interface SkTable {
+        /**
+          * Cell padding, not a height scale. `size` is the height scale every other component uses and a table has no intrinsic height — it is whatever its rows make it. Density is the axis a table actually varies on, and its default value is named for what it is rather than for a comfort level: `default` matches `variant`, and a table that wants tighter rows opts in.
+          * @default "default"
+         */
+        "density"?: "default" | "compact";
+        /**
+          * The name of the scroll region.  The viewport is focusable (`tabindex="0"`) because a scrollable region that cannot be reached from the keyboard is unreachable content (WCAG 2.1.1). With a label it also carries `role="group"` and an accessible name; with none it carries no role at all — an unnamed group is noise in the accessibility tree, not structure.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Zebra rows: even body rows take the sunken surface.
+          * @default false
+         */
+        "striped"?: boolean;
+        /**
+          * `default` is the stroked, shadowed container; `plain` drops the container chrome for a table sitting inside a `sk-card`.
+          * @default "default"
+         */
+        "variant"?: "default" | "plain";
+    }
+    /**
      * Tabs — Tier 2, and the last v1.0 component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -2645,6 +3123,18 @@ declare namespace LocalJSX {
         "placement"?: "top" | "bottom" | "left" | "right";
     }
 
+    interface SkAccordionAttributes {
+        "multiple": boolean;
+        "variant": "default" | "plain";
+    }
+    interface SkAccordionItemAttributes {
+        "heading": string;
+        "open": boolean;
+    }
+    interface SkAlertAttributes {
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+        "heading": string;
+    }
     interface SkAlertDialogAttributes {
         "open": boolean;
         "label": string;
@@ -2690,6 +3180,12 @@ declare namespace LocalJSX {
         "dismissible": boolean;
         "label": string;
     }
+    interface SkEmptyStateAttributes {
+        "variant": "default" | "bare";
+        "size": "sm" | "md" | "lg";
+        "heading": string;
+        "description": string;
+    }
     interface SkIconButtonAttributes {
         "label": string;
         "variant": ButtonVariant;
@@ -2730,6 +3226,12 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
         "download": string;
+    }
+    interface SkProgressAttributes {
+        "value": number;
+        "max": number;
+        "label": string;
+        "size": "sm" | "md" | "lg";
     }
     interface SkRadioGroupAttributes {
         "variant": "default" | "quiet";
@@ -2793,6 +3295,12 @@ declare namespace LocalJSX {
     interface SkTabPanelAttributes {
         "hidden": boolean;
     }
+    interface SkTableAttributes {
+        "variant": "default" | "plain";
+        "striped": boolean;
+        "density": "default" | "compact";
+        "label": string;
+    }
     interface SkTabsAttributes {
         "active": number;
     }
@@ -2831,16 +3339,21 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "sk-accordion": Omit<SkAccordion, keyof SkAccordionAttributes> & { [K in keyof SkAccordion & keyof SkAccordionAttributes]?: SkAccordion[K] } & { [K in keyof SkAccordion & keyof SkAccordionAttributes as `attr:${K}`]?: SkAccordionAttributes[K] } & { [K in keyof SkAccordion & keyof SkAccordionAttributes as `prop:${K}`]?: SkAccordion[K] };
+        "sk-accordion-item": Omit<SkAccordionItem, keyof SkAccordionItemAttributes> & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes]?: SkAccordionItem[K] } & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes as `attr:${K}`]?: SkAccordionItemAttributes[K] } & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes as `prop:${K}`]?: SkAccordionItem[K] };
+        "sk-alert": Omit<SkAlert, keyof SkAlertAttributes> & { [K in keyof SkAlert & keyof SkAlertAttributes]?: SkAlert[K] } & { [K in keyof SkAlert & keyof SkAlertAttributes as `attr:${K}`]?: SkAlertAttributes[K] } & { [K in keyof SkAlert & keyof SkAlertAttributes as `prop:${K}`]?: SkAlert[K] };
         "sk-alert-dialog": Omit<SkAlertDialog, keyof SkAlertDialogAttributes> & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes]?: SkAlertDialog[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `attr:${K}`]?: SkAlertDialogAttributes[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `prop:${K}`]?: SkAlertDialog[K] };
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
         "sk-checkbox": Omit<SkCheckbox, keyof SkCheckboxAttributes> & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes]?: SkCheckbox[K] } & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes as `attr:${K}`]?: SkCheckboxAttributes[K] } & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes as `prop:${K}`]?: SkCheckbox[K] };
         "sk-dialog": Omit<SkDialog, keyof SkDialogAttributes> & { [K in keyof SkDialog & keyof SkDialogAttributes]?: SkDialog[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `attr:${K}`]?: SkDialogAttributes[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `prop:${K}`]?: SkDialog[K] };
+        "sk-empty-state": Omit<SkEmptyState, keyof SkEmptyStateAttributes> & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes]?: SkEmptyState[K] } & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes as `attr:${K}`]?: SkEmptyStateAttributes[K] } & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes as `prop:${K}`]?: SkEmptyState[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
         "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-progress": Omit<SkProgress, keyof SkProgressAttributes> & { [K in keyof SkProgress & keyof SkProgressAttributes]?: SkProgress[K] } & { [K in keyof SkProgress & keyof SkProgressAttributes as `attr:${K}`]?: SkProgressAttributes[K] } & { [K in keyof SkProgress & keyof SkProgressAttributes as `prop:${K}`]?: SkProgress[K] };
         "sk-radio-group": Omit<SkRadioGroup, keyof SkRadioGroupAttributes> & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes]?: SkRadioGroup[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `attr:${K}`]?: SkRadioGroupAttributes[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `prop:${K}`]?: SkRadioGroup[K] };
         "sk-select": Omit<SkSelect, keyof SkSelectAttributes> & { [K in keyof SkSelect & keyof SkSelectAttributes]?: SkSelect[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `attr:${K}`]?: SkSelectAttributes[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `prop:${K}`]?: SkSelect[K] };
         "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
@@ -2849,6 +3362,7 @@ declare namespace LocalJSX {
         "sk-switch": Omit<SkSwitch, keyof SkSwitchAttributes> & { [K in keyof SkSwitch & keyof SkSwitchAttributes]?: SkSwitch[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `attr:${K}`]?: SkSwitchAttributes[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `prop:${K}`]?: SkSwitch[K] };
         "sk-tab": Omit<SkTab, keyof SkTabAttributes> & { [K in keyof SkTab & keyof SkTabAttributes]?: SkTab[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `attr:${K}`]?: SkTabAttributes[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `prop:${K}`]?: SkTab[K] };
         "sk-tab-panel": Omit<SkTabPanel, keyof SkTabPanelAttributes> & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes]?: SkTabPanel[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `attr:${K}`]?: SkTabPanelAttributes[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `prop:${K}`]?: SkTabPanel[K] };
+        "sk-table": Omit<SkTable, keyof SkTableAttributes> & { [K in keyof SkTable & keyof SkTableAttributes]?: SkTable[K] } & { [K in keyof SkTable & keyof SkTableAttributes as `attr:${K}`]?: SkTableAttributes[K] } & { [K in keyof SkTable & keyof SkTableAttributes as `prop:${K}`]?: SkTable[K] };
         "sk-tabs": Omit<SkTabs, keyof SkTabsAttributes> & { [K in keyof SkTabs & keyof SkTabsAttributes]?: SkTabs[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `attr:${K}`]?: SkTabsAttributes[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `prop:${K}`]?: SkTabs[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
@@ -2860,6 +3374,45 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * Accordion — a compound disclosure group over native `<details>`.
+             * The base is the NATIVE `<details>`/`<summary>` pair, for the reason sk-dialog
+             * uses the native `<dialog>`: the browser already owns the disclosure
+             * semantics, the focus behaviour and Enter/Space activation. A JavaScript
+             * reimplementation of that would be a second, worse one.
+             * This element holds items and owns the exclusion policy. It invents no ARIA
+             * roles: `<details>` and `<summary>` describe themselves, and adding
+             * `role="list"`/`role="listitem"` on top would invent structure the DOM does
+             * not have.
+             */
+            "sk-accordion": LocalJSX.IntrinsicElements["sk-accordion"] & JSXBase.HTMLAttributes<HTMLSkAccordionElement>;
+            /**
+             * Accordion item — one disclosure panel inside an `sk-accordion`.
+             * A real native `<details>`/`<summary>` pair, for the reason sk-dialog uses the
+             * native `<dialog>`: the browser already owns the semantics, the focus
+             * behaviour and Enter/Space activation, and a JavaScript reimplementation of
+             * that is a second, worse one.
+             * Known limitation, recorded rather than half-implemented: the ARIA APG
+             * accordion pattern adds roving arrow-key movement between summaries, and
+             * native `<details>` has never had it. Enter and Space are the platform's, the
+             * focus stop is the platform's, and arrow-key navigation is not built here.
+             */
+            "sk-accordion-item": LocalJSX.IntrinsicElements["sk-accordion-item"] & JSXBase.HTMLAttributes<HTMLSkAccordionItemElement>;
+            /**
+             * Alert — an inline, static status message.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * An alert is chrome, not a floating layer: it renders in the document flow,
+             * pushes content down when it appears, and never overlays anything. It is not
+             * a toast (sk-toast exists and is floating) and it is not a dialog; a message
+             * that needs to interrupt over everything on screen belongs to those
+             * components, not to this one.
+             * It owns no state and deliberately has no dismiss button: a dismissible
+             * message needs a close affordance, a focus move into that affordance, and a
+             * focus return when it goes away — which is a different component with its own
+             * contract. This component only ever states; it never hides itself.
+             */
+            "sk-alert": LocalJSX.IntrinsicElements["sk-alert"] & JSXBase.HTMLAttributes<HTMLSkAlertElement>;
             /**
              * Alert Dialog — Tier 2, and the reason the dialog mechanics were extracted
              * rather than copied.
@@ -2976,6 +3529,19 @@ declare module "@stencil/core" {
              * public API of each component is documented on the component, not in the base.
              */
             "sk-dialog": LocalJSX.IntrinsicElements["sk-dialog"] & JSXBase.HTMLAttributes<HTMLSkDialogElement>;
+            /**
+             * Empty state — Tier 1 placeholder surface.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * Like sk-card, this is a surface, not a control: it owns no state, exposes no
+             * role, and is not focusable. The section outline is the document's business —
+             * the consumer labels the section with a real heading and this component
+             * renders plain text, for the same reason sk-card's heading is a `<span>`.
+             * `variant="bare"` exists for an empty state that sits inside a card: the card
+             * already draws the boundary, and a second stroke with its own shadow inside it
+             * is two competing surfaces fighting for the same wall.
+             */
+            "sk-empty-state": LocalJSX.IntrinsicElements["sk-empty-state"] & JSXBase.HTMLAttributes<HTMLSkEmptyStateElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
             "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
             /**
@@ -3006,6 +3572,22 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            /**
+             * Progress — Tier 1 feedback component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The React package adapts this specification; it does not reimplement it.
+             * A progress bar is a non-interactive status display. It takes no focus, has no
+             * press state, and declares nothing beyond `role="progressbar"` — a progress
+             * bar that eats Tab stops is a control pretending to be a status, and the
+             * existing components never confuse the two.
+             * Limitation, recorded deliberately: the component does not render percentage
+             * text. Formatting a percentage is a locale question (3,4 % vs 3.4 %, Arabic
+             * numerals, RTL considerations), and this component does not own locale policy.
+             * A consumer who wants visible text pairs the bar with their own localized
+             * label — that is why `label` exists as the accessible name and nothing
+             * overrides it.
+             */
+            "sk-progress": LocalJSX.IntrinsicElements["sk-progress"] & JSXBase.HTMLAttributes<HTMLSkProgressElement>;
             "sk-radio-group": LocalJSX.IntrinsicElements["sk-radio-group"] & JSXBase.HTMLAttributes<HTMLSkRadioGroupElement>;
             "sk-select": LocalJSX.IntrinsicElements["sk-select"] & JSXBase.HTMLAttributes<HTMLSkSelectElement>;
             /**
@@ -3101,6 +3683,22 @@ declare module "@stencil/core" {
              * tab through the widget's `aria-labelledby` wiring.
              */
             "sk-tab-panel": LocalJSX.IntrinsicElements["sk-tab-panel"] & JSXBase.HTMLAttributes<HTMLSkTabPanelElement>;
+            /**
+             * Table — a skin over a table the consumer authors, not a table builder.
+             * The consumer writes a real `<table>` with its own `<caption>`, `<thead>`,
+             * `<th scope="col">` and `<tbody>`; this component contributes the container,
+             * the horizontal overflow handling, and the brutalist style. It takes the same
+             * position `sk-card` takes toward its content: it styles a surface, it does not
+             * invent the markup inside it. There is no column config, no data prop, and no
+             * cell rendering — the consumer's real table semantics are the component's
+             * accessibility story, not something to reimplement.
+             * KNOWN LIMITATION: sticky headers are not implemented. The scroll container's
+             * height belongs to the consumer (set `block-size` on it yourself); a
+             * `position: sticky` header only works once that height is constrained, and the
+             * component cannot assume one. A consumer who constrains the height may add
+             * `sk-table thead th { position: sticky }` from their own CSS.
+             */
+            "sk-table": LocalJSX.IntrinsicElements["sk-table"] & JSXBase.HTMLAttributes<HTMLSkTableElement>;
             /**
              * Tabs — Tier 2, and the last v1.0 component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

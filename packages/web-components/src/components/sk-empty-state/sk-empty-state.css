@@ -1,0 +1,150 @@
+/*
+ * Empty state styles.
+ *
+ * A placeholder surface, not a control. Like sk-card it carries the brutalist
+ * chrome — a 3px stroke, no rounding, a zero-blur offset shadow — and nothing
+ * here makes it focusable or interactive, deliberately.
+ */
+
+sk-empty-state {
+  --sk-empty-state-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-empty-state-fg: var(--sk-color-text, #17141c);
+  --sk-empty-state-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-empty-state-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-empty-state-gap: var(--sk-space-4, 1rem);
+  --sk-empty-state-padding: var(--sk-space-6, 1.5rem);
+  /* A readable measure: heading and description stay centered but never run the
+     full width of the area left by the missing content. */
+  --sk-empty-state-measure: 36ch;
+  --sk-empty-state-glyph: var(--sk-icon-lg, 2rem);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--sk-empty-state-gap);
+  padding: var(--sk-empty-state-padding);
+  inline-size: 100%;
+  border: var(--sk-border-thick, 3px) solid var(--sk-empty-state-border);
+  border-radius: 0;
+  background-color: var(--sk-empty-state-bg);
+  color: var(--sk-empty-state-fg);
+  box-shadow: var(--sk-empty-state-shadow) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  text-align: center;
+}
+
+sk-empty-state .sk-empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+sk-empty-state .sk-empty-state__glyph {
+  /*
+   * CSS-drawn placeholder glyph: a dashed outline box suggests the shape the
+   * absent content will take. Purely decorative, and already aria-hidden at the
+   * wrapper in the template.
+   */
+  display: block;
+  inline-size: var(--sk-empty-state-glyph);
+  block-size: var(--sk-empty-state-glyph);
+  border: var(--sk-border-thick, 3px) dashed var(--sk-color-border, #e2dff0);
+  border-radius: 0;
+  background-color: transparent;
+}
+
+sk-empty-state .sk-empty-state__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  max-inline-size: var(--sk-empty-state-measure);
+}
+
+sk-empty-state .sk-empty-state__heading {
+  font-size: var(--sk-text-lg-size, 1.125rem);
+  font-weight: var(--sk-text-lg-weight, 600);
+  line-height: var(--sk-text-lg-line-height, 1.75rem);
+}
+
+sk-empty-state .sk-empty-state__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-empty-state .sk-empty-state__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+}
+
+/* Actions sit in their own row; a call to action needs a place the eye finds. */
+sk-empty-state .sk-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sk-space-2, 0.5rem);
+  padding-block-start: var(--sk-space-2, 0.5rem);
+}
+
+/* An unfilled actions slot must leave nothing behind — not an empty row. `:empty`
+   matches because CSS ignores the comment nodes scoped mode leaves behind. */
+sk-empty-state .sk-empty-state__actions:empty {
+  display: none;
+}
+
+sk-empty-state[size="sm"] {
+  --sk-empty-state-padding: var(--sk-space-4, 1rem);
+  --sk-empty-state-gap: var(--sk-space-3, 0.75rem);
+  --sk-empty-state-glyph: var(--sk-icon-md, 1.5rem);
+}
+
+sk-empty-state[size="lg"] {
+  --sk-empty-state-padding: var(--sk-space-8, 2rem);
+  --sk-empty-state-gap: var(--sk-space-5, 1.25rem);
+  --sk-empty-state-glyph: var(--sk-icon-lg, 2rem);
+}
+
+/* `bare` drops the fill for an empty state inside another surface, where two
+   competing boundaries would fight. It drops the stroke and the shadow too — the
+   surrounding card already draws that boundary. */
+sk-empty-state[variant="bare"] {
+  --sk-empty-state-bg: transparent;
+  --sk-empty-state-border: transparent;
+  --sk-empty-state-shadow: var(--sk-shadow-brutal-none, none);
+}
+
+@media (forced-colors: active) {
+  /*
+   * Forced colors replaces authored colors wholesale, so the border is pinned
+   * to CanvasText so the placeholder keeps a visible boundary, and the shadow
+   * is dropped: a zero-blur offset shadow paints a hard block of the forced
+   * backdrop that reads as a rendering artifact rather than as elevation.
+   */
+  sk-empty-state {
+    --sk-empty-state-border: CanvasText;
+    --sk-empty-state-shadow: var(--sk-shadow-brutal-none, none);
+  }
+
+  /* `bare` means "grouped, not bounded", so under forced colors its stroke goes
+     too. Leaving it would make `bare` visibly different from what it means. */
+  sk-empty-state[variant="bare"] {
+    --sk-empty-state-border: Canvas;
+  }
+
+  /* The glyph is a placeholder drawing, not an image, so it keeps its authored
+     dashed border — forced colors leaves it visible against either palette. */
+}
+
+/*
+ * An empty state does not animate, so there is nothing to reduce here. The block
+ * is deliberate: a placeholder that later gains an entrance treatment must add
+ * its own reduced-motion handling rather than assuming the global override
+ * covers a transform, which it does not.
+ */

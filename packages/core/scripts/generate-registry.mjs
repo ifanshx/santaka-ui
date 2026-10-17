@@ -10,7 +10,7 @@
  * claims a version is verified against the bytes actually shipped.
  */
 import { createHash } from "node:crypto"
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
@@ -29,7 +29,8 @@ const version = JSON.parse(readFileSync(join(wcRoot, "package.json"), "utf8")).v
 
 const sha256 = (path) => `sha256-${createHash("sha256").update(readFileSync(path)).digest("hex")}`
 
-const wcFile = (tag, extension) => join(wcRoot, "src", "components", tag, `${tag}.${extension}`)
+const wcFile = (dir, tag, extension) =>
+  join(wcRoot, "src", "components", dir, `${tag}.${extension}`)
 
 // The public surface — props and events — is read from the committed type
 // declarations and component sources rather than authored per entry, so it
@@ -829,6 +830,10 @@ const COMPONENTS = [
   {
     name: "tabs",
     tag: "sk-tabs",
+    elements: [
+      { tag: "sk-tab", dir: "sk-tabs" },
+      { tag: "sk-tab-panel", dir: "sk-tabs" },
+    ],
     stability: "stable",
     cssVariables: [
       "--sk-border-thick",
@@ -1017,17 +1022,283 @@ const COMPONENTS = [
       ],
     },
   },
+  {
+    name: "alert",
+    tag: "sk-alert",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-color-border-strong",
+      "--sk-color-danger",
+      "--sk-color-danger-fg",
+      "--sk-color-danger-subtle",
+      "--sk-color-primary",
+      "--sk-color-primary-subtle",
+      "--sk-color-primary-text",
+      "--sk-color-shadow",
+      "--sk-color-success",
+      "--sk-color-success-fg",
+      "--sk-color-success-subtle",
+      "--sk-color-surface-sunken",
+      "--sk-color-text",
+      "--sk-color-text-muted",
+      "--sk-color-warning",
+      "--sk-color-warning-fg",
+      "--sk-color-warning-subtle",
+      "--sk-font-sans",
+      "--sk-shadow-brutal",
+      "--sk-shadow-brutal-none",
+      "--sk-space-1",
+      "--sk-space-2",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-text-base-line-height",
+      "--sk-text-base-size",
+      "--sk-text-base-weight",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-text-sm-tracking",
+      "--sk-text-sm-weight",
+    ],
+    ai: {
+      summary:
+        "An inline message about the current page: a success, a warning, a failure, or a note.",
+      whenToUse: [
+        "A result or a state needs stating next to the content it describes",
+        "A page-level or form-level failure must be visible without a modal",
+        "The message may need an action, such as Retry or View logs",
+      ],
+      whenNotToUse: [
+        "It interrupts a flow the user must acknowledge — use an Alert Dialog",
+        "It is a transient, self-dismissing update — use a Toast",
+        "It labels a value with one word's worth of state — use a Badge",
+      ],
+      accessibility:
+        'Carries `role="alert"` for the danger and warning variants, so those interrupt; the rest are `role="status"` and wait for a pause. The variant glyph is aria-hidden and differs in shape as well as colour, so the message survives a monochrome display. A consumer-set `role` is never overwritten.',
+      example:
+        '<sk-alert variant="warning" heading="Quota nearly full">Your workspace is using 96% of its quota.</sk-alert>',
+      knownLimitations: [
+        "No dismiss control, deliberately: a dismissible alert needs focus management and a close affordance that belongs to a Dialog or a Toast",
+        "The actions slot is not part of the announced message, so an action the user must take also needs to exist in the page",
+      ],
+    },
+  },
+  {
+    name: "progress",
+    tag: "sk-progress",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-border-width",
+      "--sk-color-border-strong",
+      "--sk-color-primary",
+      "--sk-color-surface-sunken",
+      "--sk-duration-overlay-slow",
+      "--sk-ease-glass",
+      "--sk-space-2",
+      "--sk-space-4",
+      "--sk-space-6",
+    ],
+    ai: {
+      summary: "Shows how far along a task is, or that a task is running with no known end.",
+      whenToUse: [
+        "Work is in progress and the user is waiting on it",
+        "The completion fraction is known and moving",
+        "The progress explains why something else on the page is unavailable",
+      ],
+      whenNotToUse: [
+        "The operation finished and its result is what matters — use an Alert",
+        "A single unmeasured delay is all there is — use a Spinner",
+        "It is a placeholder for content that is about to arrive — use a Skeleton",
+      ],
+      accessibility:
+        '`role="progressbar"` with `aria-valuemin` and `aria-valuemax`, and `aria-valuenow` only when the value is determinate — an indeterminate bar that announced a number would be lying. The bar\'s width is derived from value over max. The `label` prop becomes `aria-label` only when the consumer set none of its own.',
+      example: '<sk-progress label="Uploading build 4821" value="40"></sk-progress>',
+      knownLimitations: [
+        "No percentage text is rendered: formatting a number for the reader's locale is an Intl decision this element does not make",
+        "Under reduced motion the indeterminate bar keeps a static partial fill rather than sitting at zero, because an empty track reads as not started rather than unknown",
+      ],
+    },
+  },
+  {
+    name: "empty-state",
+    tag: "sk-empty-state",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-color-border",
+      "--sk-color-border-strong",
+      "--sk-color-shadow",
+      "--sk-color-surface-raised",
+      "--sk-color-text",
+      "--sk-color-text-muted",
+      "--sk-font-sans",
+      "--sk-icon-lg",
+      "--sk-icon-md",
+      "--sk-shadow-brutal",
+      "--sk-shadow-brutal-none",
+      "--sk-space-2",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-space-5",
+      "--sk-space-6",
+      "--sk-space-8",
+      "--sk-text-lg-line-height",
+      "--sk-text-lg-size",
+      "--sk-text-lg-weight",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+    ],
+    ai: {
+      summary: "The surface a list, table, or panel shows when it has nothing to display.",
+      whenToUse: [
+        "A region is legitimately empty and the page should say why",
+        "The empty region has a next action, such as Create or Import",
+        "A filter or a search matched nothing and the user can widen it",
+      ],
+      whenNotToUse: [
+        "The content is still loading — use a Skeleton or a Spinner",
+        "The message is about the page as a whole — use an Alert",
+        "It is a placeholder for one field inside a form",
+      ],
+      accessibility:
+        'Not focusable, with no role and no live region: an empty state is content, not a status change, and announcing "no results" on every render is noise. `heading` renders as a span rather than a heading element, because the level belongs to the consumer\'s document outline — put a real heading in the body slot when it needs to be one. Slotted actions keep their own semantics.',
+      example:
+        '<sk-empty-state heading="No deploys yet" description="Push to main and the first build starts on its own.">\n  <sk-button slot="actions">New deploy</sk-button>\n</sk-empty-state>',
+      knownLimitations: [
+        "`bare` drops the fill, the border, and the shadow rather than restyling them, because it exists for one inside a Card",
+        "The icon slot falls back to a dashed CSS glyph: this package ships no icon set",
+      ],
+    },
+  },
+  {
+    name: "accordion",
+    tag: "sk-accordion",
+    elements: [{ tag: "sk-accordion-item", dir: "sk-accordion" }],
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-border-width",
+      "--sk-color-border",
+      "--sk-color-border-strong",
+      "--sk-color-focus-ring",
+      "--sk-color-shadow",
+      "--sk-color-surface-raised",
+      "--sk-color-text",
+      "--sk-duration-control",
+      "--sk-duration-control-fast",
+      "--sk-ease-arcade",
+      "--sk-ease-arcade-exit",
+      "--sk-font-sans",
+      "--sk-ring-offset",
+      "--sk-ring-width",
+      "--sk-shadow-brutal",
+      "--sk-shadow-brutal-none",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-text-base-line-height",
+      "--sk-text-base-size",
+      "--sk-text-base-weight",
+      "--sk-touch-min",
+    ],
+    ai: {
+      summary: "A stack of disclosure panels where one, or several, can be open at a time.",
+      whenToUse: [
+        "Secondary content belongs on the page but should not occupy it — questions, advanced settings, release notes",
+        "The reader opens panels in any order and may want none of them open",
+        "The content is short enough to expand in place rather than to open a route",
+      ],
+      whenNotToUse: [
+        "The sections are the page's navigation — use Tabs",
+        "The content must be read in order, or hiding it loses the thread — keep it on the page",
+        "Every panel starts open and none should close — use headings and sections",
+      ],
+      accessibility:
+        "Built on the native `<details>` and `<summary>` elements, so the disclosure semantics, the focus stop, the expanded state, and Enter and Space are the browser's rather than reimplemented — which is why the item needs no ARIA of its own. The marker is aria-hidden and drawn with pseudo-elements. `heading` renders as a span inside the summary; a consumer that needs a real heading level puts one in the slot. The summary meets `--sk-touch-min`.",
+      example:
+        '<sk-accordion>\n  <sk-accordion-item heading="What is Santaka UI?" open>\n    <p>A token layer, a universal package, and framework adapters.</p>\n  </sk-accordion-item>\n  <sk-accordion-item heading="Does it need a framework?">\n    <p>No.</p>\n  </sk-accordion-item>\n</sk-accordion>',
+      knownLimitations: [
+        "Exclusive by default: opening an item closes its siblings, and `multiple` opts out",
+        "No group-level event summarises the open items — each item dispatches its own bubbling `sk-open-change` with `detail.open`",
+      ],
+    },
+  },
+  {
+    name: "table",
+    tag: "sk-table",
+    stability: "stable",
+    cssVariables: [
+      "--sk-border-thick",
+      "--sk-border-width",
+      "--sk-color-border",
+      "--sk-color-border-strong",
+      "--sk-color-focus-ring",
+      "--sk-color-shadow",
+      "--sk-color-surface-raised",
+      "--sk-color-surface-sunken",
+      "--sk-color-text",
+      "--sk-color-text-muted",
+      "--sk-font-sans",
+      "--sk-ring-offset",
+      "--sk-ring-width",
+      "--sk-shadow-brutal",
+      "--sk-space-2",
+      "--sk-space-3",
+      "--sk-space-4",
+      "--sk-text-sm-line-height",
+      "--sk-text-sm-size",
+      "--sk-text-xs-line-height",
+      "--sk-text-xs-size",
+      "--sk-text-xs-tracking",
+      "--sk-text-xs-weight",
+    ],
+    ai: {
+      summary: "A styled container for tabular data, which the consumer writes as a real table.",
+      whenToUse: [
+        "Tabular data where comparison down a column is the point",
+        "The same data in a narrow viewport must scroll sideways without breaking the page",
+        "The table needs the dense or striped treatment without hand-rolling it",
+      ],
+      whenNotToUse: [
+        "It is a read-only summary of a few fields — use a Card",
+        "The layout is a grid of unrelated panels — use Cards in a layout primitive",
+        "There is one column and no comparison to make — use a list of Text rows",
+      ],
+      accessibility:
+        'The consumer writes the semantics: `<caption>`, `<thead>`, and `<th scope>`. This element adds a scrollable region that is reachable from the keyboard and carries `role="group"` with an accessible name only when `label` is set — a scroll region a keyboard user cannot reach hides its own content. `label` names that region; it is not a substitute for a `<caption>`.',
+      example:
+        '<sk-table label="Deployments">\n  <table>\n    <caption>Deployments in the last 24 hours</caption>\n    <thead>\n      <tr><th scope="col">Build</th><th scope="col">Status</th></tr>\n    </thead>\n    <tbody>\n      <tr><td>4821</td><td>Live</td></tr>\n    </tbody>\n  </table>\n</sk-table>',
+      knownLimitations: [
+        "It does not sort, paginate, or read the rows: the table inside is the consumer's markup",
+        "Sticky headers are not implemented — the scroll height belongs to the consumer's own container, so a sticky offset this element chose would be wrong",
+      ],
+    },
+  },
 ]
 
 for (const component of COMPONENTS) {
-  const files = [
-    { extension: "tsx", type: "registry:component" },
-    { extension: "css", type: "registry:style" },
-  ].map(({ extension, type }) => ({
-    path: `src/components/${component.tag}/${component.tag}.${extension}`,
-    type,
-    checksum: sha256(wcFile(component.tag, extension)),
-  }))
+  // A component may ship more than one element: an accordion is useless without
+  // its items, and tabs without a tab and a panel. `elements` names those extra
+  // elements together with the directory they live in — the same directory as
+  // the main element when they share one, as both of these do — so their files
+  // are installed alongside it and their props are documented with it. Without
+  // this, `cli add accordion` would install a group that renders nothing.
+  const elements = [{ tag: component.tag, dir: component.tag }, ...(component.elements ?? [])]
+  const files = elements.flatMap(({ dir, tag }) =>
+    [
+      { extension: "tsx", type: "registry:component" },
+      { extension: "css", type: "registry:style" },
+    ]
+      // A member element may have no stylesheet of its own — its styles live in
+      // the group's file — and listing a file that does not exist would make the
+      // entry uninstallable.
+      .filter(({ extension }) => existsSync(wcFile(dir, tag, extension)))
+      .map(({ extension, type }) => ({
+        path: `src/components/${dir}/${tag}.${extension}`,
+        type,
+        checksum: sha256(wcFile(dir, tag, extension)),
+      })),
+  )
 
   const entry = {
     $schema: "https://santaka.dev/schema/registry-item-v1.json",
@@ -1046,8 +1317,17 @@ for (const component of COMPONENTS) {
     cssVariables: component.cssVariables,
     localesCovered: ["en-US"],
     license: "MIT",
-    props: propsFor(componentTypes, component.name),
-    events: eventsFor(readFileSync(wcFile(component.tag, "tsx"), "utf8"), eventMetadata),
+    props: elements.flatMap(({ tag }) => propsFor(componentTypes, tag.slice(3))),
+    // Every element is scanned for events, not just the one that names the
+    // entry: `sk-open-change` is dispatched by the accordion *item*, and a
+    // group-only scan would report that the accordion emits nothing.
+    events: [
+      ...new Set(
+        elements.flatMap(({ dir, tag }) =>
+          eventsFor(readFileSync(wcFile(dir, tag, "tsx"), "utf8"), eventMetadata),
+        ),
+      ),
+    ].sort(),
     ai: { ...component.ai, localesCovered: ["en-US"] },
   }
 

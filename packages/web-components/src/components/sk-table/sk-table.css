@@ -1,0 +1,158 @@
+/*
+ * Table styles.
+ *
+ * The component is chrome, not a floating layer, so the container gets the
+ * brutalist treatment: a 3px stroke, no rounding, a zero-blur offset shadow.
+ * Everything inside it is the consumer's table and is styled by descendant
+ * selectors from the host — scoped mode keeps the consumer's nodes in the
+ * host's own subtree, so `sk-table thead th` matches and a `<slot>` selector
+ * would not (scoped mode removes the slot element; sk-card's stylesheet
+ * records that defect by name).
+ */
+
+sk-table {
+  --sk-table-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-table-fg: var(--sk-color-text, #17141c);
+  --sk-table-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-table-rule: var(--sk-color-border, #e2dff0);
+  --sk-table-stripe: var(--sk-color-surface-sunken, #edebf5);
+  --sk-table-muted: var(--sk-color-text-muted, #5f5a6b);
+  --sk-table-cell-padding-block: var(--sk-space-3, 0.75rem);
+  --sk-table-cell-padding-inline: var(--sk-space-4, 1rem);
+  --sk-table-ring: var(--sk-color-focus-ring, #6d28d9);
+}
+
+sk-table .sk-table__viewport {
+  border: var(--sk-border-thick, 3px) solid var(--sk-table-border);
+  border-radius: 0;
+  background-color: var(--sk-table-bg);
+  color: var(--sk-table-fg);
+  box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  box-sizing: border-box;
+}
+
+/* The overflow lives on the viewport, not the host: the host is inline content
+   in the consumer's flow, and scrolling an ancestor of the border would clip
+   the shadow rather than the table. */
+sk-table .sk-table__viewport {
+  inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+}
+
+/*
+ * The viewport is a keyboard-reachable scroll container (WCAG 2.1.1): a table
+ * wider than the viewport that cannot take focus is unreachable columns for
+ * keyboard users. The ring is the same hard ring every other focusable part
+ * carries, and it is written with fallbacks because a bare `var(--sk-...)`
+ * renders as no declaration at all when a consumer forgets the theme import
+ * (section 4) — the ring is the one affordance a keyboard user cannot do
+ * without.
+ */
+sk-table .sk-table__viewport:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-table-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+/* `plain` drops the container chrome for a table inside a card, where two
+   competing fills, strokes and shadows would fight. The card they sit inside
+   supplies the boundary. */
+sk-table[variant="plain"] .sk-table__viewport {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+sk-table table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  /* `fixed` is not forced: the consumer's columns are theirs, auto layout is
+     the default behavior of a real table and is left alone. */
+}
+
+sk-table caption {
+  caption-side: top;
+  text-align: start;
+  color: var(--sk-table-muted);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  padding-block-end: var(--sk-space-3, 0.75rem);
+}
+
+/*
+ * Header cells carry the techno-arcade voice at display-input scale: xs type,
+ * heavy weight, tightened tracking, and a 3px block-end stroke in the same
+ * stroke language as every other chrome edge.
+ */
+sk-table thead th {
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 600);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  letter-spacing: var(--sk-text-xs-tracking, 0.06em);
+  /* Logical, not `text-align: left`: a table in an RTL document aligns start. */
+  text-align: start;
+  padding-block: var(--sk-table-cell-padding-block);
+  padding-inline: var(--sk-table-cell-padding-inline);
+  border-block-end: var(--sk-border-thick, 3px) solid var(--sk-table-border);
+}
+
+sk-table tbody td {
+  padding-block: var(--sk-table-cell-padding-block);
+  padding-inline: var(--sk-table-cell-padding-inline);
+  border-block-end: var(--sk-border-width, 1px) solid var(--sk-table-rule);
+}
+
+/* The last body row does not need a rule: the container's stroke (or the card's
+   boundary) is the row's end, and a second line stacked on it doubles up. */
+sk-table tbody tr:last-child td {
+  border-block-end: none;
+}
+
+/* Zebra rows over the sunken surface. Painted on the row so a cell's own
+   background never fights it. */
+sk-table[striped] tbody tr:nth-child(even) {
+  background-color: var(--sk-table-stripe);
+}
+
+/* Compact lowers the padding axis, not a font size: density in a table is
+   breathing room, not type scale. */
+sk-table[density="compact"] {
+  --sk-table-cell-padding-block: var(--sk-space-2, 0.5rem);
+  --sk-table-cell-padding-inline: var(--sk-space-3, 0.75rem);
+}
+
+@media (forced-colors: active) {
+  /*
+   * Forced colors replaces authored colors wholesale, so the viewport border is
+   * pinned to CanvasText so the container keeps a visible boundary, and the
+   * shadow is dropped: a zero-blur offset shadow paints a hard block of the
+   * forced backdrop that reads as a rendering artifact rather than elevation.
+   * The cell rules are pinned too — a border collapsed to the surface color is
+   * a divider that stopped dividing.
+   */
+  sk-table .sk-table__viewport {
+    border-color: CanvasText;
+    box-shadow: none;
+    background-color: Canvas;
+  }
+
+  sk-table thead th {
+    border-block-end-color: CanvasText;
+  }
+
+  sk-table tbody td {
+    border-block-end-color: CanvasText;
+  }
+
+  sk-table[striped] tbody tr:nth-child(even) {
+    background-color: inherit;
+  }
+}
+
+/*
+ * The table does not animate, so there is nothing to reduce here. The block is
+ * deliberate: a table that later gains a hover or transition treatment must add
+ * its own reduced-motion handling rather than assuming the global override
+ * covers a transform, which it does not.
+ */

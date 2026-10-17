@@ -523,6 +523,201 @@
         <output id="dialog-result" class="sk-text-muted" aria-live="polite"></output>
       </section>
 
+      <section aria-labelledby="alert-message-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="alert-message-heading">Alert</h2>
+        </sk-text>
+
+        <!--
+          An inline message, not a floating one: this is chrome. The variant
+          decides both the fill and how insistent the announcement is -- danger
+          and warning interrupt, the rest wait for a pause -- and the glyph
+          carries the meaning next to the colour rather than instead of it.
+        -->
+        <div class="sk-stack">
+          <sk-alert variant="primary" heading="New runner available">
+            A faster runner joined the pool.
+          </sk-alert>
+          <sk-alert variant="success">Build 4821 finished in 42s.</sk-alert>
+          <sk-alert variant="warning" heading="Quota nearly full">
+            Your workspace is using 96% of its quota.
+          </sk-alert>
+          <sk-alert variant="danger" heading="Deployment failed">
+            <p>Runner exited with code 1. No traffic was shifted.</p>
+            <sk-button slot="actions" variant="secondary" size="sm">View logs</sk-button>
+          </sk-alert>
+          <sk-alert variant="neutral">Nothing here needs your attention.</sk-alert>
+        </div>
+      </section>
+
+      <section aria-labelledby="progress-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="progress-heading">Progress</h2>
+        </sk-text>
+
+        <!--
+          Determinate for work with a known end, indeterminate for work without
+          one. The missing `value` is the whole difference between them, and it is
+          also what removes `aria-valuenow` from the announcement.
+        -->
+        <div class="sk-stack">
+          <sk-progress label="Uploading build 4821" value="40"></sk-progress>
+          <sk-progress label="Compressing assets" size="sm" value="70"></sk-progress>
+          <sk-progress label="Complete" size="lg" value="100"></sk-progress>
+          <sk-progress label="Indexing the registry"></sk-progress>
+        </div>
+      </section>
+
+      <section aria-labelledby="empty-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="empty-heading">Empty state</h2>
+        </sk-text>
+
+        <!--
+          A surface, not a control: nothing here takes focus and nothing
+          announces itself. `bare` is the variant for one that sits inside a card,
+          where a second border and a second shadow would read as noise.
+        -->
+        <div class="sk-cluster" style="align-items: stretch">
+          <sk-empty-state
+            heading="No deploys yet"
+            description="Push to main and the first build starts on its own."
+            style="min-inline-size: 20rem"
+          >
+            <sk-button slot="actions" size="sm">New deploy</sk-button>
+          </sk-empty-state>
+          <sk-empty-state
+            variant="bare"
+            size="sm"
+            heading="No results"
+            description="Try a different filter."
+            style="min-inline-size: 20rem"
+          ></sk-empty-state>
+        </div>
+      </section>
+
+      <section aria-labelledby="accordion-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="accordion-heading">Accordion</h2>
+        </sk-text>
+
+        <!--
+          Native <details> and <summary>: the browser owns the disclosure
+          semantics, the focus stop, and Enter/Space. The two instance-level
+          differences are whether a second panel may stay open (`multiple`) and
+          whether the group draws a container of its own (`variant="plain"`, for
+          an accordion inside a card).
+        -->
+        <sk-accordion id="accordion-basic" style="max-inline-size: 36rem">
+          <sk-accordion-item heading="What is Santaka UI?" open>
+            <p>A token layer, a universal Web Components package, and thin framework adapters.</p>
+          </sk-accordion-item>
+          <sk-accordion-item heading="Does it need a framework?">
+            <p>No. The elements work in plain HTML; the adapters only add typing and ergonomics.</p>
+          </sk-accordion-item>
+          <sk-accordion-item heading="How is it themed?">
+            <p>Through CSS custom properties, in light and dark.</p>
+          </sk-accordion-item>
+        </sk-accordion>
+
+        <sk-accordion
+          id="accordion-open-many"
+          multiple
+          variant="plain"
+          style="max-inline-size: 36rem"
+        >
+          <sk-accordion-item heading="First panel">
+            <p>Several panels may be open at once here.</p>
+          </sk-accordion-item>
+          <sk-accordion-item heading="Second panel" open>
+            <p>This one starts open.</p>
+          </sk-accordion-item>
+        </sk-accordion>
+      </section>
+
+      <section aria-labelledby="table-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="table-heading">Table</h2>
+        </sk-text>
+
+        <!--
+          The table is the consumer's own markup -- caption, thead, th scope --
+          and this element contributes the container, the overflow handling, and
+          the style. The scroll region is focusable because a region that scrolls
+          and cannot be reached from the keyboard is unreachable content.
+        -->
+        <sk-table label="Deployments">
+          <table>
+            <caption>
+              Deployments in the last 24 hours
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Build</th>
+                <th scope="col">Environment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>4821</td>
+                <td>production</td>
+                <td><sk-badge variant="success">Live</sk-badge></td>
+                <td>42s</td>
+              </tr>
+              <tr>
+                <td>4820</td>
+                <td>staging</td>
+                <td><sk-badge variant="warning">Pending</sk-badge></td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>4819</td>
+                <td>production</td>
+                <td><sk-badge variant="danger">Failed</sk-badge></td>
+                <td>12s</td>
+              </tr>
+            </tbody>
+          </table>
+        </sk-table>
+
+        <sk-table
+          variant="plain"
+          density="compact"
+          striped
+          label="Queue"
+          style="max-inline-size: 32rem"
+        >
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Job</th>
+                <th scope="col">Runner</th>
+                <th scope="col">Waited</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>lint</td>
+                <td>r-2</td>
+                <td>4s</td>
+              </tr>
+              <tr>
+                <td>unit</td>
+                <td>r-7</td>
+                <td>11s</td>
+              </tr>
+              <tr>
+                <td>browser</td>
+                <td>r-7</td>
+                <td>23s</td>
+              </tr>
+            </tbody>
+          </table>
+        </sk-table>
+      </section>
+
       <section aria-labelledby="structure-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="structure-heading">Structure</h2>

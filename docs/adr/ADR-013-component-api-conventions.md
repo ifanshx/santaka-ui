@@ -35,6 +35,7 @@ Read strictly, "all other boolean props" includes booleans that toggle a
 | `sk-separator` | `decorative` | removes a purely visual line from the accessibility tree |
 | `sk-dialog` | `modal` | renders blocking via `showModal()` instead of inline |
 | `sk-dialog` | `dismissible` | closes when the backdrop is clicked |
+| `sk-table` | `striped` | zebra rows: even body rows take the sunken surface |
 
 Under a strict reading these must become `isExternal`, `isSubtle`, `isDot`.
 
@@ -72,9 +73,17 @@ in a document titled "component API conventions".
    `hasIcon`, `canSubmit` fit here.
 4. **Presentation booleans are open.** The conformance test classifies every
    boolean and reports the ones fitting neither reading, naming ADR-013 as the
-   owner of the decision. `sk-link.external`, `sk-link.subtle`, and
-   `sk-badge.dot` are the live instances.
-5. **Renaming is the default when the question resolves toward prefixing.** If it
+   owner of the decision. `sk-link.external`, `sk-link.subtle`,
+   `sk-badge.dot`, `sk-separator.decorative`, `sk-dialog.modal`,
+   `sk-dialog.dismissible`, and — added when the table shipped —
+   `sk-table.striped` are the live instances.
+5. **A boolean copied from the native element keeps the platform's spelling.**
+   `sk-accordion.multiple` is `<select multiple>` and `<input multiple>`: the
+   platform name for the same concept, on the element that carries it. It is
+   neither an ARIA state nor a presentation flag, so neither of the readings
+   above assigns it a prefix, and renaming it to `isMultiple` would be a second
+   spelling for an attribute the platform already named.
+6. **Renaming is the default when the question resolves toward prefixing.** If it
    does, `external` → `isExternal` and friends ship as a minor-with-notice,
    because the prop names are public API in every framework adapter.
 

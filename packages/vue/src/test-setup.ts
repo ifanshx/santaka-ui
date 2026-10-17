@@ -423,4 +423,75 @@ beforeAll(() => {
       },
     )
   }
+
+  // The five new components follow their shipped elements' prop surfaces. Like
+  // sk-switch above, all of them render into light DOM (stencil "scoped"), so
+  // the stubs are inert default-carrying classes; heading/label-style props go
+  // through properties, and `open` on sk-accordion-item is the reflectable
+  // `<details>` state the real element mirrors on a user toggle.
+  if (!customElements.get("sk-alert")) {
+    customElements.define(
+      "sk-alert",
+      class extends HTMLElement {
+        variant = "neutral"
+        heading = ""
+      },
+    )
+  }
+
+  if (!customElements.get("sk-progress")) {
+    customElements.define(
+      "sk-progress",
+      class extends HTMLElement {
+        value?: number
+        max = 100
+        label = ""
+        size = "md"
+      },
+    )
+  }
+
+  if (!customElements.get("sk-empty-state")) {
+    customElements.define(
+      "sk-empty-state",
+      class extends HTMLElement {
+        variant = "default"
+        size = "md"
+        heading = ""
+        description = ""
+      },
+    )
+  }
+
+  if (!customElements.get("sk-accordion")) {
+    customElements.define(
+      "sk-accordion",
+      class extends HTMLElement {
+        multiple = false
+        variant = "default"
+      },
+    )
+  }
+
+  if (!customElements.get("sk-accordion-item")) {
+    customElements.define(
+      "sk-accordion-item",
+      class extends HTMLElement {
+        heading = ""
+        open = false
+      },
+    )
+  }
+
+  if (!customElements.get("sk-table")) {
+    customElements.define(
+      "sk-table",
+      class extends HTMLElement {
+        variant = "default"
+        density = "default"
+        striped = false
+        label = ""
+      },
+    )
+  }
 })

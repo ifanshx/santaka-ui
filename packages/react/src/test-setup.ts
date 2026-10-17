@@ -383,4 +383,73 @@ beforeAll(() => {
       },
     )
   }
+
+  if (!customElements.get("sk-alert")) {
+    customElements.define(
+      "sk-alert",
+      class extends HTMLElement {
+        variant = "neutral"
+        heading = ""
+        connectedCallback() {
+          this.setAttribute("role", "status")
+        }
+      },
+    )
+  }
+
+  if (!customElements.get("sk-progress")) {
+    customElements.define(
+      "sk-progress",
+      class extends HTMLElement {
+        value?: number
+        max = 100
+        label = ""
+        size = "md"
+      },
+    )
+  }
+
+  if (!customElements.get("sk-empty-state")) {
+    customElements.define(
+      "sk-empty-state",
+      class extends HTMLElement {
+        variant = "default"
+        size = "md"
+        heading = ""
+        description = ""
+      },
+    )
+  }
+
+  if (!customElements.get("sk-accordion")) {
+    customElements.define(
+      "sk-accordion",
+      class extends HTMLElement {
+        multiple = false
+        variant = "default"
+      },
+    )
+  }
+
+  if (!customElements.get("sk-accordion-item")) {
+    customElements.define(
+      "sk-accordion-item",
+      class extends HTMLElement {
+        heading = ""
+        open = false
+      },
+    )
+  }
+
+  if (!customElements.get("sk-table")) {
+    customElements.define(
+      "sk-table",
+      class extends HTMLElement {
+        variant = "default"
+        density = "default"
+        striped = false
+        label = ""
+      },
+    )
+  }
 })

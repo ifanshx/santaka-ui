@@ -1,0 +1,110 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "empty-state",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-empty-state/sk-empty-state.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-bef9bfcbbd6a727bdd45806af856a67d0347e50f3fe25930bf37ec57b84ff68d"
+    },
+    {
+      "path": "src/components/sk-empty-state/sk-empty-state.css",
+      "type": "registry:style",
+      "checksum": "sha256-3b995ce6d1f69c90d344de5a608538a97275691520be942a98d1fd1797a9afc1"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-icon-lg",
+    "--sk-icon-md",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-none",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-space-5",
+    "--sk-space-6",
+    "--sk-space-8",
+    "--sk-text-lg-line-height",
+    "--sk-text-lg-size",
+    "--sk-text-lg-weight",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Supporting text under the heading."
+    },
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Plain text in a `<span>`, not a heading element. This component does not know what level it sits at in the document's outline, and a hard-coded heading inside it contradicts the surrounding structure. Decision shared with sk-card."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Density axis: block padding and glyph size. `md` is the default because an empty state usually fills the whole area left by the missing content."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"bare\"",
+      "default": "\"default\"",
+      "description": "Visual treatment.  `default` is the stroked, shadowed surface. `bare` drops the fill, the stroke and the shadow for an empty state nested inside another surface, where two competing boundaries would fight."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "The surface a list, table, or panel shows when it has nothing to display.",
+    "whenToUse": [
+      "A region is legitimately empty and the page should say why",
+      "The empty region has a next action, such as Create or Import",
+      "A filter or a search matched nothing and the user can widen it"
+    ],
+    "whenNotToUse": [
+      "The content is still loading — use a Skeleton or a Spinner",
+      "The message is about the page as a whole — use an Alert",
+      "It is a placeholder for one field inside a form"
+    ],
+    "accessibility": "Not focusable, with no role and no live region: an empty state is content, not a status change, and announcing \"no results\" on every render is noise. `heading` renders as a span rather than a heading element, because the level belongs to the consumer's document outline — put a real heading in the body slot when it needs to be one. Slotted actions keep their own semantics.",
+    "example": "<sk-empty-state heading=\"No deploys yet\" description=\"Push to main and the first build starts on its own.\">\n  <sk-button slot=\"actions\">New deploy</sk-button>\n</sk-empty-state>",
+    "knownLimitations": [
+      "`bare` drops the fill, the border, and the shadow rather than restyling them, because it exists for one inside a Card",
+      "The icon slot falls back to a dashed CSS glyph: this package ships no icon set"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

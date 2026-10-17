@@ -1,0 +1,105 @@
+/*
+ * Progress styles.
+ *
+ * A progress bar is feedback, not chrome and not a floating layer. It carries a
+ * hard-edged 3px track stroke and no rounding to match the material everything
+ * else is drawn in, but it is non-interactive: there is no hover, no press, no
+ * focus ring, and deliberately no shadow treatment to lift.
+ */
+
+sk-progress {
+  --sk-progress-track-bg: var(--sk-color-surface-sunken, #eceaf3);
+  --sk-progress-bar-bg: var(--sk-color-primary, #6d28d9);
+  --sk-progress-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-progress-block-size: var(--sk-space-4, 1rem);
+
+  display: block;
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+
+sk-progress .sk-progress__track {
+  overflow: hidden;
+  block-size: var(--sk-progress-block-size);
+  border: var(--sk-border-thick, 3px) solid var(--sk-progress-border);
+  border-radius: 0;
+  background-color: var(--sk-progress-track-bg);
+}
+
+sk-progress .sk-progress__bar {
+  block-size: 100%;
+  background-color: var(--sk-progress-bar-bg);
+  border-inline-end: var(--sk-border-width, 1px) solid var(--sk-progress-border);
+}
+
+/* Size scales the track's block size only — the bar is a fill, not a control,
+   and its geometry follows the track. */
+sk-progress[data-size="sm"] {
+  --sk-progress-block-size: var(--sk-space-2, 0.5rem);
+}
+
+sk-progress[data-size="lg"] {
+  --sk-progress-block-size: var(--sk-space-6, 1.5rem);
+}
+
+/*
+ * Indeterminate sweep. Glass timing and easing, because a progress bar is the
+ * one chrome surface whose whole life is motion: the fast-start long-settle
+ * sweep reads as "still working" rather than as a UI element being poked.
+ * Looping without a named alternate direction so the bar always re-enters from
+ * the same side — progress does not run backwards for the eye.
+ */
+sk-progress[data-indeterminate] .sk-progress__bar {
+  animation: sk-progress-sweep var(--sk-duration-overlay-slow, 420ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1)) infinite;
+}
+
+@keyframes sk-progress-sweep {
+  from {
+    margin-inline-start: -40%;
+    inline-size: 40%;
+  }
+
+  to {
+    margin-inline-start: 100%;
+    inline-size: 40%;
+  }
+}
+
+/*
+ * Reduced motion: the sweep is removed ENTIRELY (a 1ms sweep is still a sweep,
+ * and the global override does not stop the bar from teleporting all over the
+ * track). The bar renders as a static 40% partial fill instead.
+ *
+ * The static width is the honest degradation, not a nicety: with the animation
+ * gone but the bar at width 0, the control would read as zero progress — a lie
+ * about a state the component's whole job is to report. A partial fill says
+ * "unknown share of work has happened" without animating, which is exactly
+ * what "indeterminate" means.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-progress[data-indeterminate] .sk-progress__bar {
+    animation: none;
+    margin-inline-start: 0;
+    inline-size: 40%;
+  }
+}
+
+@media (forced-colors: active) {
+  /*
+   * Forced colors replaces authored colors wholesale. The track border is
+   * pinned to CanvasText so the boundary survives, and the fill becomes
+   * Highlight — the system's own "selection/progress" voice, which assistive
+   * theme users already read as progress. The 1px fill edge is dropped: a
+   * Highlight fill on a Highlight edge is one fill, not two.
+   */
+  sk-progress {
+    --sk-progress-border: CanvasText;
+    --sk-progress-track-bg: Canvas;
+    --sk-progress-bar-bg: Highlight;
+  }
+
+  sk-progress .sk-progress__bar {
+    border-inline-end: none;
+  }
+}

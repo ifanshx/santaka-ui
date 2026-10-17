@@ -162,6 +162,42 @@ type SelectElement = HTMLElement & {
   defaultValue: string
 }
 
+type AlertElement = HTMLElement & {
+  variant: "neutral" | "primary" | "success" | "warning" | "danger"
+  heading: string
+}
+
+type ProgressElement = HTMLElement & {
+  value?: number
+  max: number
+  label: string
+  size: "sm" | "md" | "lg"
+}
+
+type EmptyStateElement = HTMLElement & {
+  variant: "default" | "bare"
+  size: "sm" | "md" | "lg"
+  heading: string
+  description: string
+}
+
+type AccordionElement = HTMLElement & {
+  multiple: boolean
+  variant: "default" | "plain"
+}
+
+type AccordionItemElement = HTMLElement & {
+  heading: string
+  open: boolean
+}
+
+type TableElement = HTMLElement & {
+  variant: "default" | "plain"
+  density: "default" | "compact"
+  striped: boolean
+  label: string
+}
+
 type TabsElement = HTMLElement & {
   active: number
 }
@@ -406,6 +442,36 @@ declare module "react" {
         active?: number
       }
       "sk-tab": BaseCustomElement<TabElement> & {
+        label?: string
+      }
+      "sk-alert": BaseCustomElement<AlertElement> & {
+        variant?: "neutral" | "primary" | "success" | "warning" | "danger"
+        heading?: string
+      }
+      "sk-progress": BaseCustomElement<ProgressElement> & {
+        value?: number
+        max?: number
+        label?: string
+        size?: "sm" | "md" | "lg"
+      }
+      "sk-empty-state": BaseCustomElement<EmptyStateElement> & {
+        variant?: "default" | "bare"
+        size?: "sm" | "md" | "lg"
+        heading?: string
+        description?: string
+      }
+      "sk-accordion": BaseCustomElement<AccordionElement> & {
+        multiple?: boolean
+        variant?: "default" | "plain"
+      }
+      "sk-accordion-item": BaseCustomElement<AccordionItemElement> & {
+        heading?: string
+        open?: boolean
+      }
+      "sk-table": BaseCustomElement<TableElement> & {
+        variant?: "default" | "plain"
+        density?: "default" | "compact"
+        striped?: boolean
         label?: string
       }
       "sk-tab-panel": BaseCustomElement<TabPanelElement> & {}

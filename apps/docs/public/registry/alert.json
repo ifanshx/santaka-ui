@@ -1,0 +1,107 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "alert",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-alert/sk-alert.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-b0318751277e5dbf27bc7e75c94337a40201d8a38c36527073103e468558e6ae"
+    },
+    {
+      "path": "src/components/sk-alert/sk-alert.css",
+      "type": "registry:style",
+      "checksum": "sha256-a3fac4febeee35c9ba888a7e87c3e62b105948fe91c8ba8b33d455d8ab0ff344"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-danger-fg",
+    "--sk-color-danger-subtle",
+    "--sk-color-primary",
+    "--sk-color-primary-subtle",
+    "--sk-color-primary-text",
+    "--sk-color-shadow",
+    "--sk-color-success",
+    "--sk-color-success-fg",
+    "--sk-color-success-subtle",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-color-warning",
+    "--sk-color-warning-fg",
+    "--sk-color-warning-subtle",
+    "--sk-font-sans",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-none",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-weight",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Heading text for the alert, rendered as a `<span>`.  Named `heading`, not `title`, for the reason sk-card records: `title` is a standardized `HTMLElement` member and a prop by that name is shadowed by the prototype property, so the browser would surface it as a hover tooltip on the whole alert.  A string rather than a heading element: the alert does not know what level it sits at in the document's outline, and a hard-coded heading inside it produces a level that may contradict the surrounding structure. A consumer who needs a real heading puts one in the body itself."
+    },
+    {
+      "name": "variant",
+      "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "\"neutral\"",
+      "description": "Visual emphasis.  Only `variant` is an appearance prop. The variant also picks the component's default live-region role, unless the consumer has already set one."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "An inline message about the current page: a success, a warning, a failure, or a note.",
+    "whenToUse": [
+      "A result or a state needs stating next to the content it describes",
+      "A page-level or form-level failure must be visible without a modal",
+      "The message may need an action, such as Retry or View logs"
+    ],
+    "whenNotToUse": [
+      "It interrupts a flow the user must acknowledge — use an Alert Dialog",
+      "It is a transient, self-dismissing update — use a Toast",
+      "It labels a value with one word's worth of state — use a Badge"
+    ],
+    "accessibility": "Carries `role=\"alert\"` for the danger and warning variants, so those interrupt; the rest are `role=\"status\"` and wait for a pause. The variant glyph is aria-hidden and differs in shape as well as colour, so the message survives a monochrome display. A consumer-set `role` is never overwritten.",
+    "example": "<sk-alert variant=\"warning\" heading=\"Quota nearly full\">Your workspace is using 96% of its quota.</sk-alert>",
+    "knownLimitations": [
+      "No dismiss control, deliberately: a dismissible alert needs focus management and a close affordance that belongs to a Dialog or a Toast",
+      "The actions slot is not part of the announced message, so an action the user must take also needs to exist in the page"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -5,7 +5,7 @@ import { expect, test, type Page } from "@playwright/test"
  * "Every component has an RTL visual regression case and a `--sk-touch-min`
  * compliant target").
  *
- * The RTL half is covered by the `visual` project's 57 baselines; this file
+ * The RTL half is covered by the `visual` project's 72 baselines; this file
  * covers the touch half, which until now was asserted for **Button and Icon
  * Button only** and measured for nothing else.
  *
@@ -85,6 +85,13 @@ const TARGETS = [
   { name: "checkbox", selector: "sk-checkbox", floor: "token" },
   { name: "switch", selector: "sk-switch", floor: "token" },
   { name: "radio-group", selector: "sk-radio-group", floor: "token" },
+  // The summary is the activation target; the drawn marker and heading sit
+  // inside it, so the summary box is what must clear the token.
+  {
+    name: "accordion",
+    selector: "#accordion-basic sk-accordion-item:first-child summary",
+    floor: "token",
+  },
   // WCAG SC 2.5.8 exempts inline targets; a link in a line of text is the case.
   {
     name: "link",

@@ -13,11 +13,15 @@
  * `defineCustomElements(window)` from client code (ADR-005), which keeps
  * hydration from upgrading tags the server already produced.
  */
+export { SkAccordion } from "./components/sk-accordion/sk-accordion.js"
+export { SkAccordionItem } from "./components/sk-accordion/sk-accordion-item.js"
+export { SkAlert } from "./components/sk-alert/sk-alert.js"
 export { SkAlertDialog } from "./components/sk-alert-dialog/sk-alert-dialog.js"
 export { SkBadge } from "./components/sk-badge/sk-badge.js"
 export { SkButton } from "./components/sk-button/sk-button.js"
 export { SkCard } from "./components/sk-card/sk-card.js"
 export { SkDialog } from "./components/sk-dialog/sk-dialog.js"
+export { SkEmptyState } from "./components/sk-empty-state/sk-empty-state.js"
 export { SkIconButton } from "./components/sk-icon-button/sk-icon-button.js"
 export { SkInput } from "./components/sk-input/sk-input.js"
 export { SkSelect } from "./components/sk-select/sk-select.js"
@@ -26,7 +30,9 @@ export { SkSwitch } from "./components/sk-switch/sk-switch.js"
 export { SkRadioGroup } from "./components/sk-radio-group/sk-radio-group.js"
 export { SkLabel } from "./components/sk-label/sk-label.js"
 export { SkLink } from "./components/sk-link/sk-link.js"
+export { SkProgress } from "./components/sk-progress/sk-progress.js"
 export { SkSeparator } from "./components/sk-separator/sk-separator.js"
+export { SkTable } from "./components/sk-table/sk-table.js"
 export { SkText } from "./components/sk-text/sk-text.js"
 export { SkSkeleton } from "./components/sk-skeleton/sk-skeleton.js"
 export { SkSpinner } from "./components/sk-spinner/sk-spinner.js"
@@ -40,11 +46,15 @@ export type { ButtonSize, ButtonType, ButtonVariant } from "./components/shared/
 
 /** Custom element tags this package defines. */
 export const COMPONENTS = [
+  "sk-accordion",
+  "sk-accordion-item",
+  "sk-alert",
   "sk-alert-dialog",
   "sk-badge",
   "sk-button",
   "sk-card",
   "sk-dialog",
+  "sk-empty-state",
   "sk-icon-button",
   "sk-input",
   "sk-select",
@@ -53,12 +63,14 @@ export const COMPONENTS = [
   "sk-radio-group",
   "sk-label",
   "sk-link",
+  "sk-progress",
   "sk-separator",
   "sk-skeleton",
   "sk-spinner",
   "sk-tab",
   "sk-tab-panel",
   "sk-tabs",
+  "sk-table",
   "sk-text",
   "sk-textarea",
   "sk-toast",

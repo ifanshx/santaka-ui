@@ -1,0 +1,97 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "progress",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-progress/sk-progress.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-76c890823d13439104bfae1c4effa91d6db7844ad6ef88a2e3705d1dab48f230"
+    },
+    {
+      "path": "src/components/sk-progress/sk-progress.css",
+      "type": "registry:style",
+      "checksum": "sha256-771c43bc1eb3a44342d30ea8e342cce47f0fdb7fe05886b91f5bb88dbbf0f4e8"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-border-width",
+    "--sk-color-border-strong",
+    "--sk-color-primary",
+    "--sk-color-surface-sunken",
+    "--sk-duration-overlay-slow",
+    "--sk-ease-glass",
+    "--sk-space-2",
+    "--sk-space-4",
+    "--sk-space-6"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name. Rendered as `aria-label` only when non-empty AND only when the host does not already carry `aria-label` or `aria-labelledby`, because a consumer's own labelling must never be clobbered by a default."
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "default": "100",
+      "description": "The scale the value is measured against. Clamped to 0..max on render."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Track height scale."
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "default": null,
+      "description": "The current value. A finite number makes the bar determinate; an absent (or non-finite) value makes it indeterminate — there is no honest percentage to report for a task whose length is unknown, so the contract says the bar sweeps instead of filling."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Shows how far along a task is, or that a task is running with no known end.",
+    "whenToUse": [
+      "Work is in progress and the user is waiting on it",
+      "The completion fraction is known and moving",
+      "The progress explains why something else on the page is unavailable"
+    ],
+    "whenNotToUse": [
+      "The operation finished and its result is what matters — use an Alert",
+      "A single unmeasured delay is all there is — use a Spinner",
+      "It is a placeholder for content that is about to arrive — use a Skeleton"
+    ],
+    "accessibility": "`role=\"progressbar\"` with `aria-valuemin` and `aria-valuemax`, and `aria-valuenow` only when the value is determinate — an indeterminate bar that announced a number would be lying. The bar's width is derived from value over max. The `label` prop becomes `aria-label` only when the consumer set none of its own.",
+    "example": "<sk-progress label=\"Uploading build 4821\" value=\"40\"></sk-progress>",
+    "knownLimitations": [
+      "No percentage text is rendered: formatting a number for the reader's locale is an Intl decision this element does not make",
+      "Under reduced motion the indeterminate bar keeps a static partial fill rather than sitting at zero, because an empty track reads as not started rather than unknown"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

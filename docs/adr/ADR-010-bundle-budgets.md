@@ -34,12 +34,20 @@ budgets are unchanged.
 
 The runtime budget is raised in the script itself as components ship, each
 raise recorded in the `BUDGETS` comment: 12 → 13 (Tier 1 completion), → 14
-(Dialog), → 15 (Toast), → 16 (Select), → 17 (Checkbox), and **17 → 18 KB** for
-Switch and Radio Group, which closed the v1.0 Tier 2 scope. The last raise
-added 1.13 KB combined — 0.57 KB per component — while the per-component CSS
-average continued to fall (2.45 → 2.24 KB). The runtime now bundles 21
-components where the original 12 KB figure covered eight; the growth is
+(Dialog), → 15 (Toast), → 16 (Select), → 17 (Checkbox), → 18 KB for
+Switch and Radio Group, which closed the v1.0 Tier 2 scope, and **18 → 21 KB**
+for the five components that closed the remaining Tier 2 scope: accordion (with
+its item), alert, empty-state, progress, and table. The last raise added 1.96 KB
+for five components — 0.39 KB per component — while the per-component CSS
+average moved 2.24 → 2.33 KB as the count went 21 → 26. The runtime now bundles
+26 components where the original 12 KB figure covered eight; the growth is
 component surface, not regression.
+
+The measurement for the last raise is stated in the fixture's own terms: the
+barrel without those six classes bundles to 18.14 KB and with them to 20.10 KB.
+The 21 KB figure leaves ~4% headroom, which is deliberate — a budget with no
+headroom fails on the next component rather than on a regression, and this row
+has already been raised once per component batch.
 
 ## Evidence: the growth is the token surface, not a regression
 

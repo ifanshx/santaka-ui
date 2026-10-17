@@ -1,0 +1,171 @@
+/*
+ * Alert styles.
+ *
+ * An alert is chrome, not a floating layer, so it carries the brutalist
+ * treatment: a 3px stroke, no rounding, and a zero-blur offset shadow. It is
+ * also an inline, static status message — never a toast, never a dialog — so
+ * there is no glass and no entrance animation here.
+ */
+
+sk-alert {
+  --sk-alert-bg: var(--sk-color-surface-sunken, #f1eef8);
+  --sk-alert-fg: var(--sk-color-text, #17141c);
+  --sk-alert-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-alert-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-alert-glyph: var(--sk-color-text-muted, #5f5a6b);
+  --sk-alert-gap: var(--sk-space-3, 0.75rem);
+  --sk-alert-padding: var(--sk-space-4, 1rem);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-alert-gap);
+  padding: var(--sk-alert-padding);
+  border: var(--sk-border-thick, 3px) solid var(--sk-alert-border);
+  border-radius: 0;
+  background-color: var(--sk-alert-bg);
+  color: var(--sk-alert-fg);
+  box-shadow: var(--sk-alert-shadow) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+  box-sizing: border-box;
+}
+
+/*
+ * Variants pair a foreground with a background chosen together — the same
+ * mapping sk-badge uses — so the text clears contrast against its own fill.
+ * The tinted glyph stays always-rendered: colour is never the only signal.
+ */
+sk-alert[data-variant="primary"] {
+  --sk-alert-bg: var(--sk-color-primary-subtle, #f1ebfd);
+  --sk-alert-fg: var(--sk-color-primary-text, #4c1d95);
+  --sk-alert-border: var(--sk-color-primary, #6d28d9);
+  --sk-alert-glyph: var(--sk-color-primary, #6d28d9);
+}
+
+sk-alert[data-variant="success"] {
+  --sk-alert-bg: var(--sk-color-success-subtle, #e9f6ed);
+  --sk-alert-fg: var(--sk-color-success-fg, #166534);
+  --sk-alert-border: var(--sk-color-success, #15803d);
+  --sk-alert-glyph: var(--sk-color-success, #15803d);
+}
+
+sk-alert[data-variant="warning"] {
+  --sk-alert-bg: var(--sk-color-warning-subtle, #fcf3e4);
+  --sk-alert-fg: var(--sk-color-warning-fg, #92400e);
+  --sk-alert-border: var(--sk-color-warning, #92400e);
+  --sk-alert-glyph: var(--sk-color-warning, #92400e);
+}
+
+sk-alert[data-variant="danger"] {
+  --sk-alert-bg: var(--sk-color-danger-subtle, #fdeded);
+  --sk-alert-fg: var(--sk-color-danger-fg, #b91c1c);
+  --sk-alert-border: var(--sk-color-danger, #dc2626);
+  --sk-alert-glyph: var(--sk-color-danger, #dc2626);
+}
+
+/*
+ * The glyph is a single CSS-drawn element: no icon font, no SVG, no
+ * dependency. Each variant restyles the same square so the shape, not only the
+ * hue, repeats the variant's meaning — a filled square for the informational
+ * variants, a warning triangle via clip-path, a danger rotated square, a
+ * success circle.
+ */
+sk-alert .sk-alert__icon {
+  position: relative;
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-block-start: 1px; /* optical alignment with the first text line */
+  background-color: var(--sk-alert-glyph);
+  /* neutral / primary: a filled square */
+  clip-path: none;
+}
+
+sk-alert[data-variant="warning"] .sk-alert__icon {
+  /* triangle via clip-path */
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+sk-alert[data-variant="danger"] .sk-alert__icon {
+  /* rotated square: a plain 45deg rotate under forced colors would still be
+     audible to sighted keyboard users as geometry, and reduced motion must
+     never be asked to undo a static transform that is not an animation, so the
+     diamond is drawn in clip-path too. */
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+sk-alert[data-variant="success"] .sk-alert__icon {
+  /* circle: drawn in clip-path like the others, so all four glyphs are one
+     draw on the same box and the circle is a shape rather than a bordered
+     style. */
+  clip-path: circle(50%);
+}
+
+sk-alert .sk-alert__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+sk-alert .sk-alert__heading {
+  font-size: var(--sk-text-base-size, 1rem);
+  font-weight: var(--sk-text-base-weight, 400);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+}
+
+/* The alert carries its own small text scale, so slotted content must be reset
+   to inherit it rather than to the page's default. */
+sk-alert .sk-alert__body {
+  display: block;
+}
+
+sk-alert .sk-alert__body > p {
+  margin: 0;
+}
+
+/*
+ * The actions row is separated by a rule rather than by a gap, for the same
+ * reason sk-card's footer is: action rows need a boundary the eye can find.
+ * The wrapper always renders, so the unfilled case is removed by CSS.
+ */
+sk-alert .sk-alert__actions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  padding-block-start: var(--sk-space-2, 0.5rem);
+  align-self: center;
+}
+
+sk-alert .sk-alert__actions:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  /*
+   * Forced colors replaces authored colors wholesale, so the border is pinned
+   * to CanvasText so the alert keeps a visible boundary, the glyph to the same
+   * so the shape still repeats the meaning, and the shadow is dropped: a
+   * zero-blur offset shadow paints a hard block of the forced backdrop that
+   * reads as a rendering artifact rather than as elevation.
+   */
+  sk-alert {
+    --sk-alert-border: CanvasText;
+    --sk-alert-fg: CanvasText;
+    --sk-alert-glyph: CanvasText;
+    --sk-alert-shadow: var(--sk-shadow-brutal-none, none);
+  }
+}
+
+/*
+ * An alert does not animate — no entrance, no press, no spin — so there is
+ * nothing to reduce here. The block is deliberate: an alert that later gains a
+ * hover or entrance treatment must add its own reduced-motion handling rather
+ * than assuming the global override covers a transform, which it does not.
+ */

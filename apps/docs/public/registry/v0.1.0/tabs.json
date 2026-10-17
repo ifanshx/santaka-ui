@@ -27,6 +27,16 @@
       "path": "src/components/sk-tabs/sk-tabs.css",
       "type": "registry:style",
       "checksum": "sha256-407b3baa0eca3bca37e83976dd0fa4450428e2c7bf71476496efda9148c3fb45"
+    },
+    {
+      "path": "src/components/sk-tabs/sk-tab.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-c332c6b9e8dca30fc60b62616a017846ca5a33f6fb148ab4774b46a7290fb627"
+    },
+    {
+      "path": "src/components/sk-tabs/sk-tab-panel.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-226bcef558955a24e538cc8e03cdb81911a50cd3945a8b5642867cf562af92df"
     }
   ],
   "cssVariables": [
@@ -59,6 +69,18 @@
       "type": "number",
       "default": "0",
       "description": "The active tab's index. Zero-based, over the tabs in DOM order."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The tab's label. A consumer may instead slot rich content."
+    },
+    {
+      "name": "hidden",
+      "type": "boolean",
+      "default": "true",
+      "description": "Panels start hidden; the widget reveals the active one."
     }
   ],
   "events": [

@@ -1,0 +1,213 @@
+/*
+ * Accordion styles.
+ *
+ * The base is the native `<details>`/`<summary>` pair; this file dresses it.
+ * Chrome is chrome: in the `default` variant the container is a 3px stroke with
+ * no rounding and a hard offset shadow, and the items inside it are separated
+ * by rules of the same weight. `plain` drops the container chrome for an
+ * accordion that sits inside a card, mirroring sk-card's `bare` reasoning.
+ *
+ * The native marker is removed and replaced with a CSS-drawn plus/minus on the
+ * marker element — drawn with pseudo-elements, never an SVG or a font glyph.
+ *
+ * Scoped mode removes the `<slot>` element, so the body is styled through the
+ * rendered `.sk-accordion__content` wrapper, never through a slot selector.
+ *
+ * Note: components do not inherit through shadow boundaries here (there is
+ * none), but `<summary>` resets display to `list-item`; `flex` restores the
+ * layout the marker and heading need, and `list-style: none` plus
+ * `::-webkit-details-marker` remove the triangle the platform would draw.
+ */
+
+sk-accordion {
+  --sk-accordion-bg: var(--sk-color-surface-raised, #f7f5fb);
+  --sk-accordion-fg: var(--sk-color-text, #17141c);
+  --sk-accordion-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-accordion-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-accordion-rule: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  --sk-accordion-ring: var(--sk-color-focus-ring, #6d28d9);
+
+  display: block;
+  background-color: var(--sk-accordion-bg);
+  color: var(--sk-accordion-fg);
+  border: var(--sk-border-thick, 3px) solid var(--sk-accordion-border);
+  border-radius: 0;
+  box-shadow: var(--sk-accordion-shadow) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  box-sizing: border-box;
+}
+
+sk-accordion-item {
+  display: block;
+}
+
+/*
+ * Items in the stroked container are separated by a 3px rule, and the first
+ * item draws NO top rule — it would double the container's own top edge. In the
+ * plain variant the rule is a hairline instead, and the first item draws it too:
+ * with no container stroke there is nothing above it for it to double.
+ */
+sk-accordion[variant="plain"] {
+  --sk-accordion-rule: var(--sk-border-width, 1px) solid var(--sk-color-border, #e2dff0);
+}
+
+sk-accordion[variant="default"] sk-accordion-item + sk-accordion-item,
+sk-accordion[variant="plain"] sk-accordion-item + sk-accordion-item,
+sk-accordion[variant="plain"] sk-accordion-item:first-child {
+  border-block-start: var(--sk-accordion-rule);
+}
+
+/* `plain` carries no container chrome: no fill, no stroke, no shadow. */
+sk-accordion[variant="plain"] {
+  --sk-accordion-bg: transparent;
+  --sk-accordion-shadow: var(--sk-shadow-brutal-none, none);
+  border: none;
+  box-shadow: var(--sk-accordion-shadow) var(--sk-color-shadow, #17141c);
+}
+
+sk-accordion-item .sk-accordion__details {
+  display: block;
+}
+
+sk-accordion-item .sk-accordion__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-3, 0.75rem);
+  min-block-size: var(--sk-touch-min, 2.75rem);
+  box-sizing: border-box;
+  /* Space around the text; the min height guarantees the touch target. */
+  padding-block: var(--sk-space-4, 1rem);
+  padding-inline: var(--sk-space-4, 1rem);
+  margin: 0;
+  list-style: none;
+  font-size: var(--sk-text-base-size, 1rem);
+  font-weight: var(--sk-text-base-weight, 400);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* The platform's disclosure triangle is replaced by the drawn marker below. */
+sk-accordion-item summary::-webkit-details-marker {
+  display: none;
+}
+
+sk-accordion-item .sk-accordion__heading {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/*
+ * The drawn marker: a plus at rest, a minus when open. The horizontal stroke is
+ * the element's own `::before`; opening hides the `::after` vertical stroke,
+ * which is what turns a plus into a minus.
+ */
+sk-accordion-item .sk-accordion__marker {
+  position: relative;
+  flex: none;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+}
+
+sk-accordion-item .sk-accordion__marker::before,
+sk-accordion-item .sk-accordion__marker::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 3px;
+  margin-block-start: -1.5px;
+  background-color: currentcolor;
+  transition: background-color var(--sk-duration-control-fast, 90ms)
+    var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+sk-accordion-item .sk-accordion__marker::after {
+  transform: rotate(90deg);
+}
+
+/* Open is a minus: the vertical stroke is removed rather than faded, since a
+   half-visible accident of a mid-transition cross is worse than none. */
+sk-accordion-item[data-open="true"] .sk-accordion__marker::after {
+  display: none;
+}
+
+sk-accordion-item .sk-accordion__summary:focus-visible {
+  outline: var(--sk-ring-width, 3px) solid var(--sk-accordion-ring);
+  outline-offset: var(--sk-ring-offset, 3px);
+}
+
+sk-accordion[variant="plain"] sk-accordion-item .sk-accordion__summary:focus-visible {
+  /* Inside the plain container the ring would clip against the content's own
+     edges on every side, so it draws inward here — same ring, same tokens. */
+  outline-offset: calc(-1 * var(--sk-ring-offset, 3px));
+}
+
+/*
+ * The content wrapper carries the entrance. `opacity` and a small block-axis
+ * `translate` are what a panel opening is; they run on the short arcade timing,
+ * not the overlay one — an accordion is a control, not a dialog.
+ */
+sk-accordion-item .sk-accordion__content {
+  padding-block-end: var(--sk-space-4, 1rem);
+  padding-inline: var(--sk-space-4, 1rem);
+  color: var(--sk-color-text, #17141c);
+  font-size: var(--sk-text-base-size, 1rem);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+  transform: translateY(0);
+  animation: sk-accordion-enter var(--sk-duration-control, 140ms)
+    var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
+  animation-play-state: paused;
+}
+
+/* Native open/close still snaps content; the entrance only runs on open. */
+sk-accordion-item .sk-accordion__details[open] .sk-accordion__content {
+  animation-play-state: running;
+}
+
+@keyframes sk-accordion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Reduced motion removes the animation AND the transform entirely — a 1ms
+ * slide is still a slide, and a transform that only gets faster has not been
+ * reduced.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-accordion-item .sk-accordion__content {
+    animation: none;
+    transform: none;
+  }
+}
+
+/*
+ * Forced colors: the palette replaces every author color, so the container
+ * stroke and the item rules collapse to CanvasText and the hard shadow is
+ * dropped — a zero-blur offset shadow paints a hard block of the forced
+ * backdrop that reads as a rendering artifact rather than as elevation.
+ */
+@media (forced-colors: active) {
+  sk-accordion {
+    --sk-accordion-border: CanvasText;
+    --sk-accordion-shadow: var(--sk-shadow-brutal-none, none);
+    --sk-accordion-rule: var(--sk-border-thick, 3px) solid CanvasText;
+  }
+
+  sk-accordion[variant="plain"] {
+    --sk-accordion-rule: var(--sk-border-width, 1px) solid CanvasText;
+  }
+
+  sk-accordion-item .sk-accordion__marker::before,
+  sk-accordion-item .sk-accordion__marker::after {
+    background-color: CanvasText;
+  }
+}

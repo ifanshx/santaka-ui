@@ -1,0 +1,110 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "table",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-table/sk-table.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-26800f6ca0604ed5cc8d828d0eef8473b7e7a8f09cde0415f77b038b694d2a4e"
+    },
+    {
+      "path": "src/components/sk-table/sk-table.css",
+      "type": "registry:style",
+      "checksum": "sha256-a0a7ff098b517d30acff2a6f04e8dc8358c039afd62e639009cc8d8c8f52a92d"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-border-width",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-focus-ring",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-tracking",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "density",
+      "type": "\"default\" | \"compact\"",
+      "default": "\"default\"",
+      "description": "Cell padding, not a height scale. `size` is the height scale every other component uses and a table has no intrinsic height — it is whatever its rows make it. Density is the axis a table actually varies on, and its default value is named for what it is rather than for a comfort level: `default` matches `variant`, and a table that wants tighter rows opts in."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The name of the scroll region.  The viewport is focusable (`tabindex=\"0\"`) because a scrollable region that cannot be reached from the keyboard is unreachable content (WCAG 2.1.1). With a label it also carries `role=\"group\"` and an accessible name; with none it carries no role at all — an unnamed group is noise in the accessibility tree, not structure."
+    },
+    {
+      "name": "striped",
+      "type": "boolean",
+      "default": "false",
+      "description": "Zebra rows: even body rows take the sunken surface."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"plain\"",
+      "default": "\"default\"",
+      "description": "`default` is the stroked, shadowed container; `plain` drops the container chrome for a table sitting inside a `sk-card`."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A styled container for tabular data, which the consumer writes as a real table.",
+    "whenToUse": [
+      "Tabular data where comparison down a column is the point",
+      "The same data in a narrow viewport must scroll sideways without breaking the page",
+      "The table needs the dense or striped treatment without hand-rolling it"
+    ],
+    "whenNotToUse": [
+      "It is a read-only summary of a few fields — use a Card",
+      "The layout is a grid of unrelated panels — use Cards in a layout primitive",
+      "There is one column and no comparison to make — use a list of Text rows"
+    ],
+    "accessibility": "The consumer writes the semantics: `<caption>`, `<thead>`, and `<th scope>`. This element adds a scrollable region that is reachable from the keyboard and carries `role=\"group\"` with an accessible name only when `label` is set — a scroll region a keyboard user cannot reach hides its own content. `label` names that region; it is not a substitute for a `<caption>`.",
+    "example": "<sk-table label=\"Deployments\">\n  <table>\n    <caption>Deployments in the last 24 hours</caption>\n    <thead>\n      <tr><th scope=\"col\">Build</th><th scope=\"col\">Status</th></tr>\n    </thead>\n    <tbody>\n      <tr><td>4821</td><td>Live</td></tr>\n    </tbody>\n  </table>\n</sk-table>",
+    "knownLimitations": [
+      "It does not sort, paginate, or read the rows: the table inside is the consumer's markup",
+      "Sticky headers are not implemented — the scroll height belongs to the consumer's own container, so a sticky offset this element chose would be wrong"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

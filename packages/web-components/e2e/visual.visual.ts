@@ -38,6 +38,11 @@ const SECTIONS = [
   ["tabs", "tabs"],
   ["alert", "alert dialog"],
   ["dialog", "dialog"],
+  ["alert-message", "alert"],
+  ["progress", "progress"],
+  ["empty", "empty state"],
+  ["accordion", "accordion"],
+  ["table", "table"],
   ["structure", "structure"],
   ["loading", "loading"],
   ["materials", "materials"],
@@ -69,9 +74,9 @@ async function prepare(page: Page, dir: "ltr" | "rtl", theme: "light" | "dark") 
   // `[data-sk-theme="dark"]` for dark), so it is the canary for "the CSS
   // loaded at all". Without this assertion a build that skipped the token
   // package renders the page unstyled, every section looks identical in both
-  // themes, and `--update-snapshots` happily records 57 baselines that are
-  // worthless — which is exactly what happened once. The guard turns that
-  // silent corruption into a failing test.
+  // themes, and `--update-snapshots` happily records a full set of baselines
+  // that are worthless — which is exactly what happened once. The guard turns
+  // that silent corruption into a failing test.
   const colorScheme = await page.evaluate(
     () => getComputedStyle(document.documentElement).colorScheme,
   )

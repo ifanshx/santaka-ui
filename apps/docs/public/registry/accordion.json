@@ -1,0 +1,117 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "accordion",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-accordion/sk-accordion.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-15c53cbd0a44d5b5b93311249798d6e90508b8d085ed3799d1392a79d279dafc"
+    },
+    {
+      "path": "src/components/sk-accordion/sk-accordion.css",
+      "type": "registry:style",
+      "checksum": "sha256-bab40138bf7881e69a030ffe25ee1e3d6898ec1bbbeab71ba27f52d46df0f63a"
+    },
+    {
+      "path": "src/components/sk-accordion/sk-accordion-item.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-13c19c35d63307f9ea93ce798e10dd6564c34b1c55d1c59bf36f10fa72b7dd16"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-border-width",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-focus-ring",
+    "--sk-color-shadow",
+    "--sk-color-surface-raised",
+    "--sk-color-text",
+    "--sk-duration-control",
+    "--sk-duration-control-fast",
+    "--sk-ease-arcade",
+    "--sk-ease-arcade-exit",
+    "--sk-font-sans",
+    "--sk-ring-offset",
+    "--sk-ring-width",
+    "--sk-shadow-brutal",
+    "--sk-shadow-brutal-none",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-weight",
+    "--sk-touch-min"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether several panels may be open at once. When false, opening one item closes the others."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"plain\"",
+      "default": "\"default\"",
+      "description": "Visual dressing. `default` is the stroked container with a hard shadow; `plain` drops the container chrome for an accordion that sits inside a card — mirror of sk-card's `bare` reasoning."
+    },
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The summary text.  A `<span>` inside the `<summary>`, not a heading element: the item does not know what level it sits at in the document outline, and a hard-coded heading inside it contradicts the surrounding structure (sk-card's stated reason for the same shape)."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the panel is expanded. Mirrors `<details open>` and is reflected: a consumer can author `<sk-accordion-item open>` in HTML — including server-rendered markup for an already-expanded item — and the attribute tracks what the browser did on a user toggle, so the parent can close siblings and the consumer can read the real state."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
+  "ai": {
+    "summary": "A stack of disclosure panels where one, or several, can be open at a time.",
+    "whenToUse": [
+      "Secondary content belongs on the page but should not occupy it — questions, advanced settings, release notes",
+      "The reader opens panels in any order and may want none of them open",
+      "The content is short enough to expand in place rather than to open a route"
+    ],
+    "whenNotToUse": [
+      "The sections are the page's navigation — use Tabs",
+      "The content must be read in order, or hiding it loses the thread — keep it on the page",
+      "Every panel starts open and none should close — use headings and sections"
+    ],
+    "accessibility": "Built on the native `<details>` and `<summary>` elements, so the disclosure semantics, the focus stop, the expanded state, and Enter and Space are the browser's rather than reimplemented — which is why the item needs no ARIA of its own. The marker is aria-hidden and drawn with pseudo-elements. `heading` renders as a span inside the summary; a consumer that needs a real heading level puts one in the slot. The summary meets `--sk-touch-min`.",
+    "example": "<sk-accordion>\n  <sk-accordion-item heading=\"What is Santaka UI?\" open>\n    <p>A token layer, a universal package, and framework adapters.</p>\n  </sk-accordion-item>\n  <sk-accordion-item heading=\"Does it need a framework?\">\n    <p>No.</p>\n  </sk-accordion-item>\n</sk-accordion>",
+    "knownLimitations": [
+      "Exclusive by default: opening an item closes its siblings, and `multiple` opts out",
+      "No group-level event summarises the open items — each item dispatches its own bubbling `sk-open-change` with `detail.open`"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

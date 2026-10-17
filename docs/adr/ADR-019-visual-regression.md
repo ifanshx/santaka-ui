@@ -59,7 +59,7 @@ pinned Docker image.**
 
 Every section of the vanilla example page — which mounts every component in
 its documented states — in three passes: **light/ltr, light/rtl, dark/ltr**.
-That is 19 sections × 3 = 57 baselines, and it satisfies §17's per-component
+That is 24 sections × 3 = 72 baselines, and it satisfies §17's per-component
 RTL requirement in the cheapest honest way: the same component photographed in
 both directions, rather than a hand-written RTL assertion per file that could
 silently stop covering a component.
@@ -70,11 +70,12 @@ look at and judge, not a rectangle of isolated markup.
 
 ### The failure this suite already had, and the guard against it
 
-The first run inside the container produced 57 baselines, all "passing", and
-all worthless. The container build was filtered to the `web-components` package
-and its dependencies, which does not include `@santaka-ui/tokens` or
-`@santaka-ui/styles` — `styles` depends on `tokens`, but nothing the
-`web-components` graph touches depends on either. So the page rendered with no
+The first run inside the container produced a full set of baselines, all
+"passing", and all worthless. The container build was filtered to the
+`web-components` package and its dependencies, which does not include
+`@santaka-ui/tokens` or `@santaka-ui/styles` — `styles` depends on `tokens`,
+but nothing the `web-components` graph touches depends on either. So the page
+rendered with no
 token CSS and no component CSS. An unstyled page has no theme, so the light and
 dark shots were byte-identical, and an unstyled page has no layout, so the
 "diff" was a rectangle of default text that would never change when a component
