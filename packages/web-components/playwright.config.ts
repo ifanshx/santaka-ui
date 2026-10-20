@@ -20,7 +20,12 @@ export default defineConfig({
   // and turbo runs several browser-bearing tasks at once, so the ceiling that
   // matters is tasks × workers — see `packages/react/vitest.config.ts` for the
   // full note. Two browsers covers the suite without starving the machine.
-  workers: 2,
+  //
+  // The `browsers` CI job runs this task alone, though, and two workers took one
+  // engine past its 45-minute budget before finishing. It asks for four there
+  // via `PLAYWRIGHT_WORKERS`, which is the honest fix: the number is a function
+  // of what else is running, not a constant.
+  workers: Number(process.env.PLAYWRIGHT_WORKERS ?? 2),
   // Visual-regression defaults (ADR-019). Screenshots are the only test whose
   // result depends on fonts, so the tolerance and the baseline environment are
   // stated rather than left to defaults: 1% of pixels may differ (antialiasing

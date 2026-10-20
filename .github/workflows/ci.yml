@@ -104,6 +104,11 @@ jobs:
       - run: pnpm --filter @santaka-ui/web-components exec playwright install --with-deps ${{ matrix.project == 'chromium-baseline' && 'chromium' || matrix.project == 'firefox-baseline' && 'firefox' || 'webkit' }}
 
       - run: pnpm --filter @santaka-ui/web-components exec playwright test --project ${{ matrix.project }}
+        env:
+          # This job runs one Playwright task alone, so the shared worker cap of
+          # two — which exists because turbo runs several browser-bearing tasks
+          # at once — only makes one engine take longer than the job's budget.
+          PLAYWRIGHT_WORKERS: 4
 
   react-example:
     name: React example submits through a plain form
