@@ -45,8 +45,15 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter @santaka-ui/web-components exec playwright install --with-deps chromium
 
+      # Chromium only. `pnpm run verify` runs `playwright test`, which launches
+      # every project in the config — including firefox, webkit, and visual — so
+      # installing just chromium here made the run fail on a missing Firefox
+      # binary. The cross-engine matrix is the `browsers` job's job, and it has
+      # its own install step; this one is the fast gate.
       - name: Verify
         run: pnpm run verify
+        env:
+          PLAYWRIGHT_PROJECT: chromium-baseline
 
       # The adapter element types are a hand-written copy of the custom elements,
       # and a drifted copy compiles while being wrong. This reads the components

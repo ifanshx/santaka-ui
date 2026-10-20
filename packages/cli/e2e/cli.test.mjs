@@ -24,6 +24,7 @@ import { after, before, describe, it } from "node:test"
 import assert from "node:assert/strict"
 
 const here = dirname(fileURLToPath(import.meta.url))
+const repoRoot = resolve(here, "..", "..", "..")
 const CLI = resolve(here, "..", "dist", "cli.js")
 
 /** Run the CLI, capturing stdout, stderr, and the exit code. */
@@ -309,7 +310,16 @@ describe("the built CLI", () => {
     const dir = makeProject()
     const result = runCli(["list"], dir)
     assert.equal(result.code, 0)
-    // Derived from the entries, in the order the registry publishes them.
-    assert.match(result.stdout, /26 components, 3 blocks/)
+    // Derived from the registry payload rather than written here. The count used
+    // to be hardcoded as 26 and drifted the moment components were added: the
+    // CLI kept printing the right number and this test kept failing for months
+    // on whatever runner had not been updated. A number the registry already
+    // knows should be read from it.
+    const index = JSON.parse(
+      readFileSync(join(repoRoot, "packages/core/registry/index.json"), "utf8"),
+    )
+    const components = index.items.filter((item) => item.type === "component").length
+    const blocks = index.items.filter((item) => item.type === "block").length
+    assert.match(result.stdout, new RegExp(`${components} components, ${blocks} blocks`))
   })
 })

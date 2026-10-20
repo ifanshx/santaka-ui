@@ -49,7 +49,7 @@
     "clean": "rimraf dist loader www .stencil",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
-    "test": "playwright test",
+    "test": "node scripts/run-playwright.mjs",
     "test:unit": "vitest run --root ../.. tests",
     "test:visual": "node scripts/run-visual.mjs",
     "test:support-matrix": "node scripts/test-support-matrix.mjs",

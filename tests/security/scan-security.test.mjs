@@ -128,9 +128,23 @@ describe("published direct dependencies (real manifests)", () => {
   })
 
   it("attributes a real runtime dependency to its owning package", () => {
-    // `ajv` is a direct runtime dependency of `@santaka-ui/core` — the same
-    // module the manual negative test injected an advisory for.
-    const owners = publishedDirectDeps(repoRoot).get("ajv")
-    assert.ok(owners?.includes("core"), `expected ajv to be owned by core, got ${owners}`)
+    // Read from whichever package actually declares a runtime dependency, rather
+    // than naming `ajv` and `core`. That pair stopped being true when the
+    // validator moved to build time — Ajv is now a devDependency, so `core`
+    // ships with no runtime dependencies at all, which is the property worth
+    // asserting anyway. A test that names a dependency is a test that has to be
+    // edited whenever the dependency does.
+    const deps = publishedDirectDeps(repoRoot)
+    assert.ok(deps.size > 0, "no published package declares a runtime dependency to check")
+
+    for (const [dep, owners] of deps) {
+      assert.ok(owners.length > 0, `${dep} has no owning package`)
+      for (const owner of owners) {
+        assert.ok(
+          publishedDirNames(repoRoot).includes(owner),
+          `${dep} is attributed to ${owner}, which is not a directory in packages/`,
+        )
+      }
+    }
   })
 })
