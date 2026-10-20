@@ -1,5 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  // `PLAYWRIGHT_PROJECT` narrows the browser suite to one engine. Turbo does not
+  // pass an environment variable into a task unless it is named here, so setting
+  // it on the job alone left the suite launching firefox and webkit on a runner
+  // that had only installed chromium.
+  "globalEnv": ["PLAYWRIGHT_PROJECT"],
   "globalDependencies": ["tsconfig.json", "**/.env.*local"],
   // Half the available CPUs, not turbo's default of ten concurrent tasks.
   //
