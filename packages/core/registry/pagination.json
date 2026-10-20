@@ -1,0 +1,112 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "pagination",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-pagination/sk-pagination.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-6a95687a9e22b48d71e970dafd614a448410f98d664129825b2ab8f786c53f12"
+    },
+    {
+      "path": "src/components/sk-pagination/sk-pagination.css",
+      "type": "registry:style",
+      "checksum": "sha256-0492b9c63ebd98101d8db26410454077e32e892fa18fd922c8a1c551f0a1d279"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border",
+    "--sk-color-border-strong",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-primary-text",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-shadow-brutal",
+    "--sk-shadow-sm",
+    "--sk-space-2",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "default": "1",
+      "description": "Total number of pages."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Builds the href for a page number. `$p` is replaced with the page."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"Pagination\"",
+      "description": "Accessible name for the landmark."
+    },
+    {
+      "name": "page",
+      "type": "number",
+      "default": "1",
+      "description": "The current page, 1-based."
+    },
+    {
+      "name": "siblings",
+      "type": "number",
+      "default": "1",
+      "description": "How many page numbers to show between the ellipses. Small enough that the row never wraps on a 320px viewport."
+    }
+  ],
+  "events": [
+    "sk-page-change"
+  ],
+  "ai": {
+    "summary": "Moves between pages of a list, with a window around the current page.",
+    "whenToUse": [
+      "A list is split into numbered pages",
+      "The reader needs to jump to a known page, not just the next one",
+      "The total number of pages is known"
+    ],
+    "whenNotToUse": [
+      "Items load as you scroll — use infinite scrolling instead",
+      "There are only two or three pages — Prev/Next alone is less to read",
+      "The pages are steps in a process — use a Stepper"
+    ],
+    "accessibility": "`<nav>` with an accessible name, and page numbers are links because a page is a destination — a `<button>` would misdescribe navigation as an action. The current page carries `aria-current=\"page\"` and is not a link. The ellipsis is empty and `aria-hidden`, so it is not announced as a stop and cannot take focus. Prev and Next carry visually hidden words, because \"‹\" alone announces as punctuation.",
+    "example": "<sk-pagination count={12} page={6}></sk-pagination>",
+    "knownLimitations": [
+      "The window is computed here; `siblings` controls how many pages sit either side",
+      "Without an `href` template the component handles the navigation and emits `sk-page-change`; with one, the links are real and the browser navigates"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

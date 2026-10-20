@@ -1,0 +1,65 @@
+/*
+ * Kbd styles.
+ *
+ * A shortcut is chrome, so it carries the brutalist treatment: a 3px stroke, no
+ * rounding, and a hard offset shadow. It is small chrome, so the shadow is the
+ * `sm` step — the `brutal` offset would dwarf a two-character key.
+ *
+ * The monospace family is not decoration. "l" and "1" and "I" are the same
+ * glyph in most UI faces, and a shortcut is a string a reader copies by eye.
+ */
+
+sk-kbd {
+  display: inline-flex;
+  vertical-align: middle;
+  font-family: var(--sk-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+
+sk-kbd .sk-kbd__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sk-space-1, 0.25rem);
+  min-inline-size: 1.25rem;
+  min-block-size: 1.25rem;
+  padding-inline: var(--sk-space-2, 0.5rem);
+  padding-block: var(--sk-space-1, 0.25rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: var(--sk-radius-sm, 0);
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  color: var(--sk-color-text, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  font-family: inherit;
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  letter-spacing: var(--sk-text-xs-tracking, 0.04em);
+  white-space: nowrap;
+}
+
+sk-kbd[data-size="md"] .sk-kbd__key {
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding-inline: var(--sk-space-3, 0.75rem);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+/*
+ * A shortcut inside a heading or a paragraph inherits the surrounding step, so
+ * the key must not impose a line-height taller than the line it sits on. This
+ * is the reason `min-block-size` is used rather than `block-size`: the box grows
+ * with its content instead of forcing the line box open.
+ */
+sk-kbd .sk-kbd__key:empty {
+  min-inline-size: 0;
+}
+
+@media (forced-colors: active) {
+  sk-kbd .sk-kbd__key {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

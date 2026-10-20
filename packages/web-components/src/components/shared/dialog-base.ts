@@ -22,6 +22,11 @@
  *  - Every close path — Escape, backdrop, imperative, a consumer setting the
  *    prop — reports through one `sk-open-change` event.
  *  - Focus returns to the invoker on close.
+ *  - The slotted trigger reports state: `aria-expanded` mirrors `open` (and
+ *    `aria-haspopup` names the panel), so a screen reader announces the toggle
+ *    instead of leaving the invoker mute about what it did. This is
+ *    deliberately trigger chrome, not panel markup — the same pattern
+ *    `sk-popover` uses.
  */
 
 /** The state and element handles a dialog component owns. */
@@ -85,6 +90,7 @@ export function showDialog(state: DialogState): void {
   const dialog = state.dialog
   if (!dialog) return
   state.returnFocusTo = document.activeElement as HTMLElement | null
+  setTriggerState(state, true)
   if (state.modal && typeof dialog.showModal === "function") {
     dialog.showModal()
   } else {
@@ -106,6 +112,33 @@ export function hideDialog(state: DialogState): void {
   state.returnFocusTo?.focus()
   state.returnFocusTo = null
   state.dialog?.close()
+  setTriggerState(state, false)
+}
+
+/**
+ * Writes the toggle state onto the slotted trigger, if there is one.
+ *
+ * `aria-expanded` is what a screen reader announces when the invoker is
+ * pressed; without it the trigger says nothing about the panel it opened.
+ * `aria-haspopup="dialog"` tells the reader what kind of thing is coming. The
+ * trigger is optional (a drawer may be driven entirely by the `open` prop), so
+ * an absent one is skipped, not an error.
+ */
+function setTriggerState(state: DialogState, open: boolean): void {
+  const trigger = state.host.querySelector<HTMLElement>("[slot='trigger']")
+  if (!trigger) return
+  trigger.setAttribute("aria-haspopup", "dialog")
+  trigger.setAttribute("aria-expanded", String(open))
+}
+
+/**
+ * Writes the trigger's *initial* state at upgrade: `aria-expanded="false"` has
+ * to exist before the first open, or the attribute's first appearance is the
+ * drawer opening — an invoker that silently gains a state mid-session instead
+ * of reporting one from the start.
+ */
+export function initTriggerState(state: DialogState): void {
+  setTriggerState(state, state.open)
 }
 
 /** Reports an open-state change through the single shared event. */

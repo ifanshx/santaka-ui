@@ -1,0 +1,156 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "slider",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-slider/sk-slider.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-062b59a90f079d608f799ee04666e21fde4aef40ec9209202d327cb18da617f3"
+    },
+    {
+      "path": "src/components/sk-slider/sk-slider.css",
+      "type": "registry:style",
+      "checksum": "sha256-fd4a754205c924ba671d9973d16ecf6ba83accab109d7dbab56aa13a466a06fa"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger-fg",
+    "--sk-color-primary",
+    "--sk-color-shadow",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-shadow-sm",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables the control and withholds it from submission."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "default": "\"\"",
+      "description": "A template for `aria-valuetext`, where `$v` is the value and `$m` is the maximum — \"$v of $m\". What a screen reader announces instead of a bare number."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid independently of whether `error` is set."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name, and the label rendered above the control."
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "default": "100",
+      "description": "Largest value."
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "default": "0",
+      "description": "Smallest value."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Native form semantics. The control is named by the host attribute."
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "default": "false",
+      "description": "Renders the numeric output beside the label.  Off by default: a value the consumer is already displaying in their own UI should not be duplicated here, and a bare number with no unit is often worse than none."
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "default": "1",
+      "description": "Granularity. `0` means any value the browser can represent."
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "default": "50",
+      "description": "The current value."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Picks one number from a range, on a track the reader drags or arrows across.",
+    "whenToUse": [
+      "The value is a number on a known range, such as volume or a budget ceiling",
+      "The exact number matters less than where it sits in the range",
+      "Steps are meaningful — volume in fives, budget in tens"
+    ],
+    "whenNotToUse": [
+      "The reader must type an exact figure — use an Input with type=number",
+      "There are fewer than five discrete choices — use a Radio Group",
+      "You need two ends of a range — use two sliders, or a dedicated range control"
+    ],
+    "accessibility": "A real `<input type=\"range\">`, so the platform owns the slider role, `aria-valuenow`, the arrow/Page/Home/End model, and the touch target — all of which a `<div role=\"slider\">` reimplementation tends to lose. `aria-valuetext` takes a consumer-supplied `format` template (\"$v of $m\"), because §6 says locale is consumer-supplied. The label points at the control by id; the description and error ids are appended together rather than one replacing the other.",
+    "example": "<sk-slider name=\"volume\" label=\"Volume\" value=\"40\" show-value format=\"$v of $m\"></sk-slider>",
+    "knownLimitations": [
+      "The thumb's square shape is asserted on Chromium and Firefox; WebKit exposes neither thumb pseudo-element to getComputedStyle",
+      "SSR consumers must pass an explicit id — the counter differs between server and client",
+      "The visual fill on Chromium comes from the platform's own rendering, not a custom element"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

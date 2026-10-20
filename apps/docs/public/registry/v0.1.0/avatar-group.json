@@ -1,0 +1,96 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "avatar-group",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-avatar-group/sk-avatar-group.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-a57a404ce7d666bea0e5f6f28be8b624062c5c84c1b44482bad18b236bf669ee"
+    },
+    {
+      "path": "src/components/sk-avatar-group/sk-avatar-group.css",
+      "type": "registry:style",
+      "checksum": "sha256-6b37386bf76604d780dad6b271bd85213327c55c24295b9f2b8ea8a0cdc88291"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-surface-sunken",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-height-lg",
+    "--sk-height-md",
+    "--sk-height-sm",
+    "--sk-radius-full",
+    "--sk-space-2",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-tracking",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name for the group — \"Assigned to\", \"Contributors\". A bare `role=\"group\"` with no label is skipped by most screen readers, so the label is what makes the group announce at all."
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "default": "3",
+      "description": "How many avatars to show before collapsing the rest into a count. `0` means show all."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Diameter applied to every avatar in the group."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A stacked row of avatars, with the ones past `max` collapsed into a named count.",
+    "whenToUse": [
+      "A task, review, or thread shows several people in one row",
+      "The list is longer than the space, so the tail becomes a count",
+      "The group needs one accessible name, such as 'Assigned to'"
+    ],
+    "whenNotToUse": [
+      "There is one person — use an Avatar on its own",
+      "Each person is separately actionable — use Buttons or Links; a group is not a menu",
+      "You need each name announced individually — a group announces one sentence, not five stops"
+    ],
+    "accessibility": "`role=\"group\"` with the consumer's `label`, not a `list`: these are people, and a list would announce \"list, 5 items\" and walk the reader through each one when one sentence is more useful. The overflow is a `<span>` with `aria-label=\"N more\"`, not a fourth avatar — '+3' is not a person and a circle would have no name. Avatars past `max` get `display: none`, which removes them from the accessibility tree, so the group announces exactly what it shows instead of reading five names over three visible ones. Without a `label` the group carries no role at all, because an unnamed `group` is skipped by most screen readers.",
+    "example": "<sk-avatar-group max=\"3\" label=\"Assigned to\"><sk-avatar name=\"Ada Lovelace\"></sk-avatar></sk-avatar-group>",
+    "knownLimitations": [
+      "The avatars are slotted `sk-avatar` elements, not a data array — a `people` prop would put name and initials logic in two places",
+      "Overlap is a negative `margin-inline-start`, so it mirrors in RTL; nothing is absolutely positioned",
+      "The count is recomputed at render time, not observed — adding avatars later requires a re-render"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

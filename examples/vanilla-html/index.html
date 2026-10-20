@@ -127,6 +127,26 @@
         <p><sk-link href="" data-slot="link">A link with no destination</sk-link></p>
       </section>
 
+      <section aria-labelledby="breadcrumb-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="breadcrumb-heading">Breadcrumbs</h2>
+        </sk-text>
+        <sk-breadcrumb
+          id="breadcrumb-basic"
+          items='[{"label":"Home","href":"#"},{"label":"Projects","href":"#"},{"label":"Santaka","href":"#"},{"label":"Components"}]'
+        ></sk-breadcrumb>
+        <sk-breadcrumb id="breadcrumb-empty" items="[]"></sk-breadcrumb>
+      </section>
+
+      <section aria-labelledby="pagination-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="pagination-heading">Pagination</h2>
+        </sk-text>
+        <sk-pagination id="pagination-mid" count="12" page="6"></sk-pagination>
+        <sk-pagination id="pagination-first" count="5" page="1"></sk-pagination>
+        <sk-pagination id="pagination-last" count="5" page="5"></sk-pagination>
+      </section>
+
       <section aria-labelledby="badge-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="badge-heading">Badges</h2>
@@ -140,6 +160,121 @@
           <sk-badge variant="warning" size="sm">Compact</sk-badge>
           <sk-badge dot variant="success" status-label="Active"></sk-badge>
         </div>
+      </section>
+
+      <section aria-labelledby="avatar-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="avatar-heading">Avatars</h2>
+        </sk-text>
+        <div class="sk-cluster">
+          <sk-avatar id="avatar-initials" name="Ada Lovelace"></sk-avatar>
+          <sk-avatar
+            id="avatar-image"
+            name="Grace Hopper"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%236d28d9'/%3E%3C/svg%3E"
+          ></sk-avatar>
+          <sk-avatar
+            id="avatar-broken"
+            name="Alan Turing"
+            src="/examples/vanilla-html/does-not-exist.png"
+          ></sk-avatar>
+          <sk-avatar id="avatar-empty"></sk-avatar>
+          <sk-avatar name="Katherine Johnson" size="sm"></sk-avatar>
+          <sk-avatar name="Barbara Liskov" size="lg"></sk-avatar>
+        </div>
+
+        <div class="sk-cluster">
+          <sk-avatar-group id="group-named" max="3" label="Assigned to">
+            <sk-avatar name="Ada Lovelace"></sk-avatar>
+            <sk-avatar name="Grace Hopper"></sk-avatar>
+            <sk-avatar name="Alan Turing"></sk-avatar>
+            <sk-avatar name="Katherine Johnson"></sk-avatar>
+            <sk-avatar name="Barbara Liskov"></sk-avatar>
+          </sk-avatar-group>
+          <sk-avatar-group id="group-no-overflow" max="0" label="Reviewers">
+            <sk-avatar name="Ada Lovelace"></sk-avatar>
+            <sk-avatar name="Grace Hopper"></sk-avatar>
+          </sk-avatar-group>
+          <sk-avatar-group id="group-unnamed" max="2">
+            <sk-avatar name="Ada Lovelace"></sk-avatar>
+            <sk-avatar name="Grace Hopper"></sk-avatar>
+            <sk-avatar name="Alan Turing"></sk-avatar>
+          </sk-avatar-group>
+        </div>
+      </section>
+
+      <section aria-labelledby="banner-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="banner-heading">Banners</h2>
+        </sk-text>
+        <sk-banner
+          id="banner-named"
+          variant="warning"
+          heading="Scheduled maintenance"
+          aria-label="Service status"
+        >
+          The dashboard is read-only on Saturday between 02:00 and 04:00 UTC.
+          <sk-button slot="actions" size="sm" variant="secondary">Read the plan</sk-button>
+        </sk-banner>
+        <sk-banner id="banner-unnamed" variant="danger"
+          >An unnamed banner is not a landmark.</sk-banner
+        >
+        <sk-banner
+          id="banner-inline"
+          variant="primary"
+          full-width="false"
+          aria-label="Section notice"
+        >
+          Inline: a message about this section, not the whole page.
+        </sk-banner>
+      </section>
+
+      <section aria-labelledby="kbd-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="kbd-heading">Keyboard shortcuts</h2>
+        </sk-text>
+        <div class="sk-cluster">
+          <sk-kbd>Ctrl</sk-kbd>
+          <sk-kbd>Shift</sk-kbd>
+          <sk-kbd>K</sk-kbd>
+          <sk-kbd size="sm">Esc</sk-kbd>
+        </div>
+        <p>
+          Press <sk-kbd>Ctrl</sk-kbd> then <sk-kbd>K</sk-kbd> to open the command palette — the
+          shortcut sits inside the sentence it describes.
+        </p>
+      </section>
+
+      <section aria-labelledby="field-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="field-heading">Fields</h2>
+        </sk-text>
+        <p>
+          A field labels a control it does not own — here a plain <code>&lt;input&gt;</code>, not
+          one of ours.
+        </p>
+        <sk-field
+          id="field-plain"
+          label="Workspace name"
+          description="Lowercase letters and dashes."
+        >
+          <input id="field-plain-input" name="workspace" type="text" />
+        </sk-field>
+        <sk-field
+          id="field-error"
+          label="Workspace name"
+          description="Lowercase letters and dashes."
+          error="That name is already taken."
+        >
+          <input id="field-error-input" name="workspace" type="text" />
+        </sk-field>
+        <sk-field id="field-required" label="Email" required>
+          <input id="field-required-input" name="email" type="email" />
+        </sk-field>
+        <sk-field id="field-invalid" label="Repository" invalid>
+          <input id="field-invalid-input" name="repo" type="text" />
+        </sk-field>
+        <sk-field id="field-empty" label="No control yet"></sk-field>
       </section>
 
       <section aria-labelledby="input-heading" class="sk-stack">
@@ -267,6 +402,38 @@
         </section>
       </section>
 
+      <section aria-labelledby="slider-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="slider-heading">Sliders</h2>
+        </sk-text>
+        <sk-slider
+          id="slider-basic"
+          name="volume"
+          label="Volume"
+          value="40"
+          show-value
+          format="$v of $m"
+        ></sk-slider>
+        <sk-slider
+          id="slider-error"
+          name="budget"
+          label="Monthly budget"
+          description="How much this project may spend."
+          error="Budget must be at least 20."
+          value="10"
+          min="0"
+          max="200"
+          step="10"
+        ></sk-slider>
+        <sk-slider
+          id="slider-disabled"
+          name="archived"
+          label="Retention"
+          value="30"
+          disabled
+        ></sk-slider>
+      </section>
+
       <section aria-labelledby="textarea-heading" class="sk-stack">
         <sk-text variant="lg" family="display">
           <h2 id="textarea-heading">Textareas</h2>
@@ -371,6 +538,25 @@
         ></sk-select>
       </section>
 
+      <section aria-labelledby="combobox-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="combobox-heading">Comboboxes</h2>
+        </sk-text>
+        <sk-combobox
+          id="combobox-basic"
+          name="country"
+          label="Country"
+          description="Type to filter."
+          options='[{"value":"id","label":"Indonesia"},{"value":"jp","label":"Japan"},{"value":"ke","label":"Kenya"},{"value":"nl","label":"Netherlands"}]'
+        ></sk-combobox>
+        <sk-combobox
+          id="combobox-error"
+          label="Runner"
+          error="Pick a runner to continue."
+          options='[{"value":"linux","label":"Linux x64"},{"value":"macos","label":"macOS arm64"}]'
+        ></sk-combobox>
+      </section>
+
       <section aria-labelledby="tooltip-heading" class="sk-stack" style="position: relative">
         <sk-text variant="lg" family="display">
           <h2 id="tooltip-heading">Tooltip</h2>
@@ -395,6 +581,37 @@
             </sk-icon-button>
             Configure runners, secrets, and retention.
           </sk-tooltip>
+        </div>
+      </section>
+
+      <section aria-labelledby="popover-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="popover-heading">Popovers</h2>
+        </sk-text>
+        <p>A popover holds controls, so it takes focus and closes — unlike a tooltip.</p>
+        <sk-popover id="popover-bottom" placement="bottom" label="Filters">
+          <sk-button slot="trigger" variant="secondary">Filters</sk-button>
+          <sk-checkbox label="Failed only"></sk-checkbox>
+          <sk-checkbox label="Last 24 hours"></sk-checkbox>
+        </sk-popover>
+        <sk-popover id="popover-start" placement="start">
+          <sk-button slot="trigger" variant="ghost">From the start edge</sk-button>
+          <sk-text variant="sm">Opens on the logical start edge.</sk-text>
+        </sk-popover>
+      </section>
+
+      <section aria-labelledby="taka-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="taka-heading">Taka</h2>
+        </sk-text>
+        <p>
+          The mascot, drawn here as paths rather than imported as an asset (§13). It is decorative
+          everywhere it appears.
+        </p>
+        <div class="sk-cluster">
+          <sk-taka id="taka-idle" mood="idle"></sk-taka>
+          <sk-taka id="taka-wave" mood="wave" size="lg"></sk-taka>
+          <sk-taka id="taka-bounce" mood="bounce" size="sm"></sk-taka>
         </div>
       </section>
 
@@ -521,6 +738,26 @@
           </div>
         </sk-dialog>
         <output id="dialog-result" class="sk-text-muted" aria-live="polite"></output>
+      </section>
+
+      <section aria-labelledby="drawer-heading" class="sk-stack">
+        <sk-text variant="lg" family="display">
+          <h2 id="drawer-heading">Drawers</h2>
+        </sk-text>
+        <sk-drawer id="drawer-end" side="end" label="Settings">
+          <sk-button slot="trigger" variant="secondary">Open drawer</sk-button>
+          <sk-text variant="lg" family="display" slot="title">
+            <h3>Settings</h3>
+          </sk-text>
+          <sk-text variant="sm" muted> Slides in from the inline-end edge. </sk-text>
+          <sk-button id="drawer-close" variant="ghost">Close</sk-button>
+        </sk-drawer>
+        <sk-drawer id="drawer-start" side="start">
+          <sk-button slot="trigger" variant="ghost">Open from the other edge</sk-button>
+          <sk-text variant="lg" family="display" slot="title">
+            <h3>Navigation</h3>
+          </sk-text>
+        </sk-drawer>
       </section>
 
       <section aria-labelledby="alert-message-heading" class="sk-stack">

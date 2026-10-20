@@ -1,0 +1,103 @@
+/*
+ * Avatar styles.
+ *
+ * The frame is square by ratio and circular by radius: 1fr of inline size and a
+ * matching block size, so `size` is one axis and the markup never has to pair a
+ * width with a height. `aspect-ratio` is the Baseline-tier way to say that, and
+ * the fixed block sizes below are the Core-tier fallback — without them a
+ * browser that drops `aspect-ratio` would render a zero-height box.
+ */
+
+sk-avatar {
+  --sk-avatar-size: var(--sk-height-md, 2.25rem);
+  --sk-avatar-font: var(--sk-text-sm-size, 0.875rem);
+
+  display: inline-flex;
+  inline-size: var(--sk-avatar-size);
+  block-size: var(--sk-avatar-size);
+  flex: none;
+  vertical-align: middle;
+}
+
+sk-avatar[data-size="sm"] {
+  --sk-avatar-size: var(--sk-height-sm, 1.75rem);
+  --sk-avatar-font: var(--sk-text-xs-size, 0.75rem);
+}
+
+sk-avatar[data-size="lg"] {
+  --sk-avatar-size: var(--sk-height-lg, 2.75rem);
+  --sk-avatar-font: var(--sk-text-base-size, 1rem);
+}
+
+sk-avatar .sk-avatar__frame {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+  /*
+   * A portrait is not chrome: it keeps a full radius where buttons, badges, and
+   * cards are hard-edged at zero (ADR-017). The stroke stays — it is what reads
+   * as this system — but the radius is the shape of a face, not a crop.
+   */
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: var(--sk-radius-full, 9999px);
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  color: var(--sk-color-text, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-avatar-font);
+  font-weight: var(--sk-text-sm-weight, 600);
+  line-height: 1;
+  letter-spacing: var(--sk-text-xs-tracking, 0.04em);
+  vertical-align: middle;
+}
+
+sk-avatar .sk-avatar__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  /*
+   * The image is painted over the initials rather than replacing them, so a
+   * slow or failed load reveals the initials instead of leaving a hole. It is
+   * hidden until `load` fires, which is what makes a half-painted image
+   * impossible.
+   */
+  opacity: 0;
+  transition: opacity var(--sk-duration-control, 120ms) var(--sk-ease-arcade, ease-out);
+}
+
+sk-avatar[data-state="loaded"] .sk-avatar__image {
+  opacity: 1;
+}
+
+sk-avatar .sk-avatar__initials {
+  position: relative;
+  /*
+   * Announced by nobody: the host carries the person's name, and a second
+   * announcement of the same person is not better than one.
+   */
+  user-select: none;
+}
+
+/*
+ * Reduced motion removes the fade rather than shortening it. The image still
+ * appears — the transition is not the mechanism that shows it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-avatar .sk-avatar__image {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-avatar .sk-avatar__frame {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

@@ -64,25 +64,37 @@ stylesheet.
 - **sk-accordion** (stable) — A stack of disclosure panels where one, or several, can be open at a time.
 - **sk-alert** (stable) — An inline message about the current page: a success, a warning, a failure, or a note.
 - **sk-alert-dialog** (stable) — A forced decision on the glass material: role=alertdialog, no Escape, no backdrop click — the user must choose an action.
+- **sk-avatar** (stable) — A circular portrait of a person, with initials derived from their name as the fallback.
+- **sk-avatar-group** (stable) — A stacked row of avatars, with the ones past `max` collapsed into a named count.
 - **sk-badge** (stable) — A static label for status, category, or count. It is not interactive.
+- **sk-banner** (stable) — A page-level message that spans its container above the content it is about.
+- **sk-breadcrumb** (stable) — Shows where the current page sits in a hierarchy, oldest ancestor first.
 - **sk-button** (stable) — Triggers an action: submit a form, open a dialog, save a change.
 - **sk-card** (stable) — A hard-edged surface that groups related content, with optional header, body, and footer.
 - **sk-checkbox** (stable) — A boolean toggle that participates in a plain HTML form. Validation is the browser's, not this component's.
+- **sk-combobox** (stable) — A text field with a filterable list of options — type to narrow, arrows to choose.
 - **sk-dialog** (stable) — A modal overlay on the glass material: focus is trapped by the native <dialog>, Escape closes, and focus returns to the invoker.
+- **sk-drawer** (stable) — A panel that slides in from one edge, for navigation or a persistent side task.
 - **sk-empty-state** (stable) — The surface a list, table, or panel shows when it has nothing to display.
+- **sk-field** (stable) — Labels, describes, and marks a form control the consumer already owns.
 - **sk-icon-button** (stable) — A square, icon-only control for actions that need no label, such as edit or delete.
 - **sk-input** (stable) — A single-line text field that participates in a plain HTML form. Validation is the browser's, not this component's.
+- **sk-kbd** (stable) — Marks up a keyboard shortcut as a real `<kbd>` element, styled as hard-edged chrome.
 - **sk-label** (stable) — A programmatic label for any control: names it through `for`, and clicking it focuses the control through the browser's own activation.
 - **sk-link** (stable) — Navigates to another URL, in place or in a new tab.
+- **sk-pagination** (stable) — Moves between pages of a list, with a window around the current page.
+- **sk-popover** (stable) — A floating panel that holds controls, anchored to a trigger.
 - **sk-progress** (stable) — Shows how far along a task is, or that a task is running with no known end.
 - **sk-radio-group** (stable) — An exclusive choice from a small set of options, rendered as real native radios so the browser owns arrow-key navigation and validation.
 - **sk-select** (stable) — A real native <select>, visibly: submits through a plain form, validates natively, and the popup is the browser's own.
 - **sk-separator** (stable) — A hairline between content: a real <hr> that announces itself unless it is purely visual.
 - **sk-skeleton** (stable) — A grey placeholder in the shape of content that is loading, so the page does not shift when the content arrives.
+- **sk-slider** (stable) — Picks one number from a range, on a track the reader drags or arrows across.
 - **sk-spinner** (stable) — A spinning ring for an operation in progress, announced to screen readers by its label rather than by the moving picture.
 - **sk-switch** (stable) — An on/off control that acts immediately, rendered as a native checkbox carrying role=switch so the browser keeps validation and form submission.
 - **sk-table** (stable) — A styled container for tabular data, which the consumer writes as a real table.
 - **sk-tabs** (stable) — Roving-tabindex tabs: the tablist owns the keyboard, arrows move and activate, and the active panel is the only one rendered.
+- **sk-taka** (stable) — The project mascot, for onboarding, empty states, and easter eggs.
 - **sk-text** (stable) — Applies one whole type step — size, line-height, weight, and tracking together — to any element.
 - **sk-textarea** (stable) — A multi-line text field that participates in a plain HTML form, for text too long to type on one line.
 - **sk-toast** (stable) — A non-blocking notification on the glass material: announced politely, auto-dismissed, never stealing focus.

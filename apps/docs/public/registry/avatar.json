@@ -1,0 +1,100 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "avatar",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-avatar/sk-avatar.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-b277a58a5be4b171af615d9865eff5a62409c36b491e6a61b0b11a46645299e6"
+    },
+    {
+      "path": "src/components/sk-avatar/sk-avatar.css",
+      "type": "registry:style",
+      "checksum": "sha256-b0227b6ae4c8d3e8c0c47312cefe54d41acbac22ed58b124f137521c99af6d1d"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-shadow",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-duration-control",
+    "--sk-ease-arcade",
+    "--sk-font-sans",
+    "--sk-height-lg",
+    "--sk-height-md",
+    "--sk-height-sm",
+    "--sk-radius-full",
+    "--sk-shadow-sm",
+    "--sk-text-base-size",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-size",
+    "--sk-text-xs-tracking"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The person's name. It is the accessible name of the image and the source of the initials — one field, so the two cannot disagree."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Diameter. An avatar is square by ratio, so `size` is one axis."
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Image source. Without it, the initials render."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A circular portrait of a person, with initials derived from their name as the fallback.",
+    "whenToUse": [
+      "A list or header identifies a person by their picture",
+      "An account menu, comment, or assignment shows who it belongs to",
+      "Several people are stacked in a group — see the Avatar Group entry"
+    ],
+    "whenNotToUse": [
+      "It is a company or project logo — that is an image, not a person",
+      "It is clickable — wrap it in a Button or Link; an avatar takes no interaction",
+      "The name is unknown and the picture is decorative — use a plain image with `alt=\"\"`"
+    ],
+    "accessibility": "The host carries `role=\"img\"` and the person's name as its accessible name, so the picture is announced as the person rather than as a filename or as nothing. The `<img>` inside is `alt=\"\"` and the initials are `aria-hidden`, because one announcement of a person is better than two competing ones. An avatar with neither a name nor initials is `aria-hidden` instead of an empty `role=\"img\"` — an unnamed image is an axe violation, and defaulting the label to a word like \"avatar\" would announce the designer's word instead of the person's name. `data-state` distinguishes `absent` from `error`, which render identical pixels and are two different bugs.",
+    "example": "<sk-avatar name=\"Ada Lovelace\" size=\"md\"></sk-avatar>",
+    "knownLimitations": [
+      "Initials take the first and last word only — name order, particles, and single-name cultures are locale questions, and §6 says locale is consumer-supplied",
+      "There is no `initials` prop: they are derived from `name`, so the two cannot disagree",
+      "`size` sets the diameter; the frame is square by ratio, so there is no separate width and height"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

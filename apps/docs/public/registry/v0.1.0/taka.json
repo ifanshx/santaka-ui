@@ -1,0 +1,83 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "taka",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-taka/sk-taka.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-4cdea0ccbe2efd6e3264fea537e73cc7db4269568798dd455f6fc44a46fee5ab"
+    },
+    {
+      "path": "src/components/sk-taka/sk-taka.css",
+      "type": "registry:style",
+      "checksum": "sha256-22c31043ec103dfaa38501eeef7fe2559bb29756578722c0da42dd15c61bdc95"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-primary",
+    "--sk-color-primary-subtle",
+    "--sk-color-border-strong",
+    "--sk-color-surface",
+    "--sk-color-warning",
+    "--sk-duration-control-slow",
+    "--sk-duration-overlay",
+    "--sk-ease-arcade"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "mood",
+      "type": "\"idle\" | \"wave\" | \"bounce\"",
+      "default": "\"idle\"",
+      "description": "What Taka is doing. `idle` is a still portrait; the other two add an idle animation that reduced motion removes entirely."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "description": "Rendered size, in the icon scale."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "The project mascot, for onboarding, empty states, and easter eggs.",
+    "whenToUse": [
+      "An empty state would otherwise read as a failure",
+      "Onboarding or a first-run screen needs a face",
+      "A small easter egg, where §1.8's playfulness is welcome"
+    ],
+    "whenNotToUse": [
+      "It would be the only carrier of meaning — a mascot is decorative by rule",
+      "The screen is dense with real information — §1.8 reserves it, not every screen",
+      "You need a status marker or an icon — use a Badge for status, and slotted SVG for an icon; Taka is a character, not an icon set"
+    ],
+    "accessibility": "Decorative always: `aria-hidden` on the host and `role=\"presentation\"` on the `<svg>`, so a screen reader never announces it. The heading beside it does the talking. Artwork is drawn as SVG paths rather than imported, per §13's requirement that the mascot be original artwork. `mood` adds an idle animation that `prefers-reduced-motion` removes outright rather than shortening.",
+    "example": "<sk-taka mood=\"wave\" size=\"lg\"></sk-taka>",
+    "knownLimitations": [
+      "Purely decorative — it must never be the only signal",
+      "The `wave` and `bounce` moods animate and are cancelled under reduced motion"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

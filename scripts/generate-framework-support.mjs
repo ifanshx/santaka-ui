@@ -128,7 +128,7 @@ export const TARGETS = [
   },
   {
     id: "svelte",
-    target: "Svelte / SvelteKit",
+    target: "Svelte (Vite + SSR)",
     state: "Stable",
     implementation: "Elements used directly, plus a types-only subpath and a theme store",
     gate: "Props/events, form submission, SSR markup and hydration, theme contract",
@@ -137,7 +137,16 @@ export const TARGETS = [
     scripts: [{ dir: "examples/svelte-vite", name: "test" }],
     testCommand: "pnpm --filter @santaka-ui/example-svelte-vite test",
     ciJob: "svelte-example",
-    note: "No wrapper components, and that is measured: Svelte 5 already decides per write whether a prop reaches the element's property or its attribute — the setters the element exposes once it is registered, an object-valued prop as a property while it is not — so the package ships the two things Svelte cannot supply, `@santaka-ui/svelte/elements` for types and a theme store for section 6, and nothing else (ADR-021). Server rendering turned up a rule the whole repository now shares: because the elements are scoped and have no shadow root (ADR-011), registering them *before* hydration mutates the tree being hydrated, Svelte abandons the server's markup and mounts again. Register after hydration. The example's test asserts both the node identity and the hydration markers, so the order cannot regress silently. SvelteKit's own server entry is not tested here; the Vite SSR build is what the gate names.",
+    note: "No wrapper components, and that is measured: Svelte 5 already decides per write whether a prop reaches the element's property or its attribute — the setters the element exposes once it is registered, an object-valued prop as a property while it is not — so the package ships the two things Svelte cannot supply, `@santaka-ui/svelte/elements` for types and a theme store for section 6, and nothing else (ADR-021). Server rendering turned up a rule the whole repository now shares: because the elements are scoped and have no shadow root (ADR-011), registering them *before* hydration mutates the tree being hydrated, Svelte abandons the server's markup and mounts again. Register after hydration. The example's test asserts both the node identity and the hydration markers, so the order cannot regress silently. The row is Svelte, not SvelteKit: the Vite SSR build is what is proven, and SvelteKit's own server entry has its own row below.",
+  },
+  {
+    id: "sveltekit",
+    target: "SvelteKit",
+    state: "Planned",
+    implementation: "The Svelte adapter plus SvelteKit's own server entry and routing",
+    gate: "SvelteKit server render, hydration, route-level example",
+    wouldLiveAt: ["packages/kit", "examples/sveltekit"],
+    note: "Unmeasured rather than unbuilt. The SSR rule SvelteKit would rely on is proven — `examples/svelte-vite` server-renders and asserts that hydration reused the server's nodes — but SvelteKit's own server entry is not exercised by it, and the gate now says so instead of leaving it implicit. It is blocked on a dependency conflict, not on design: `@sveltejs/kit@3.1.0` peer-requires `typescript ^6.0.0` while this workspace pins 5.9.3, so adopting it means a TypeScript major across every package (ADR-021). Splitting the row is the point: one label covering both made a measured target and an unmeasured one look identical.",
   },
   {
     id: "angular",

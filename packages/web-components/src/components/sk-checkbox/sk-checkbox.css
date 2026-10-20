@@ -111,8 +111,12 @@ sk-checkbox .sk-checkbox__control:disabled {
   box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
 }
 
-sk-checkbox .sk-checkbox__label:has(.sk-checkbox__control:disabled) {
-  cursor: not-allowed;
+/* `:has()` is Baseline-tier only (§4). Wrapping it is what lets a Core browser
+   apply the rules it does understand instead of dropping this one silently. */
+@supports selector(:has(*)) {
+  sk-checkbox .sk-checkbox__label:has(.sk-checkbox__control:disabled) {
+    cursor: not-allowed;
+  }
 }
 
 sk-checkbox[data-invalid] {

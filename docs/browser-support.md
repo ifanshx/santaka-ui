@@ -5,10 +5,18 @@
      that actually run, so a browser appears here only if a project launches it.
      Regenerate with `pnpm --filter @santaka-ui/web-components support-matrix`. -->
 
-Two tiers, tested separately (ADR-014). **Baseline** gets full styling, motion,
-and behavior. **Core** gets structure and behavior with degraded styling: a
-feature Baseline uses freely is either avoided in component CSS or placed behind
-`@supports`, so a Core browser keeps a working fallback.
+Two tiers (ADR-014). **Baseline** gets full styling, motion, and behavior.
+**Core** gets structure and behavior with degraded styling: a feature Baseline
+uses freely is either avoided in component CSS or placed behind `@supports`, so
+a Core browser keeps a working fallback.
+
+Only Baseline is launched by a Playwright project. Core is the floor the CSS is
+written to, and it is enforced by the conformance test in
+`e2e/conventions.e2e.ts` — which fails on a Baseline-only feature used outside
+an `@supports` block — rather than by running a Core-tier browser. Playwright
+bundles one revision per engine and cannot launch Chrome 90, Firefox 121, or
+Safari 15.4, so a claim that Core is *tested* would not survive a reader
+checking it. The discipline is checked; the rendering is not.
 
 | Tier | Meaning | Chromium (Chrome / Edge) | Firefox | WebKit (Safari) |
 |---|---|---|---|---|

@@ -1,0 +1,123 @@
+/*
+ * Pagination styles.
+ *
+ * Page numbers are chrome, so they wear the brutalist treatment: a 3px stroke,
+ * no rounding, and a hard offset shadow. The current page is the exception — it
+ * is inverts rather than adds a second accent, because an accent on the current
+ * item competes with the accent on the links around it.
+ *
+ * Everything is logical-property based so the row mirrors under `dir="rtl"`
+ * (ADR-016): the chevrons are drawn glyphs, and mirroring a drawn arrow is a
+ * rotation the stylesheet owns rather than an asset swap.
+ */
+
+sk-pagination {
+  display: block;
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-pagination .sk-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+sk-pagination .sk-pagination__item {
+  display: inline-flex;
+}
+
+sk-pagination .sk-pagination__page,
+sk-pagination .sk-pagination__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.25rem;
+  min-block-size: 2.25rem;
+  padding-inline: var(--sk-space-2, 0.5rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  background-color: var(--sk-color-surface, #ffffff);
+  color: var(--sk-color-primary-text, #4c1d95);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  font-weight: var(--sk-text-sm-weight, 600);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+sk-pagination .sk-pagination__page:hover,
+sk-pagination .sk-pagination__step:hover {
+  color: var(--sk-color-primary, #6d28d9);
+  translate: -1px -1px;
+  box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0) var(--sk-color-shadow, #17141c);
+}
+
+/*
+ * The current page inverts instead of adding an accent: solid fill, no shadow,
+ * which is what makes it read as "you are here" rather than "click me".
+ */
+sk-pagination .sk-pagination__page[aria-current="page"] {
+  border-color: var(--sk-color-primary, #6d28d9);
+  background-color: var(--sk-color-primary, #6d28d9);
+  color: var(--sk-color-primary-fg, #ffffff);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* A disabled step is visibly stepped back, not merely greyed. */
+sk-pagination .sk-pagination__step[aria-disabled="true"] {
+  border-color: var(--sk-color-border, #cbc5d8);
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  color: var(--sk-color-text-muted, #5f5a6b);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/*
+ * The ellipsis is drawn as three dots with a text-shadow trick rather than typed
+ * as "…", so there is no text node for a screen reader to announce.
+ */
+sk-pagination .sk-pagination__ellipsis {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  inline-size: 1.25rem;
+  min-block-size: 2.25rem;
+  padding-block-end: 0.625rem;
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-weight: 700;
+  letter-spacing: 0.125rem;
+}
+
+sk-pagination .sk-pagination__ellipsis::before {
+  content: "•••";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  sk-pagination .sk-pagination__page:hover,
+  sk-pagination .sk-pagination__step:hover {
+    translate: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-pagination .sk-pagination__page,
+  sk-pagination .sk-pagination__step {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: LinkText;
+  }
+
+  sk-pagination .sk-pagination__page[aria-current="page"] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  sk-pagination .sk-pagination__step[aria-disabled="true"] {
+    color: GrayText;
+  }
+}

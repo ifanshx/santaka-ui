@@ -117,8 +117,12 @@ sk-switch .sk-switch__control:disabled + .sk-switch__track {
   box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
 }
 
-sk-switch .sk-switch__label:has(.sk-switch__control:disabled) {
-  cursor: not-allowed;
+/* `:has()` is Baseline-tier only (§4); a Core browser must skip this rule
+   rather than fail to parse past it. */
+@supports selector(:has(*)) {
+  sk-switch .sk-switch__label:has(.sk-switch__control:disabled) {
+    cursor: not-allowed;
+  }
 }
 
 sk-switch[data-invalid] {

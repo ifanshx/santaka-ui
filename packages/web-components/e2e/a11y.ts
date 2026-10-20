@@ -18,8 +18,15 @@ import { expect, type Page } from "@playwright/test"
  * rules cannot silently change what "passing" means.
  */
 
-/** The WCAG 2.0/2.1 A + AA tags axe implements, pinned for stability. */
-const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
+/**
+ * The WCAG 2.0/2.1/2.2 A + AA tags axe implements, pinned for stability.
+ *
+ * 2.2 is the product target (plan.md §12) and axe-core 4.14 ships `wcag22aa`,
+ * so scanning one version below the target was a claim the docs could not
+ * make. Pinning the whole ladder rather than `wcag22aa` alone keeps 2.0 and
+ * 2.1 regressions visible: a rule that regressed to the 2.0 level still fails.
+ */
+const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"]
 
 /** Scan the page in its current state and assert no violations. */
 export async function expectNoAxeViolations(

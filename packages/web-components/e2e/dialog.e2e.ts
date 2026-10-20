@@ -164,3 +164,22 @@ test("reduced motion removes the entrance animation", async ({ page }) => {
   // glass.css's ruling: a 1ms entrance is still an entrance.
   expect(animation).toBe("none")
 })
+
+test("the trigger carries its state before the first open", async ({ page }) => {
+  // `initTriggerState` exists for one reason: `aria-expanded="false"` must be on
+  // the invoker from first paint, not appear the first time the panel opens. An
+  // invoker that silently gains a state mid-session is announced differently
+  // before and after its first use.
+  //
+  // This loads a dialog that has never been opened, so showDialog has not run
+  // and the only way the attribute exists is the upgrade-time write.
+  await page.goto("/examples/vanilla-html/index.html")
+  const before = page.locator("sk-dialog [slot='trigger']")
+  await expect(before).toHaveAttribute("aria-haspopup", "dialog")
+  await expect(before).toHaveAttribute("aria-expanded", "false")
+
+  // And it tracks the open state once it is used, the same way the popover's
+  // does — one set of mechanics in shared/dialog-base.ts, one contract.
+  await before.click()
+  await expect(before).toHaveAttribute("aria-expanded", "true")
+})

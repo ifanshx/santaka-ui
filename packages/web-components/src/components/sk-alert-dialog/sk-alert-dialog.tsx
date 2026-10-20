@@ -4,6 +4,7 @@ import {
   emitOpenChange,
   handleDialogClick,
   hideDialog,
+  initTriggerState,
   moveChildrenIntoPanel,
   showDialog,
   type DialogState,
@@ -73,6 +74,10 @@ export class SkAlertDialog {
 
   componentDidLoad() {
     moveChildrenIntoPanel(this.host, this.state.dialog!)
+    // The trigger reports state from first paint, not only after the first open:
+    // an invoker that gains `aria-expanded` mid-session is a control a screen
+    // reader announces differently before and after its first use.
+    initTriggerState(this.state)
     if (this.open) showDialog(this.state)
   }
 

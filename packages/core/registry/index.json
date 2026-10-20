@@ -6,27 +6,39 @@
     "alert-dialog.json",
     "alert.json",
     "authentication.json",
+    "avatar-group.json",
+    "avatar.json",
     "badge.json",
+    "banner.json",
+    "breadcrumb.json",
     "button.json",
     "card.json",
     "checkbox.json",
+    "combobox.json",
     "dashboard.json",
     "dialog.json",
+    "drawer.json",
     "empty-state.json",
+    "field.json",
     "icon-button.json",
     "input.json",
+    "kbd.json",
     "label.json",
     "link.json",
+    "pagination.json",
+    "popover.json",
     "progress.json",
     "radio-group.json",
     "select.json",
     "separator.json",
     "settings.json",
     "skeleton.json",
+    "slider.json",
     "spinner.json",
     "switch.json",
     "table.json",
     "tabs.json",
+    "taka.json",
     "text.json",
     "textarea.json",
     "toast.json",
@@ -412,6 +424,202 @@
     {
       "$schema": "https://santaka.dev/schema/registry-item-v1.json",
       "schemaVersion": 1,
+      "name": "avatar-group",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-avatar-group/sk-avatar-group.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-a57a404ce7d666bea0e5f6f28be8b624062c5c84c1b44482bad18b236bf669ee"
+        },
+        {
+          "path": "src/components/sk-avatar-group/sk-avatar-group.css",
+          "type": "registry:style",
+          "checksum": "sha256-6b37386bf76604d780dad6b271bd85213327c55c24295b9f2b8ea8a0cdc88291"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-surface-sunken",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-height-lg",
+        "--sk-height-md",
+        "--sk-height-sm",
+        "--sk-radius-full",
+        "--sk-space-2",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-tracking",
+        "--sk-text-xs-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The accessible name for the group — \"Assigned to\", \"Contributors\". A bare `role=\"group\"` with no label is skipped by most screen readers, so the label is what makes the group announce at all."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "3",
+          "description": "How many avatars to show before collapsing the rest into a count. `0` means show all."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Diameter applied to every avatar in the group."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A stacked row of avatars, with the ones past `max` collapsed into a named count.",
+        "whenToUse": [
+          "A task, review, or thread shows several people in one row",
+          "The list is longer than the space, so the tail becomes a count",
+          "The group needs one accessible name, such as 'Assigned to'"
+        ],
+        "whenNotToUse": [
+          "There is one person — use an Avatar on its own",
+          "Each person is separately actionable — use Buttons or Links; a group is not a menu",
+          "You need each name announced individually — a group announces one sentence, not five stops"
+        ],
+        "accessibility": "`role=\"group\"` with the consumer's `label`, not a `list`: these are people, and a list would announce \"list, 5 items\" and walk the reader through each one when one sentence is more useful. The overflow is a `<span>` with `aria-label=\"N more\"`, not a fourth avatar — '+3' is not a person and a circle would have no name. Avatars past `max` get `display: none`, which removes them from the accessibility tree, so the group announces exactly what it shows instead of reading five names over three visible ones. Without a `label` the group carries no role at all, because an unnamed `group` is skipped by most screen readers.",
+        "example": "<sk-avatar-group max=\"3\" label=\"Assigned to\"><sk-avatar name=\"Ada Lovelace\"></sk-avatar></sk-avatar-group>",
+        "knownLimitations": [
+          "The avatars are slotted `sk-avatar` elements, not a data array — a `people` prop would put name and initials logic in two places",
+          "Overlap is a negative `margin-inline-start`, so it mirrors in RTL; nothing is absolutely positioned",
+          "The count is recomputed at render time, not observed — adding avatars later requires a re-render"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "avatar",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-avatar/sk-avatar.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-b277a58a5be4b171af615d9865eff5a62409c36b491e6a61b0b11a46645299e6"
+        },
+        {
+          "path": "src/components/sk-avatar/sk-avatar.css",
+          "type": "registry:style",
+          "checksum": "sha256-b0227b6ae4c8d3e8c0c47312cefe54d41acbac22ed58b124f137521c99af6d1d"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-shadow",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-duration-control",
+        "--sk-ease-arcade",
+        "--sk-font-sans",
+        "--sk-height-lg",
+        "--sk-height-md",
+        "--sk-height-sm",
+        "--sk-radius-full",
+        "--sk-shadow-sm",
+        "--sk-text-base-size",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-size",
+        "--sk-text-xs-tracking"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The person's name. It is the accessible name of the image and the source of the initials — one field, so the two cannot disagree."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Diameter. An avatar is square by ratio, so `size` is one axis."
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Image source. Without it, the initials render."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A circular portrait of a person, with initials derived from their name as the fallback.",
+        "whenToUse": [
+          "A list or header identifies a person by their picture",
+          "An account menu, comment, or assignment shows who it belongs to",
+          "Several people are stacked in a group — see the Avatar Group entry"
+        ],
+        "whenNotToUse": [
+          "It is a company or project logo — that is an image, not a person",
+          "It is clickable — wrap it in a Button or Link; an avatar takes no interaction",
+          "The name is unknown and the picture is decorative — use a plain image with `alt=\"\"`"
+        ],
+        "accessibility": "The host carries `role=\"img\"` and the person's name as its accessible name, so the picture is announced as the person rather than as a filename or as nothing. The `<img>` inside is `alt=\"\"` and the initials are `aria-hidden`, because one announcement of a person is better than two competing ones. An avatar with neither a name nor initials is `aria-hidden` instead of an empty `role=\"img\"` — an unnamed image is an axe violation, and defaulting the label to a word like \"avatar\" would announce the designer's word instead of the person's name. `data-state` distinguishes `absent` from `error`, which render identical pixels and are two different bugs.",
+        "example": "<sk-avatar name=\"Ada Lovelace\" size=\"md\"></sk-avatar>",
+        "knownLimitations": [
+          "Initials take the first and last word only — name order, particles, and single-name cultures are locale questions, and §6 says locale is consumer-supplied",
+          "There is no `initials` prop: they are derived from `name`, so the two cannot disagree",
+          "`size` sets the diameter; the frame is square by ratio, so there is no separate width and height"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
       "name": "badge",
       "namespace": null,
       "type": "component",
@@ -509,6 +717,204 @@
         "example": "<sk-badge variant=\"success\">Active</sk-badge>",
         "knownLimitations": [
           "The `statusLabel` prop is required in the React types for the `dot` variant but only warns in plain HTML"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "banner",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-banner/sk-banner.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-78eb9f1498c7d9b7b99a3ac0c73eef2c2222858e6c6feeaa0b98b73ade16deba"
+        },
+        {
+          "path": "src/components/sk-banner/sk-banner.css",
+          "type": "registry:style",
+          "checksum": "sha256-6cd7acefd7c6656d1c90c671a1b78d8dff38baf37e22627b82f727b57c626930"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger",
+        "--sk-color-danger-fg",
+        "--sk-color-danger-subtle",
+        "--sk-color-primary",
+        "--sk-color-primary-subtle",
+        "--sk-color-primary-text",
+        "--sk-color-shadow",
+        "--sk-color-success",
+        "--sk-color-success-fg",
+        "--sk-color-success-subtle",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-color-warning",
+        "--sk-color-warning-fg",
+        "--sk-color-warning-subtle",
+        "--sk-font-sans",
+        "--sk-radius-full",
+        "--sk-shadow-brutal",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-space-4",
+        "--sk-text-base-line-height",
+        "--sk-text-base-size",
+        "--sk-text-base-weight",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-tracking",
+        "--sk-text-sm-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "default": "true",
+          "description": "Whether the banner spans its container as a full-width strip.  `false` keeps it in the flow as a block with the standard chrome, for a message about one section rather than the whole page."
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Heading text. Named `heading`, not `title`, for the reason `sk-alert` records: `title` is a standardized `HTMLElement` member, so a prop by that name is shadowed by the prototype and the browser would surface it as a hover tooltip over the whole banner."
+        },
+        {
+          "name": "variant",
+          "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+          "default": "\"neutral\"",
+          "description": "Visual emphasis."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "A page-level message that spans its container above the content it is about.",
+        "whenToUse": [
+          "A site-wide notice — maintenance, degraded service, an expiring trial",
+          "A message that belongs to the whole page rather than to one section",
+          "A persistent status the reader can act on from an actions slot"
+        ],
+        "whenNotToUse": [
+          "It belongs to one section and sits in the flow — use an Alert",
+          "It must interrupt after a user action — use an Alert or a Toast",
+          "It floats above the page and dismisses — use a Toast"
+        ],
+        "accessibility": "Sets `role=\"region\"`, not `role=\"banner\"` — in ARIA `banner` is the site header and is one-per-page, so using it here would collide with the consumer's real `<header>`. A `region` is only exposed as a landmark when it has an accessible name, so `aria-label` or `aria-labelledby` is required for the banner to be reachable by landmark navigation; the React type enforces one of the two. An unnamed banner is left unnamed rather than given a made-up label. It is not a live region: a banner was already present when the page loaded, and announcing it as an interruption would talk over the content the reader came for. The glyph is decorative and hidden.",
+        "example": "<sk-banner variant=\"warning\" heading=\"Scheduled maintenance\" aria-label=\"Service status\">Read-only on Saturday.</sk-banner>",
+        "knownLimitations": [
+          "No dismiss button, by design: dismissing needs a close affordance, focus into it, and a focus return — a different component",
+          "`fullWidth` is geometry, not material: it drops the offset shadow and side borders because a shadow makes a box read as floating above the page",
+          "`heading` is a string, not a heading element — the component does not know its level in the document outline"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "breadcrumb",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-breadcrumb/sk-breadcrumb.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-75d46d4d5808c035cd64f5bba2e1c7240ad1e78b93541ac7e1d3e03c34db7c3c"
+        },
+        {
+          "path": "src/components/sk-breadcrumb/sk-breadcrumb.css",
+          "type": "registry:style",
+          "checksum": "sha256-9b84c28de4d3bde2c6455ca678b863cf6e16838ab06cdc455acc3db769bc4543"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-border-strong",
+        "--sk-color-primary",
+        "--sk-color-primary-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-space-2",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "items",
+          "type": "string | Array<{ label: string",
+          "default": "\"[]\"",
+          "description": "The trail, oldest first — the last entry is the current page.  A JSON array of `{ label, href? }`. `href` is optional precisely because the last item normally has none: the current page is not a link."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"Breadcrumb\"",
+          "description": "Accessible name for the landmark. Defaults to \"Breadcrumb\"."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Shows where the current page sits in a hierarchy, oldest ancestor first.",
+        "whenToUse": [
+          "The page is more than two levels deep",
+          "The reader needs to move up one or more levels",
+          "The hierarchy, not the history, is what matters — this is not a back button"
+        ],
+        "whenNotToUse": [
+          "The page is flat or one level deep — a breadcrumb with one item says nothing",
+          "You want to go back to where the reader came from — use a Link or the browser's back",
+          "The trail is a stepped process — use a Stepper"
+        ],
+        "accessibility": "`<nav aria-label=\"Breadcrumb\">` wrapping an `<ol>`, so it is a landmark a screen reader can jump to and announces as a hierarchy rather than as unrelated links. The last item carries `aria-current=\"page\"` and is not a link — a link to the page you are on is a no-op that reads as actionable. Separators are drawn with `::before` and carry no text, so nothing announces between the items.",
+        "example": "<sk-breadcrumb items='[{\"label\":\"Home\",\"href\":\"/\"},{\"label\":\"Projects\",\"href\":\"/projects\"},{\"label\":\"Santaka\"}]'></sk-breadcrumb>",
+        "knownLimitations": [
+          "An empty trail renders nothing at all rather than an empty landmark",
+          "`items` is JSON, not slotted children, because the component must know which entry is last"
         ],
         "localesCovered": [
           "en-US"
@@ -776,7 +1182,7 @@
         {
           "path": "src/components/sk-checkbox/sk-checkbox.css",
           "type": "registry:style",
-          "checksum": "sha256-4b1064c46fca19e2ed85290cbd0e12ee4d5469118cd100f93a26ac099a593bb0"
+          "checksum": "sha256-742e7c4c538f8fd0fa2a0b44a5d64ac5b15c604e13d21d08d9e28eae96cbc212"
         }
       ],
       "cssVariables": [
@@ -920,6 +1326,146 @@
         "knownLimitations": [
           "The generated `id` for the inner control differs from React's `useId()`, so an SSR consumer must pass an explicit `id` for a separately-rendered `Label` to find it (section 4, forms contract)",
           "`indeterminate` is a property, not an attribute — it cannot be set in declarative HTML and resets on re-render if not re-applied"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "combobox",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-combobox/sk-combobox.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-3cf55054175ae6d6e741484b73f27104b688391518f1ca79445a6b1dc8400beb"
+        },
+        {
+          "path": "src/components/sk-combobox/sk-combobox.css",
+          "type": "registry:style",
+          "checksum": "sha256-f07d2619d7e049e5cf88c26c1f9adf453999c5c9c1d6add4425dca24196cd8c9"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger-fg",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight",
+        "--sk-z-popover"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the control."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid independently of whether `error` is set."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The accessible name, and the label rendered above the field."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Native form semantics."
+        },
+        {
+          "name": "options",
+          "type": "string | Array<{ value: string",
+          "default": "\"[]\"",
+          "description": "The options, as JSON: `[{ \"value\": \"…\", \"label\": \"…\" }]`."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Placeholder. Never a substitute for a label."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The selected value."
+        }
+      ],
+      "events": [
+        "sk-value-change"
+      ],
+      "ai": {
+        "summary": "A text field with a filterable list of options — type to narrow, arrows to choose.",
+        "whenToUse": [
+          "There are more options than fit in a Select — roughly more than fifteen",
+          "The reader may know part of the name and want to type it",
+          "Options have labels the reader searches by, not just values"
+        ],
+        "whenNotToUse": [
+          "There are fewer than about eight options — use a Radio Group or Select",
+          "Free text is a valid answer — use an Input",
+          "Multiple selections are needed — use a multi-select pattern instead"
+        ],
+        "accessibility": "The ARIA 1.2 combobox pattern: the input carries `role=\"combobox\"` with `aria-expanded` and `aria-controls` naming the listbox, and **focus never leaves the input** — the active option is reported through `aria-activedescendant` instead. Moving focus into the list is the common mistake: it blurs the field the reader is typing into and every screen reader announces it as leaving. Arrows wrap rather than dead-ending. Escape closes without clearing the typed text, because closing is not the same command as reverting. `sk-value-change` fires only for a committed selection — typing filters and is not a value change (§4).",
+        "example": "<sk-combobox label=\"Country\" options='[{\"value\":\"id\",\"label\":\"Indonesia\"}]'></sk-combobox>",
+        "knownLimitations": [
+          "Matching is a plain case-insensitive substring — the wrong collation for some locales, and §6 leaves locale to the consumer, who may pass pre-filtered options",
+          "No `aria-live` result count: it interrupts on every keystroke, and the listbox relationship already conveys the change",
+          "SSR consumers must pass an explicit id — the counter differs between server and client"
         ],
         "localesCovered": [
           "en-US"
@@ -1111,6 +1657,124 @@
     {
       "$schema": "https://santaka.dev/schema/registry-item-v1.json",
       "schemaVersion": 1,
+      "name": "drawer",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-drawer/sk-drawer.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-5ba87b48e4ecd17f388a72c624eee5049f986e43d1825127dc0872236e6ace02"
+        },
+        {
+          "path": "src/components/sk-drawer/sk-drawer.css",
+          "type": "registry:style",
+          "checksum": "sha256-74080903d13c544ffe2817263f852dfbcbc579be0722f29786ea0a9785815709"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-shadow",
+        "--sk-color-text",
+        "--sk-duration-overlay",
+        "--sk-ease-glass",
+        "--sk-font-sans",
+        "--sk-space-6",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-z-modal"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "close",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": "Closes the drawer."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "default": "true",
+          "description": "Closes when the backdrop is clicked."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Accessible name for the panel. The consumer's title slot supplies it best."
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "default": "true",
+          "description": "Modal is the default: the page behind is inert and focus is trapped. A non-modal drawer is for a persistent side panel the reader keeps open while working."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the drawer is showing. Reflects so page CSS can target it."
+        },
+        {
+          "name": "show",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": "Opens the drawer. Equivalent to setting `open`."
+        },
+        {
+          "name": "side",
+          "type": "\"start\" | \"end\"",
+          "default": "\"end\"",
+          "description": "Which edge it slides from.  Both values are logical and mirror under `dir=\"rtl\"`, which is ADR-016's requirement. There is no physical pair — see the note at the top of the stylesheet for why."
+        }
+      ],
+      "events": [
+        "sk-open-change"
+      ],
+      "ai": {
+        "summary": "A panel that slides in from one edge, for navigation or a persistent side task.",
+        "whenToUse": [
+          "Navigation or filters live beside the content rather than over it",
+          "The panel stays open while the reader works — a non-modal side panel",
+          "The content is taller than it is wide, such as a menu or a filter list"
+        ],
+        "whenNotToUse": [
+          "It must interrupt and demand a decision — use a Dialog or Alert Dialog",
+          "The content is a short description of a control — use a Tooltip",
+          "The content is a small menu anchored to a button — use a Popover"
+        ],
+        "accessibility": "Reuses the dialog mechanics in `shared/dialog-base.ts`, so the native `<dialog>` owns focus trapping, Escape, `::backdrop`, and inert background content — nothing is reimplemented. Focus returns to the trigger on close. `side` is logical: `start` and `end` mirror under `dir=\"rtl\"` (ADR-016), and there is deliberately no physical `left`/`right` pair, because a fixed edge is exactly what puts a drawer on the wrong side of a right-to-left document.",
+        "example": "<sk-drawer side=\"end\" label=\"Settings\"><sk-button slot=\"trigger\">Open</sk-button><h3 slot=\"title\">Settings</h3></sk-drawer>",
+        "knownLimitations": [
+          "The panel needs an `[hidden][open]` rule: scoped mode writes `hidden` onto elements hosting a `<slot>`, which otherwise leaves an open drawer invisible",
+          "No physical side values — see the accessibility note"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
       "name": "empty-state",
       "namespace": null,
       "type": "component",
@@ -1212,6 +1876,118 @@
         "knownLimitations": [
           "`bare` drops the fill, the border, and the shadow rather than restyling them, because it exists for one inside a Card",
           "The icon slot falls back to a dashed CSS glyph: this package ships no icon set"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "field",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-field/sk-field.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-7d8260e0c57d73b83c24fd0f95e4adff84be7aad299b231b522611c4da2a756c"
+        },
+        {
+          "path": "src/components/sk-field/sk-field.css",
+          "type": "registry:style",
+          "checksum": "sha256-dd81cc9b4743997aeb71e11881541f1d30a8acba2f0f4e157c7eaa06532b8ecf"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-danger-fg",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-space-1",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-tracking",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text, announced through `aria-describedby`."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Announces the field as disabled. Does not disable the control itself."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid independently of whether `error` is set."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Label text. Becomes the accessible name of the control inside."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field required. Announced through `aria-required` on the control."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Labels, describes, and marks a form control the consumer already owns.",
+        "whenToUse": [
+          "The control is a plain `<input>`, a third-party widget, or not one of ours",
+          "Several controls share one label and one error",
+          "You need label, description, and error wiring without a form-associated wrapper"
+        ],
+        "whenNotToUse": [
+          "The control is `sk-input`, `sk-textarea`, or `sk-select` — those render their own label, description, and error",
+          "You want a form-associated control — use Input; a Field is not form-associated and never submits",
+          "You need a layout wrapper with no labelling — use a plain container"
+        ],
+        "accessibility": "Puts `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required` on the **control**, because that is the element a screen reader is on when it announces them, and sets nothing else — `value`, `name`, `disabled`, and validity stay the control's own. The description and error ids are appended together, not one replacing the other: an error that silences the hint removes the format instruction exactly when the user needs it. `invalid` and `error` are separate, so a field can be invalid before the consumer knows why. `required` renders an asterisk that is `aria-hidden` and a visually hidden word, so a reader hears 'required' rather than a symbol. The error carries a glyph as well as colour (WCAG 1.4.1).",
+        "example": "<sk-field label=\"Workspace name\" description=\"Lowercase letters and dashes.\"><input type=\"text\" /></sk-field>",
+        "knownLimitations": [
+          "The field is not form-associated: it never sets `name`, never calls `setFormValue`, and does not participate in submission",
+          "It adopts the first form control in its slot; a field wrapping several controls labels only the first",
+          "It draws no chrome of its own — a box around a control that already has one reads as two nested inputs"
         ],
         "localesCovered": [
           "en-US"
@@ -1570,6 +2346,93 @@
     {
       "$schema": "https://santaka.dev/schema/registry-item-v1.json",
       "schemaVersion": 1,
+      "name": "kbd",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-kbd/sk-kbd.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-511a955f26f48dd2fc6365e5e63ceeedf989aa4a1245cc33fb68fd5b7f529865"
+        },
+        {
+          "path": "src/components/sk-kbd/sk-kbd.css",
+          "type": "registry:style",
+          "checksum": "sha256-e633e8c834b6559b45259977e508a99754c56eb20d8114b6f1e63d5f45d10219"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-shadow",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-font-mono",
+        "--sk-radius-sm",
+        "--sk-shadow-sm",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-space-3",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-tracking",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-tracking",
+        "--sk-text-xs-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\"",
+          "default": "\"md\"",
+          "description": "The type step the shortcut is set in."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Marks up a keyboard shortcut as a real `<kbd>` element, styled as hard-edged chrome.",
+        "whenToUse": [
+          "Documentation or a menu item names a key the reader should press",
+          "A shortcut appears inline with copy describing what it does",
+          "Several keys form one combination, such as Ctrl, Shift, and K"
+        ],
+        "whenNotToUse": [
+          "The keys are not actually pressable here — use Text; `<kbd>` promises input the reader can make",
+          "It is a button the user clicks with a keyboard shortcut beside it — the shortcut is a Kbd, the control is a Button",
+          "It is a code sample or a terminal command — that is a Code block, not input"
+        ],
+        "accessibility": "Renders a real `<kbd>` in the light DOM rather than a styled `<span>`, so assistive technology can identify the text as key input instead of reading a bare word — the difference between 'Shift' the key and 'shift' the sentence. It takes no role and no tab stop: a shortcut is text, not a control. The monospace family is functional, not decorative — 'l', '1', and 'I' are the same glyph in most UI faces and a shortcut is copied by eye.",
+        "example": "<sk-kbd>Ctrl</sk-kbd> <sk-kbd>Shift</sk-kbd> <sk-kbd>K</sk-kbd>",
+        "knownLimitations": [
+          "There is no `variant` prop: this component has one look, and §4's two-prop rule applies to components with an axis to vary on",
+          "It renders the key combination as plain text; separating multiple keys with '+' is the consumer's choice, and the component adds no separator"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
       "name": "label",
       "namespace": null,
       "type": "component",
@@ -1760,6 +2623,222 @@
     {
       "$schema": "https://santaka.dev/schema/registry-item-v1.json",
       "schemaVersion": 1,
+      "name": "pagination",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-pagination/sk-pagination.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-6a95687a9e22b48d71e970dafd614a448410f98d664129825b2ab8f786c53f12"
+        },
+        {
+          "path": "src/components/sk-pagination/sk-pagination.css",
+          "type": "registry:style",
+          "checksum": "sha256-0492b9c63ebd98101d8db26410454077e32e892fa18fd922c8a1c551f0a1d279"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border",
+        "--sk-color-border-strong",
+        "--sk-color-primary",
+        "--sk-color-primary-fg",
+        "--sk-color-primary-text",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-shadow-brutal",
+        "--sk-shadow-sm",
+        "--sk-space-2",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "count",
+          "type": "number",
+          "default": "1",
+          "description": "Total number of pages."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Builds the href for a page number. `$p` is replaced with the page."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"Pagination\"",
+          "description": "Accessible name for the landmark."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "default": "1",
+          "description": "The current page, 1-based."
+        },
+        {
+          "name": "siblings",
+          "type": "number",
+          "default": "1",
+          "description": "How many page numbers to show between the ellipses. Small enough that the row never wraps on a 320px viewport."
+        }
+      ],
+      "events": [
+        "sk-page-change"
+      ],
+      "ai": {
+        "summary": "Moves between pages of a list, with a window around the current page.",
+        "whenToUse": [
+          "A list is split into numbered pages",
+          "The reader needs to jump to a known page, not just the next one",
+          "The total number of pages is known"
+        ],
+        "whenNotToUse": [
+          "Items load as you scroll — use infinite scrolling instead",
+          "There are only two or three pages — Prev/Next alone is less to read",
+          "The pages are steps in a process — use a Stepper"
+        ],
+        "accessibility": "`<nav>` with an accessible name, and page numbers are links because a page is a destination — a `<button>` would misdescribe navigation as an action. The current page carries `aria-current=\"page\"` and is not a link. The ellipsis is empty and `aria-hidden`, so it is not announced as a stop and cannot take focus. Prev and Next carry visually hidden words, because \"‹\" alone announces as punctuation.",
+        "example": "<sk-pagination count={12} page={6}></sk-pagination>",
+        "knownLimitations": [
+          "The window is computed here; `siblings` controls how many pages sit either side",
+          "Without an `href` template the component handles the navigation and emits `sk-page-change`; with one, the links are real and the browser navigates"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "popover",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-popover/sk-popover.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-d8b773e5ef671220dbaf32794ab95181b817397a380ff2631cf6140d5b39c3b7"
+        },
+        {
+          "path": "src/components/sk-popover/sk-popover.css",
+          "type": "registry:style",
+          "checksum": "sha256-5c430f1a2f9c9309325900ef74183ca9c30faf97181df71504917248a7845510"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-text",
+        "--sk-duration-overlay",
+        "--sk-ease-glass",
+        "--sk-font-sans",
+        "--sk-space-2",
+        "--sk-space-4",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-z-popover"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "hide",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": "Closes the popover and returns focus to the trigger."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Accessible name for the panel, needed when there is no visible heading."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether the popover is showing. Reflects so page CSS can target it."
+        },
+        {
+          "name": "placement",
+          "type": "\"top\" | \"bottom\" | \"start\" | \"end\"",
+          "default": "\"bottom\"",
+          "description": "Preferred side. Flips at the viewport edge rather than clipping, so a `bottom` popover on a trigger near the bottom of the screen renders above."
+        },
+        {
+          "name": "show",
+          "type": "() => Promise<void>",
+          "default": null,
+          "description": "Opens the popover."
+        }
+      ],
+      "events": [
+        "sk-open-change"
+      ],
+      "ai": {
+        "summary": "A floating panel that holds controls, anchored to a trigger.",
+        "whenToUse": [
+          "A button opens a small panel of controls, such as filters or a menu",
+          "The panel content is interactive — links, checkboxes, a form",
+          "The panel needs to close on Escape and on an outside click"
+        ],
+        "whenNotToUse": [
+          "The content is only a description of the trigger — use a Tooltip",
+          "It must interrupt and demand a decision — use a Dialog",
+          "The content is navigation beside the page — use a Drawer"
+        ],
+        "accessibility": "`role=\"dialog\"` on the panel, with `aria-haspopup=\"dialog\"` and `aria-expanded` on the trigger — not `aria-describedby`, which would announce the whole panel as the trigger's description. Focus moves into the panel on open and returns to the trigger on close. Escape and an outside click both dismiss. Unlike a Tooltip, it takes pointer events, because it holds controls. `placement` is logical on the inline axis: `start` and `end` mirror under `dir=\"rtl\"` (ADR-016).",
+        "example": "<sk-popover placement=\"bottom\" label=\"Filters\"><sk-button slot=\"trigger\">Filters</sk-button><sk-checkbox label=\"Failed only\"></sk-checkbox></sk-popover>",
+        "knownLimitations": [
+          "The panel is rendered by Stencil with real `<slot>` elements — the consumer's children are never relocated, which is what keeps a click on slotted content inside the panel",
+          "The flip at the viewport edge is computed for the block axis only; inline-axis placement does not flip"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
       "name": "progress",
       "namespace": null,
       "type": "component",
@@ -1882,7 +2961,7 @@
         {
           "path": "src/components/sk-radio-group/sk-radio-group.css",
           "type": "registry:style",
-          "checksum": "sha256-3fcf70aa7334d6a62fc309b11894c4a60b422fb839305d00f80c0c95eff4fabc"
+          "checksum": "sha256-725d4223a2a1fd9e5bba73cfc33060f0af83f57dca89c7c03bf44ca06cbaff2f"
         }
       ],
       "cssVariables": [
@@ -2444,6 +3523,162 @@
     {
       "$schema": "https://santaka.dev/schema/registry-item-v1.json",
       "schemaVersion": 1,
+      "name": "slider",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-slider/sk-slider.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-062b59a90f079d608f799ee04666e21fde4aef40ec9209202d327cb18da617f3"
+        },
+        {
+          "path": "src/components/sk-slider/sk-slider.css",
+          "type": "registry:style",
+          "checksum": "sha256-fd4a754205c924ba671d9973d16ecf6ba83accab109d7dbab56aa13a466a06fa"
+        }
+      ],
+      "cssVariables": [
+        "--sk-border-thick",
+        "--sk-color-border-strong",
+        "--sk-color-danger-fg",
+        "--sk-color-primary",
+        "--sk-color-shadow",
+        "--sk-color-surface",
+        "--sk-color-surface-sunken",
+        "--sk-color-text",
+        "--sk-color-text-muted",
+        "--sk-font-sans",
+        "--sk-shadow-sm",
+        "--sk-space-1",
+        "--sk-space-2",
+        "--sk-text-sm-line-height",
+        "--sk-text-sm-size",
+        "--sk-text-sm-tracking",
+        "--sk-text-sm-weight",
+        "--sk-text-xs-line-height",
+        "--sk-text-xs-size",
+        "--sk-text-xs-weight"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Persistent helper text."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the control and withholds it from submission."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The validation message. Its presence drives `aria-invalid`."
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "default": "\"\"",
+          "description": "A template for `aria-valuetext`, where `$v` is the value and `$m` is the maximum — \"$v of $m\". What a screen reader announces instead of a bare number."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "Marks the field invalid independently of whether `error` is set."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "\"\"",
+          "description": "The accessible name, and the label rendered above the control."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "100",
+          "description": "Largest value."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "default": "0",
+          "description": "Smallest value."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Native form semantics. The control is named by the host attribute."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "default": "false",
+          "description": "Renders the numeric output beside the label.  Off by default: a value the consumer is already displaying in their own UI should not be duplicated here, and a bare number with no unit is often worse than none."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "default": "1",
+          "description": "Granularity. `0` means any value the browser can represent."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "default": "50",
+          "description": "The current value."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "Picks one number from a range, on a track the reader drags or arrows across.",
+        "whenToUse": [
+          "The value is a number on a known range, such as volume or a budget ceiling",
+          "The exact number matters less than where it sits in the range",
+          "Steps are meaningful — volume in fives, budget in tens"
+        ],
+        "whenNotToUse": [
+          "The reader must type an exact figure — use an Input with type=number",
+          "There are fewer than five discrete choices — use a Radio Group",
+          "You need two ends of a range — use two sliders, or a dedicated range control"
+        ],
+        "accessibility": "A real `<input type=\"range\">`, so the platform owns the slider role, `aria-valuenow`, the arrow/Page/Home/End model, and the touch target — all of which a `<div role=\"slider\">` reimplementation tends to lose. `aria-valuetext` takes a consumer-supplied `format` template (\"$v of $m\"), because §6 says locale is consumer-supplied. The label points at the control by id; the description and error ids are appended together rather than one replacing the other.",
+        "example": "<sk-slider name=\"volume\" label=\"Volume\" value=\"40\" show-value format=\"$v of $m\"></sk-slider>",
+        "knownLimitations": [
+          "The thumb's square shape is asserted on Chromium and Firefox; WebKit exposes neither thumb pseudo-element to getComputedStyle",
+          "SSR consumers must pass an explicit id — the counter differs between server and client",
+          "The visual fill on Chromium comes from the platform's own rendering, not a custom element"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
       "name": "spinner",
       "namespace": null,
       "type": "component",
@@ -2553,7 +3788,7 @@
         {
           "path": "src/components/sk-switch/sk-switch.css",
           "type": "registry:style",
-          "checksum": "sha256-d627d2f16c2577c33e0970c1026e77b2cf67605b9a349a7bc82f8dc8205492d6"
+          "checksum": "sha256-0980a90c3646d0d7937d9e80b04d90ff2847227f747f642f5e9355514b901081"
         }
       ],
       "cssVariables": [
@@ -2911,6 +4146,89 @@
         "knownLimitations": [
           "Inactive panels are hidden, not kept alive — state inside a panel is lost on switch, unless the application holds it",
           "The tablist slot must carry `data-slot=\"tablist\"` and each part its `data-slot` — the wiring contract is structural"
+        ],
+        "localesCovered": [
+          "en-US"
+        ]
+      }
+    },
+    {
+      "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+      "schemaVersion": 1,
+      "name": "taka",
+      "namespace": null,
+      "type": "component",
+      "frameworks": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "web-components"
+      ],
+      "stability": "stable",
+      "behaviorOwner": "web-components",
+      "version": "0.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/components/sk-taka/sk-taka.tsx",
+          "type": "registry:component",
+          "checksum": "sha256-4cdea0ccbe2efd6e3264fea537e73cc7db4269568798dd455f6fc44a46fee5ab"
+        },
+        {
+          "path": "src/components/sk-taka/sk-taka.css",
+          "type": "registry:style",
+          "checksum": "sha256-22c31043ec103dfaa38501eeef7fe2559bb29756578722c0da42dd15c61bdc95"
+        }
+      ],
+      "cssVariables": [
+        "--sk-color-primary",
+        "--sk-color-primary-subtle",
+        "--sk-color-border-strong",
+        "--sk-color-surface",
+        "--sk-color-warning",
+        "--sk-duration-control-slow",
+        "--sk-duration-overlay",
+        "--sk-ease-arcade"
+      ],
+      "localesCovered": [
+        "en-US"
+      ],
+      "license": "MIT",
+      "props": [
+        {
+          "name": "mood",
+          "type": "\"idle\" | \"wave\" | \"bounce\"",
+          "default": "\"idle\"",
+          "description": "What Taka is doing. `idle` is a still portrait; the other two add an idle animation that reduced motion removes entirely."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Rendered size, in the icon scale."
+        }
+      ],
+      "events": [],
+      "ai": {
+        "summary": "The project mascot, for onboarding, empty states, and easter eggs.",
+        "whenToUse": [
+          "An empty state would otherwise read as a failure",
+          "Onboarding or a first-run screen needs a face",
+          "A small easter egg, where §1.8's playfulness is welcome"
+        ],
+        "whenNotToUse": [
+          "It would be the only carrier of meaning — a mascot is decorative by rule",
+          "The screen is dense with real information — §1.8 reserves it, not every screen",
+          "You need a status marker or an icon — use a Badge for status, and slotted SVG for an icon; Taka is a character, not an icon set"
+        ],
+        "accessibility": "Decorative always: `aria-hidden` on the host and `role=\"presentation\"` on the `<svg>`, so a screen reader never announces it. The heading beside it does the talking. Artwork is drawn as SVG paths rather than imported, per §13's requirement that the mascot be original artwork. `mood` adds an idle animation that `prefers-reduced-motion` removes outright rather than shortening.",
+        "example": "<sk-taka mood=\"wave\" size=\"lg\"></sk-taka>",
+        "knownLimitations": [
+          "Purely decorative — it must never be the only signal",
+          "The `wave` and `bounce` moods animate and are cancelled under reduced motion"
         ],
         "localesCovered": [
           "en-US"

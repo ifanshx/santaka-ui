@@ -124,6 +124,88 @@ export namespace Components {
         "open": boolean;
     }
     /**
+     * Avatar — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An avatar is a picture of a person, and that makes it *meaningful* rather
+     * than decorative. A decorative image takes `alt=""`; this one is the person's
+     * name as far as a screen-reader user is concerned. That framing decides three
+     * things this component does deliberately:
+     * 1. **The host is the accessible image, not the `<img>`.** `role="img"` with
+     *    the person's name as its label, and the `<img>` inside is `alt=""`. The
+     *    alternative — putting the name on the `<img>` — leaves the initials span
+     *    as a second, competing text node in the same box.
+     * 2. **An avatar with no name and no image carries no information**, so it gets
+     *    `aria-hidden` instead of an empty `role="img"`. An unnamed image is an axe
+     *    violation (`role-img-alt`), and the tempting fix — defaulting the label to
+     *    something like "avatar" — is worse: it announces a word the designer
+     *    wrote, not the person's name.
+     * 3. **`data-state` distinguishes why initials are showing.** "No image",
+     *    "still loading", and "the image 404'd" look identical in review and are
+     *    three different bugs. The attribute names which, so a screenshot diff and
+     *    a test can both tell them apart.
+     * The initials are derived from `name`, never supplied separately. Two fields
+     * that can disagree are how an avatar shows "JD" while announcing "Jane Doe".
+     * The shape is a circle, which is a deliberate departure: chrome in this system
+     * is hard-edged at zero radius (ADR-017), but a portrait is not chrome. A
+     * square with no radius reads as a cropped document rather than a person.
+     */
+    interface SkAvatar {
+        /**
+          * The person's name. It is the accessible name of the image and the source of the initials — one field, so the two cannot disagree.
+          * @default ""
+         */
+        "name": string;
+        /**
+          * Diameter. An avatar is square by ratio, so `size` is one axis.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+        /**
+          * Image source. Without it, the initials render.
+          * @default ""
+         */
+        "src": string;
+    }
+    /**
+     * Avatar Group — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A stacked row of avatars, with the overflow collapsed into a count. Three
+     * decisions make this more than a flex wrapper:
+     * 1. **The overflow count is text, not another avatar.** "+3" is not a person,
+     *    so rendering it as a fourth circle invites a reader to think it is one —
+     *    and it has no name to announce. It is a `<span>` with a real accessible
+     *    name built from the count, not an unnamed circle.
+     * 2. **The group is a `group`, not a `list`.** These are people, not items to
+     *    navigate. A `list` would make a screen reader announce "list, 4 items" and
+     *    walk the reader through each one, when the useful information is one
+     *    sentence: "Ada Lovelace, Grace Hopper, and 2 others".
+     * 3. **Overlap is visual, not structural.** The stack is drawn with a negative
+     *    inline margin on every avatar after the first. Nothing is absolutely
+     *    positioned, so the group reflows at narrow widths and mirrors in RTL —
+     *    `margin-inline-start` is what flips, not a `left` offset.
+     * The avatars are slotted `sk-avatar` elements rather than a data array. A
+     * `people={[...]}` prop would be a second, competing way to render a person and
+     * would put name/initials/label logic in two places — the duplication that made
+     * `sk-avatar` derive initials from `name` rather than accept them.
+     */
+    interface SkAvatarGroup {
+        /**
+          * The accessible name for the group — "Assigned to", "Contributors". A bare `role="group"` with no label is skipped by most screen readers, so the label is what makes the group announce at all.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * How many avatars to show before collapsing the rest into a count. `0` means show all.
+          * @default 3
+         */
+        "max": number;
+        /**
+          * Diameter applied to every avatar in the group.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
+    }
+    /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A badge is a static label, not an interactive element. That is stated here
@@ -155,6 +237,82 @@ export namespace Components {
           * @default "neutral"
          */
         "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
+     * Banner — a page-level message that sits above the content it is about.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A banner and an alert look alike and are not the same thing, so the
+     * difference is the first thing recorded here:
+     * - **`sk-alert` is inline.** It renders in the document flow, pushes content
+     *   down, and belongs to the section it describes.
+     * - **`sk-banner` is regional.** It spans the width of its container and sits
+     *   *above* the content, which is why it is the component for site-wide
+     *   notices — maintenance windows, a degraded service, an expired trial.
+     * That difference decides the ARIA. A banner that spans the page is a landmark,
+     * so the role is `region` rather than a live region: **`role="banner"` is not
+     * used**, because in ARIA that name means the site header and is reserved for
+     * one element per page — putting it here would collide with the consumer's real
+     * `<header>` and leave two "banner" landmarks. `region` with an accessible name
+     * is the correct shape, and it is only a landmark once it is named, which is
+     * why `aria-label` or `aria-labelledby` is required for the landmark role to
+     * apply at all.
+     * It is **not** announced as an interruption. An alert interrupts because it
+     * appeared in reaction to something the user just did; a banner was already
+     * there when the page loaded, and announcing it as an interruption would talk
+     * over the content the user came for. Consumers who need an interruption should
+     * use `sk-alert` or `sk-toast`, which own those contracts.
+     * Like `sk-alert`, it has no dismiss button. Dismissing is a different
+     * component: it needs a close affordance, focus into it, and a focus return
+     * when the banner goes away.
+     */
+    interface SkBanner {
+        /**
+          * Whether the banner spans its container as a full-width strip.  `false` keeps it in the flow as a block with the standard chrome, for a message about one section rather than the whole page.
+          * @default true
+         */
+        "fullWidth": boolean;
+        /**
+          * Heading text. Named `heading`, not `title`, for the reason `sk-alert` records: `title` is a standardized `HTMLElement` member, so a prop by that name is shadowed by the prototype and the browser would surface it as a hover tooltip over the whole banner.
+          * @default ""
+         */
+        "heading": string;
+        /**
+          * Visual emphasis.
+          * @default "neutral"
+         */
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
+     * Breadcrumb — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The ARIA shape is the whole reason this is a component rather than a row of
+     * links:
+     * 1. **`<nav>` with `aria-label="Breadcrumb"`, and an `<ol>` inside.** The nav
+     *    makes it a landmark a screen reader can jump to; the list is what makes it
+     *    announce "list, 3 items" so the reader knows there is a hierarchy rather
+     *    than three unrelated links.
+     * 2. **The current page is `aria-current="page"`, not a link.** A link to the
+     *    page you are already on is a no-op that reads as actionable. Marking it is
+     *    what distinguishes "where you are" from "where you came from".
+     * 3. **The separators are decorative and hidden.** Drawn in CSS with
+     *    `aria-hidden`, so a reader does not announce "slash, slash, slash" between
+     *    the items. A `<span>/</span>` between every item is the common mistake.
+     * The items come from an `items` array rather than slotted children, because the
+     * component has to know which one is last — that is what `aria-current` hangs
+     * off, and a slot cannot tell you how many nodes it received without walking
+     * them at runtime.
+     */
+    interface SkBreadcrumb {
+        /**
+          * The trail, oldest first — the last entry is the current page.  A JSON array of `{ label, href? }`. `href` is optional precisely because the last item normally has none: the current page is not a link.
+          * @default "[]"
+         */
+        "items": string | Array<{ label: string; href?: string }>;
+        /**
+          * Accessible name for the landmark. Defaults to "Breadcrumb".
+          * @default "Breadcrumb"
+         */
+        "label": string;
     }
     /**
      * Button — Tier 1 foundation component.
@@ -332,6 +490,85 @@ export namespace Components {
         "variant": "default" | "quiet";
     }
     /**
+     * Combobox — Tier 2 form control: a text field with a filterable list.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The ARIA pattern, and the part everyone gets wrong
+     * The ARIA 1.2 combobox pattern is four separate pieces, and a component that
+     * merges them is a component a screen reader cannot drive:
+     * 1. The **input** carries `role="combobox"`, `aria-expanded`, and
+     *    `aria-controls` pointing at the listbox.
+     * 2. The **listbox** carries `role="listbox"` and is the element `aria-controls`
+     *    names.
+     * 3. **Focus never leaves the input.** The active option is reported through
+     *    `aria-activedescendant` on the input, not by moving focus into the list.
+     *    Moving focus is the common mistake: it fires a blur on the field the reader
+     *    is typing into, and every screen reader announces it as leaving.
+     * 4. The **options** carry `role="option"` and `aria-selected`, with ids
+     *    `aria-activedescendant` can name.
+     * ### Decisions specific to this component
+     * - **A real `<input>` inside the host**, and the list is a real `<ul>`. The
+     *   component filters; it does not reimplement text editing. Native validation,
+     *   IME, and autofill all keep working because the input is the input.
+     * - **§4's event rule**: `sk-value-change` fires only for user-initiated changes.
+     *   Filtering as the reader types is not a value change — only a committed
+     *   selection is.
+     * - **Escape closes without clearing.** Closing and reverting are different
+     *   commands; the reader's typed text is their work.
+     * - **No `aria-live` announcement of the result count.** It looks helpful and is
+     *   a known anti-pattern: it interrupts on every keystroke. The listbox
+     *   relationship already tells a screen reader the results changed.
+     * §6: the component does no locale-sensitive work. Matching is a plain
+     * case-insensitive substring, which is the wrong collation for some locales and
+     * is deliberately left to the consumer, who may pass pre-filtered options.
+     */
+    interface SkCombobox {
+        /**
+          * Persistent helper text.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables the control.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The accessible name, and the label rendered above the field.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Native form semantics.
+          * @default ""
+         */
+        "name": string;
+        /**
+          * The options, as JSON: `[{ "value": "…", "label": "…" }]`.
+          * @default "[]"
+         */
+        "options": string | Array<{ value: string; label: string }>;
+        /**
+          * Placeholder. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder": string;
+        /**
+          * The selected value.
+          * @default ""
+         */
+        "value": string;
+    }
+    /**
      * Dialog — Tier 2 floating overlay, and the first consumer of the glass
      * material.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -378,6 +615,63 @@ export namespace Components {
         "showModal": () => Promise<void>;
     }
     /**
+     * Drawer — Tier 2 floating overlay that slides in from one edge.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A drawer is a dialog with a different shape, and the codebase already decided
+     * how dialogs work — so this reuses `shared/dialog-base.ts` rather than writing
+     * a second focus story. That is the whole point of the base existing. The
+     * browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content; nothing here reimplements them.
+     * What is genuinely ours is the edge, and it is the part worth being careful
+     * about:
+     * - **`side` is logical, not physical.** `start` and `end`, never `left` and
+     *   `right`: a document with `dir="rtl"` gets the mirrored edge for free, which
+     *   is ADR-016's requirement rather than a preference. There is deliberately no
+     *   physical pair — a fixed edge is exactly what puts a drawer on the wrong side
+     *   of a right-to-left document.
+     * - **The entrance is the glass material's float**, not the control's press
+     *   (§2 splits motion by layer). Reduced motion removes it rather than
+     *   shortening it.
+     * Like the dialog, open/closed is ephemeral state the component owns outright,
+     * so there is no `defaultOpen` — §4's rule for state the caller cannot see.
+     * Every close path reports through one `sk-open-change`.
+     */
+    interface SkDrawer {
+        /**
+          * Closes the drawer.
+         */
+        "close": () => Promise<void>;
+        /**
+          * Closes when the backdrop is clicked.
+          * @default true
+         */
+        "dismissible": boolean;
+        /**
+          * Accessible name for the panel. The consumer's title slot supplies it best.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Modal is the default: the page behind is inert and focus is trapped. A non-modal drawer is for a persistent side panel the reader keeps open while working.
+          * @default true
+         */
+        "modal": boolean;
+        /**
+          * Whether the drawer is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Opens the drawer. Equivalent to setting `open`.
+         */
+        "show": () => Promise<void>;
+        /**
+          * Which edge it slides from.  Both values are logical and mirror under `dir="rtl"`, which is ADR-016's requirement. There is no physical pair — see the note at the top of the stylesheet for why.
+          * @default "end"
+         */
+        "side": "start" | "end";
+    }
+    /**
      * Empty state — Tier 1 placeholder surface.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -410,6 +704,68 @@ export namespace Components {
           * @default "default"
          */
         "variant": "default" | "bare";
+    }
+    /**
+     * Field — Tier 1 form component: the wrapper that labels, describes, and marks a
+     * control it does not own.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * `sk-input`, `sk-textarea`, and `sk-select` each render their own label,
+     * description, and error. That is right for a self-contained control and wrong
+     * the moment the control is *not one of ours* — a consumer's `<input>`, a
+     * third-party widget, or several controls under one label. This component exists
+     * for exactly that case, and the boundary is the point:
+     * **It describes; it does not control.** The field owns the label, the
+     * description, the error, and the ARIA wiring that points at them. It never
+     * reads or writes the control's value, never sets `name`, and never calls
+     * `setFormValue` — the control is not form-associated through this wrapper. A
+     * wrapper that also tried to own the value would be a second owner of it, and
+     * the two would eventually disagree, which is the failure §4's "exactly one
+     * implementation owns the behavior" rule exists to prevent.
+     * ### The only attributes it sets on the control
+     * ARIA association is not optional and not the consumer's job to guess:
+     * `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required`
+     * have to sit on the *control*, because that is the element a screen reader is
+     * on when it announces them. So the field finds the first control in its slot
+     * and sets those four, and nothing else. They are description;
+     * `value`, `name`, `disabled`, and validity stay the control's own business.
+     * The label is associated by id rather than by wrapping: the control is the
+     * consumer's, and a `<label>` wrapping an element this component did not render
+     * would make the association indirect and fragile under re-renders.
+     * §4 requires the error id to be **appended** to any existing description rather
+     * than replacing it — an error that silences the hint removes the format
+     * instruction exactly when the user needs it.
+     */
+    interface SkField {
+        /**
+          * Persistent helper text, announced through `aria-describedby`.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Announces the field as disabled. Does not disable the control itself.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * Label text. Becomes the accessible name of the control inside.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Marks the field required. Announced through `aria-required` on the control.
+          * @default false
+         */
+        "required": boolean;
     }
     interface SkIconButton {
         /**
@@ -532,6 +888,35 @@ export namespace Components {
         "variant": "default" | "quiet";
     }
     /**
+     * Kbd — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The semantic is the whole reason this exists, and it is why the component
+     * does not merely restyle a `<span>`. A keyboard shortcut written as
+     * `<span>Ctrl</span>` is two characters to sighted readers and a run of
+     * unmarked text to anyone listening: no role, no pronunciation, no way to tell
+     * "Shift" the key from "shift" the word. `<kbd>` is the platform's answer, and
+     * this component renders one rather than imitating its appearance.
+     * Two decisions worth recording:
+     * 1. **The element is real, in the light DOM, with no wrapper box.** Scoped
+     *    mode renders the `<kbd>` inside the host (ADR-011), so the consumer's
+     *    document structure — a `<kbd>` inside a `<p>`, a `<kbd>` inside a menu
+     *    item — stays exactly what they wrote. A wrapper `<div>` here would put an
+     *    anonymous box between a shortcut and the text describing it.
+     * 2. **`size` follows the type scale, not a pixel ladder.** Shortcuts are read
+     *    inline with the copy around them, so the only sizing that stays honest is
+     *    the one the type tokens already define.
+     * `variant` is not used: this component has one look, and §4's two-prop rule is
+     * about components that have an axis to vary on. Adding a decorative variant
+     * here would be a prop that exists to be unused.
+     */
+    interface SkKbd {
+        /**
+          * The type step the shortcut is set in.
+          * @default "md"
+         */
+        "size": "sm" | "md";
+    }
+    /**
      * Label — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The wiring here is the pattern `sk-input` proved in a real browser: the label
@@ -599,6 +984,105 @@ export namespace Components {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Pagination — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Four decisions, all of them about what a screen reader hears:
+     * 1. **`<nav>` with `aria-label`, and the page numbers are links.** Pagination is
+     *    navigation, so it is a landmark; the numbers are `<a href>` because a page
+     *    is a destination, and a `<button>` would misdescribe it as an action.
+     * 2. **The current page carries `aria-current="page"`, and is `aria-disabled`
+     *    rather than a dead link.** A link to the page you are on is a no-op that
+     *    reads as actionable.
+     * 3. **The ellipsis is decorative and hidden.** "…" is not a page. Rendered as
+     *    an empty `<span>` with `aria-hidden`, so it is not announced as a stop and
+     *    is not focusable.
+     * 4. **Prev and Next keep real accessible names.** "‹" alone announces as a
+     *    punctuation mark, so each carries a visually hidden word alongside the
+     *    glyph.
+     * The window is computed here rather than left to the consumer: `count` and
+     * `page` are the inputs, and which pages to show with ellipses is the part every
+     * consumer reimplements badly.
+     * §4's event rule: `sk-page-change` fires only for user-initiated changes, never
+     * when `page` is updated programmatically, which is what keeps a controlled
+     * pager from looping.
+     */
+    interface SkPagination {
+        /**
+          * Total number of pages.
+          * @default 1
+         */
+        "count": number;
+        /**
+          * Builds the href for a page number. `$p` is replaced with the page.
+          * @default ""
+         */
+        "href": string;
+        /**
+          * Accessible name for the landmark.
+          * @default "Pagination"
+         */
+        "label": string;
+        /**
+          * The current page, 1-based.
+          * @default 1
+         */
+        "page": number;
+        /**
+          * How many page numbers to show between the ellipses. Small enough that the row never wraps on a 320px viewport.
+          * @default 1
+         */
+        "siblings": number;
+    }
+    /**
+     * Popover — Tier 2 floating layer that holds interactive content.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * **The distinction that makes this not a tooltip.** A tooltip is a description
+     * of something the reader can already see and use; it is named through
+     * `aria-describedby`, takes no focus, and holds no interactive content. A popover
+     * holds controls — a menu, a filter, a form — so it needs the opposite contract
+     * on all three counts:
+     * 1. **It is a dialog, labelled by its own heading or `label`.** The trigger gets
+     *    `aria-haspopup="dialog"` and `aria-expanded`, not `aria-describedby` —
+     *    announcing a menu as the trigger's description reads the whole thing out as
+     *    one sentence.
+     * 2. **It dismisses on Escape and on an outside click**, and returns focus to the
+     *    trigger. A tooltip disappears when you look away; a popover has to be
+     *    *closed*, because it owns focus while it is open.
+     * 3. **Slot content is not moved.** The panel is rendered by Stencil with real
+     *    `<slot>` elements rather than built imperatively and filled by relocating
+     *    the consumer's children. Relocation is what broke the first attempt: the
+     *    rendered `<slot name="trigger">` was itself a child of the host, so moving
+     *    children took the trigger with them, and a click on slotted content reported
+     *    the original node — outside the host — so the popover closed on itself.
+     * Placement is a hint, not a guarantee: the component flips at the viewport edge
+     * rather than rendering off-screen, the same rule the tooltip follows.
+     */
+    interface SkPopover {
+        /**
+          * Closes the popover and returns focus to the trigger.
+         */
+        "hide": () => Promise<void>;
+        /**
+          * Accessible name for the panel, needed when there is no visible heading.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Whether the popover is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Preferred side. Flips at the viewport edge rather than clipping, so a `bottom` popover on a trigger near the bottom of the screen renders above.
+          * @default "bottom"
+         */
+        "placement": "top" | "bottom" | "start" | "end";
+        /**
+          * Opens the popover.
+         */
+        "show": () => Promise<void>;
     }
     /**
      * Progress — Tier 1 feedback component.
@@ -825,6 +1309,97 @@ export namespace Components {
         "variant": "text" | "rect" | "circle";
     }
     /**
+     * Slider — Tier 2 form control: a single value on a range.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The one decision that shapes everything else
+     * **A real `<input type="range">` does the work.** The native input owns the
+     * pointer drag, the keyboard model, the ARIA slider role, `aria-valuenow`,
+     * `aria-valuetext`, and the touch behaviour. Reimplementing those is where a
+     * slider usually goes wrong — a `<div>` with `role="slider"` and hand-written
+     * arrow handling loses the platform's own step rounding, and it silently breaks
+     * on touch and on screen readers that read the native control better.
+     * That is also what makes this form-associated for free: the native input
+     * submits through a plain `<form>`, and `ElementInternals` is used only to
+     * report validity, never to duplicate the value. One owner of the value, as §4
+     * requires.
+     * ### What is actually ours
+     * - **The visual treatment**: hard-edged chrome, a 3px stroke track, and a
+     *   square thumb — the brutalist reading of a slider, where most libraries ship
+     *   a pill on a pill.
+     * - **The tick marks and the output**, which the native control does not draw.
+     * - **RTL**: the native input already mirrors under `dir="rtl"`; the *fill* has
+     *   to follow, and it does so through logical properties rather than a
+     *   direction flag. §4's rule is that horizontal keyboard semantics derive from
+     *   `getComputedStyle().direction` at interaction time — the native input does
+     *   exactly that, which is the main reason not to reimplement it.
+     * - **Reduced motion**: the thumb does not animate on keyboard steps.
+     * `aria-valuetext` is set when the consumer supplies a `format` string, so a
+     * screen reader announces "3 of 10" rather than a bare number. §6 says locale is
+     * consumer-supplied, so the component formats only what it is told.
+     */
+    interface SkSlider {
+        /**
+          * Persistent helper text.
+          * @default ""
+         */
+        "description": string;
+        /**
+          * Disables the control and withholds it from submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error": string;
+        /**
+          * A template for `aria-valuetext`, where `$v` is the value and `$m` is the maximum — "$v of $m". What a screen reader announces instead of a bare number.
+          * @default ""
+         */
+        "format": string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid": boolean;
+        /**
+          * The accessible name, and the label rendered above the control.
+          * @default ""
+         */
+        "label": string;
+        /**
+          * Largest value.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Smallest value.
+          * @default 0
+         */
+        "min": number;
+        /**
+          * Native form semantics. The control is named by the host attribute.
+          * @default ""
+         */
+        "name": string;
+        /**
+          * Renders the numeric output beside the label.  Off by default: a value the consumer is already displaying in their own UI should not be duplicated here, and a bare number with no unit is often worse than none.
+          * @default false
+         */
+        "showValue": boolean;
+        /**
+          * Granularity. `0` means any value the browser can represent.
+          * @default 1
+         */
+        "step": number;
+        /**
+          * The current value.
+          * @default 50
+         */
+        "value": number;
+    }
+    /**
      * Spinner — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The visual is lifted from Icon Button's loading state, deliberately: two
@@ -1040,6 +1615,37 @@ export namespace Components {
           * @default 0
          */
         "active": number;
+    }
+    /**
+     * Taka — the project's optional mascot (§1.8, §13).
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Three rules govern this component, and they come straight from the plan:
+     * 1. **The artwork is original.** §13: "treat the 'Taka' mascot as original
+     *    artwork committed under the project license. Any traced or borrowed asset
+     *    invalidates the icon/illustration license story." This is drawn here as
+     *    paths and primitives — no imported asset, nothing traced.
+     * 2. **It is decorative, always.** A mascot is never the only carrier of
+     *    meaning, so it renders `aria-hidden` and takes no role. The heading beside
+     *    it does the talking; the bird is what makes the empty state feel less like
+     *    a failure.
+     * 3. **It is reserved for onboarding, empty states, and easter eggs** — §1.8
+     *    says "rather than every screen". `mood` exists so the same character reads
+     *    differently in each of those places without becoming a second mascot.
+     * `mood` also has to respect reduced motion: `wave` and `bounce` are idle
+     * animations, and §6 requires `prefers-reduced-motion` to remove them rather
+     * than shorten them. That is handled in the stylesheet, not here.
+     */
+    interface SkTaka {
+        /**
+          * What Taka is doing. `idle` is a still portrait; the other two add an idle animation that reduced motion removes entirely.
+          * @default "idle"
+         */
+        "mood": "idle" | "wave" | "bounce";
+        /**
+          * Rendered size, in the icon scale.
+          * @default "md"
+         */
+        "size": "sm" | "md" | "lg";
     }
     /**
      * Text — Tier 1 foundation component.
@@ -1331,6 +1937,66 @@ declare global {
         new (): HTMLSkAlertDialogElement;
     };
     /**
+     * Avatar — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An avatar is a picture of a person, and that makes it *meaningful* rather
+     * than decorative. A decorative image takes `alt=""`; this one is the person's
+     * name as far as a screen-reader user is concerned. That framing decides three
+     * things this component does deliberately:
+     * 1. **The host is the accessible image, not the `<img>`.** `role="img"` with
+     *    the person's name as its label, and the `<img>` inside is `alt=""`. The
+     *    alternative — putting the name on the `<img>` — leaves the initials span
+     *    as a second, competing text node in the same box.
+     * 2. **An avatar with no name and no image carries no information**, so it gets
+     *    `aria-hidden` instead of an empty `role="img"`. An unnamed image is an axe
+     *    violation (`role-img-alt`), and the tempting fix — defaulting the label to
+     *    something like "avatar" — is worse: it announces a word the designer
+     *    wrote, not the person's name.
+     * 3. **`data-state` distinguishes why initials are showing.** "No image",
+     *    "still loading", and "the image 404'd" look identical in review and are
+     *    three different bugs. The attribute names which, so a screenshot diff and
+     *    a test can both tell them apart.
+     * The initials are derived from `name`, never supplied separately. Two fields
+     * that can disagree are how an avatar shows "JD" while announcing "Jane Doe".
+     * The shape is a circle, which is a deliberate departure: chrome in this system
+     * is hard-edged at zero radius (ADR-017), but a portrait is not chrome. A
+     * square with no radius reads as a cropped document rather than a person.
+     */
+    interface HTMLSkAvatarElement extends Components.SkAvatar, HTMLStencilElement {
+    }
+    var HTMLSkAvatarElement: {
+        prototype: HTMLSkAvatarElement;
+        new (): HTMLSkAvatarElement;
+    };
+    /**
+     * Avatar Group — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A stacked row of avatars, with the overflow collapsed into a count. Three
+     * decisions make this more than a flex wrapper:
+     * 1. **The overflow count is text, not another avatar.** "+3" is not a person,
+     *    so rendering it as a fourth circle invites a reader to think it is one —
+     *    and it has no name to announce. It is a `<span>` with a real accessible
+     *    name built from the count, not an unnamed circle.
+     * 2. **The group is a `group`, not a `list`.** These are people, not items to
+     *    navigate. A `list` would make a screen reader announce "list, 4 items" and
+     *    walk the reader through each one, when the useful information is one
+     *    sentence: "Ada Lovelace, Grace Hopper, and 2 others".
+     * 3. **Overlap is visual, not structural.** The stack is drawn with a negative
+     *    inline margin on every avatar after the first. Nothing is absolutely
+     *    positioned, so the group reflows at narrow widths and mirrors in RTL —
+     *    `margin-inline-start` is what flips, not a `left` offset.
+     * The avatars are slotted `sk-avatar` elements rather than a data array. A
+     * `people={[...]}` prop would be a second, competing way to render a person and
+     * would put name/initials/label logic in two places — the duplication that made
+     * `sk-avatar` derive initials from `name` rather than accept them.
+     */
+    interface HTMLSkAvatarGroupElement extends Components.SkAvatarGroup, HTMLStencilElement {
+    }
+    var HTMLSkAvatarGroupElement: {
+        prototype: HTMLSkAvatarGroupElement;
+        new (): HTMLSkAvatarGroupElement;
+    };
+    /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A badge is a static label, not an interactive element. That is stated here
@@ -1346,6 +2012,65 @@ declare global {
     var HTMLSkBadgeElement: {
         prototype: HTMLSkBadgeElement;
         new (): HTMLSkBadgeElement;
+    };
+    /**
+     * Banner — a page-level message that sits above the content it is about.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A banner and an alert look alike and are not the same thing, so the
+     * difference is the first thing recorded here:
+     * - **`sk-alert` is inline.** It renders in the document flow, pushes content
+     *   down, and belongs to the section it describes.
+     * - **`sk-banner` is regional.** It spans the width of its container and sits
+     *   *above* the content, which is why it is the component for site-wide
+     *   notices — maintenance windows, a degraded service, an expired trial.
+     * That difference decides the ARIA. A banner that spans the page is a landmark,
+     * so the role is `region` rather than a live region: **`role="banner"` is not
+     * used**, because in ARIA that name means the site header and is reserved for
+     * one element per page — putting it here would collide with the consumer's real
+     * `<header>` and leave two "banner" landmarks. `region` with an accessible name
+     * is the correct shape, and it is only a landmark once it is named, which is
+     * why `aria-label` or `aria-labelledby` is required for the landmark role to
+     * apply at all.
+     * It is **not** announced as an interruption. An alert interrupts because it
+     * appeared in reaction to something the user just did; a banner was already
+     * there when the page loaded, and announcing it as an interruption would talk
+     * over the content the user came for. Consumers who need an interruption should
+     * use `sk-alert` or `sk-toast`, which own those contracts.
+     * Like `sk-alert`, it has no dismiss button. Dismissing is a different
+     * component: it needs a close affordance, focus into it, and a focus return
+     * when the banner goes away.
+     */
+    interface HTMLSkBannerElement extends Components.SkBanner, HTMLStencilElement {
+    }
+    var HTMLSkBannerElement: {
+        prototype: HTMLSkBannerElement;
+        new (): HTMLSkBannerElement;
+    };
+    /**
+     * Breadcrumb — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The ARIA shape is the whole reason this is a component rather than a row of
+     * links:
+     * 1. **`<nav>` with `aria-label="Breadcrumb"`, and an `<ol>` inside.** The nav
+     *    makes it a landmark a screen reader can jump to; the list is what makes it
+     *    announce "list, 3 items" so the reader knows there is a hierarchy rather
+     *    than three unrelated links.
+     * 2. **The current page is `aria-current="page"`, not a link.** A link to the
+     *    page you are already on is a no-op that reads as actionable. Marking it is
+     *    what distinguishes "where you are" from "where you came from".
+     * 3. **The separators are decorative and hidden.** Drawn in CSS with
+     *    `aria-hidden`, so a reader does not announce "slash, slash, slash" between
+     *    the items. A `<span>/</span>` between every item is the common mistake.
+     * The items come from an `items` array rather than slotted children, because the
+     * component has to know which one is last — that is what `aria-current` hangs
+     * off, and a slot cannot tell you how many nodes it received without walking
+     * them at runtime.
+     */
+    interface HTMLSkBreadcrumbElement extends Components.SkBreadcrumb, HTMLStencilElement {
+    }
+    var HTMLSkBreadcrumbElement: {
+        prototype: HTMLSkBreadcrumbElement;
+        new (): HTMLSkBreadcrumbElement;
     };
     /**
      * Button — Tier 1 foundation component.
@@ -1426,6 +2151,44 @@ declare global {
         new (): HTMLSkCheckboxElement;
     };
     /**
+     * Combobox — Tier 2 form control: a text field with a filterable list.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The ARIA pattern, and the part everyone gets wrong
+     * The ARIA 1.2 combobox pattern is four separate pieces, and a component that
+     * merges them is a component a screen reader cannot drive:
+     * 1. The **input** carries `role="combobox"`, `aria-expanded`, and
+     *    `aria-controls` pointing at the listbox.
+     * 2. The **listbox** carries `role="listbox"` and is the element `aria-controls`
+     *    names.
+     * 3. **Focus never leaves the input.** The active option is reported through
+     *    `aria-activedescendant` on the input, not by moving focus into the list.
+     *    Moving focus is the common mistake: it fires a blur on the field the reader
+     *    is typing into, and every screen reader announces it as leaving.
+     * 4. The **options** carry `role="option"` and `aria-selected`, with ids
+     *    `aria-activedescendant` can name.
+     * ### Decisions specific to this component
+     * - **A real `<input>` inside the host**, and the list is a real `<ul>`. The
+     *   component filters; it does not reimplement text editing. Native validation,
+     *   IME, and autofill all keep working because the input is the input.
+     * - **§4's event rule**: `sk-value-change` fires only for user-initiated changes.
+     *   Filtering as the reader types is not a value change — only a committed
+     *   selection is.
+     * - **Escape closes without clearing.** Closing and reverting are different
+     *   commands; the reader's typed text is their work.
+     * - **No `aria-live` announcement of the result count.** It looks helpful and is
+     *   a known anti-pattern: it interrupts on every keystroke. The listbox
+     *   relationship already tells a screen reader the results changed.
+     * §6: the component does no locale-sensitive work. Matching is a plain
+     * case-insensitive substring, which is the wrong collation for some locales and
+     * is deliberately left to the consumer, who may pass pre-filtered options.
+     */
+    interface HTMLSkComboboxElement extends Components.SkCombobox, HTMLStencilElement {
+    }
+    var HTMLSkComboboxElement: {
+        prototype: HTMLSkComboboxElement;
+        new (): HTMLSkComboboxElement;
+    };
+    /**
      * Dialog — Tier 2 floating overlay, and the first consumer of the glass
      * material.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -1451,6 +2214,34 @@ declare global {
         new (): HTMLSkDialogElement;
     };
     /**
+     * Drawer — Tier 2 floating overlay that slides in from one edge.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A drawer is a dialog with a different shape, and the codebase already decided
+     * how dialogs work — so this reuses `shared/dialog-base.ts` rather than writing
+     * a second focus story. That is the whole point of the base existing. The
+     * browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content; nothing here reimplements them.
+     * What is genuinely ours is the edge, and it is the part worth being careful
+     * about:
+     * - **`side` is logical, not physical.** `start` and `end`, never `left` and
+     *   `right`: a document with `dir="rtl"` gets the mirrored edge for free, which
+     *   is ADR-016's requirement rather than a preference. There is deliberately no
+     *   physical pair — a fixed edge is exactly what puts a drawer on the wrong side
+     *   of a right-to-left document.
+     * - **The entrance is the glass material's float**, not the control's press
+     *   (§2 splits motion by layer). Reduced motion removes it rather than
+     *   shortening it.
+     * Like the dialog, open/closed is ephemeral state the component owns outright,
+     * so there is no `defaultOpen` — §4's rule for state the caller cannot see.
+     * Every close path reports through one `sk-open-change`.
+     */
+    interface HTMLSkDrawerElement extends Components.SkDrawer, HTMLStencilElement {
+    }
+    var HTMLSkDrawerElement: {
+        prototype: HTMLSkDrawerElement;
+        new (): HTMLSkDrawerElement;
+    };
+    /**
      * Empty state — Tier 1 placeholder surface.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -1468,6 +2259,42 @@ declare global {
         prototype: HTMLSkEmptyStateElement;
         new (): HTMLSkEmptyStateElement;
     };
+    /**
+     * Field — Tier 1 form component: the wrapper that labels, describes, and marks a
+     * control it does not own.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * `sk-input`, `sk-textarea`, and `sk-select` each render their own label,
+     * description, and error. That is right for a self-contained control and wrong
+     * the moment the control is *not one of ours* — a consumer's `<input>`, a
+     * third-party widget, or several controls under one label. This component exists
+     * for exactly that case, and the boundary is the point:
+     * **It describes; it does not control.** The field owns the label, the
+     * description, the error, and the ARIA wiring that points at them. It never
+     * reads or writes the control's value, never sets `name`, and never calls
+     * `setFormValue` — the control is not form-associated through this wrapper. A
+     * wrapper that also tried to own the value would be a second owner of it, and
+     * the two would eventually disagree, which is the failure §4's "exactly one
+     * implementation owns the behavior" rule exists to prevent.
+     * ### The only attributes it sets on the control
+     * ARIA association is not optional and not the consumer's job to guess:
+     * `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required`
+     * have to sit on the *control*, because that is the element a screen reader is
+     * on when it announces them. So the field finds the first control in its slot
+     * and sets those four, and nothing else. They are description;
+     * `value`, `name`, `disabled`, and validity stay the control's own business.
+     * The label is associated by id rather than by wrapping: the control is the
+     * consumer's, and a `<label>` wrapping an element this component did not render
+     * would make the association indirect and fragile under re-renders.
+     * §4 requires the error id to be **appended** to any existing description rather
+     * than replacing it — an error that silences the hint removes the format
+     * instruction exactly when the user needs it.
+     */
+    interface HTMLSkFieldElement extends Components.SkField, HTMLStencilElement {
+    }
+    var HTMLSkFieldElement: {
+        prototype: HTMLSkFieldElement;
+        new (): HTMLSkFieldElement;
+    };
     interface HTMLSkIconButtonElement extends Components.SkIconButton, HTMLStencilElement {
     }
     var HTMLSkIconButtonElement: {
@@ -1479,6 +2306,34 @@ declare global {
     var HTMLSkInputElement: {
         prototype: HTMLSkInputElement;
         new (): HTMLSkInputElement;
+    };
+    /**
+     * Kbd — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The semantic is the whole reason this exists, and it is why the component
+     * does not merely restyle a `<span>`. A keyboard shortcut written as
+     * `<span>Ctrl</span>` is two characters to sighted readers and a run of
+     * unmarked text to anyone listening: no role, no pronunciation, no way to tell
+     * "Shift" the key from "shift" the word. `<kbd>` is the platform's answer, and
+     * this component renders one rather than imitating its appearance.
+     * Two decisions worth recording:
+     * 1. **The element is real, in the light DOM, with no wrapper box.** Scoped
+     *    mode renders the `<kbd>` inside the host (ADR-011), so the consumer's
+     *    document structure — a `<kbd>` inside a `<p>`, a `<kbd>` inside a menu
+     *    item — stays exactly what they wrote. A wrapper `<div>` here would put an
+     *    anonymous box between a shortcut and the text describing it.
+     * 2. **`size` follows the type scale, not a pixel ladder.** Shortcuts are read
+     *    inline with the copy around them, so the only sizing that stays honest is
+     *    the one the type tokens already define.
+     * `variant` is not used: this component has one look, and §4's two-prop rule is
+     * about components that have an axis to vary on. Adding a decorative variant
+     * here would be a prop that exists to be unused.
+     */
+    interface HTMLSkKbdElement extends Components.SkKbd, HTMLStencilElement {
+    }
+    var HTMLSkKbdElement: {
+        prototype: HTMLSkKbdElement;
+        new (): HTMLSkKbdElement;
     };
     /**
      * Label — Tier 1 foundation component.
@@ -1517,6 +2372,65 @@ declare global {
     var HTMLSkLinkElement: {
         prototype: HTMLSkLinkElement;
         new (): HTMLSkLinkElement;
+    };
+    /**
+     * Pagination — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Four decisions, all of them about what a screen reader hears:
+     * 1. **`<nav>` with `aria-label`, and the page numbers are links.** Pagination is
+     *    navigation, so it is a landmark; the numbers are `<a href>` because a page
+     *    is a destination, and a `<button>` would misdescribe it as an action.
+     * 2. **The current page carries `aria-current="page"`, and is `aria-disabled`
+     *    rather than a dead link.** A link to the page you are on is a no-op that
+     *    reads as actionable.
+     * 3. **The ellipsis is decorative and hidden.** "…" is not a page. Rendered as
+     *    an empty `<span>` with `aria-hidden`, so it is not announced as a stop and
+     *    is not focusable.
+     * 4. **Prev and Next keep real accessible names.** "‹" alone announces as a
+     *    punctuation mark, so each carries a visually hidden word alongside the
+     *    glyph.
+     * The window is computed here rather than left to the consumer: `count` and
+     * `page` are the inputs, and which pages to show with ellipses is the part every
+     * consumer reimplements badly.
+     * §4's event rule: `sk-page-change` fires only for user-initiated changes, never
+     * when `page` is updated programmatically, which is what keeps a controlled
+     * pager from looping.
+     */
+    interface HTMLSkPaginationElement extends Components.SkPagination, HTMLStencilElement {
+    }
+    var HTMLSkPaginationElement: {
+        prototype: HTMLSkPaginationElement;
+        new (): HTMLSkPaginationElement;
+    };
+    /**
+     * Popover — Tier 2 floating layer that holds interactive content.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * **The distinction that makes this not a tooltip.** A tooltip is a description
+     * of something the reader can already see and use; it is named through
+     * `aria-describedby`, takes no focus, and holds no interactive content. A popover
+     * holds controls — a menu, a filter, a form — so it needs the opposite contract
+     * on all three counts:
+     * 1. **It is a dialog, labelled by its own heading or `label`.** The trigger gets
+     *    `aria-haspopup="dialog"` and `aria-expanded`, not `aria-describedby` —
+     *    announcing a menu as the trigger's description reads the whole thing out as
+     *    one sentence.
+     * 2. **It dismisses on Escape and on an outside click**, and returns focus to the
+     *    trigger. A tooltip disappears when you look away; a popover has to be
+     *    *closed*, because it owns focus while it is open.
+     * 3. **Slot content is not moved.** The panel is rendered by Stencil with real
+     *    `<slot>` elements rather than built imperatively and filled by relocating
+     *    the consumer's children. Relocation is what broke the first attempt: the
+     *    rendered `<slot name="trigger">` was itself a child of the host, so moving
+     *    children took the trigger with them, and a click on slotted content reported
+     *    the original node — outside the host — so the popover closed on itself.
+     * Placement is a hint, not a guarantee: the component flips at the viewport edge
+     * rather than rendering off-screen, the same rule the tooltip follows.
+     */
+    interface HTMLSkPopoverElement extends Components.SkPopover, HTMLStencilElement {
+    }
+    var HTMLSkPopoverElement: {
+        prototype: HTMLSkPopoverElement;
+        new (): HTMLSkPopoverElement;
     };
     /**
      * Progress — Tier 1 feedback component.
@@ -1589,6 +2503,41 @@ declare global {
     var HTMLSkSkeletonElement: {
         prototype: HTMLSkSkeletonElement;
         new (): HTMLSkSkeletonElement;
+    };
+    /**
+     * Slider — Tier 2 form control: a single value on a range.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The one decision that shapes everything else
+     * **A real `<input type="range">` does the work.** The native input owns the
+     * pointer drag, the keyboard model, the ARIA slider role, `aria-valuenow`,
+     * `aria-valuetext`, and the touch behaviour. Reimplementing those is where a
+     * slider usually goes wrong — a `<div>` with `role="slider"` and hand-written
+     * arrow handling loses the platform's own step rounding, and it silently breaks
+     * on touch and on screen readers that read the native control better.
+     * That is also what makes this form-associated for free: the native input
+     * submits through a plain `<form>`, and `ElementInternals` is used only to
+     * report validity, never to duplicate the value. One owner of the value, as §4
+     * requires.
+     * ### What is actually ours
+     * - **The visual treatment**: hard-edged chrome, a 3px stroke track, and a
+     *   square thumb — the brutalist reading of a slider, where most libraries ship
+     *   a pill on a pill.
+     * - **The tick marks and the output**, which the native control does not draw.
+     * - **RTL**: the native input already mirrors under `dir="rtl"`; the *fill* has
+     *   to follow, and it does so through logical properties rather than a
+     *   direction flag. §4's rule is that horizontal keyboard semantics derive from
+     *   `getComputedStyle().direction` at interaction time — the native input does
+     *   exactly that, which is the main reason not to reimplement it.
+     * - **Reduced motion**: the thumb does not animate on keyboard steps.
+     * `aria-valuetext` is set when the consumer supplies a `format` string, so a
+     * screen reader announces "3 of 10" rather than a bare number. §6 says locale is
+     * consumer-supplied, so the component formats only what it is told.
+     */
+    interface HTMLSkSliderElement extends Components.SkSlider, HTMLStencilElement {
+    }
+    var HTMLSkSliderElement: {
+        prototype: HTMLSkSliderElement;
+        new (): HTMLSkSliderElement;
     };
     /**
      * Spinner — Tier 1 foundation component.
@@ -1723,6 +2672,31 @@ declare global {
         new (): HTMLSkTabsElement;
     };
     /**
+     * Taka — the project's optional mascot (§1.8, §13).
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Three rules govern this component, and they come straight from the plan:
+     * 1. **The artwork is original.** §13: "treat the 'Taka' mascot as original
+     *    artwork committed under the project license. Any traced or borrowed asset
+     *    invalidates the icon/illustration license story." This is drawn here as
+     *    paths and primitives — no imported asset, nothing traced.
+     * 2. **It is decorative, always.** A mascot is never the only carrier of
+     *    meaning, so it renders `aria-hidden` and takes no role. The heading beside
+     *    it does the talking; the bird is what makes the empty state feel less like
+     *    a failure.
+     * 3. **It is reserved for onboarding, empty states, and easter eggs** — §1.8
+     *    says "rather than every screen". `mood` exists so the same character reads
+     *    differently in each of those places without becoming a second mascot.
+     * `mood` also has to respect reduced motion: `wave` and `bounce` are idle
+     * animations, and §6 requires `prefers-reduced-motion` to remove them rather
+     * than shorten them. That is handled in the stylesheet, not here.
+     */
+    interface HTMLSkTakaElement extends Components.SkTaka, HTMLStencilElement {
+    }
+    var HTMLSkTakaElement: {
+        prototype: HTMLSkTakaElement;
+        new (): HTMLSkTakaElement;
+    };
+    /**
      * Text — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * This component exists because of how the example page styled its headings
@@ -1829,27 +2803,39 @@ declare global {
         "sk-accordion-item": HTMLSkAccordionItemElement;
         "sk-alert": HTMLSkAlertElement;
         "sk-alert-dialog": HTMLSkAlertDialogElement;
+        "sk-avatar": HTMLSkAvatarElement;
+        "sk-avatar-group": HTMLSkAvatarGroupElement;
         "sk-badge": HTMLSkBadgeElement;
+        "sk-banner": HTMLSkBannerElement;
+        "sk-breadcrumb": HTMLSkBreadcrumbElement;
         "sk-button": HTMLSkButtonElement;
         "sk-card": HTMLSkCardElement;
         "sk-checkbox": HTMLSkCheckboxElement;
+        "sk-combobox": HTMLSkComboboxElement;
         "sk-dialog": HTMLSkDialogElement;
+        "sk-drawer": HTMLSkDrawerElement;
         "sk-empty-state": HTMLSkEmptyStateElement;
+        "sk-field": HTMLSkFieldElement;
         "sk-icon-button": HTMLSkIconButtonElement;
         "sk-input": HTMLSkInputElement;
+        "sk-kbd": HTMLSkKbdElement;
         "sk-label": HTMLSkLabelElement;
         "sk-link": HTMLSkLinkElement;
+        "sk-pagination": HTMLSkPaginationElement;
+        "sk-popover": HTMLSkPopoverElement;
         "sk-progress": HTMLSkProgressElement;
         "sk-radio-group": HTMLSkRadioGroupElement;
         "sk-select": HTMLSkSelectElement;
         "sk-separator": HTMLSkSeparatorElement;
         "sk-skeleton": HTMLSkSkeletonElement;
+        "sk-slider": HTMLSkSliderElement;
         "sk-spinner": HTMLSkSpinnerElement;
         "sk-switch": HTMLSkSwitchElement;
         "sk-tab": HTMLSkTabElement;
         "sk-tab-panel": HTMLSkTabPanelElement;
         "sk-table": HTMLSkTableElement;
         "sk-tabs": HTMLSkTabsElement;
+        "sk-taka": HTMLSkTakaElement;
         "sk-text": HTMLSkTextElement;
         "sk-textarea": HTMLSkTextareaElement;
         "sk-toast": HTMLSkToastElement;
@@ -1967,6 +2953,88 @@ declare namespace LocalJSX {
         "open"?: boolean;
     }
     /**
+     * Avatar — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * An avatar is a picture of a person, and that makes it *meaningful* rather
+     * than decorative. A decorative image takes `alt=""`; this one is the person's
+     * name as far as a screen-reader user is concerned. That framing decides three
+     * things this component does deliberately:
+     * 1. **The host is the accessible image, not the `<img>`.** `role="img"` with
+     *    the person's name as its label, and the `<img>` inside is `alt=""`. The
+     *    alternative — putting the name on the `<img>` — leaves the initials span
+     *    as a second, competing text node in the same box.
+     * 2. **An avatar with no name and no image carries no information**, so it gets
+     *    `aria-hidden` instead of an empty `role="img"`. An unnamed image is an axe
+     *    violation (`role-img-alt`), and the tempting fix — defaulting the label to
+     *    something like "avatar" — is worse: it announces a word the designer
+     *    wrote, not the person's name.
+     * 3. **`data-state` distinguishes why initials are showing.** "No image",
+     *    "still loading", and "the image 404'd" look identical in review and are
+     *    three different bugs. The attribute names which, so a screenshot diff and
+     *    a test can both tell them apart.
+     * The initials are derived from `name`, never supplied separately. Two fields
+     * that can disagree are how an avatar shows "JD" while announcing "Jane Doe".
+     * The shape is a circle, which is a deliberate departure: chrome in this system
+     * is hard-edged at zero radius (ADR-017), but a portrait is not chrome. A
+     * square with no radius reads as a cropped document rather than a person.
+     */
+    interface SkAvatar {
+        /**
+          * The person's name. It is the accessible name of the image and the source of the initials — one field, so the two cannot disagree.
+          * @default ""
+         */
+        "name"?: string;
+        /**
+          * Diameter. An avatar is square by ratio, so `size` is one axis.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+        /**
+          * Image source. Without it, the initials render.
+          * @default ""
+         */
+        "src"?: string;
+    }
+    /**
+     * Avatar Group — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A stacked row of avatars, with the overflow collapsed into a count. Three
+     * decisions make this more than a flex wrapper:
+     * 1. **The overflow count is text, not another avatar.** "+3" is not a person,
+     *    so rendering it as a fourth circle invites a reader to think it is one —
+     *    and it has no name to announce. It is a `<span>` with a real accessible
+     *    name built from the count, not an unnamed circle.
+     * 2. **The group is a `group`, not a `list`.** These are people, not items to
+     *    navigate. A `list` would make a screen reader announce "list, 4 items" and
+     *    walk the reader through each one, when the useful information is one
+     *    sentence: "Ada Lovelace, Grace Hopper, and 2 others".
+     * 3. **Overlap is visual, not structural.** The stack is drawn with a negative
+     *    inline margin on every avatar after the first. Nothing is absolutely
+     *    positioned, so the group reflows at narrow widths and mirrors in RTL —
+     *    `margin-inline-start` is what flips, not a `left` offset.
+     * The avatars are slotted `sk-avatar` elements rather than a data array. A
+     * `people={[...]}` prop would be a second, competing way to render a person and
+     * would put name/initials/label logic in two places — the duplication that made
+     * `sk-avatar` derive initials from `name` rather than accept them.
+     */
+    interface SkAvatarGroup {
+        /**
+          * The accessible name for the group — "Assigned to", "Contributors". A bare `role="group"` with no label is skipped by most screen readers, so the label is what makes the group announce at all.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * How many avatars to show before collapsing the rest into a count. `0` means show all.
+          * @default 3
+         */
+        "max"?: number;
+        /**
+          * Diameter applied to every avatar in the group.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
+    }
+    /**
      * Badge — Tier 1 display component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * A badge is a static label, not an interactive element. That is stated here
@@ -1998,6 +3066,82 @@ declare namespace LocalJSX {
           * @default "neutral"
          */
         "variant"?: "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
+     * Banner — a page-level message that sits above the content it is about.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A banner and an alert look alike and are not the same thing, so the
+     * difference is the first thing recorded here:
+     * - **`sk-alert` is inline.** It renders in the document flow, pushes content
+     *   down, and belongs to the section it describes.
+     * - **`sk-banner` is regional.** It spans the width of its container and sits
+     *   *above* the content, which is why it is the component for site-wide
+     *   notices — maintenance windows, a degraded service, an expired trial.
+     * That difference decides the ARIA. A banner that spans the page is a landmark,
+     * so the role is `region` rather than a live region: **`role="banner"` is not
+     * used**, because in ARIA that name means the site header and is reserved for
+     * one element per page — putting it here would collide with the consumer's real
+     * `<header>` and leave two "banner" landmarks. `region` with an accessible name
+     * is the correct shape, and it is only a landmark once it is named, which is
+     * why `aria-label` or `aria-labelledby` is required for the landmark role to
+     * apply at all.
+     * It is **not** announced as an interruption. An alert interrupts because it
+     * appeared in reaction to something the user just did; a banner was already
+     * there when the page loaded, and announcing it as an interruption would talk
+     * over the content the user came for. Consumers who need an interruption should
+     * use `sk-alert` or `sk-toast`, which own those contracts.
+     * Like `sk-alert`, it has no dismiss button. Dismissing is a different
+     * component: it needs a close affordance, focus into it, and a focus return
+     * when the banner goes away.
+     */
+    interface SkBanner {
+        /**
+          * Whether the banner spans its container as a full-width strip.  `false` keeps it in the flow as a block with the standard chrome, for a message about one section rather than the whole page.
+          * @default true
+         */
+        "fullWidth"?: boolean;
+        /**
+          * Heading text. Named `heading`, not `title`, for the reason `sk-alert` records: `title` is a standardized `HTMLElement` member, so a prop by that name is shadowed by the prototype and the browser would surface it as a hover tooltip over the whole banner.
+          * @default ""
+         */
+        "heading"?: string;
+        /**
+          * Visual emphasis.
+          * @default "neutral"
+         */
+        "variant"?: "neutral" | "primary" | "success" | "warning" | "danger";
+    }
+    /**
+     * Breadcrumb — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The ARIA shape is the whole reason this is a component rather than a row of
+     * links:
+     * 1. **`<nav>` with `aria-label="Breadcrumb"`, and an `<ol>` inside.** The nav
+     *    makes it a landmark a screen reader can jump to; the list is what makes it
+     *    announce "list, 3 items" so the reader knows there is a hierarchy rather
+     *    than three unrelated links.
+     * 2. **The current page is `aria-current="page"`, not a link.** A link to the
+     *    page you are already on is a no-op that reads as actionable. Marking it is
+     *    what distinguishes "where you are" from "where you came from".
+     * 3. **The separators are decorative and hidden.** Drawn in CSS with
+     *    `aria-hidden`, so a reader does not announce "slash, slash, slash" between
+     *    the items. A `<span>/</span>` between every item is the common mistake.
+     * The items come from an `items` array rather than slotted children, because the
+     * component has to know which one is last — that is what `aria-current` hangs
+     * off, and a slot cannot tell you how many nodes it received without walking
+     * them at runtime.
+     */
+    interface SkBreadcrumb {
+        /**
+          * The trail, oldest first — the last entry is the current page.  A JSON array of `{ label, href? }`. `href` is optional precisely because the last item normally has none: the current page is not a link.
+          * @default "[]"
+         */
+        "items"?: string | Array<{ label: string; href?: string }>;
+        /**
+          * Accessible name for the landmark. Defaults to "Breadcrumb".
+          * @default "Breadcrumb"
+         */
+        "label"?: string;
     }
     /**
      * Button — Tier 1 foundation component.
@@ -2187,6 +3331,85 @@ declare namespace LocalJSX {
         "variant"?: "default" | "quiet";
     }
     /**
+     * Combobox — Tier 2 form control: a text field with a filterable list.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The ARIA pattern, and the part everyone gets wrong
+     * The ARIA 1.2 combobox pattern is four separate pieces, and a component that
+     * merges them is a component a screen reader cannot drive:
+     * 1. The **input** carries `role="combobox"`, `aria-expanded`, and
+     *    `aria-controls` pointing at the listbox.
+     * 2. The **listbox** carries `role="listbox"` and is the element `aria-controls`
+     *    names.
+     * 3. **Focus never leaves the input.** The active option is reported through
+     *    `aria-activedescendant` on the input, not by moving focus into the list.
+     *    Moving focus is the common mistake: it fires a blur on the field the reader
+     *    is typing into, and every screen reader announces it as leaving.
+     * 4. The **options** carry `role="option"` and `aria-selected`, with ids
+     *    `aria-activedescendant` can name.
+     * ### Decisions specific to this component
+     * - **A real `<input>` inside the host**, and the list is a real `<ul>`. The
+     *   component filters; it does not reimplement text editing. Native validation,
+     *   IME, and autofill all keep working because the input is the input.
+     * - **§4's event rule**: `sk-value-change` fires only for user-initiated changes.
+     *   Filtering as the reader types is not a value change — only a committed
+     *   selection is.
+     * - **Escape closes without clearing.** Closing and reverting are different
+     *   commands; the reader's typed text is their work.
+     * - **No `aria-live` announcement of the result count.** It looks helpful and is
+     *   a known anti-pattern: it interrupts on every keystroke. The listbox
+     *   relationship already tells a screen reader the results changed.
+     * §6: the component does no locale-sensitive work. Matching is a plain
+     * case-insensitive substring, which is the wrong collation for some locales and
+     * is deliberately left to the consumer, who may pass pre-filtered options.
+     */
+    interface SkCombobox {
+        /**
+          * Persistent helper text.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables the control.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The accessible name, and the label rendered above the field.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Native form semantics.
+          * @default ""
+         */
+        "name"?: string;
+        /**
+          * The options, as JSON: `[{ "value": "…", "label": "…" }]`.
+          * @default "[]"
+         */
+        "options"?: string | Array<{ value: string; label: string }>;
+        /**
+          * Placeholder. Never a substitute for a label.
+          * @default ""
+         */
+        "placeholder"?: string;
+        /**
+          * The selected value.
+          * @default ""
+         */
+        "value"?: string;
+    }
+    /**
      * Dialog — Tier 2 floating overlay, and the first consumer of the glass
      * material.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -2228,6 +3451,55 @@ declare namespace LocalJSX {
         "open"?: boolean;
     }
     /**
+     * Drawer — Tier 2 floating overlay that slides in from one edge.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * A drawer is a dialog with a different shape, and the codebase already decided
+     * how dialogs work — so this reuses `shared/dialog-base.ts` rather than writing
+     * a second focus story. That is the whole point of the base existing. The
+     * browser owns focus trapping, Escape, `::backdrop`, and inert background
+     * content; nothing here reimplements them.
+     * What is genuinely ours is the edge, and it is the part worth being careful
+     * about:
+     * - **`side` is logical, not physical.** `start` and `end`, never `left` and
+     *   `right`: a document with `dir="rtl"` gets the mirrored edge for free, which
+     *   is ADR-016's requirement rather than a preference. There is deliberately no
+     *   physical pair — a fixed edge is exactly what puts a drawer on the wrong side
+     *   of a right-to-left document.
+     * - **The entrance is the glass material's float**, not the control's press
+     *   (§2 splits motion by layer). Reduced motion removes it rather than
+     *   shortening it.
+     * Like the dialog, open/closed is ephemeral state the component owns outright,
+     * so there is no `defaultOpen` — §4's rule for state the caller cannot see.
+     * Every close path reports through one `sk-open-change`.
+     */
+    interface SkDrawer {
+        /**
+          * Closes when the backdrop is clicked.
+          * @default true
+         */
+        "dismissible"?: boolean;
+        /**
+          * Accessible name for the panel. The consumer's title slot supplies it best.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Modal is the default: the page behind is inert and focus is trapped. A non-modal drawer is for a persistent side panel the reader keeps open while working.
+          * @default true
+         */
+        "modal"?: boolean;
+        /**
+          * Whether the drawer is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Which edge it slides from.  Both values are logical and mirror under `dir="rtl"`, which is ADR-016's requirement. There is no physical pair — see the note at the top of the stylesheet for why.
+          * @default "end"
+         */
+        "side"?: "start" | "end";
+    }
+    /**
      * Empty state — Tier 1 placeholder surface.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The React package adapts this specification; it does not reimplement it.
@@ -2260,6 +3532,68 @@ declare namespace LocalJSX {
           * @default "default"
          */
         "variant"?: "default" | "bare";
+    }
+    /**
+     * Field — Tier 1 form component: the wrapper that labels, describes, and marks a
+     * control it does not own.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * `sk-input`, `sk-textarea`, and `sk-select` each render their own label,
+     * description, and error. That is right for a self-contained control and wrong
+     * the moment the control is *not one of ours* — a consumer's `<input>`, a
+     * third-party widget, or several controls under one label. This component exists
+     * for exactly that case, and the boundary is the point:
+     * **It describes; it does not control.** The field owns the label, the
+     * description, the error, and the ARIA wiring that points at them. It never
+     * reads or writes the control's value, never sets `name`, and never calls
+     * `setFormValue` — the control is not form-associated through this wrapper. A
+     * wrapper that also tried to own the value would be a second owner of it, and
+     * the two would eventually disagree, which is the failure §4's "exactly one
+     * implementation owns the behavior" rule exists to prevent.
+     * ### The only attributes it sets on the control
+     * ARIA association is not optional and not the consumer's job to guess:
+     * `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required`
+     * have to sit on the *control*, because that is the element a screen reader is
+     * on when it announces them. So the field finds the first control in its slot
+     * and sets those four, and nothing else. They are description;
+     * `value`, `name`, `disabled`, and validity stay the control's own business.
+     * The label is associated by id rather than by wrapping: the control is the
+     * consumer's, and a `<label>` wrapping an element this component did not render
+     * would make the association indirect and fragile under re-renders.
+     * §4 requires the error id to be **appended** to any existing description rather
+     * than replacing it — an error that silences the hint removes the format
+     * instruction exactly when the user needs it.
+     */
+    interface SkField {
+        /**
+          * Persistent helper text, announced through `aria-describedby`.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Announces the field as disabled. Does not disable the control itself.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * Label text. Becomes the accessible name of the control inside.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Marks the field required. Announced through `aria-required` on the control.
+          * @default false
+         */
+        "required"?: boolean;
     }
     interface SkIconButton {
         /**
@@ -2394,6 +3728,35 @@ declare namespace LocalJSX {
         "variant"?: "default" | "quiet";
     }
     /**
+     * Kbd — Tier 1 display component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * The semantic is the whole reason this exists, and it is why the component
+     * does not merely restyle a `<span>`. A keyboard shortcut written as
+     * `<span>Ctrl</span>` is two characters to sighted readers and a run of
+     * unmarked text to anyone listening: no role, no pronunciation, no way to tell
+     * "Shift" the key from "shift" the word. `<kbd>` is the platform's answer, and
+     * this component renders one rather than imitating its appearance.
+     * Two decisions worth recording:
+     * 1. **The element is real, in the light DOM, with no wrapper box.** Scoped
+     *    mode renders the `<kbd>` inside the host (ADR-011), so the consumer's
+     *    document structure — a `<kbd>` inside a `<p>`, a `<kbd>` inside a menu
+     *    item — stays exactly what they wrote. A wrapper `<div>` here would put an
+     *    anonymous box between a shortcut and the text describing it.
+     * 2. **`size` follows the type scale, not a pixel ladder.** Shortcuts are read
+     *    inline with the copy around them, so the only sizing that stays honest is
+     *    the one the type tokens already define.
+     * `variant` is not used: this component has one look, and §4's two-prop rule is
+     * about components that have an axis to vary on. Adding a decorative variant
+     * here would be a prop that exists to be unused.
+     */
+    interface SkKbd {
+        /**
+          * The type step the shortcut is set in.
+          * @default "md"
+         */
+        "size"?: "sm" | "md";
+    }
+    /**
      * Label — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The wiring here is the pattern `sk-input` proved in a real browser: the label
@@ -2461,6 +3824,97 @@ declare namespace LocalJSX {
           * Opens in a new tab without the external treatment.
          */
         "target"?: string;
+    }
+    /**
+     * Pagination — Tier 2 navigation component.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Four decisions, all of them about what a screen reader hears:
+     * 1. **`<nav>` with `aria-label`, and the page numbers are links.** Pagination is
+     *    navigation, so it is a landmark; the numbers are `<a href>` because a page
+     *    is a destination, and a `<button>` would misdescribe it as an action.
+     * 2. **The current page carries `aria-current="page"`, and is `aria-disabled`
+     *    rather than a dead link.** A link to the page you are on is a no-op that
+     *    reads as actionable.
+     * 3. **The ellipsis is decorative and hidden.** "…" is not a page. Rendered as
+     *    an empty `<span>` with `aria-hidden`, so it is not announced as a stop and
+     *    is not focusable.
+     * 4. **Prev and Next keep real accessible names.** "‹" alone announces as a
+     *    punctuation mark, so each carries a visually hidden word alongside the
+     *    glyph.
+     * The window is computed here rather than left to the consumer: `count` and
+     * `page` are the inputs, and which pages to show with ellipses is the part every
+     * consumer reimplements badly.
+     * §4's event rule: `sk-page-change` fires only for user-initiated changes, never
+     * when `page` is updated programmatically, which is what keeps a controlled
+     * pager from looping.
+     */
+    interface SkPagination {
+        /**
+          * Total number of pages.
+          * @default 1
+         */
+        "count"?: number;
+        /**
+          * Builds the href for a page number. `$p` is replaced with the page.
+          * @default ""
+         */
+        "href"?: string;
+        /**
+          * Accessible name for the landmark.
+          * @default "Pagination"
+         */
+        "label"?: string;
+        /**
+          * The current page, 1-based.
+          * @default 1
+         */
+        "page"?: number;
+        /**
+          * How many page numbers to show between the ellipses. Small enough that the row never wraps on a 320px viewport.
+          * @default 1
+         */
+        "siblings"?: number;
+    }
+    /**
+     * Popover — Tier 2 floating layer that holds interactive content.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * **The distinction that makes this not a tooltip.** A tooltip is a description
+     * of something the reader can already see and use; it is named through
+     * `aria-describedby`, takes no focus, and holds no interactive content. A popover
+     * holds controls — a menu, a filter, a form — so it needs the opposite contract
+     * on all three counts:
+     * 1. **It is a dialog, labelled by its own heading or `label`.** The trigger gets
+     *    `aria-haspopup="dialog"` and `aria-expanded`, not `aria-describedby` —
+     *    announcing a menu as the trigger's description reads the whole thing out as
+     *    one sentence.
+     * 2. **It dismisses on Escape and on an outside click**, and returns focus to the
+     *    trigger. A tooltip disappears when you look away; a popover has to be
+     *    *closed*, because it owns focus while it is open.
+     * 3. **Slot content is not moved.** The panel is rendered by Stencil with real
+     *    `<slot>` elements rather than built imperatively and filled by relocating
+     *    the consumer's children. Relocation is what broke the first attempt: the
+     *    rendered `<slot name="trigger">` was itself a child of the host, so moving
+     *    children took the trigger with them, and a click on slotted content reported
+     *    the original node — outside the host — so the popover closed on itself.
+     * Placement is a hint, not a guarantee: the component flips at the viewport edge
+     * rather than rendering off-screen, the same rule the tooltip follows.
+     */
+    interface SkPopover {
+        /**
+          * Accessible name for the panel, needed when there is no visible heading.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Whether the popover is showing. Reflects so page CSS can target it.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Preferred side. Flips at the viewport edge rather than clipping, so a `bottom` popover on a trigger near the bottom of the screen renders above.
+          * @default "bottom"
+         */
+        "placement"?: "top" | "bottom" | "start" | "end";
     }
     /**
      * Progress — Tier 1 feedback component.
@@ -2691,6 +4145,97 @@ declare namespace LocalJSX {
         "variant"?: "text" | "rect" | "circle";
     }
     /**
+     * Slider — Tier 2 form control: a single value on a range.
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * ### The one decision that shapes everything else
+     * **A real `<input type="range">` does the work.** The native input owns the
+     * pointer drag, the keyboard model, the ARIA slider role, `aria-valuenow`,
+     * `aria-valuetext`, and the touch behaviour. Reimplementing those is where a
+     * slider usually goes wrong — a `<div>` with `role="slider"` and hand-written
+     * arrow handling loses the platform's own step rounding, and it silently breaks
+     * on touch and on screen readers that read the native control better.
+     * That is also what makes this form-associated for free: the native input
+     * submits through a plain `<form>`, and `ElementInternals` is used only to
+     * report validity, never to duplicate the value. One owner of the value, as §4
+     * requires.
+     * ### What is actually ours
+     * - **The visual treatment**: hard-edged chrome, a 3px stroke track, and a
+     *   square thumb — the brutalist reading of a slider, where most libraries ship
+     *   a pill on a pill.
+     * - **The tick marks and the output**, which the native control does not draw.
+     * - **RTL**: the native input already mirrors under `dir="rtl"`; the *fill* has
+     *   to follow, and it does so through logical properties rather than a
+     *   direction flag. §4's rule is that horizontal keyboard semantics derive from
+     *   `getComputedStyle().direction` at interaction time — the native input does
+     *   exactly that, which is the main reason not to reimplement it.
+     * - **Reduced motion**: the thumb does not animate on keyboard steps.
+     * `aria-valuetext` is set when the consumer supplies a `format` string, so a
+     * screen reader announces "3 of 10" rather than a bare number. §6 says locale is
+     * consumer-supplied, so the component formats only what it is told.
+     */
+    interface SkSlider {
+        /**
+          * Persistent helper text.
+          * @default ""
+         */
+        "description"?: string;
+        /**
+          * Disables the control and withholds it from submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The validation message. Its presence drives `aria-invalid`.
+          * @default ""
+         */
+        "error"?: string;
+        /**
+          * A template for `aria-valuetext`, where `$v` is the value and `$m` is the maximum — "$v of $m". What a screen reader announces instead of a bare number.
+          * @default ""
+         */
+        "format"?: string;
+        /**
+          * Marks the field invalid independently of whether `error` is set.
+          * @default false
+         */
+        "invalid"?: boolean;
+        /**
+          * The accessible name, and the label rendered above the control.
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * Largest value.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Smallest value.
+          * @default 0
+         */
+        "min"?: number;
+        /**
+          * Native form semantics. The control is named by the host attribute.
+          * @default ""
+         */
+        "name"?: string;
+        /**
+          * Renders the numeric output beside the label.  Off by default: a value the consumer is already displaying in their own UI should not be duplicated here, and a bare number with no unit is often worse than none.
+          * @default false
+         */
+        "showValue"?: boolean;
+        /**
+          * Granularity. `0` means any value the browser can represent.
+          * @default 1
+         */
+        "step"?: number;
+        /**
+          * The current value.
+          * @default 50
+         */
+        "value"?: number;
+    }
+    /**
      * Spinner — Tier 1 foundation component.
      * Behavior owner: `web-components` (section 4, Implementation ownership rule).
      * The visual is lifted from Icon Button's loading state, deliberately: two
@@ -2910,6 +4455,37 @@ declare namespace LocalJSX {
           * @default 0
          */
         "active"?: number;
+    }
+    /**
+     * Taka — the project's optional mascot (§1.8, §13).
+     * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+     * Three rules govern this component, and they come straight from the plan:
+     * 1. **The artwork is original.** §13: "treat the 'Taka' mascot as original
+     *    artwork committed under the project license. Any traced or borrowed asset
+     *    invalidates the icon/illustration license story." This is drawn here as
+     *    paths and primitives — no imported asset, nothing traced.
+     * 2. **It is decorative, always.** A mascot is never the only carrier of
+     *    meaning, so it renders `aria-hidden` and takes no role. The heading beside
+     *    it does the talking; the bird is what makes the empty state feel less like
+     *    a failure.
+     * 3. **It is reserved for onboarding, empty states, and easter eggs** — §1.8
+     *    says "rather than every screen". `mood` exists so the same character reads
+     *    differently in each of those places without becoming a second mascot.
+     * `mood` also has to respect reduced motion: `wave` and `bounce` are idle
+     * animations, and §6 requires `prefers-reduced-motion` to remove them rather
+     * than shorten them. That is handled in the stylesheet, not here.
+     */
+    interface SkTaka {
+        /**
+          * What Taka is doing. `idle` is a still portrait; the other two add an idle animation that reduced motion removes entirely.
+          * @default "idle"
+         */
+        "mood"?: "idle" | "wave" | "bounce";
+        /**
+          * Rendered size, in the icon scale.
+          * @default "md"
+         */
+        "size"?: "sm" | "md" | "lg";
     }
     /**
      * Text — Tier 1 foundation component.
@@ -3140,11 +4716,30 @@ declare namespace LocalJSX {
         "label": string;
         "initialFocus": string;
     }
+    interface SkAvatarAttributes {
+        "name": string;
+        "src": string;
+        "size": "sm" | "md" | "lg";
+    }
+    interface SkAvatarGroupAttributes {
+        "max": number;
+        "label": string;
+        "size": "sm" | "md" | "lg";
+    }
     interface SkBadgeAttributes {
         "variant": "neutral" | "primary" | "success" | "warning" | "danger";
         "size": "sm" | "md";
         "dot": boolean;
         "statusLabel": string;
+    }
+    interface SkBannerAttributes {
+        "variant": "neutral" | "primary" | "success" | "warning" | "danger";
+        "heading": string;
+        "fullWidth": boolean;
+    }
+    interface SkBreadcrumbAttributes {
+        "items": string | Array<{ label: string; href?: string }>;
+        "label": string;
     }
     interface SkButtonAttributes {
         "variant": ButtonVariant;
@@ -3174,8 +4769,26 @@ declare namespace LocalJSX {
         "value": string;
         "indeterminate": boolean;
     }
+    interface SkComboboxAttributes {
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "name": string;
+        "placeholder": string;
+        "options": string | Array<{ value: string; label: string }>;
+        "value": string;
+    }
     interface SkDialogAttributes {
         "open": boolean;
+        "modal": boolean;
+        "dismissible": boolean;
+        "label": string;
+    }
+    interface SkDrawerAttributes {
+        "open": boolean;
+        "side": "start" | "end";
         "modal": boolean;
         "dismissible": boolean;
         "label": string;
@@ -3185,6 +4798,14 @@ declare namespace LocalJSX {
         "size": "sm" | "md" | "lg";
         "heading": string;
         "description": string;
+    }
+    interface SkFieldAttributes {
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "required": boolean;
+        "disabled": boolean;
     }
     interface SkIconButtonAttributes {
         "label": string;
@@ -3214,6 +4835,9 @@ declare namespace LocalJSX {
         "maxLength": number;
         "pattern": string;
     }
+    interface SkKbdAttributes {
+        "size": "sm" | "md";
+    }
     interface SkLabelAttributes {
         "forId": string;
         "required": boolean;
@@ -3226,6 +4850,18 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
         "download": string;
+    }
+    interface SkPaginationAttributes {
+        "count": number;
+        "page": number;
+        "siblings": number;
+        "label": string;
+        "href": string;
+    }
+    interface SkPopoverAttributes {
+        "open": boolean;
+        "placement": "top" | "bottom" | "start" | "end";
+        "label": string;
     }
     interface SkProgressAttributes {
         "value": number;
@@ -3270,6 +4906,20 @@ declare namespace LocalJSX {
         "variant": "text" | "rect" | "circle";
         "direction": "ltr" | "rtl";
     }
+    interface SkSliderAttributes {
+        "label": string;
+        "description": string;
+        "error": string;
+        "invalid": boolean;
+        "disabled": boolean;
+        "name": string;
+        "min": number;
+        "max": number;
+        "step": number;
+        "value": number;
+        "showValue": boolean;
+        "format": string;
+    }
     interface SkSpinnerAttributes {
         "size": "sm" | "md" | "lg";
         "label": string;
@@ -3303,6 +4953,10 @@ declare namespace LocalJSX {
     }
     interface SkTabsAttributes {
         "active": number;
+    }
+    interface SkTakaAttributes {
+        "mood": "idle" | "wave" | "bounce";
+        "size": "sm" | "md" | "lg";
     }
     interface SkTextAttributes {
         "variant": "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "display-sm" | "display";
@@ -3343,27 +4997,39 @@ declare namespace LocalJSX {
         "sk-accordion-item": Omit<SkAccordionItem, keyof SkAccordionItemAttributes> & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes]?: SkAccordionItem[K] } & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes as `attr:${K}`]?: SkAccordionItemAttributes[K] } & { [K in keyof SkAccordionItem & keyof SkAccordionItemAttributes as `prop:${K}`]?: SkAccordionItem[K] };
         "sk-alert": Omit<SkAlert, keyof SkAlertAttributes> & { [K in keyof SkAlert & keyof SkAlertAttributes]?: SkAlert[K] } & { [K in keyof SkAlert & keyof SkAlertAttributes as `attr:${K}`]?: SkAlertAttributes[K] } & { [K in keyof SkAlert & keyof SkAlertAttributes as `prop:${K}`]?: SkAlert[K] };
         "sk-alert-dialog": Omit<SkAlertDialog, keyof SkAlertDialogAttributes> & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes]?: SkAlertDialog[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `attr:${K}`]?: SkAlertDialogAttributes[K] } & { [K in keyof SkAlertDialog & keyof SkAlertDialogAttributes as `prop:${K}`]?: SkAlertDialog[K] };
+        "sk-avatar": Omit<SkAvatar, keyof SkAvatarAttributes> & { [K in keyof SkAvatar & keyof SkAvatarAttributes]?: SkAvatar[K] } & { [K in keyof SkAvatar & keyof SkAvatarAttributes as `attr:${K}`]?: SkAvatarAttributes[K] } & { [K in keyof SkAvatar & keyof SkAvatarAttributes as `prop:${K}`]?: SkAvatar[K] };
+        "sk-avatar-group": Omit<SkAvatarGroup, keyof SkAvatarGroupAttributes> & { [K in keyof SkAvatarGroup & keyof SkAvatarGroupAttributes]?: SkAvatarGroup[K] } & { [K in keyof SkAvatarGroup & keyof SkAvatarGroupAttributes as `attr:${K}`]?: SkAvatarGroupAttributes[K] } & { [K in keyof SkAvatarGroup & keyof SkAvatarGroupAttributes as `prop:${K}`]?: SkAvatarGroup[K] };
         "sk-badge": Omit<SkBadge, keyof SkBadgeAttributes> & { [K in keyof SkBadge & keyof SkBadgeAttributes]?: SkBadge[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `attr:${K}`]?: SkBadgeAttributes[K] } & { [K in keyof SkBadge & keyof SkBadgeAttributes as `prop:${K}`]?: SkBadge[K] };
+        "sk-banner": Omit<SkBanner, keyof SkBannerAttributes> & { [K in keyof SkBanner & keyof SkBannerAttributes]?: SkBanner[K] } & { [K in keyof SkBanner & keyof SkBannerAttributes as `attr:${K}`]?: SkBannerAttributes[K] } & { [K in keyof SkBanner & keyof SkBannerAttributes as `prop:${K}`]?: SkBanner[K] };
+        "sk-breadcrumb": Omit<SkBreadcrumb, keyof SkBreadcrumbAttributes> & { [K in keyof SkBreadcrumb & keyof SkBreadcrumbAttributes]?: SkBreadcrumb[K] } & { [K in keyof SkBreadcrumb & keyof SkBreadcrumbAttributes as `attr:${K}`]?: SkBreadcrumbAttributes[K] } & { [K in keyof SkBreadcrumb & keyof SkBreadcrumbAttributes as `prop:${K}`]?: SkBreadcrumb[K] };
         "sk-button": Omit<SkButton, keyof SkButtonAttributes> & { [K in keyof SkButton & keyof SkButtonAttributes]?: SkButton[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `attr:${K}`]?: SkButtonAttributes[K] } & { [K in keyof SkButton & keyof SkButtonAttributes as `prop:${K}`]?: SkButton[K] };
         "sk-card": Omit<SkCard, keyof SkCardAttributes> & { [K in keyof SkCard & keyof SkCardAttributes]?: SkCard[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `attr:${K}`]?: SkCardAttributes[K] } & { [K in keyof SkCard & keyof SkCardAttributes as `prop:${K}`]?: SkCard[K] };
         "sk-checkbox": Omit<SkCheckbox, keyof SkCheckboxAttributes> & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes]?: SkCheckbox[K] } & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes as `attr:${K}`]?: SkCheckboxAttributes[K] } & { [K in keyof SkCheckbox & keyof SkCheckboxAttributes as `prop:${K}`]?: SkCheckbox[K] };
+        "sk-combobox": Omit<SkCombobox, keyof SkComboboxAttributes> & { [K in keyof SkCombobox & keyof SkComboboxAttributes]?: SkCombobox[K] } & { [K in keyof SkCombobox & keyof SkComboboxAttributes as `attr:${K}`]?: SkComboboxAttributes[K] } & { [K in keyof SkCombobox & keyof SkComboboxAttributes as `prop:${K}`]?: SkCombobox[K] };
         "sk-dialog": Omit<SkDialog, keyof SkDialogAttributes> & { [K in keyof SkDialog & keyof SkDialogAttributes]?: SkDialog[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `attr:${K}`]?: SkDialogAttributes[K] } & { [K in keyof SkDialog & keyof SkDialogAttributes as `prop:${K}`]?: SkDialog[K] };
+        "sk-drawer": Omit<SkDrawer, keyof SkDrawerAttributes> & { [K in keyof SkDrawer & keyof SkDrawerAttributes]?: SkDrawer[K] } & { [K in keyof SkDrawer & keyof SkDrawerAttributes as `attr:${K}`]?: SkDrawerAttributes[K] } & { [K in keyof SkDrawer & keyof SkDrawerAttributes as `prop:${K}`]?: SkDrawer[K] };
         "sk-empty-state": Omit<SkEmptyState, keyof SkEmptyStateAttributes> & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes]?: SkEmptyState[K] } & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes as `attr:${K}`]?: SkEmptyStateAttributes[K] } & { [K in keyof SkEmptyState & keyof SkEmptyStateAttributes as `prop:${K}`]?: SkEmptyState[K] };
+        "sk-field": Omit<SkField, keyof SkFieldAttributes> & { [K in keyof SkField & keyof SkFieldAttributes]?: SkField[K] } & { [K in keyof SkField & keyof SkFieldAttributes as `attr:${K}`]?: SkFieldAttributes[K] } & { [K in keyof SkField & keyof SkFieldAttributes as `prop:${K}`]?: SkField[K] };
         "sk-icon-button": Omit<SkIconButton, keyof SkIconButtonAttributes> & { [K in keyof SkIconButton & keyof SkIconButtonAttributes]?: SkIconButton[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `attr:${K}`]?: SkIconButtonAttributes[K] } & { [K in keyof SkIconButton & keyof SkIconButtonAttributes as `prop:${K}`]?: SkIconButton[K] };
         "sk-input": Omit<SkInput, keyof SkInputAttributes> & { [K in keyof SkInput & keyof SkInputAttributes]?: SkInput[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `attr:${K}`]?: SkInputAttributes[K] } & { [K in keyof SkInput & keyof SkInputAttributes as `prop:${K}`]?: SkInput[K] };
+        "sk-kbd": Omit<SkKbd, keyof SkKbdAttributes> & { [K in keyof SkKbd & keyof SkKbdAttributes]?: SkKbd[K] } & { [K in keyof SkKbd & keyof SkKbdAttributes as `attr:${K}`]?: SkKbdAttributes[K] } & { [K in keyof SkKbd & keyof SkKbdAttributes as `prop:${K}`]?: SkKbd[K] };
         "sk-label": Omit<SkLabel, keyof SkLabelAttributes> & { [K in keyof SkLabel & keyof SkLabelAttributes]?: SkLabel[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `attr:${K}`]?: SkLabelAttributes[K] } & { [K in keyof SkLabel & keyof SkLabelAttributes as `prop:${K}`]?: SkLabel[K] };
         "sk-link": Omit<SkLink, keyof SkLinkAttributes> & { [K in keyof SkLink & keyof SkLinkAttributes]?: SkLink[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `attr:${K}`]?: SkLinkAttributes[K] } & { [K in keyof SkLink & keyof SkLinkAttributes as `prop:${K}`]?: SkLink[K] };
+        "sk-pagination": Omit<SkPagination, keyof SkPaginationAttributes> & { [K in keyof SkPagination & keyof SkPaginationAttributes]?: SkPagination[K] } & { [K in keyof SkPagination & keyof SkPaginationAttributes as `attr:${K}`]?: SkPaginationAttributes[K] } & { [K in keyof SkPagination & keyof SkPaginationAttributes as `prop:${K}`]?: SkPagination[K] };
+        "sk-popover": Omit<SkPopover, keyof SkPopoverAttributes> & { [K in keyof SkPopover & keyof SkPopoverAttributes]?: SkPopover[K] } & { [K in keyof SkPopover & keyof SkPopoverAttributes as `attr:${K}`]?: SkPopoverAttributes[K] } & { [K in keyof SkPopover & keyof SkPopoverAttributes as `prop:${K}`]?: SkPopover[K] };
         "sk-progress": Omit<SkProgress, keyof SkProgressAttributes> & { [K in keyof SkProgress & keyof SkProgressAttributes]?: SkProgress[K] } & { [K in keyof SkProgress & keyof SkProgressAttributes as `attr:${K}`]?: SkProgressAttributes[K] } & { [K in keyof SkProgress & keyof SkProgressAttributes as `prop:${K}`]?: SkProgress[K] };
         "sk-radio-group": Omit<SkRadioGroup, keyof SkRadioGroupAttributes> & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes]?: SkRadioGroup[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `attr:${K}`]?: SkRadioGroupAttributes[K] } & { [K in keyof SkRadioGroup & keyof SkRadioGroupAttributes as `prop:${K}`]?: SkRadioGroup[K] };
         "sk-select": Omit<SkSelect, keyof SkSelectAttributes> & { [K in keyof SkSelect & keyof SkSelectAttributes]?: SkSelect[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `attr:${K}`]?: SkSelectAttributes[K] } & { [K in keyof SkSelect & keyof SkSelectAttributes as `prop:${K}`]?: SkSelect[K] };
         "sk-separator": Omit<SkSeparator, keyof SkSeparatorAttributes> & { [K in keyof SkSeparator & keyof SkSeparatorAttributes]?: SkSeparator[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `attr:${K}`]?: SkSeparatorAttributes[K] } & { [K in keyof SkSeparator & keyof SkSeparatorAttributes as `prop:${K}`]?: SkSeparator[K] };
         "sk-skeleton": Omit<SkSkeleton, keyof SkSkeletonAttributes> & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes]?: SkSkeleton[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `attr:${K}`]?: SkSkeletonAttributes[K] } & { [K in keyof SkSkeleton & keyof SkSkeletonAttributes as `prop:${K}`]?: SkSkeleton[K] };
+        "sk-slider": Omit<SkSlider, keyof SkSliderAttributes> & { [K in keyof SkSlider & keyof SkSliderAttributes]?: SkSlider[K] } & { [K in keyof SkSlider & keyof SkSliderAttributes as `attr:${K}`]?: SkSliderAttributes[K] } & { [K in keyof SkSlider & keyof SkSliderAttributes as `prop:${K}`]?: SkSlider[K] };
         "sk-spinner": Omit<SkSpinner, keyof SkSpinnerAttributes> & { [K in keyof SkSpinner & keyof SkSpinnerAttributes]?: SkSpinner[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `attr:${K}`]?: SkSpinnerAttributes[K] } & { [K in keyof SkSpinner & keyof SkSpinnerAttributes as `prop:${K}`]?: SkSpinner[K] };
         "sk-switch": Omit<SkSwitch, keyof SkSwitchAttributes> & { [K in keyof SkSwitch & keyof SkSwitchAttributes]?: SkSwitch[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `attr:${K}`]?: SkSwitchAttributes[K] } & { [K in keyof SkSwitch & keyof SkSwitchAttributes as `prop:${K}`]?: SkSwitch[K] };
         "sk-tab": Omit<SkTab, keyof SkTabAttributes> & { [K in keyof SkTab & keyof SkTabAttributes]?: SkTab[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `attr:${K}`]?: SkTabAttributes[K] } & { [K in keyof SkTab & keyof SkTabAttributes as `prop:${K}`]?: SkTab[K] };
         "sk-tab-panel": Omit<SkTabPanel, keyof SkTabPanelAttributes> & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes]?: SkTabPanel[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `attr:${K}`]?: SkTabPanelAttributes[K] } & { [K in keyof SkTabPanel & keyof SkTabPanelAttributes as `prop:${K}`]?: SkTabPanel[K] };
         "sk-table": Omit<SkTable, keyof SkTableAttributes> & { [K in keyof SkTable & keyof SkTableAttributes]?: SkTable[K] } & { [K in keyof SkTable & keyof SkTableAttributes as `attr:${K}`]?: SkTableAttributes[K] } & { [K in keyof SkTable & keyof SkTableAttributes as `prop:${K}`]?: SkTable[K] };
         "sk-tabs": Omit<SkTabs, keyof SkTabsAttributes> & { [K in keyof SkTabs & keyof SkTabsAttributes]?: SkTabs[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `attr:${K}`]?: SkTabsAttributes[K] } & { [K in keyof SkTabs & keyof SkTabsAttributes as `prop:${K}`]?: SkTabs[K] };
+        "sk-taka": Omit<SkTaka, keyof SkTakaAttributes> & { [K in keyof SkTaka & keyof SkTakaAttributes]?: SkTaka[K] } & { [K in keyof SkTaka & keyof SkTakaAttributes as `attr:${K}`]?: SkTakaAttributes[K] } & { [K in keyof SkTaka & keyof SkTakaAttributes as `prop:${K}`]?: SkTaka[K] };
         "sk-text": Omit<SkText, keyof SkTextAttributes> & { [K in keyof SkText & keyof SkTextAttributes]?: SkText[K] } & { [K in keyof SkText & keyof SkTextAttributes as `attr:${K}`]?: SkTextAttributes[K] } & { [K in keyof SkText & keyof SkTextAttributes as `prop:${K}`]?: SkText[K] };
         "sk-textarea": Omit<SkTextarea, keyof SkTextareaAttributes> & { [K in keyof SkTextarea & keyof SkTextareaAttributes]?: SkTextarea[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `attr:${K}`]?: SkTextareaAttributes[K] } & { [K in keyof SkTextarea & keyof SkTextareaAttributes as `prop:${K}`]?: SkTextarea[K] };
         "sk-toast": Omit<SkToast, keyof SkToastAttributes> & { [K in keyof SkToast & keyof SkToastAttributes]?: SkToast[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `attr:${K}`]?: SkToastAttributes[K] } & { [K in keyof SkToast & keyof SkToastAttributes as `prop:${K}`]?: SkToast[K] };
@@ -3435,6 +5101,56 @@ declare module "@stencil/core" {
              */
             "sk-alert-dialog": LocalJSX.IntrinsicElements["sk-alert-dialog"] & JSXBase.HTMLAttributes<HTMLSkAlertDialogElement>;
             /**
+             * Avatar — Tier 1 display component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * An avatar is a picture of a person, and that makes it *meaningful* rather
+             * than decorative. A decorative image takes `alt=""`; this one is the person's
+             * name as far as a screen-reader user is concerned. That framing decides three
+             * things this component does deliberately:
+             * 1. **The host is the accessible image, not the `<img>`.** `role="img"` with
+             *    the person's name as its label, and the `<img>` inside is `alt=""`. The
+             *    alternative — putting the name on the `<img>` — leaves the initials span
+             *    as a second, competing text node in the same box.
+             * 2. **An avatar with no name and no image carries no information**, so it gets
+             *    `aria-hidden` instead of an empty `role="img"`. An unnamed image is an axe
+             *    violation (`role-img-alt`), and the tempting fix — defaulting the label to
+             *    something like "avatar" — is worse: it announces a word the designer
+             *    wrote, not the person's name.
+             * 3. **`data-state` distinguishes why initials are showing.** "No image",
+             *    "still loading", and "the image 404'd" look identical in review and are
+             *    three different bugs. The attribute names which, so a screenshot diff and
+             *    a test can both tell them apart.
+             * The initials are derived from `name`, never supplied separately. Two fields
+             * that can disagree are how an avatar shows "JD" while announcing "Jane Doe".
+             * The shape is a circle, which is a deliberate departure: chrome in this system
+             * is hard-edged at zero radius (ADR-017), but a portrait is not chrome. A
+             * square with no radius reads as a cropped document rather than a person.
+             */
+            "sk-avatar": LocalJSX.IntrinsicElements["sk-avatar"] & JSXBase.HTMLAttributes<HTMLSkAvatarElement>;
+            /**
+             * Avatar Group — Tier 1 display component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A stacked row of avatars, with the overflow collapsed into a count. Three
+             * decisions make this more than a flex wrapper:
+             * 1. **The overflow count is text, not another avatar.** "+3" is not a person,
+             *    so rendering it as a fourth circle invites a reader to think it is one —
+             *    and it has no name to announce. It is a `<span>` with a real accessible
+             *    name built from the count, not an unnamed circle.
+             * 2. **The group is a `group`, not a `list`.** These are people, not items to
+             *    navigate. A `list` would make a screen reader announce "list, 4 items" and
+             *    walk the reader through each one, when the useful information is one
+             *    sentence: "Ada Lovelace, Grace Hopper, and 2 others".
+             * 3. **Overlap is visual, not structural.** The stack is drawn with a negative
+             *    inline margin on every avatar after the first. Nothing is absolutely
+             *    positioned, so the group reflows at narrow widths and mirrors in RTL —
+             *    `margin-inline-start` is what flips, not a `left` offset.
+             * The avatars are slotted `sk-avatar` elements rather than a data array. A
+             * `people={[...]}` prop would be a second, competing way to render a person and
+             * would put name/initials/label logic in two places — the duplication that made
+             * `sk-avatar` derive initials from `name` rather than accept them.
+             */
+            "sk-avatar-group": LocalJSX.IntrinsicElements["sk-avatar-group"] & JSXBase.HTMLAttributes<HTMLSkAvatarGroupElement>;
+            /**
              * Badge — Tier 1 display component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
              * A badge is a static label, not an interactive element. That is stated here
@@ -3446,6 +5162,55 @@ declare module "@stencil/core" {
              * for that variant in the React types.
              */
             "sk-badge": LocalJSX.IntrinsicElements["sk-badge"] & JSXBase.HTMLAttributes<HTMLSkBadgeElement>;
+            /**
+             * Banner — a page-level message that sits above the content it is about.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A banner and an alert look alike and are not the same thing, so the
+             * difference is the first thing recorded here:
+             * - **`sk-alert` is inline.** It renders in the document flow, pushes content
+             *   down, and belongs to the section it describes.
+             * - **`sk-banner` is regional.** It spans the width of its container and sits
+             *   *above* the content, which is why it is the component for site-wide
+             *   notices — maintenance windows, a degraded service, an expired trial.
+             * That difference decides the ARIA. A banner that spans the page is a landmark,
+             * so the role is `region` rather than a live region: **`role="banner"` is not
+             * used**, because in ARIA that name means the site header and is reserved for
+             * one element per page — putting it here would collide with the consumer's real
+             * `<header>` and leave two "banner" landmarks. `region` with an accessible name
+             * is the correct shape, and it is only a landmark once it is named, which is
+             * why `aria-label` or `aria-labelledby` is required for the landmark role to
+             * apply at all.
+             * It is **not** announced as an interruption. An alert interrupts because it
+             * appeared in reaction to something the user just did; a banner was already
+             * there when the page loaded, and announcing it as an interruption would talk
+             * over the content the user came for. Consumers who need an interruption should
+             * use `sk-alert` or `sk-toast`, which own those contracts.
+             * Like `sk-alert`, it has no dismiss button. Dismissing is a different
+             * component: it needs a close affordance, focus into it, and a focus return
+             * when the banner goes away.
+             */
+            "sk-banner": LocalJSX.IntrinsicElements["sk-banner"] & JSXBase.HTMLAttributes<HTMLSkBannerElement>;
+            /**
+             * Breadcrumb — Tier 2 navigation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The ARIA shape is the whole reason this is a component rather than a row of
+             * links:
+             * 1. **`<nav>` with `aria-label="Breadcrumb"`, and an `<ol>` inside.** The nav
+             *    makes it a landmark a screen reader can jump to; the list is what makes it
+             *    announce "list, 3 items" so the reader knows there is a hierarchy rather
+             *    than three unrelated links.
+             * 2. **The current page is `aria-current="page"`, not a link.** A link to the
+             *    page you are already on is a no-op that reads as actionable. Marking it is
+             *    what distinguishes "where you are" from "where you came from".
+             * 3. **The separators are decorative and hidden.** Drawn in CSS with
+             *    `aria-hidden`, so a reader does not announce "slash, slash, slash" between
+             *    the items. A `<span>/</span>` between every item is the common mistake.
+             * The items come from an `items` array rather than slotted children, because the
+             * component has to know which one is last — that is what `aria-current` hangs
+             * off, and a slot cannot tell you how many nodes it received without walking
+             * them at runtime.
+             */
+            "sk-breadcrumb": LocalJSX.IntrinsicElements["sk-breadcrumb"] & JSXBase.HTMLAttributes<HTMLSkBreadcrumbElement>;
             /**
              * Button — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -3510,6 +5275,39 @@ declare module "@stencil/core" {
              */
             "sk-checkbox": LocalJSX.IntrinsicElements["sk-checkbox"] & JSXBase.HTMLAttributes<HTMLSkCheckboxElement>;
             /**
+             * Combobox — Tier 2 form control: a text field with a filterable list.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * ### The ARIA pattern, and the part everyone gets wrong
+             * The ARIA 1.2 combobox pattern is four separate pieces, and a component that
+             * merges them is a component a screen reader cannot drive:
+             * 1. The **input** carries `role="combobox"`, `aria-expanded`, and
+             *    `aria-controls` pointing at the listbox.
+             * 2. The **listbox** carries `role="listbox"` and is the element `aria-controls`
+             *    names.
+             * 3. **Focus never leaves the input.** The active option is reported through
+             *    `aria-activedescendant` on the input, not by moving focus into the list.
+             *    Moving focus is the common mistake: it fires a blur on the field the reader
+             *    is typing into, and every screen reader announces it as leaving.
+             * 4. The **options** carry `role="option"` and `aria-selected`, with ids
+             *    `aria-activedescendant` can name.
+             * ### Decisions specific to this component
+             * - **A real `<input>` inside the host**, and the list is a real `<ul>`. The
+             *   component filters; it does not reimplement text editing. Native validation,
+             *   IME, and autofill all keep working because the input is the input.
+             * - **§4's event rule**: `sk-value-change` fires only for user-initiated changes.
+             *   Filtering as the reader types is not a value change — only a committed
+             *   selection is.
+             * - **Escape closes without clearing.** Closing and reverting are different
+             *   commands; the reader's typed text is their work.
+             * - **No `aria-live` announcement of the result count.** It looks helpful and is
+             *   a known anti-pattern: it interrupts on every keystroke. The listbox
+             *   relationship already tells a screen reader the results changed.
+             * §6: the component does no locale-sensitive work. Matching is a plain
+             * case-insensitive substring, which is the wrong collation for some locales and
+             * is deliberately left to the consumer, who may pass pre-filtered options.
+             */
+            "sk-combobox": LocalJSX.IntrinsicElements["sk-combobox"] & JSXBase.HTMLAttributes<HTMLSkComboboxElement>;
+            /**
              * Dialog — Tier 2 floating overlay, and the first consumer of the glass
              * material.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -3530,6 +5328,29 @@ declare module "@stencil/core" {
              */
             "sk-dialog": LocalJSX.IntrinsicElements["sk-dialog"] & JSXBase.HTMLAttributes<HTMLSkDialogElement>;
             /**
+             * Drawer — Tier 2 floating overlay that slides in from one edge.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * A drawer is a dialog with a different shape, and the codebase already decided
+             * how dialogs work — so this reuses `shared/dialog-base.ts` rather than writing
+             * a second focus story. That is the whole point of the base existing. The
+             * browser owns focus trapping, Escape, `::backdrop`, and inert background
+             * content; nothing here reimplements them.
+             * What is genuinely ours is the edge, and it is the part worth being careful
+             * about:
+             * - **`side` is logical, not physical.** `start` and `end`, never `left` and
+             *   `right`: a document with `dir="rtl"` gets the mirrored edge for free, which
+             *   is ADR-016's requirement rather than a preference. There is deliberately no
+             *   physical pair — a fixed edge is exactly what puts a drawer on the wrong side
+             *   of a right-to-left document.
+             * - **The entrance is the glass material's float**, not the control's press
+             *   (§2 splits motion by layer). Reduced motion removes it rather than
+             *   shortening it.
+             * Like the dialog, open/closed is ephemeral state the component owns outright,
+             * so there is no `defaultOpen` — §4's rule for state the caller cannot see.
+             * Every close path reports through one `sk-open-change`.
+             */
+            "sk-drawer": LocalJSX.IntrinsicElements["sk-drawer"] & JSXBase.HTMLAttributes<HTMLSkDrawerElement>;
+            /**
              * Empty state — Tier 1 placeholder surface.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
              * The React package adapts this specification; it does not reimplement it.
@@ -3542,8 +5363,62 @@ declare module "@stencil/core" {
              * is two competing surfaces fighting for the same wall.
              */
             "sk-empty-state": LocalJSX.IntrinsicElements["sk-empty-state"] & JSXBase.HTMLAttributes<HTMLSkEmptyStateElement>;
+            /**
+             * Field — Tier 1 form component: the wrapper that labels, describes, and marks a
+             * control it does not own.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * `sk-input`, `sk-textarea`, and `sk-select` each render their own label,
+             * description, and error. That is right for a self-contained control and wrong
+             * the moment the control is *not one of ours* — a consumer's `<input>`, a
+             * third-party widget, or several controls under one label. This component exists
+             * for exactly that case, and the boundary is the point:
+             * **It describes; it does not control.** The field owns the label, the
+             * description, the error, and the ARIA wiring that points at them. It never
+             * reads or writes the control's value, never sets `name`, and never calls
+             * `setFormValue` — the control is not form-associated through this wrapper. A
+             * wrapper that also tried to own the value would be a second owner of it, and
+             * the two would eventually disagree, which is the failure §4's "exactly one
+             * implementation owns the behavior" rule exists to prevent.
+             * ### The only attributes it sets on the control
+             * ARIA association is not optional and not the consumer's job to guess:
+             * `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required`
+             * have to sit on the *control*, because that is the element a screen reader is
+             * on when it announces them. So the field finds the first control in its slot
+             * and sets those four, and nothing else. They are description;
+             * `value`, `name`, `disabled`, and validity stay the control's own business.
+             * The label is associated by id rather than by wrapping: the control is the
+             * consumer's, and a `<label>` wrapping an element this component did not render
+             * would make the association indirect and fragile under re-renders.
+             * §4 requires the error id to be **appended** to any existing description rather
+             * than replacing it — an error that silences the hint removes the format
+             * instruction exactly when the user needs it.
+             */
+            "sk-field": LocalJSX.IntrinsicElements["sk-field"] & JSXBase.HTMLAttributes<HTMLSkFieldElement>;
             "sk-icon-button": LocalJSX.IntrinsicElements["sk-icon-button"] & JSXBase.HTMLAttributes<HTMLSkIconButtonElement>;
             "sk-input": LocalJSX.IntrinsicElements["sk-input"] & JSXBase.HTMLAttributes<HTMLSkInputElement>;
+            /**
+             * Kbd — Tier 1 display component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * The semantic is the whole reason this exists, and it is why the component
+             * does not merely restyle a `<span>`. A keyboard shortcut written as
+             * `<span>Ctrl</span>` is two characters to sighted readers and a run of
+             * unmarked text to anyone listening: no role, no pronunciation, no way to tell
+             * "Shift" the key from "shift" the word. `<kbd>` is the platform's answer, and
+             * this component renders one rather than imitating its appearance.
+             * Two decisions worth recording:
+             * 1. **The element is real, in the light DOM, with no wrapper box.** Scoped
+             *    mode renders the `<kbd>` inside the host (ADR-011), so the consumer's
+             *    document structure — a `<kbd>` inside a `<p>`, a `<kbd>` inside a menu
+             *    item — stays exactly what they wrote. A wrapper `<div>` here would put an
+             *    anonymous box between a shortcut and the text describing it.
+             * 2. **`size` follows the type scale, not a pixel ladder.** Shortcuts are read
+             *    inline with the copy around them, so the only sizing that stays honest is
+             *    the one the type tokens already define.
+             * `variant` is not used: this component has one look, and §4's two-prop rule is
+             * about components that have an axis to vary on. Adding a decorative variant
+             * here would be a prop that exists to be unused.
+             */
+            "sk-kbd": LocalJSX.IntrinsicElements["sk-kbd"] & JSXBase.HTMLAttributes<HTMLSkKbdElement>;
             /**
              * Label — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -3572,6 +5447,55 @@ declare module "@stencil/core" {
              * and copying the URL all work — the things a `div` with a click handler breaks.
              */
             "sk-link": LocalJSX.IntrinsicElements["sk-link"] & JSXBase.HTMLAttributes<HTMLSkLinkElement>;
+            /**
+             * Pagination — Tier 2 navigation component.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * Four decisions, all of them about what a screen reader hears:
+             * 1. **`<nav>` with `aria-label`, and the page numbers are links.** Pagination is
+             *    navigation, so it is a landmark; the numbers are `<a href>` because a page
+             *    is a destination, and a `<button>` would misdescribe it as an action.
+             * 2. **The current page carries `aria-current="page"`, and is `aria-disabled`
+             *    rather than a dead link.** A link to the page you are on is a no-op that
+             *    reads as actionable.
+             * 3. **The ellipsis is decorative and hidden.** "…" is not a page. Rendered as
+             *    an empty `<span>` with `aria-hidden`, so it is not announced as a stop and
+             *    is not focusable.
+             * 4. **Prev and Next keep real accessible names.** "‹" alone announces as a
+             *    punctuation mark, so each carries a visually hidden word alongside the
+             *    glyph.
+             * The window is computed here rather than left to the consumer: `count` and
+             * `page` are the inputs, and which pages to show with ellipses is the part every
+             * consumer reimplements badly.
+             * §4's event rule: `sk-page-change` fires only for user-initiated changes, never
+             * when `page` is updated programmatically, which is what keeps a controlled
+             * pager from looping.
+             */
+            "sk-pagination": LocalJSX.IntrinsicElements["sk-pagination"] & JSXBase.HTMLAttributes<HTMLSkPaginationElement>;
+            /**
+             * Popover — Tier 2 floating layer that holds interactive content.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * **The distinction that makes this not a tooltip.** A tooltip is a description
+             * of something the reader can already see and use; it is named through
+             * `aria-describedby`, takes no focus, and holds no interactive content. A popover
+             * holds controls — a menu, a filter, a form — so it needs the opposite contract
+             * on all three counts:
+             * 1. **It is a dialog, labelled by its own heading or `label`.** The trigger gets
+             *    `aria-haspopup="dialog"` and `aria-expanded`, not `aria-describedby` —
+             *    announcing a menu as the trigger's description reads the whole thing out as
+             *    one sentence.
+             * 2. **It dismisses on Escape and on an outside click**, and returns focus to the
+             *    trigger. A tooltip disappears when you look away; a popover has to be
+             *    *closed*, because it owns focus while it is open.
+             * 3. **Slot content is not moved.** The panel is rendered by Stencil with real
+             *    `<slot>` elements rather than built imperatively and filled by relocating
+             *    the consumer's children. Relocation is what broke the first attempt: the
+             *    rendered `<slot name="trigger">` was itself a child of the host, so moving
+             *    children took the trigger with them, and a click on slotted content reported
+             *    the original node — outside the host — so the popover closed on itself.
+             * Placement is a hint, not a guarantee: the component flips at the viewport edge
+             * rather than rendering off-screen, the same rule the tooltip follows.
+             */
+            "sk-popover": LocalJSX.IntrinsicElements["sk-popover"] & JSXBase.HTMLAttributes<HTMLSkPopoverElement>;
             /**
              * Progress — Tier 1 feedback component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -3619,6 +5543,36 @@ declare module "@stencil/core" {
              *    while it loads, that is a live region's job and the consumer owns it.
              */
             "sk-skeleton": LocalJSX.IntrinsicElements["sk-skeleton"] & JSXBase.HTMLAttributes<HTMLSkSkeletonElement>;
+            /**
+             * Slider — Tier 2 form control: a single value on a range.
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * ### The one decision that shapes everything else
+             * **A real `<input type="range">` does the work.** The native input owns the
+             * pointer drag, the keyboard model, the ARIA slider role, `aria-valuenow`,
+             * `aria-valuetext`, and the touch behaviour. Reimplementing those is where a
+             * slider usually goes wrong — a `<div>` with `role="slider"` and hand-written
+             * arrow handling loses the platform's own step rounding, and it silently breaks
+             * on touch and on screen readers that read the native control better.
+             * That is also what makes this form-associated for free: the native input
+             * submits through a plain `<form>`, and `ElementInternals` is used only to
+             * report validity, never to duplicate the value. One owner of the value, as §4
+             * requires.
+             * ### What is actually ours
+             * - **The visual treatment**: hard-edged chrome, a 3px stroke track, and a
+             *   square thumb — the brutalist reading of a slider, where most libraries ship
+             *   a pill on a pill.
+             * - **The tick marks and the output**, which the native control does not draw.
+             * - **RTL**: the native input already mirrors under `dir="rtl"`; the *fill* has
+             *   to follow, and it does so through logical properties rather than a
+             *   direction flag. §4's rule is that horizontal keyboard semantics derive from
+             *   `getComputedStyle().direction` at interaction time — the native input does
+             *   exactly that, which is the main reason not to reimplement it.
+             * - **Reduced motion**: the thumb does not animate on keyboard steps.
+             * `aria-valuetext` is set when the consumer supplies a `format` string, so a
+             * screen reader announces "3 of 10" rather than a bare number. §6 says locale is
+             * consumer-supplied, so the component formats only what it is told.
+             */
+            "sk-slider": LocalJSX.IntrinsicElements["sk-slider"] & JSXBase.HTMLAttributes<HTMLSkSliderElement>;
             /**
              * Spinner — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).
@@ -3721,6 +5675,26 @@ declare module "@stencil/core" {
              * separately slotted and cannot see each other at authoring time.
              */
             "sk-tabs": LocalJSX.IntrinsicElements["sk-tabs"] & JSXBase.HTMLAttributes<HTMLSkTabsElement>;
+            /**
+             * Taka — the project's optional mascot (§1.8, §13).
+             * Behavior owner: `web-components` (section 4, Implementation ownership rule).
+             * Three rules govern this component, and they come straight from the plan:
+             * 1. **The artwork is original.** §13: "treat the 'Taka' mascot as original
+             *    artwork committed under the project license. Any traced or borrowed asset
+             *    invalidates the icon/illustration license story." This is drawn here as
+             *    paths and primitives — no imported asset, nothing traced.
+             * 2. **It is decorative, always.** A mascot is never the only carrier of
+             *    meaning, so it renders `aria-hidden` and takes no role. The heading beside
+             *    it does the talking; the bird is what makes the empty state feel less like
+             *    a failure.
+             * 3. **It is reserved for onboarding, empty states, and easter eggs** — §1.8
+             *    says "rather than every screen". `mood` exists so the same character reads
+             *    differently in each of those places without becoming a second mascot.
+             * `mood` also has to respect reduced motion: `wave` and `bounce` are idle
+             * animations, and §6 requires `prefers-reduced-motion` to remove them rather
+             * than shorten them. That is handled in the stylesheet, not here.
+             */
+            "sk-taka": LocalJSX.IntrinsicElements["sk-taka"] & JSXBase.HTMLAttributes<HTMLSkTakaElement>;
             /**
              * Text — Tier 1 foundation component.
              * Behavior owner: `web-components` (section 4, Implementation ownership rule).

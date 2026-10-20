@@ -1,0 +1,81 @@
+/*
+ * Breadcrumb styles.
+ *
+ * The separator is drawn with `::before` on every item after the first, which is
+ * why there is no text node for a screen reader to announce between items. A
+ * `<span>/</span>` between each pair is the common mistake and reads as "slash,
+ * slash, slash".
+ */
+
+sk-breadcrumb {
+  display: block;
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-breadcrumb[hidden] {
+  display: none;
+}
+
+sk-breadcrumb .sk-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+sk-breadcrumb .sk-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  min-inline-size: 0;
+}
+
+/*
+ * Logical properties throughout: `margin-inline-end` is what makes the trail
+ * mirror under `dir="rtl"` without a second stylesheet (ADR-016).
+ */
+sk-breadcrumb .sk-breadcrumb__item + .sk-breadcrumb__item::before {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline-end: 0;
+  border-inline-end: 2px solid var(--sk-color-border-strong, #8b85a0);
+  border-block-start: 2px solid var(--sk-color-border-strong, #8b85a0);
+  /* A chevron drawn by rotation rather than an icon asset (§4, ADR-025). */
+  transform: rotate(45deg);
+  flex: none;
+}
+
+sk-breadcrumb .sk-breadcrumb__link {
+  color: var(--sk-color-primary-text, #4c1d95);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+sk-breadcrumb .sk-breadcrumb__link:hover {
+  color: var(--sk-color-primary, #6d28d9);
+}
+
+sk-breadcrumb .sk-breadcrumb__current {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-weight: var(--sk-text-sm-weight, 600);
+}
+
+@media (forced-colors: active) {
+  sk-breadcrumb .sk-breadcrumb__link {
+    color: LinkText;
+  }
+
+  sk-breadcrumb .sk-breadcrumb__current {
+    color: CanvasText;
+  }
+
+  sk-breadcrumb .sk-breadcrumb__item + .sk-breadcrumb__item::before {
+    border-color: CanvasText;
+  }
+}

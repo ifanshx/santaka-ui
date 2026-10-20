@@ -20,8 +20,14 @@ attribute that a re-render dropped would pass every existing suite.
 states: light theme, dark theme, and after an invalid form submit.**
 
 - `e2e/a11y.ts` is the shared helper: `AxeBuilder` pinned to
-  `withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])` so an axe release
-  that adds rules cannot silently change what "passing" means.
+  `withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"])`
+  so an axe release that adds rules cannot silently change what "passing"
+  means. The 2.2 tags were added later: §12 names WCAG 2.2 AA as the product
+  target, and scanning one version below it was a claim the docs could not
+  make. The whole ladder is pinned rather than `wcag22aa` alone, so a rule
+  that regressed to the 2.0 level still fails. `wcag22aa` contributes
+  `target-size`, evaluated on 66 nodes with no incomplete results — the
+  project's own `--sk-touch-min` is the stricter gate above it.
 - `e2e/a11y.e2e.ts` scans the whole page — which mounts every component in its
   documented states — so a violation names a shipped component, not a fixture.
   Nothing is disabled: if a rule fires, the component is wrong or the markup

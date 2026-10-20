@@ -1,3 +1,4 @@
+import { expect, within } from "storybook/test"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { Link } from "@santaka-ui/react"
 
@@ -49,7 +50,19 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 /** The default: same-tab navigation, persistent underline. */
-export const Default: Story = {}
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // The anchor is what makes middle-click, "open in new tab", and URL
+    // copying work — the load-bearing property from `e2e/link.e2e.ts` — so
+    // assert the anchor itself rather than the rendered text.
+    const anchor = await canvas.findByRole("link", { name: "Example link" })
+    await expect(anchor).toHaveAttribute("href", "https://example.com")
+    // A same-tab link must not carry the external treatment.
+    await expect(anchor).not.toHaveAttribute("target", "_blank")
+    await expect(anchor).not.toHaveAttribute("rel", /.+/)
+  },
+}
 
 /**
  * External: opens a new tab, gets a safe `rel`, and renders an icon indicating
@@ -60,6 +73,20 @@ export const External: Story = {
     href: "https://example.com/external-docs",
     external: true,
     children: "External documentation",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const anchor = await canvas.findByRole("link", { name: "External documentation" })
+    // External links open a new tab with a safe rel: `noopener` prevents the
+    // opened page reaching back through `window.opener`, `noreferrer` strips
+    // the referrer.
+    await expect(anchor).toHaveAttribute("href", "https://example.com/external-docs")
+    await expect(anchor).toHaveAttribute("target", "_blank")
+    // The attribute is compared as one string: this matcher takes a literal
+    // here, not a pattern, and a regex silently fails against the real value.
+    const rel = anchor.getAttribute("rel")
+    expect(rel).toContain("noopener")
+    expect(rel).toContain("noreferrer")
   },
 }
 

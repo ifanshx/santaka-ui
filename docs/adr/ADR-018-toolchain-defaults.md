@@ -59,11 +59,18 @@ to find out whether an absence is a decision or an oversight.
   suite is what stands in for it. Recorded in `plan.md` §17 rather than claimed.
 - **Playwright Core and Baseline projects.** The three baseline projects
   (`chromium-baseline`, `firefox-baseline`, `webkit-baseline`) exist. A separate
-  **Core-tier** project does not; the Core tier is exercised by *device
-  emulation inside the existing projects* where a component needs it (Icon
-  Button's square target, for example), not by a fourth project. ADR-019 adds a
-  `visual` project on top of these, which is a test-layer addition rather than a
-  browser-tier one.
+  **Core-tier** project does not, and cannot: Playwright bundles one revision
+  per engine, so it cannot launch Chrome 90, Firefox 121, or Safari 15.4. The
+  Core tier is exercised two ways instead — by *reproducing the Core branch of a
+  stylesheet* inside the existing projects where a component needs it (Icon
+  Button's square target, which cancels the Baseline branch and applies the
+  `@supports` fallback by injection), and by a conformance test in
+  `e2e/conventions.e2e.ts` that fails on a Baseline-only feature used outside an
+  `@supports` block. The second was added after three stylesheets were found
+  using bare `:has()`; until then the ban had no enforcement, exactly like the
+  physical-property ban before ADR-016. `docs/browser-support.md` states the
+  limit rather than claiming Core is launched. ADR-019 adds a `visual` project
+  on top of these, which is a test-layer addition rather than a browser-tier one.
 
 ### The rule this ADR exists to hold
 

@@ -106,7 +106,7 @@ test.beforeEach(async ({ page }) => {
   await page.waitForTimeout(500)
 })
 
-test.describe("axe scans — WCAG 2.0/2.1 A+AA", () => {
+test.describe("axe scans — WCAG 2.0/2.1/2.2 A+AA", () => {
   test("the full page passes at rest in the light theme", async ({ page }) => {
     await expectNoAxeViolations(page, "full page, light theme")
   })

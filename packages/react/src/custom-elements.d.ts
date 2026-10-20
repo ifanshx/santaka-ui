@@ -70,6 +70,96 @@ type BadgeElement = HTMLElement & {
   statusLabel: string
 }
 
+type AvatarElement = HTMLElement & {
+  name: string
+  src: string
+  size: "sm" | "md" | "lg"
+}
+
+type BannerElement = HTMLElement & {
+  variant: "neutral" | "primary" | "success" | "warning" | "danger"
+  heading: string
+  fullWidth: boolean
+}
+
+type AvatarGroupElement = HTMLElement & {
+  max: number
+  label: string
+  size: "sm" | "md" | "lg"
+}
+
+type FieldElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  required: boolean
+  disabled: boolean
+}
+
+type KbdElement = HTMLElement & {
+  size: "sm" | "md"
+}
+
+type SliderElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  name: string
+  min: number
+  max: number
+  step: number
+  value: number
+  showValue: boolean
+  format: string
+}
+
+type BreadcrumbElement = HTMLElement & {
+  items: string | Array<{ label: string; href?: string }>
+  label: string
+}
+
+type PaginationElement = HTMLElement & {
+  count: number
+  page: number
+  siblings: number
+  label: string
+  href: string
+}
+
+type DrawerElement = HTMLElement & {
+  open: boolean
+  side: "start" | "end"
+  modal: boolean
+  dismissible: boolean
+  label: string
+}
+
+type TakaElement = HTMLElement & {
+  mood: "idle" | "wave" | "bounce"
+  size: "sm" | "md" | "lg"
+}
+
+type PopoverElement = HTMLElement & {
+  open: boolean
+  placement: "top" | "bottom" | "start" | "end"
+  label: string
+}
+
+type ComboboxElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  name: string
+  placeholder: string
+  options: string | Array<{ value: string; label: string }>
+  value: string
+}
+
 type InputElement = HTMLElement & {
   type: InputType
   variant: "default" | "quiet"
@@ -300,6 +390,86 @@ declare module "react" {
         size?: BadgeSize
         dot?: boolean
         "status-label"?: string
+      }
+      "sk-avatar": BaseCustomElement<AvatarElement> & {
+        name?: string
+        src?: string
+        size?: "sm" | "md" | "lg"
+      }
+      "sk-banner": BaseCustomElement<BannerElement> & {
+        variant?: "neutral" | "primary" | "success" | "warning" | "danger"
+        heading?: string
+        "full-width"?: "false"
+        "aria-label"?: string
+        "aria-labelledby"?: string
+      }
+      "sk-avatar-group": BaseCustomElement<AvatarGroupElement> & {
+        max?: number
+        label?: string
+        size?: "sm" | "md" | "lg"
+      }
+      "sk-kbd": BaseCustomElement<KbdElement> & {
+        size?: "sm" | "md"
+      }
+      "sk-field": BaseCustomElement<FieldElement> & {
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        required?: boolean
+        disabled?: boolean
+      }
+      "sk-slider": BaseCustomElement<SliderElement> & {
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        name?: string
+        min?: number
+        max?: number
+        step?: number
+        value?: number
+        "show-value"?: boolean
+        format?: string
+      }
+      "sk-breadcrumb": BaseCustomElement<BreadcrumbElement> & {
+        items?: string | Array<{ label: string; href?: string }>
+        label?: string
+      }
+      "sk-pagination": BaseCustomElement<PaginationElement> & {
+        count?: number
+        page?: number
+        siblings?: number
+        label?: string
+        href?: string
+      }
+      "sk-drawer": BaseCustomElement<DrawerElement> & {
+        open?: boolean
+        side?: "start" | "end"
+        modal?: boolean
+        dismissible?: boolean
+        label?: string
+      }
+      "sk-taka": BaseCustomElement<TakaElement> & {
+        mood?: "idle" | "wave" | "bounce"
+        size?: "sm" | "md" | "lg"
+      }
+      "sk-popover": BaseCustomElement<PopoverElement> & {
+        open?: boolean
+        placement?: "top" | "bottom" | "start" | "end"
+        label?: string
+      }
+      "sk-combobox": BaseCustomElement<ComboboxElement> & {
+        label?: string
+        description?: string
+        error?: string
+        invalid?: boolean
+        disabled?: boolean
+        name?: string
+        placeholder?: string
+        options?: string | Array<{ value: string; label: string }>
+        value?: string
       }
       "sk-input": BaseCustomElement<InputElement> & {
         type?: InputType

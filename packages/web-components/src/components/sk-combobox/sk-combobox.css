@@ -1,0 +1,137 @@
+/*
+ * Combobox styles.
+ *
+ * The field is chrome — a 3px stroke, no rounding, a hard offset shadow — and the
+ * list is a floating layer, so it wears the glass material. That split is §2's:
+ * controls press, overlays float.
+ *
+ * The listbox is positioned, not laid out, so opening it never moves the content
+ * below. `hidden` is safe here because the listbox hosts no `<slot>` — which is
+ * exactly why the popover could not use it.
+ */
+
+sk-combobox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  color: var(--sk-color-text, #17141c);
+}
+
+sk-combobox .sk-combobox__label {
+  font-weight: var(--sk-text-sm-weight, 600);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+sk-combobox .sk-combobox__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-combobox .sk-combobox__control {
+  position: relative;
+  display: block;
+}
+
+sk-combobox .sk-combobox__input {
+  inline-size: 100%;
+  min-block-size: 2.25rem;
+  padding-inline: var(--sk-space-3, 0.75rem);
+  padding-block: var(--sk-space-2, 0.5rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: 0;
+  background-color: var(--sk-color-surface, #ffffff);
+  color: inherit;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+sk-combobox .sk-combobox__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+}
+
+sk-combobox .sk-combobox__listbox {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  z-index: var(--sk-z-popover, 1400);
+  max-block-size: 15rem;
+  overflow-y: auto;
+  margin: 0;
+  margin-block-start: var(--sk-space-1, 0.25rem);
+  padding: var(--sk-space-1, 0.25rem);
+  list-style: none;
+}
+
+sk-combobox .sk-combobox__listbox[hidden] {
+  display: none;
+}
+
+sk-combobox .sk-combobox__option {
+  padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
+  cursor: pointer;
+}
+
+/*
+ * The active option is marked by `aria-activedescendant`, so the visual has to
+ * follow it — a reader whose focus never moves still needs to see where they are.
+ */
+sk-combobox .sk-combobox__option[data-active] {
+  background-color: var(--sk-color-primary, #6d28d9);
+  color: var(--sk-color-primary-fg, #ffffff);
+}
+
+sk-combobox .sk-combobox__option[aria-selected="true"] {
+  font-weight: var(--sk-text-sm-weight, 600);
+}
+
+sk-combobox .sk-combobox__empty {
+  padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+sk-combobox .sk-combobox__error {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger-fg, #b91c1c);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+/* A glyph, so the error is not colour alone (WCAG 1.4.1). */
+sk-combobox .sk-combobox__error-icon {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  margin-block-start: 0.1875rem;
+  background-color: var(--sk-color-danger-fg, #b91c1c);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+@media (forced-colors: active) {
+  sk-combobox .sk-combobox__input {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  sk-combobox .sk-combobox__option[data-active] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  sk-combobox .sk-combobox__error {
+    color: CanvasText;
+  }
+
+  sk-combobox .sk-combobox__error-icon {
+    background-color: CanvasText;
+  }
+}

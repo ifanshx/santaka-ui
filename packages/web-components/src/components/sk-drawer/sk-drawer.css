@@ -1,0 +1,133 @@
+/*
+ * Drawer styles.
+ *
+ * A drawer is a dialog with an edge, so the panel keeps the glass material and
+ * the dialog mechanics; what changes is the geometry. The panel is built
+ * imperatively by shared/dialog-base.ts and carries `.sk-drawer__panel`, so
+ * every rule below targets that class rather than a Stencil-rendered element.
+ *
+ * `side` is logical by default: `start` and `end` mirror under `dir="rtl"`
+ * because they are expressed with `inset-inline-start` / `inset-inline-end`
+ * (ADR-016). The physical `left` and `right` remain for a drawer that must stay
+ * on one side regardless of reading direction, and they are the only rules in
+ * this file allowed to name a physical edge.
+ */
+
+/*
+ * Two class selectors, not one: the panel also carries `.sk-glass
+ * .sk-dialog__panel` from the shared base, and `.sk-dialog__panel` alone is the
+ * same specificity as `.sk-drawer__panel` — so the winner would be whichever
+ * file loaded last. Pairing the classes is what makes the drawer's geometry
+ * win deterministically over the dialog's centring (`margin: auto`) and its
+ * `max-inline-size`, both of which are wrong for a panel pinned to one edge.
+ */
+sk-drawer .sk-glass.sk-drawer__panel {
+  /* Full height, one edge: the drawer's whole shape. */
+  position: fixed;
+  inset-block: 0;
+  /*
+   * `inset-inline-start: auto` is load-bearing: a native <dialog> is centred by
+   * the UA stylesheet through `inset: 0` plus `margin: auto`, so setting only
+   * the end edge leaves `left: 0` in place and the panel stretches across the
+   * viewport instead of hugging the edge. Releasing the start side is what
+   * makes the width mean anything.
+   */
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  inline-size: min(24rem, 100vw);
+  max-inline-size: 100%;
+  max-block-size: none;
+  block-size: 100%;
+  margin: 0;
+  padding: var(--sk-space-6, 1.5rem);
+  overflow-y: auto;
+  border: 0;
+  border-inline-start: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: 0;
+  color: var(--sk-color-text, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+/*
+ * Two `[hidden]` rules, for the same two reasons `sk-dialog` records them:
+ *
+ * 1. When the drawer closes, the UA's `[hidden] { display: none }` has to win,
+ *    or a closed panel stays on screen.
+ * 2. When it opens, Stencil's scoped-mode slot manager writes `hidden` on
+ *    elements it treats as empty slot fallbacks — including this panel, since
+ *    it hosts the `<slot>` elements the base built. An open drawer with a stray
+ *    `hidden` must still show, so the `open` attribute wins.
+ *
+ * Without the second rule the panel carries both `open` and `hidden` and is
+ * invisible to a reader and to a test, which is a defect the markup alone does
+ * not reveal.
+ */
+sk-drawer .sk-glass.sk-drawer__panel[hidden] {
+  display: none;
+}
+
+sk-drawer .sk-glass.sk-drawer__panel[hidden][open] {
+  display: block;
+}
+
+/* Logical sides — the recommended pair. */
+sk-drawer[data-side="start"] .sk-glass.sk-drawer__panel {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+  border-inline-start: 0;
+  border-inline-end: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+}
+
+/*
+ * There is deliberately no physical `left` / `right` pair. ADR-016 bans those
+ * properties in component CSS, and "a consumer might want a fixed edge" is not
+ * a strong enough reason to break the rule the whole RTL story rests on: a
+ * physical edge is exactly the thing that renders a drawer on the wrong side of
+ * a right-to-left document. `start` and `end` cover the need.
+ */
+
+/*
+ * The entrance is the glass material's float, not the control's press — §2
+ * splits motion by layer, and an overlay that animates on control timing moves
+ * on the wrong one. Each side slides from its own edge.
+ */
+sk-drawer .sk-glass.sk-drawer__panel[open] {
+  animation: sk-drawer-enter var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+@keyframes sk-drawer-enter {
+  from {
+    opacity: 0;
+    translate: var(--sk-drawer-offset, 100%) 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+sk-drawer[data-side="start"] .sk-glass.sk-drawer__panel[open] {
+  --sk-drawer-offset: -100%;
+}
+
+sk-drawer[data-side="left"] .sk-glass.sk-drawer__panel[open] {
+  --sk-drawer-offset: -100%;
+}
+
+/* Reduced motion removes the slide rather than shortening it (§6). */
+@media (prefers-reduced-motion: reduce) {
+  sk-drawer .sk-glass.sk-drawer__panel[open] {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-drawer .sk-glass.sk-drawer__panel {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

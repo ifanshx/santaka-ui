@@ -1,0 +1,87 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "kbd",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-kbd/sk-kbd.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-511a955f26f48dd2fc6365e5e63ceeedf989aa4a1245cc33fb68fd5b7f529865"
+    },
+    {
+      "path": "src/components/sk-kbd/sk-kbd.css",
+      "type": "registry:style",
+      "checksum": "sha256-e633e8c834b6559b45259977e508a99754c56eb20d8114b6f1e63d5f45d10219"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-shadow",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-font-mono",
+    "--sk-radius-sm",
+    "--sk-shadow-sm",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-tracking",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "default": "\"md\"",
+      "description": "The type step the shortcut is set in."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Marks up a keyboard shortcut as a real `<kbd>` element, styled as hard-edged chrome.",
+    "whenToUse": [
+      "Documentation or a menu item names a key the reader should press",
+      "A shortcut appears inline with copy describing what it does",
+      "Several keys form one combination, such as Ctrl, Shift, and K"
+    ],
+    "whenNotToUse": [
+      "The keys are not actually pressable here — use Text; `<kbd>` promises input the reader can make",
+      "It is a button the user clicks with a keyboard shortcut beside it — the shortcut is a Kbd, the control is a Button",
+      "It is a code sample or a terminal command — that is a Code block, not input"
+    ],
+    "accessibility": "Renders a real `<kbd>` in the light DOM rather than a styled `<span>`, so assistive technology can identify the text as key input instead of reading a bare word — the difference between 'Shift' the key and 'shift' the sentence. It takes no role and no tab stop: a shortcut is text, not a control. The monospace family is functional, not decorative — 'l', '1', and 'I' are the same glyph in most UI faces and a shortcut is copied by eye.",
+    "example": "<sk-kbd>Ctrl</sk-kbd> <sk-kbd>Shift</sk-kbd> <sk-kbd>K</sk-kbd>",
+    "knownLimitations": [
+      "There is no `variant` prop: this component has one look, and §4's two-prop rule applies to components with an axis to vary on",
+      "It renders the key combination as plain text; separating multiple keys with '+' is the consumer's choice, and the component adds no separator"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

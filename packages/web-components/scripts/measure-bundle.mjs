@@ -242,10 +242,48 @@ const BUDGETS = [
   // moved 2.24 → 2.33 KB while the count went 21 → 26. The 21 KB figure is that
   // measurement with ~4% headroom, and the per-component CSS figure still says
   // what the total cannot: the additions are leaner than the average.
+  // Raised 21 → 23 by the five components that closed Tier 1: avatar,
+  // avatar-group, banner, field, and kbd. Measured in this fixture, the 29 older
+  // classes bundle to 20.13 KB and all 34 to 22.00 KB — 1.87 KB for five
+  // components, 0.37 KB each, against the 0.39 KB average the last five cost.
+  // The additions are leaner than the ones before them, which is the number that
+  // says the raise is growth rather than bloat. 23 KB is that measurement with
+  // ~4% headroom.
+  // Raised 23 → 26 by the five components added next: taka, slider,
+  // breadcrumb, pagination, and drawer. Measured in this fixture, the 34 older
+  // classes bundle to 22.00 KB and all 39 to 24.53 KB — 2.53 KB for five
+  // components, **0.51 KB each**, against the 0.37 KB the previous five cost.
+  //
+  // That is heavier per component, and recorded as such rather than rounded
+  // away: `sk-drawer` pulls in `shared/dialog-base.ts`, and this is the first
+  // addition that shares a base rather than standing alone. Sharing is the right
+  // call — it is the same reason `sk-alert-dialog` reuses the dialog mechanics
+  // instead of copying them — but it means the marginal cost of the *second*
+  // consumer of a base is not zero, and the budget has to reflect that.
+  //
+  // 26 KB is 24.53 KB with ~6% headroom. The thinner headroom than the previous
+  // ~4% is deliberate: this raise is closer to the measurement, because the
+  // trend is no longer downward and the next addition should be charged against
+  // a tighter number.
+  // Raised 26 → 28 by the next two: popover and combobox. Measured in this
+  // fixture, the 39 older classes bundle to 24.53 KB and all 41 to 26.12 KB —
+  // 1.59 KB for two components, **0.79 KB each**.
+  //
+  // That is now the third consecutive raise and the steepest yet: 0.39 → 0.37 →
+  // 0.51 → 0.79 KB per component. Each step had a real cause — the first two
+  // were lean standalone components, then a shared base, and now a component
+  // with a full ARIA state machine (Combobox owns a listbox, an active index, and
+  // a filter pass). But the trend is the signal, and it is upward.
+  //
+  // 28 KB is 26.12 KB with ~7% headroom. **The next raise should not be routine.**
+  // Before raising again, check whether the shared bases are growing rather than
+  // the component count — that is the point at which the fix is to split a base,
+  // not to move the number. A component that costs over 1 KB of shared runtime
+  // needs a note saying what it brought in.
   {
     name: "web-components runtime",
     measure: () => measureJs(join(pkgRoot, "dist/components/index.js"), runtimeExports()),
-    budgetKb: 21,
+    budgetKb: 28,
   },
   {
     name: "component CSS, per component",

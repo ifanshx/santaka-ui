@@ -1,0 +1,136 @@
+/*
+ * Banner styles.
+ *
+ * Chrome, like the alert: a 3px stroke, no rounding, and a zero-blur offset
+ * shadow. The difference from the alert is geometry, not material — a banner
+ * spans its container instead of sitting in the flow as an inline block, and
+ * `fullWidth` is what swaps the two.
+ */
+
+sk-banner {
+  --sk-banner-bg: var(--sk-color-surface-sunken, #f1eef8);
+  --sk-banner-fg: var(--sk-color-text, #17141c);
+  --sk-banner-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-banner-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --sk-banner-glyph: var(--sk-color-text-muted, #5f5a6a);
+  --sk-banner-gap: var(--sk-space-3, 0.75rem);
+  --sk-banner-padding: var(--sk-space-4, 1rem);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sk-banner-gap);
+  padding: var(--sk-banner-padding);
+  inline-size: 100%;
+  border-block-end: var(--sk-border-thick, 3px) solid var(--sk-banner-border);
+  background-color: var(--sk-banner-bg);
+  color: var(--sk-banner-fg);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  font-weight: var(--sk-text-sm-weight, 400);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+  box-sizing: border-box;
+}
+
+/*
+ * `fullWidth` is the strip: no side borders and no offset shadow, because a
+ * shadow is what makes a box read as *floating above* the page — and a banner
+ * spans the page rather than sitting on it. Dropping the shadow is the whole
+ * difference between "regional" and "a card at the top".
+ */
+sk-banner[data-full-width="false"] {
+  border: var(--sk-border-thick, 3px) solid var(--sk-banner-border);
+  border-radius: 0;
+  box-shadow: var(--sk-banner-shadow) var(--sk-color-shadow, #17141c);
+}
+
+sk-banner[data-variant="primary"] {
+  --sk-banner-bg: var(--sk-color-primary-subtle, #f1ebfd);
+  --sk-banner-fg: var(--sk-color-primary-text, #4c1d95);
+  --sk-banner-border: var(--sk-color-primary, #6d28d9);
+  --sk-banner-glyph: var(--sk-color-primary, #6d28d9);
+}
+
+sk-banner[data-variant="success"] {
+  --sk-banner-bg: var(--sk-color-success-subtle, #e9f6ed);
+  --sk-banner-fg: var(--sk-color-success-fg, #166534);
+  --sk-banner-border: var(--sk-color-success, #15803d);
+  --sk-banner-glyph: var(--sk-color-success, #15803d);
+}
+
+sk-banner[data-variant="warning"] {
+  --sk-banner-bg: var(--sk-color-warning-subtle, #fcf3e4);
+  --sk-banner-fg: var(--sk-color-warning-fg, #92400e);
+  --sk-banner-border: var(--sk-color-warning, #92400e);
+  --sk-banner-glyph: var(--sk-color-warning, #92400e);
+}
+
+sk-banner[data-variant="danger"] {
+  --sk-banner-bg: var(--sk-color-danger-subtle, #fdeded);
+  --sk-banner-fg: var(--sk-color-danger-fg, #b91c1c);
+  --sk-banner-border: var(--sk-color-danger, #dc2626);
+  --sk-banner-glyph: var(--sk-color-danger, #dc2626);
+}
+
+sk-banner .sk-banner__icon {
+  /*
+   * A drawn glyph, not a font icon: it repeats what the fill and the text
+   * already say, which is why it is hidden from assistive technology in the
+   * markup. It exists so colour is never the only signal (WCAG 1.4.1).
+   */
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-block-start: 0.0625rem;
+  border: 2px solid var(--sk-banner-glyph);
+  border-radius: var(--sk-radius-full, 9999px);
+  background-color: var(--sk-banner-glyph);
+}
+
+sk-banner .sk-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  min-inline-size: 0;
+}
+
+sk-banner .sk-banner__heading {
+  font-size: var(--sk-text-base-size, 1rem);
+  font-weight: var(--sk-text-base-weight, 600);
+  line-height: var(--sk-text-base-line-height, 1.5rem);
+}
+
+sk-banner .sk-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  margin-inline-start: auto;
+  flex: none;
+}
+
+/*
+ * An empty actions row is removed rather than left as a gap. `:empty` matches
+ * because CSS ignores the comment nodes Stencil's scoped mode leaves behind —
+ * relied on by sk-card's footer for the same reason, and asserted by a test
+ * there rather than assumed.
+ */
+sk-banner .sk-banner__actions:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  sk-banner {
+    border-block-end: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  sk-banner[data-full-width="false"] {
+    border: 1px solid CanvasText;
+  }
+
+  sk-banner .sk-banner__icon {
+    border-color: CanvasText;
+    background-color: CanvasText;
+  }
+}

@@ -1,0 +1,144 @@
+/*
+ * Taka styles.
+ *
+ * The mascot is chrome, so it wears the brutalist treatment: a 3px stroke on the
+ * silhouette and no soft gradients. The one place it departs is the eye, which
+ * is a shape rather than chrome — the same exemption `sk-badge`'s dot and
+ * `sk-avatar`'s portrait make.
+ *
+ * Motion is the part that needs care. §6 requires `prefers-reduced-motion` to
+ * *remove* an animation rather than shorten it, so the idle animations below are
+ * declared here and cancelled entirely in the media query — not slowed.
+ */
+
+sk-taka {
+  --sk-taka-size: var(--sk-icon-lg, 2.5rem);
+  --sk-taka-fill: var(--sk-color-primary, #6d28d9);
+  --sk-taka-belly: var(--sk-color-primary-subtle, #f1ebfd);
+  --sk-taka-stroke: var(--sk-color-border-strong, #8b85a0);
+  --sk-taka-accent: var(--sk-color-warning, #92400e);
+
+  display: inline-flex;
+  inline-size: var(--sk-taka-size);
+  block-size: var(--sk-taka-size);
+  flex: none;
+  vertical-align: middle;
+}
+
+sk-taka[data-size="sm"] {
+  --sk-taka-size: var(--sk-icon-md, 1.5rem);
+}
+
+sk-taka[data-size="lg"] {
+  /* The icon scale tops out at `lg` (2.5rem), so the largest mascot is a
+     multiple of it rather than a token that does not exist. */
+  --sk-taka-size: calc(var(--sk-icon-lg, 2.5rem) * 1.6);
+}
+
+sk-taka .sk-taka__body {
+  fill: var(--sk-taka-fill);
+  stroke: var(--sk-taka-stroke);
+  stroke-width: 3;
+}
+
+sk-taka .sk-taka__belly {
+  fill: var(--sk-taka-belly);
+  stroke: var(--sk-taka-stroke);
+  stroke-width: 2;
+}
+
+sk-taka .sk-taka__beak {
+  fill: var(--sk-taka-accent);
+  stroke: var(--sk-taka-stroke);
+  stroke-width: 2;
+}
+
+sk-taka .sk-taka__eye {
+  fill: var(--sk-taka-stroke);
+}
+
+sk-taka .sk-taka__highlight {
+  fill: var(--sk-color-surface, #ffffff);
+}
+
+sk-taka .sk-taka__crest path,
+sk-taka .sk-taka__feet path {
+  fill: none;
+  stroke: var(--sk-taka-stroke);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/*
+ * `wave` pivots the crest from its own base — `transform-box: fill-box` is what
+ * makes the rotation origin the path itself rather than the SVG viewport, which
+ * would swing the whole bird instead of its feathers.
+ */
+sk-taka[data-mood="wave"] .sk-taka__crest {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: sk-taka-wave var(--sk-duration-control-slow, 180ms)
+    var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)) infinite alternate;
+}
+
+sk-taka[data-mood="bounce"] .sk-taka__art {
+  animation: sk-taka-bounce var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)) infinite alternate;
+}
+
+@keyframes sk-taka-wave {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes sk-taka-bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8%);
+  }
+}
+
+/*
+ * Reduced motion cancels the animations outright. The mascot still looks like
+ * the mascot — it simply stops moving, which is what "reduced" means.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-taka[data-mood="wave"] .sk-taka__crest,
+  sk-taka[data-mood="bounce"] .sk-taka__art {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-taka .sk-taka__body {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+
+  sk-taka .sk-taka__belly {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+
+  sk-taka .sk-taka__beak {
+    fill: CanvasText;
+    stroke: CanvasText;
+  }
+
+  sk-taka .sk-taka__eye,
+  sk-taka .sk-taka__crest path,
+  sk-taka .sk-taka__feet path {
+    fill: CanvasText;
+    stroke: CanvasText;
+  }
+
+  sk-taka .sk-taka__highlight {
+    fill: Canvas;
+  }
+}

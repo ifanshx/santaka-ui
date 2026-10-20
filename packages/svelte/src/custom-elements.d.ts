@@ -60,6 +60,96 @@ export type SkBadgeElement = HTMLElement & {
   statusLabel: string
 }
 
+export type SkAvatarElement = HTMLElement & {
+  name: string
+  src: string
+  size: "sm" | "md" | "lg"
+}
+
+export type SkAvatarGroupElement = HTMLElement & {
+  max: number
+  label: string
+  size: "sm" | "md" | "lg"
+}
+
+export type SkBannerElement = HTMLElement & {
+  variant: "neutral" | "primary" | "success" | "warning" | "danger"
+  heading: string
+  fullWidth: boolean
+}
+
+export type SkFieldElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  required: boolean
+  disabled: boolean
+}
+
+export type SkSliderElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  name: string
+  min: number
+  max: number
+  step: number
+  value: number
+  showValue: boolean
+  format: string
+}
+
+export type SkBreadcrumbElement = HTMLElement & {
+  items: string | Array<{ label: string; href?: string }>
+  label: string
+}
+
+export type SkPaginationElement = HTMLElement & {
+  count: number
+  page: number
+  siblings: number
+  label: string
+  href: string
+}
+
+export type SkDrawerElement = HTMLElement & {
+  open: boolean
+  side: "start" | "end"
+  modal: boolean
+  dismissible: boolean
+  label: string
+}
+
+export type SkTakaElement = HTMLElement & {
+  mood: "idle" | "wave" | "bounce"
+  size: "sm" | "md" | "lg"
+}
+
+export type SkPopoverElement = HTMLElement & {
+  open: boolean
+  placement: "top" | "bottom" | "start" | "end"
+  label: string
+}
+
+export type SkComboboxElement = HTMLElement & {
+  label: string
+  description: string
+  error: string
+  invalid: boolean
+  disabled: boolean
+  name: string
+  placeholder: string
+  options: string | Array<{ value: string; label: string }>
+  value: string
+}
+
+export type SkKbdElement = HTMLElement & {
+  size: "sm" | "md"
+}
+
 export type SkInputElement = HTMLElement & {
   type: "text" | "email" | "password" | "search" | "tel" | "url" | "number"
   variant: "default" | "quiet"
@@ -317,6 +407,97 @@ export type SkBadgeAttributes = HTMLAttributes<SkBadgeElement> & {
   "status-label"?: string
 }
 
+export type SkAvatarAttributes = HTMLAttributes<SkAvatarElement> & {
+  name?: string
+  src?: string
+  size?: "sm" | "md" | "lg"
+}
+
+export type SkAvatarGroupAttributes = HTMLAttributes<SkAvatarGroupElement> & {
+  max?: number
+  label?: string
+  size?: "sm" | "md" | "lg"
+}
+
+export type SkBannerAttributes = HTMLAttributes<SkBannerElement> & {
+  variant?: "neutral" | "primary" | "success" | "warning" | "danger"
+  heading?: string
+  "full-width"?: "false"
+}
+
+export type SkKbdAttributes = HTMLAttributes<SkKbdElement> & {
+  size?: "sm" | "md"
+}
+
+export type SkFieldAttributes = HTMLAttributes<SkFieldElement> & {
+  label?: string
+  description?: string
+  error?: string
+  invalid?: boolean
+  required?: boolean
+  disabled?: boolean
+}
+
+export type SkSliderAttributes = HTMLAttributes<SkSliderElement> & {
+  label?: string
+  description?: string
+  error?: string
+  invalid?: boolean
+  disabled?: boolean
+  name?: string
+  min?: number
+  max?: number
+  step?: number
+  value?: number
+  "show-value"?: boolean
+  format?: string
+}
+
+export type SkBreadcrumbAttributes = HTMLAttributes<SkBreadcrumbElement> & {
+  items?: string | Array<{ label: string; href?: string }>
+  label?: string
+}
+
+export type SkPaginationAttributes = HTMLAttributes<SkPaginationElement> & {
+  count?: number
+  page?: number
+  siblings?: number
+  label?: string
+  href?: string
+}
+
+export type SkDrawerAttributes = HTMLAttributes<SkDrawerElement> & {
+  open?: boolean
+  side?: "start" | "end"
+  modal?: boolean
+  dismissible?: boolean
+  label?: string
+}
+
+export type SkTakaAttributes = HTMLAttributes<SkTakaElement> & {
+  mood?: "idle" | "wave" | "bounce"
+  size?: "sm" | "md" | "lg"
+}
+
+export type SkPopoverAttributes = HTMLAttributes<SkPopoverElement> & {
+  open?: boolean
+  placement?: "top" | "bottom" | "start" | "end"
+  label?: string
+}
+
+export type SkComboboxAttributes = HTMLAttributes<SkComboboxElement> & {
+  label?: string
+  description?: string
+  error?: string
+  invalid?: boolean
+  disabled?: boolean
+  name?: string
+  placeholder?: string
+  options?: string | Array<{ value: string; label: string }>
+  value?: string
+  "onsk-value-change"?: (event: CustomEvent<{ value: string }>) => void
+}
+
 export type SkInputAttributes = HTMLAttributes<SkInputElement> & {
   type?: "text" | "email" | "password" | "search" | "tel" | "url" | "number"
   variant?: "default" | "quiet"
@@ -557,6 +738,18 @@ declare module "svelte/elements" {
     "sk-icon-button": SkIconButtonAttributes
     "sk-link": SkLinkAttributes
     "sk-badge": SkBadgeAttributes
+    "sk-avatar": SkAvatarAttributes
+    "sk-avatar-group": SkAvatarGroupAttributes
+    "sk-banner": SkBannerAttributes
+    "sk-kbd": SkKbdAttributes
+    "sk-field": SkFieldAttributes
+    "sk-slider": SkSliderAttributes
+    "sk-breadcrumb": SkBreadcrumbAttributes
+    "sk-pagination": SkPaginationAttributes
+    "sk-drawer": SkDrawerAttributes
+    "sk-taka": SkTakaAttributes
+    "sk-popover": SkPopoverAttributes
+    "sk-combobox": SkComboboxAttributes
     "sk-input": SkInputAttributes
     "sk-textarea": SkTextareaAttributes
     "sk-checkbox": SkCheckboxAttributes

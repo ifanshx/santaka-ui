@@ -1,0 +1,243 @@
+---
+/**
+ * Showcase — every component rendered live, not listed.
+ *
+ * The catalogue at `/components` is the reference: one page per registry entry,
+ * generated, with props and limitations. This page is the opposite trade — a
+ * single screen that answers "what does this system actually look like" without
+ * a click. It imports `@santaka-ui/web-components`, the package a consumer
+ * installs, so a preview cannot work here and nowhere else (ADR-006).
+ *
+ * Two rules keep this honest:
+ *
+ * 1. Every element is the real one. No screenshot, no static mock-up — a preview
+ *    that only worked in this workspace would be the exact defect class the
+ *    consumer fixture exists to catch.
+ * 2. Each group names the file that defines what you are looking at, so a reader
+ *    who wants the contract knows where it lives rather than guessing from the
+ *    pixels.
+ */
+import Layout from "../layouts/Layout.astro"
+import { componentPages } from "../lib/components"
+
+const pages = componentPages()
+const count = pages.length
+
+
+---
+
+<Layout
+  title="Showcase"
+  description={`All ${count} Santaka UI components rendered live, grouped by what they are for.`}
+>
+  <h1>Showcase</h1>
+  <p class="lede">
+    Every element on this page is the real one, loaded from
+    <code>@santaka-ui/web-components</code> — the package you install. Nothing here is a
+    screenshot, so what you see is what you get. For props, accessibility notes, and known
+    limitations, use the <a href="/">catalogue</a>.
+  </p>
+
+  <p class="count-line">{count} components</p>
+
+  <section class="showcase">
+    <h2>Buttons and actions</h2>
+    <div class="row">
+      <sk-button variant="primary">Primary</sk-button>
+      <sk-button variant="secondary">Secondary</sk-button>
+      <sk-button variant="outline">Outline</sk-button>
+      <sk-button variant="ghost">Ghost</sk-button>
+      <sk-button variant="danger">Danger</sk-button>
+      <sk-button disabled>Disabled</sk-button>
+      <sk-button loading>Loading</sk-button>
+    </div>
+    <div class="row">
+      <sk-button size="sm" variant="primary">Small</sk-button>
+      <sk-button size="md" variant="primary">Medium</sk-button>
+      <sk-button size="lg" variant="primary">Large</sk-button>
+      <sk-icon-button label="Settings" variant="primary"></sk-icon-button>
+    </div>
+    <p class="source">sk-button, sk-icon-button</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Text and labels</h2>
+    <div class="row column">
+      <sk-text variant="display" family="display">Display</sk-text>
+      <sk-text variant="2xl">Heading</sk-text>
+      <sk-text variant="base">Body copy at the base step.</sk-text>
+      <sk-text variant="sm" muted>Muted supporting text.</sk-text>
+    </div>
+    <div class="row">
+      <sk-kbd>Ctrl</sk-kbd>
+      <sk-kbd>Shift</sk-kbd>
+      <sk-kbd>K</sk-kbd>
+      <sk-kbd size="sm">Esc</sk-kbd>
+    </div>
+    <p class="source">sk-text, sk-kbd, sk-label</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Surfaces</h2>
+    <sk-banner variant="warning" label="Service status" heading="Scheduled maintenance">
+      The dashboard is read-only on Saturday between 02:00 and 04:00 UTC.
+    </sk-banner>
+    <div class="row">
+      <sk-card heading="Deployment" subtitle="Every push builds here">
+        The heading is a real heading, not a prop: the card does not know its level in your
+        outline.
+      </sk-card>
+      <sk-empty-state heading="No runs yet" description="Push a commit to start one." size="sm">
+      </sk-empty-state>
+    </div>
+    <div class="row column">
+      <sk-alert variant="success" heading="Deployed">Shipped to production in 41s.</sk-alert>
+      <sk-alert variant="danger" heading="Failed">The health check timed out.</sk-alert>
+    </div>
+    <p class="source">sk-card, sk-banner, sk-alert, sk-empty-state</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Form controls</h2>
+    <div class="row column narrow">
+      <sk-input label="Workspace name" description="Lowercase letters and dashes."></sk-input>
+      <sk-input label="Email" type="email" error="That address is already in use."></sk-input>
+      <sk-textarea label="Bio" rows="3"></sk-textarea>
+      <sk-field label="Repository" description="Where the source lives.">
+        <input type="text" />
+      </sk-field>
+      <sk-slider label="Volume" value="40" show-value format="$v of $m"></sk-slider>
+    </div>
+    <div class="row">
+      <sk-checkbox label="Notify me"></sk-checkbox>
+      <sk-switch label="Dark mode"></sk-switch>
+    </div>
+    <p class="source">
+      sk-input, sk-textarea, sk-select, sk-checkbox, sk-switch, sk-radio-group, sk-field,
+      sk-slider
+    </p>
+  </section>
+
+  <section class="showcase">
+    <h2>People</h2>
+    <div class="row">
+      <sk-avatar name="Ada Lovelace"></sk-avatar>
+      <sk-avatar name="Grace Hopper" size="lg"></sk-avatar>
+      <sk-avatar
+        name="Alan Turing"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%236d28d9'/%3E%3C/svg%3E"
+      ></sk-avatar>
+      <sk-avatar-group
+        max={3}
+        label="Assigned to"
+        items='[{"label":"Ada"},{"label":"Grace"},{"label":"Alan"},{"label":"Katherine"},{"label":"Barbara"}]'
+      ></sk-avatar-group>
+    </div>
+    <div class="row">
+      <sk-taka mood="idle"></sk-taka>
+      <sk-taka mood="wave" size="lg"></sk-taka>
+      <sk-taka mood="bounce" size="sm"></sk-taka>
+    </div>
+    <p class="source">sk-avatar, sk-avatar-group, sk-taka</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Navigation</h2>
+    <sk-breadcrumb
+      items='[{"label":"Home","href":"/"},{"label":"Components","href":"/components"},{"label":"Showcase"}]'
+    ></sk-breadcrumb>
+    <div class="row">
+      <sk-pagination count={12} page={6}></sk-pagination>
+    </div>
+    <div class="row">
+      <sk-link href="/">Components</sk-link>
+      <sk-link href="/guides/theming">Theming</sk-link>
+    </div>
+    <p class="source">sk-breadcrumb, sk-pagination, sk-tabs, sk-link</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Feedback</h2>
+    <div class="row">
+      <sk-badge variant="neutral">Draft</sk-badge>
+      <sk-badge variant="primary">Featured</sk-badge>
+      <sk-badge variant="success">Active</sk-badge>
+      <sk-badge variant="warning">Pending</sk-badge>
+      <sk-badge variant="danger">Failed</sk-badge>
+    </div>
+    <div class="row column narrow">
+      <sk-progress value={62} max={100} label="Build progress"></sk-progress>
+      <sk-progress label="Indeterminate"></sk-progress>
+    </div>
+    <div class="row">
+      <sk-spinner label="Loading"></sk-spinner>
+      <sk-skeleton></sk-skeleton>
+    </div>
+    <p class="source">sk-badge, sk-progress, sk-spinner, sk-skeleton, sk-toast</p>
+  </section>
+
+  <section class="showcase">
+    <h2>Overlays</h2>
+    <div class="row">
+      <sk-dialog dismissible>
+        <sk-button slot="trigger" variant="primary">Open dialog</sk-button>
+        <sk-text variant="lg" family="display" slot="title"><h3>Discard draft?</h3></sk-text>
+        <sk-text variant="sm">Your draft will be deleted. This cannot be undone.</sk-text>
+      </sk-dialog>
+      <sk-drawer side="end" label="Settings">
+        <sk-button slot="trigger" variant="secondary">Open drawer</sk-button>
+        <sk-text variant="lg" family="display" slot="title"><h3>Settings</h3></sk-text>
+        <sk-text variant="sm">Slides in from the inline-end edge.</sk-text>
+      </sk-drawer>
+      <sk-tooltip delay="0">
+        <sk-button slot="trigger" variant="ghost">Hover for a tooltip</sk-button>
+        Shown on hover and on keyboard focus.
+      </sk-tooltip>
+    </div>
+    <p class="source">sk-dialog, sk-alert-dialog, sk-drawer, sk-tooltip</p>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 68ch;
+  }
+  .count-line {
+    font-variant-numeric: tabular-nums;
+    color: var(--sk-color-text-muted);
+    margin-block-end: 2rem;
+  }
+  .showcase {
+    margin-block-end: 2.5rem;
+    padding-block-end: 1.5rem;
+    border-block-end: 1px solid var(--sk-color-border);
+  }
+  .showcase h2 {
+    margin-block-end: 1rem;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block-end: 0.75rem;
+  }
+  .row.column {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .row.column.narrow {
+    max-inline-size: 26rem;
+  }
+  .source {
+    font-family: var(--sk-font-mono, monospace);
+    font-size: 0.75rem;
+    color: var(--sk-color-text-muted);
+    margin-block-start: 0.5rem;
+  }
+  /* The showcase is a composition surface, so a few previews need room. */
+  sk-progress,
+  sk-skeleton {
+    inline-size: 100%;
+  }
+</style>

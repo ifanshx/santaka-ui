@@ -1,0 +1,116 @@
+/*
+ * Popover styles.
+ *
+ * A popover is a floating layer, so it wears the glass material and enters on the
+ * glass timing — the same split §2 makes for the dialog. It is not a tooltip: it
+ * holds controls, so it must take pointer events (a tooltip deliberately takes
+ * none).
+ *
+ * Visibility is driven by the host's `data-open`, not by `hidden` on the panel —
+ * scoped mode writes `hidden` onto elements that host a `<slot>`, which left an
+ * open panel both invisible and unfocusable.
+ *
+ * Placement is logical on the inline axis: `start` and `end` mirror under
+ * `dir="rtl"` (ADR-016). `top` and `bottom` are block-axis and need no mirroring.
+ */
+
+sk-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+sk-popover .sk-popover__panel {
+  display: none;
+  position: absolute;
+  z-index: var(--sk-z-popover, 1400);
+  inline-size: max-content;
+  max-inline-size: min(20rem, calc(100vw - 2 * var(--sk-space-4, 1rem)));
+  margin: 0;
+  padding: var(--sk-space-4, 1rem);
+  color: var(--sk-color-text, #17141c);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+}
+
+sk-popover[data-open] .sk-popover__panel {
+  display: block;
+}
+
+/* Block-axis placements: no mirroring needed. */
+sk-popover[data-placement="bottom"] .sk-popover__panel {
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin-block-start: var(--sk-space-2, 0.5rem);
+}
+
+sk-popover[data-placement="top"] .sk-popover__panel {
+  inset-block-end: 100%;
+  inset-inline-start: 0;
+  margin-block-end: var(--sk-space-2, 0.5rem);
+}
+
+/* Inline-axis placements: logical, so they mirror under `dir="rtl"`. */
+sk-popover[data-placement="end"] .sk-popover__panel {
+  inset-inline-start: 100%;
+  inset-block-start: 0;
+  margin-inline-start: var(--sk-space-2, 0.5rem);
+}
+
+sk-popover[data-placement="start"] .sk-popover__panel {
+  inset-inline-end: 100%;
+  inset-block-start: 0;
+  margin-inline-end: var(--sk-space-2, 0.5rem);
+}
+
+/*
+ * Flipped at the viewport edge: the side swaps rather than the panel being
+ * nudged, because a nudge puts it over the trigger it belongs to.
+ */
+sk-popover[data-flipped][data-placement="bottom"] .sk-popover__panel {
+  inset-block-start: auto;
+  inset-block-end: 100%;
+  margin-block-start: 0;
+  margin-block-end: var(--sk-space-2, 0.5rem);
+}
+
+sk-popover[data-flipped][data-placement="top"] .sk-popover__panel {
+  inset-block-end: auto;
+  inset-block-start: 100%;
+  margin-block-end: 0;
+  margin-block-start: var(--sk-space-2, 0.5rem);
+}
+
+/*
+ * The entrance is the glass float, not the control press. Reduced motion removes
+ * it outright rather than shortening it (§6).
+ */
+sk-popover[data-open] .sk-popover__panel {
+  animation: sk-popover-enter var(--sk-duration-overlay, 280ms)
+    var(--sk-ease-glass, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+@keyframes sk-popover-enter {
+  from {
+    opacity: 0;
+    translate: 0 -0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  sk-popover[data-open] .sk-popover__panel {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  sk-popover .sk-popover__panel {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

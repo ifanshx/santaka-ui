@@ -1,0 +1,104 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "popover",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-popover/sk-popover.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-d8b773e5ef671220dbaf32794ab95181b817397a380ff2631cf6140d5b39c3b7"
+    },
+    {
+      "path": "src/components/sk-popover/sk-popover.css",
+      "type": "registry:style",
+      "checksum": "sha256-5c430f1a2f9c9309325900ef74183ca9c30faf97181df71504917248a7845510"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-text",
+    "--sk-duration-overlay",
+    "--sk-ease-glass",
+    "--sk-font-sans",
+    "--sk-space-2",
+    "--sk-space-4",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-z-popover"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "hide",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": "Closes the popover and returns focus to the trigger."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Accessible name for the panel, needed when there is no visible heading."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the popover is showing. Reflects so page CSS can target it."
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\" | \"start\" | \"end\"",
+      "default": "\"bottom\"",
+      "description": "Preferred side. Flips at the viewport edge rather than clipping, so a `bottom` popover on a trigger near the bottom of the screen renders above."
+    },
+    {
+      "name": "show",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": "Opens the popover."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
+  "ai": {
+    "summary": "A floating panel that holds controls, anchored to a trigger.",
+    "whenToUse": [
+      "A button opens a small panel of controls, such as filters or a menu",
+      "The panel content is interactive — links, checkboxes, a form",
+      "The panel needs to close on Escape and on an outside click"
+    ],
+    "whenNotToUse": [
+      "The content is only a description of the trigger — use a Tooltip",
+      "It must interrupt and demand a decision — use a Dialog",
+      "The content is navigation beside the page — use a Drawer"
+    ],
+    "accessibility": "`role=\"dialog\"` on the panel, with `aria-haspopup=\"dialog\"` and `aria-expanded` on the trigger — not `aria-describedby`, which would announce the whole panel as the trigger's description. Focus moves into the panel on open and returns to the trigger on close. Escape and an outside click both dismiss. Unlike a Tooltip, it takes pointer events, because it holds controls. `placement` is logical on the inline axis: `start` and `end` mirror under `dir=\"rtl\"` (ADR-016).",
+    "example": "<sk-popover placement=\"bottom\" label=\"Filters\"><sk-button slot=\"trigger\">Filters</sk-button><sk-checkbox label=\"Failed only\"></sk-checkbox></sk-popover>",
+    "knownLimitations": [
+      "The panel is rendered by Stencil with real `<slot>` elements — the consumer's children are never relocated, which is what keeps a click on slotted content inside the panel",
+      "The flip at the viewport edge is computed for the block axis only; inline-axis placement does not flip"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

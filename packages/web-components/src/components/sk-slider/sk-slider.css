@@ -1,0 +1,191 @@
+/*
+ * Slider styles.
+ *
+ * The native range input does the work; everything here is the brutalist reading
+ * of it. That means styling the platform's own pseudo-elements, which is the
+ * part worth being careful about: `::-webkit-slider-thumb` and
+ * `::-moz-range-thumb` are the two vendor surfaces, and a rule written for only
+ * one of them ships a half-finished control.
+ *
+ * The fill uses logical properties so it follows `dir="rtl"` without a second
+ * stylesheet — ADR-016, and the reason this is not a `left`-offset gradient.
+ */
+
+sk-slider {
+  --sk-slider-track: var(--sk-color-surface-sunken, #f1eef8);
+  --sk-slider-fill: var(--sk-color-primary, #6d28d9);
+  --sk-slider-thumb: var(--sk-color-surface, #ffffff);
+  --sk-slider-border: var(--sk-color-border-strong, #8b85a0);
+  --sk-slider-height: 0.75rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1, 0.25rem);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  color: var(--sk-color-text, #17141c);
+}
+
+sk-slider .sk-slider__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sk-space-2, 0.5rem);
+}
+
+sk-slider .sk-slider__label {
+  font-weight: var(--sk-text-sm-weight, 600);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+sk-slider .sk-slider__output {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+sk-slider .sk-slider__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+sk-slider .sk-slider__control {
+  display: flex;
+  align-items: center;
+  /* The thumb is larger than the track; this keeps the row from being clipped. */
+  padding-block: var(--sk-space-2, 0.5rem);
+}
+
+/*
+ * The native input is restyled rather than replaced. `appearance: none` is what
+ * makes the track drawable; without it the platform paints its own and every
+ * rule below is ignored.
+ */
+sk-slider .sk-slider__input {
+  inline-size: 100%;
+  block-size: var(--sk-slider-height);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+sk-slider .sk-slider__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Track — WebKit. */
+sk-slider .sk-slider__input::-webkit-slider-runnable-track {
+  block-size: var(--sk-slider-height);
+  border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
+  background-color: var(--sk-slider-track);
+}
+
+/* Track — Firefox. */
+sk-slider .sk-slider__input::-moz-range-track {
+  block-size: var(--sk-slider-height);
+  border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
+  background-color: var(--sk-slider-track);
+}
+
+/*
+ * Fill — Firefox only. Firefox paints the progress before the thumb, which is
+ * why `--sk-slider-fill` appears here and not in a WebKit rule; WebKit has no
+ * progress pseudo-element, so the fill there comes from the gradient below.
+ */
+sk-slider .sk-slider__input::-moz-range-progress {
+  block-size: var(--sk-slider-height);
+  background-color: var(--sk-slider-fill);
+}
+
+/*
+ * Thumb — both engines, separately. A square thumb with a hard shadow is the
+ * brutalist reading; most sliders ship a circle on a pill, which is precisely
+ * the look this system avoids.
+ */
+sk-slider .sk-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  inline-size: 1.25rem;
+  block-size: 1.5rem;
+  border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
+  border-radius: 0;
+  background-color: var(--sk-slider-thumb);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  cursor: grab;
+}
+
+sk-slider .sk-slider__input::-moz-range-thumb {
+  inline-size: 1.25rem;
+  block-size: 1.5rem;
+  border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
+  border-radius: 0;
+  background-color: var(--sk-slider-thumb);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  cursor: grab;
+}
+
+sk-slider .sk-slider__input:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}
+
+sk-slider .sk-slider__input:active::-moz-range-thumb {
+  cursor: grabbing;
+}
+
+/*
+ * Reduced motion: no transition on the thumb position at all. The value still
+ * changes — the animation was never the mechanism.
+ */
+@media (prefers-reduced-motion: reduce) {
+  sk-slider .sk-slider__input,
+  sk-slider .sk-slider__input::-webkit-slider-thumb,
+  sk-slider .sk-slider__input::-moz-range-thumb {
+    transition: none;
+  }
+}
+
+sk-slider .sk-slider__error {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger-fg, #b91c1c);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+/* A glyph, so the error is not colour alone (WCAG 1.4.1). */
+sk-slider .sk-slider__error-icon {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  margin-block-start: 0.1875rem;
+  background-color: var(--sk-color-danger-fg, #b91c1c);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+@media (forced-colors: active) {
+  sk-slider .sk-slider__input::-webkit-slider-runnable-track,
+  sk-slider .sk-slider__input::-moz-range-track {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+  }
+
+  sk-slider .sk-slider__input::-webkit-slider-thumb,
+  sk-slider .sk-slider__input::-moz-range-thumb {
+    border: 1px solid CanvasText;
+    background-color: CanvasText;
+  }
+
+  sk-slider .sk-slider__error {
+    color: CanvasText;
+  }
+
+  sk-slider .sk-slider__error-icon {
+    background-color: CanvasText;
+  }
+}

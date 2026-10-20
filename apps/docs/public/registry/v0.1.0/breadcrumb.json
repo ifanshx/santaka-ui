@@ -1,0 +1,84 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "breadcrumb",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-breadcrumb/sk-breadcrumb.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-75d46d4d5808c035cd64f5bba2e1c7240ad1e78b93541ac7e1d3e03c34db7c3c"
+    },
+    {
+      "path": "src/components/sk-breadcrumb/sk-breadcrumb.css",
+      "type": "registry:style",
+      "checksum": "sha256-9b84c28de4d3bde2c6455ca678b863cf6e16838ab06cdc455acc3db769bc4543"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-border-strong",
+    "--sk-color-primary",
+    "--sk-color-primary-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-space-2",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "items",
+      "type": "string | Array<{ label: string",
+      "default": "\"[]\"",
+      "description": "The trail, oldest first — the last entry is the current page.  A JSON array of `{ label, href? }`. `href` is optional precisely because the last item normally has none: the current page is not a link."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"Breadcrumb\"",
+      "description": "Accessible name for the landmark. Defaults to \"Breadcrumb\"."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Shows where the current page sits in a hierarchy, oldest ancestor first.",
+    "whenToUse": [
+      "The page is more than two levels deep",
+      "The reader needs to move up one or more levels",
+      "The hierarchy, not the history, is what matters — this is not a back button"
+    ],
+    "whenNotToUse": [
+      "The page is flat or one level deep — a breadcrumb with one item says nothing",
+      "You want to go back to where the reader came from — use a Link or the browser's back",
+      "The trail is a stepped process — use a Stepper"
+    ],
+    "accessibility": "`<nav aria-label=\"Breadcrumb\">` wrapping an `<ol>`, so it is a landmark a screen reader can jump to and announces as a hierarchy rather than as unrelated links. The last item carries `aria-current=\"page\"` and is not a link — a link to the page you are on is a no-op that reads as actionable. Separators are drawn with `::before` and carry no text, so nothing announces between the items.",
+    "example": "<sk-breadcrumb items='[{\"label\":\"Home\",\"href\":\"/\"},{\"label\":\"Projects\",\"href\":\"/projects\"},{\"label\":\"Santaka\"}]'></sk-breadcrumb>",
+    "knownLimitations": [
+      "An empty trail renders nothing at all rather than an empty landmark",
+      "`items` is JSON, not slotted children, because the component must know which entry is last"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-checkbox/sk-checkbox.css",
       "type": "registry:style",
-      "checksum": "sha256-4b1064c46fca19e2ed85290cbd0e12ee4d5469118cd100f93a26ac099a593bb0"
+      "checksum": "sha256-742e7c4c538f8fd0fa2a0b44a5d64ac5b15c604e13d21d08d9e28eae96cbc212"
     }
   ],
   "cssVariables": [

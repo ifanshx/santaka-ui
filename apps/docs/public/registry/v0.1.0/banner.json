@@ -1,0 +1,114 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "banner",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-banner/sk-banner.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-78eb9f1498c7d9b7b99a3ac0c73eef2c2222858e6c6feeaa0b98b73ade16deba"
+    },
+    {
+      "path": "src/components/sk-banner/sk-banner.css",
+      "type": "registry:style",
+      "checksum": "sha256-6cd7acefd7c6656d1c90c671a1b78d8dff38baf37e22627b82f727b57c626930"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger",
+    "--sk-color-danger-fg",
+    "--sk-color-danger-subtle",
+    "--sk-color-primary",
+    "--sk-color-primary-subtle",
+    "--sk-color-primary-text",
+    "--sk-color-shadow",
+    "--sk-color-success",
+    "--sk-color-success-fg",
+    "--sk-color-success-subtle",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-color-warning",
+    "--sk-color-warning-fg",
+    "--sk-color-warning-subtle",
+    "--sk-font-sans",
+    "--sk-radius-full",
+    "--sk-shadow-brutal",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-space-4",
+    "--sk-text-base-line-height",
+    "--sk-text-base-size",
+    "--sk-text-base-weight",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-sm-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "default": "true",
+      "description": "Whether the banner spans its container as a full-width strip.  `false` keeps it in the flow as a block with the standard chrome, for a message about one section rather than the whole page."
+    },
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Heading text. Named `heading`, not `title`, for the reason `sk-alert` records: `title` is a standardized `HTMLElement` member, so a prop by that name is shadowed by the prototype and the browser would surface it as a hover tooltip over the whole banner."
+    },
+    {
+      "name": "variant",
+      "type": "\"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "\"neutral\"",
+      "description": "Visual emphasis."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "A page-level message that spans its container above the content it is about.",
+    "whenToUse": [
+      "A site-wide notice — maintenance, degraded service, an expiring trial",
+      "A message that belongs to the whole page rather than to one section",
+      "A persistent status the reader can act on from an actions slot"
+    ],
+    "whenNotToUse": [
+      "It belongs to one section and sits in the flow — use an Alert",
+      "It must interrupt after a user action — use an Alert or a Toast",
+      "It floats above the page and dismisses — use a Toast"
+    ],
+    "accessibility": "Sets `role=\"region\"`, not `role=\"banner\"` — in ARIA `banner` is the site header and is one-per-page, so using it here would collide with the consumer's real `<header>`. A `region` is only exposed as a landmark when it has an accessible name, so `aria-label` or `aria-labelledby` is required for the banner to be reachable by landmark navigation; the React type enforces one of the two. An unnamed banner is left unnamed rather than given a made-up label. It is not a live region: a banner was already present when the page loaded, and announcing it as an interruption would talk over the content the reader came for. The glyph is decorative and hidden.",
+    "example": "<sk-banner variant=\"warning\" heading=\"Scheduled maintenance\" aria-label=\"Service status\">Read-only on Saturday.</sk-banner>",
+    "knownLimitations": [
+      "No dismiss button, by design: dismissing needs a close affordance, focus into it, and a focus return — a different component",
+      "`fullWidth` is geometry, not material: it drops the offset shadow and side borders because a shadow makes a box read as floating above the page",
+      "`heading` is a string, not a heading element — the component does not know its level in the document outline"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

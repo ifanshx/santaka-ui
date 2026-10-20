@@ -46,6 +46,15 @@ const SECTIONS = [
   ["structure", "structure"],
   ["loading", "loading"],
   ["materials", "materials"],
+  ["slider", "slider"],
+  ["breadcrumb", "breadcrumb"],
+  ["pagination", "pagination"],
+  ["drawer", "drawer"],
+  ["taka", "taka"],
+  ["banner", "banner"],
+  ["field", "field"],
+  ["avatar", "avatars"],
+  ["kbd", "keyboard shortcuts"],
 ] as const
 
 async function prepare(page: Page, dir: "ltr" | "rtl", theme: "light" | "dark") {

@@ -1,0 +1,309 @@
+---
+/**
+ * Manual keyboard and screen-reader review (plan.md §17).
+ *
+ * This page exists because one §17 gate cannot be closed by a test, and leaving
+ * it unstated is how it stays open forever: "manually reviewed" with no
+ * checklist is not a task anyone can start.
+ *
+ * It is deliberately NOT a claim that the review happened. The sign-off table
+ * below is empty, and §17 stays unticked until a person fills it in.
+ */
+import Layout from "../layouts/Layout.astro"
+
+const automated = [
+  {
+    what: "Tabs",
+    detail:
+      "Tab/Shift+Tab traversal, roving tabindex, Arrow keys, Home/End, and RTL inverting arrow meaning at interaction time",
+    file: "e2e/tabs.e2e.ts",
+  },
+  {
+    what: "Radio Group",
+    detail: "arrow navigation, group-level form value",
+    file: "e2e/radio-group.e2e.ts",
+  },
+  {
+    what: "Dialog",
+    detail:
+      "initial focus inside the panel, focus trapped while open, Escape closes, focus returns to the invoker",
+    file: "e2e/dialog.e2e.ts",
+  },
+  {
+    what: "Alert Dialog",
+    detail: "Escape refused, focus on the chosen default action",
+    file: "e2e/alert-dialog.e2e.ts",
+  },
+  {
+    what: "Accordion",
+    detail: "Enter and Space activation on a focused summary",
+    file: "e2e/accordion.e2e.ts",
+  },
+  {
+    what: "Checkbox and Switch",
+    detail: "Space toggles a focused control",
+    file: "e2e/checkbox.e2e.ts, e2e/switch.e2e.ts",
+  },
+  {
+    what: "Tooltip",
+    detail: "shown on keyboard focus with no hover delay; the panel takes no focus",
+    file: "e2e/tooltip.e2e.ts",
+  },
+  {
+    what: "Touch targets",
+    detail: "measured against <code>--sk-touch-min</code>",
+    file: "e2e/touch-target.e2e.ts",
+  },
+  {
+    what: "Whole-page axe scans",
+    detail: "light, dark, and invalid-submit states; WCAG 2.0/2.1/2.2 A+AA",
+    file: "e2e/a11y.e2e.ts",
+  },
+]
+
+const groups = [
+  {
+    title: "Focus order and reachability",
+    rows: [
+      "Tab through the whole page top to bottom. Does the order match reading order, or does it jump between sections?",
+      "Does anything take focus that should not — a decorative wrapper, a <code>sk-card</code>, a <code>sk-text</code>, an empty <code>sk-avatar</code>?",
+      "Is anything interactive unreachable — a control reachable by mouse only?",
+      "Shift+Tab backwards: does it retrace the same path, or does it diverge?",
+      "Does focus ever land on something with no visible indication?",
+      "Disabled controls: are they skipped, and is that the intended behaviour for each one?",
+    ],
+  },
+  {
+    title: "Focus visibility",
+    rows: [
+      "Every focused element shows the focus ring clearly in light <strong>and</strong> dark.",
+      "The ring is not clipped by <code>overflow: hidden</code> anywhere — check <code>sk-avatar</code> and <code>sk-table</code>'s scroll region specifically, since both clip.",
+      "In <code>forced-colors</code> mode (Windows High Contrast), focus is still visible.",
+      "Focus stays visible while a <code>sk-toast</code> is on screen and while a <code>sk-dialog</code> is open.",
+    ],
+  },
+  {
+    title: "Overlays: Dialog, Alert Dialog, Toast",
+    rows: [
+      "Opening a dialog: is the first Tab inside the panel, and is it the element you would want?",
+      "Tab past the last focusable element: does it wrap to the first, staying inside?",
+      "Closing by every route (Escape, action button, backdrop) returns focus to the trigger.",
+      "Does the screen reader announce the dialog's role and its title on open?",
+      "<code>sk-toast</code>: does it announce without stealing focus, and can you still reach the control behind it?",
+      "<code>sk-alert-dialog</code>: does Escape get refused, and does the screen reader convey that it is urgent?",
+    ],
+  },
+  {
+    title: "Forms",
+    rows: [
+      "Every control is reachable and operable by keyboard alone.",
+      "Submitting with the keyboard surfaces validation errors; are they announced, not only shown?",
+      "Is the error associated with its field — does focusing the invalid control announce the error text?",
+      "<code>aria-describedby</code> carries both <code>description</code> and <code>error</code> when both are set, not one replacing the other.",
+      "Required fields are announced as required.",
+    ],
+  },
+  {
+    title: "Reading and announcement",
+    rows: [
+      "Each interactive component announces its name and its role.",
+      "Tabs announce selected state; Accordion announces expanded state.",
+      "<code>sk-progress</code> announces a value when determinate and says nothing misleading when indeterminate.",
+      "<code>sk-spinner</code> announces its label, and the ring is silent.",
+      "<code>sk-skeleton</code> is silent entirely.",
+      "<code>sk-badge</code> with <code>dot</code> announces its <code>statusLabel</code>, not nothing.",
+      "<code>sk-avatar</code> announces the person's name once, not twice.",
+      "<code>sk-kbd</code> announces as key input, not as an unmarked word.",
+      "<code>sk-separator</code> announces when meaningful and stays silent when <code>decorative</code>.",
+    ],
+  },
+  {
+    title: "Direction and motion",
+    rows: [
+      "In <code>dir=\"rtl\"</code>, arrow-key direction inverts for Tabs — verify it matches the visual direction, not just the assertion.",
+      "With <code>prefers-reduced-motion: reduce</code>, no component animates; check the overlay entrance and the spinner specifically.",
+      "At 320px and at 200% zoom, the focus order and focus visibility still hold.",
+    ],
+  },
+]
+
+let n = 0
+const numbered = groups.map((group) => ({
+  ...group,
+  rows: group.rows.map((row) => ({ n: ++n, row })),
+}))
+---
+
+<Layout
+  title="Manual keyboard and screen-reader review"
+  description="The plan.md §17 gate that needs a person: what is already automated, and the checks that are not."
+>
+  <h1>Manual keyboard and screen-reader review</h1>
+
+  <p class="lede">
+    <code>plan.md</code> §17 leaves one gate open: "Keyboard navigation and focus management
+    have been manually reviewed." This page is that gate. It is not a test and it does not
+    close itself — §17 stays unticked until a person works through it and records what they
+    found.
+  </p>
+
+  <section>
+    <h2>Why a person has to do this</h2>
+    <p>
+      The automated half is real and named: 24 key presses across 10 browser specs assert
+      §8's contract — Tab and Shift+Tab through Tabs with a roving tabindex, arrow keys in
+      Radio Group and Tabs, Escape, focus trap, and focus return in Dialog and Alert Dialog,
+      initial focus on the first focusable element. None of that can answer what this review
+      asks:
+    </p>
+    <ul>
+      <li>
+        Is the <strong>focus order</strong> sensible, or merely deterministic? A tab sequence
+        can be perfectly stable and still visit a logout button before the form.
+      </li>
+      <li>
+        Is the <strong>announcement</strong> correct? A <code>role</code> and an
+        <code>aria-label</code> can both be present and the announcement still be "button,
+        button, button".
+      </li>
+      <li>
+        Does focus <strong>look</strong> visible? <code>:focus-visible</code> can compute
+        correctly on an element whose ring is painted under another one.
+      </li>
+      <li>
+        Is anything reachable that should not be, or unreachable that should be? Automation
+        asserts what it was told to assert.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to run it</h2>
+    <ul>
+      <li>Keyboard only. Put the mouse away; do not click to get into a state.</li>
+      <li>
+        One screen reader minimum. Record which one and its version — NVDA + Firefox and
+        VoiceOver + Safari behave differently, and "it announced fine" is not a result
+        without both halves.
+      </li>
+      <li>
+        Both themes and both directions (<code>dir="ltr"</code> and <code>dir="rtl"</code>).
+      </li>
+      <li>
+        <code>examples/vanilla-html/index.html</code> mounts every component in its
+        documented states, which is why it is the fixture: a finding names a shipped
+        component rather than a test page.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Sign-off</h2>
+    <p class="callout">
+      This table is <strong>empty on purpose</strong>. Filling it in is the review; until
+      someone does, §17 stays unticked.
+    </p>
+    <table class="signoff">
+      <tbody>
+        <tr><th>Reviewer</th><td></td></tr>
+        <tr><th>Date</th><td></td></tr>
+        <tr><th>Screen reader(s) and version</th><td></td></tr>
+        <tr><th>Browser(s) and version</th><td></td></tr>
+        <tr><th>Keyboard layout / OS</th><td></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Already automated — do not re-verify</h2>
+    <p>Re-testing these wastes the review. They run on every commit.</p>
+    <table>
+      <thead>
+        <tr><th>Component</th><th>What is asserted</th><th>Spec</th></tr>
+      </thead>
+      <tbody>
+        {
+          automated.map((item) => (
+            <tr>
+              <td>{item.what}</td>
+              <td set:html={item.detail} />
+              <td><code>{item.file}</code></td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+
+  {
+    numbered.map((group) => (
+      <section>
+        <h2>{group.title}</h2>
+        <table class="checklist">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Check</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {group.rows.map(({ n, row }) => (
+              <tr>
+                <td>{n}</td>
+                <td set:html={row} />
+                <td />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))
+  }
+
+  <section>
+    <h2>Recording a finding</h2>
+    <p>
+      A finding names: the component, the key or gesture, the screen reader and version, what
+      happened, and what you expected. "Tabs felt odd" is not actionable; "Shift+Tab from the
+      third tab lands on the page footer, expected the second tab" is.
+    </p>
+    <p>
+      Fix the defect; do not disable the rule. That is the standard the automated half
+      already holds — the first axe run found four real defect classes and all four were
+      fixed rather than suppressed — and it applies here too.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .lede {
+    max-inline-size: 65ch;
+  }
+  table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    margin-block: 1rem;
+    font-size: 0.9375rem;
+  }
+  th,
+  td {
+    border: 1px solid var(--edge);
+    padding: 0.5rem 0.625rem;
+    text-align: start;
+    vertical-align: top;
+  }
+  th {
+    background: var(--sk-color-surface-sunken, #f1eef8);
+  }
+  .signoff td {
+    min-inline-size: 12rem;
+  }
+  .checklist td:last-child {
+    min-inline-size: 8rem;
+  }
+  .callout {
+    border-inline-start: 3px solid var(--sk-color-primary, #6d28d9);
+    padding-inline-start: 0.875rem;
+  }
+</style>

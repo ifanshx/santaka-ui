@@ -1,0 +1,100 @@
+/*
+ * Avatar Group styles.
+ *
+ * The stack overlaps by a negative inline margin on every avatar after the
+ * first. Nothing is absolutely positioned, so the row reflows at narrow widths
+ * and mirrors in RTL — `margin-inline-start` is what flips, not a `left`
+ * offset. ADR-016 bans the physical properties this replaces.
+ */
+
+sk-avatar-group {
+  --sk-avatar-group-overlap: var(--sk-space-2, 0.5rem);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-2, 0.5rem);
+  vertical-align: middle;
+}
+
+sk-avatar-group .sk-avatar-group__stack {
+  display: inline-flex;
+  align-items: center;
+}
+
+/*
+ * Every avatar from the second onward is pulled back over its predecessor.
+ * `nth-child(n + 2)` rather than a sibling combinator: the rule has to apply to
+ * the element itself, and a combinator would restate the same thing one level
+ * deeper.
+ */
+sk-avatar-group .sk-avatar-group__stack > sk-avatar:nth-child(n + 2) {
+  margin-inline-start: calc(-1 * var(--sk-avatar-group-overlap));
+}
+
+/*
+ * Later avatars are painted under earlier ones, so the stack reads left-to-right
+ * as "first person on top". Without this the overlap direction looks accidental
+ * in RTL, where the visual order is already reversed.
+ */
+sk-avatar-group .sk-avatar-group__stack > sk-avatar:nth-child(n + 2) {
+  position: relative;
+  z-index: 0;
+}
+
+sk-avatar-group .sk-avatar-group__stack > sk-avatar:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Avatars past `max` are hidden rather than removed. `display: none` takes them
+ * out of the accessibility tree too, which is what makes the group announce
+ * exactly what it shows — a screen reader would otherwise read four names while
+ * the page shows three plus "+1". The attribute is set by the component, which
+ * is the only thing that knows `max`.
+ */
+sk-avatar-group .sk-avatar-group__stack > sk-avatar[data-overflow-hidden] {
+  display: none;
+}
+
+/*
+ * The overflow count is text, not a circle: "+3" is not a person, and drawing it
+ * as a fourth avatar invites a reader to think it is one. It still carries the
+ * brutalist stroke so it reads as part of the same family.
+ */
+sk-avatar-group .sk-avatar-group__overflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--sk-height-md, 2.25rem);
+  min-block-size: var(--sk-height-md, 2.25rem);
+  padding-inline: var(--sk-space-2, 0.5rem);
+  border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
+  border-radius: var(--sk-radius-full, 9999px);
+  background-color: var(--sk-color-surface-sunken, #f1eef8);
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+  letter-spacing: var(--sk-text-xs-tracking, 0.04em);
+  white-space: nowrap;
+}
+
+sk-avatar-group[data-size="sm"] .sk-avatar-group__overflow {
+  min-inline-size: var(--sk-height-sm, 1.75rem);
+  min-block-size: var(--sk-height-sm, 1.75rem);
+}
+
+sk-avatar-group[data-size="lg"] .sk-avatar-group__overflow {
+  min-inline-size: var(--sk-height-lg, 2.75rem);
+  min-block-size: var(--sk-height-lg, 2.75rem);
+}
+
+@media (forced-colors: active) {
+  sk-avatar-group .sk-avatar-group__overflow {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

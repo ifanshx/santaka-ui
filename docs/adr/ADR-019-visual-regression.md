@@ -115,6 +115,31 @@ Two fixes, because the root cause and the detection are separate problems:
   baselines, and the PR is expected to include the regenerated images. That is
   the review cost of the suite, and it is the point.
 
+- **The committed baselines are stale as of 2026-10-20, and say so.** Nine
+  component sections were added to the example page — slider, breadcrumb,
+  pagination, drawer, taka, banner, field, avatar, and kbd — and the existing
+  sections now sit below new markup. Two consequences follow, and both are
+  recorded rather than smoothed over:
+
+  1. The nine new sections have **no baselines at all**. They were added to
+     `SECTIONS` in the same change, so the spec expects files that do not exist
+     yet.
+  2. The 72 existing baselines were photographed against the **previous**
+     example page. Any of them whose section moved, or which captured a scroll
+     position rather than an element, is now wrong.
+
+  Regenerating requires the pinned image
+  (`mcr.microsoft.com/playwright:v1.64.0-noble`) via
+  `node scripts/visual-baseline-docker.mjs --update`. On the machine where this
+  was recorded the Docker CLI is installed but **no daemon is running and Docker
+  Desktop is not installed**, so the update could not be performed here. Regenerating
+  on an ordinary workstation instead would produce exactly the failure ADR-019
+  exists to prevent — baselines owned by whichever machine ran last — so the honest
+  state is "stale and awaiting the pinned run", not "regenerated locally".
+
+  **Do not treat a green `visual` run as evidence until the update has happened
+  in the pinned image.**
+
 ## What would reverse this
 
 If Playwright ships a rendering backend stable across platforms — or if the

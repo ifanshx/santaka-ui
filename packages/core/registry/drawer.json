@@ -1,0 +1,118 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "drawer",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-drawer/sk-drawer.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-5ba87b48e4ecd17f388a72c624eee5049f986e43d1825127dc0872236e6ace02"
+    },
+    {
+      "path": "src/components/sk-drawer/sk-drawer.css",
+      "type": "registry:style",
+      "checksum": "sha256-74080903d13c544ffe2817263f852dfbcbc579be0722f29786ea0a9785815709"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-shadow",
+    "--sk-color-text",
+    "--sk-duration-overlay",
+    "--sk-ease-glass",
+    "--sk-font-sans",
+    "--sk-space-6",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-z-modal"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "close",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": "Closes the drawer."
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "default": "true",
+      "description": "Closes when the backdrop is clicked."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Accessible name for the panel. The consumer's title slot supplies it best."
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "default": "true",
+      "description": "Modal is the default: the page behind is inert and focus is trapped. A non-modal drawer is for a persistent side panel the reader keeps open while working."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether the drawer is showing. Reflects so page CSS can target it."
+    },
+    {
+      "name": "show",
+      "type": "() => Promise<void>",
+      "default": null,
+      "description": "Opens the drawer. Equivalent to setting `open`."
+    },
+    {
+      "name": "side",
+      "type": "\"start\" | \"end\"",
+      "default": "\"end\"",
+      "description": "Which edge it slides from.  Both values are logical and mirror under `dir=\"rtl\"`, which is ADR-016's requirement. There is no physical pair — see the note at the top of the stylesheet for why."
+    }
+  ],
+  "events": [
+    "sk-open-change"
+  ],
+  "ai": {
+    "summary": "A panel that slides in from one edge, for navigation or a persistent side task.",
+    "whenToUse": [
+      "Navigation or filters live beside the content rather than over it",
+      "The panel stays open while the reader works — a non-modal side panel",
+      "The content is taller than it is wide, such as a menu or a filter list"
+    ],
+    "whenNotToUse": [
+      "It must interrupt and demand a decision — use a Dialog or Alert Dialog",
+      "The content is a short description of a control — use a Tooltip",
+      "The content is a small menu anchored to a button — use a Popover"
+    ],
+    "accessibility": "Reuses the dialog mechanics in `shared/dialog-base.ts`, so the native `<dialog>` owns focus trapping, Escape, `::backdrop`, and inert background content — nothing is reimplemented. Focus returns to the trigger on close. `side` is logical: `start` and `end` mirror under `dir=\"rtl\"` (ADR-016), and there is deliberately no physical `left`/`right` pair, because a fixed edge is exactly what puts a drawer on the wrong side of a right-to-left document.",
+    "example": "<sk-drawer side=\"end\" label=\"Settings\"><sk-button slot=\"trigger\">Open</sk-button><h3 slot=\"title\">Settings</h3></sk-drawer>",
+    "knownLimitations": [
+      "The panel needs an `[hidden][open]` rule: scoped mode writes `hidden` onto elements hosting a `<slot>`, which otherwise leaves an open drawer invisible",
+      "No physical side values — see the accessibility note"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

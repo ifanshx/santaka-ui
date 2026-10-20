@@ -24,8 +24,9 @@ import Layout from "../../layouts/Layout.astro"
       The axe scans (<code>e2e/a11y.e2e.ts</code>) run against the vanilla example page,
       which mounts every component in its documented states, so a violation names a shipped
       component rather than a test fixture. The ruleset is pinned to <code>wcag2a</code>,
-      <code>wcag21a</code>, <code>wcag2aa</code>, and <code>wcag21aa</code> — the WCAG
-      2.0/2.1 A+AA rules axe implements — so an axe release that adds rules cannot silently
+      <code>wcag2aa</code>, <code>wcag21a</code>, <code>wcag21aa</code>,
+      <code>wcag22a</code>, and <code>wcag22aa</code> — the WCAG 2.0/2.1/2.2 A+AA rules
+      axe implements — so an axe release that adds rules cannot silently
       change what "passing" means, and no rule is disabled. Three whole-page passes run:
       light theme, dark theme (the same markup against the dark palette, so contrast
       re-evaluates), and again after an intentionally invalid form submission — the state
@@ -129,7 +130,17 @@ import Layout from "../../layouts/Layout.astro"
       return focus, and the other interaction tests assert keyboard and ARIA
       behavior in a real browser rather than inferring it from source.
     </p>
+    <p>
+      The gate now has a checklist: <a href="/manual-keyboard-review">Manual keyboard
+      and screen-reader review</a>. It states what the automated suite already covers,
+      so a reviewer does not re-verify it, and lists the 33 checks that need a person —
+      focus order, focus visibility, announcement, direction, and motion. It also
+      carries the sign-off table. Until someone fills that table in, §17 stays
+      unticked, which is the honest state: a checklist is not the review.
+    </p>
   </section>
+
+
 
   <section>
     <h2>Source files</h2>

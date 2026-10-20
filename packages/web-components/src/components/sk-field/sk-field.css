@@ -1,0 +1,87 @@
+/*
+ * Field styles.
+ *
+ * The field draws no chrome of its own: no stroke, no fill, no shadow. It is a
+ * layout and labelling wrapper around a control the consumer supplied, and a box
+ * around a control that already has one would read as two nested inputs.
+ */
+
+sk-field {
+  --sk-field-gap: var(--sk-space-1, 0.25rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-field-gap);
+  font-family: var(--sk-font-sans, system-ui, sans-serif);
+  font-size: var(--sk-text-sm-size, 0.875rem);
+  line-height: var(--sk-text-sm-line-height, 1.25rem);
+  color: var(--sk-color-text, #17141c);
+}
+
+sk-field .sk-field__label-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+}
+
+sk-field .sk-field__label {
+  font-weight: var(--sk-text-sm-weight, 600);
+  letter-spacing: var(--sk-text-sm-tracking, 0.01em);
+}
+
+sk-field .sk-field__required {
+  color: var(--sk-color-danger-fg, #b91c1c);
+}
+
+sk-field .sk-field__description {
+  color: var(--sk-color-text-muted, #5f5a6b);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+/*
+ * The control wrapper takes no size of its own: the consumer's control decides
+ * it. `display: block` rather than `flex` so a control with its own width
+ * declaration is not stretched.
+ */
+sk-field .sk-field__control {
+  display: block;
+}
+
+sk-field .sk-field__error {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sk-space-1, 0.25rem);
+  color: var(--sk-color-danger-fg, #b91c1c);
+  font-size: var(--sk-text-xs-size, 0.75rem);
+  font-weight: var(--sk-text-xs-weight, 500);
+  line-height: var(--sk-text-xs-line-height, 1rem);
+}
+
+/*
+ * A drawn glyph, not colour alone (WCAG 1.4.1). It is empty and `aria-hidden`
+ * in the markup; the triangle is what makes the error distinguishable without
+ * hue.
+ */
+sk-field .sk-field__error-icon {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  margin-block-start: 0.1875rem;
+  background-color: var(--sk-color-danger-fg, #b91c1c);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+sk-field[data-disabled] {
+  color: var(--sk-color-text-muted, #5f5a6b);
+}
+
+@media (forced-colors: active) {
+  sk-field .sk-field__error {
+    color: CanvasText;
+  }
+
+  sk-field .sk-field__error-icon {
+    background-color: CanvasText;
+  }
+}

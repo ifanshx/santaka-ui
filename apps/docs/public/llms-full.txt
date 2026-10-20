@@ -246,6 +246,94 @@ The card is a single `<form>` with an accessible name from its heading; each fie
 - Nothing is submitted and nothing is validated: the error alert demonstrates the state, it is not wired to a response
 - There is no second-factor step, no OAuth buttons, and no password-strength meter
 
+## sk-avatar
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A circular portrait of a person, with initials derived from their name as the fallback.
+
+**When to use**
+
+- A list or header identifies a person by their picture
+- An account menu, comment, or assignment shows who it belongs to
+- Several people are stacked in a group — see the Avatar Group entry
+
+**When not to use**
+
+- It is a company or project logo — that is an image, not a person
+- It is clickable — wrap it in a Button or Link; an avatar takes no interaction
+- The name is unknown and the picture is decorative — use a plain image with `alt=""`
+
+**Accessibility**
+
+The host carries `role="img"` and the person's name as its accessible name, so the picture is announced as the person rather than as a filename or as nothing. The `<img>` inside is `alt=""` and the initials are `aria-hidden`, because one announcement of a person is better than two competing ones. An avatar with neither a name nor initials is `aria-hidden` instead of an empty `role="img"` — an unnamed image is an axe violation, and defaulting the label to a word like "avatar" would announce the designer's word instead of the person's name. `data-state` distinguishes `absent` from `error`, which render identical pixels and are two different bugs.
+
+**Example**
+
+```html
+<sk-avatar name="Ada Lovelace" size="md"></sk-avatar>
+```
+
+**Known limitations**
+
+- Initials take the first and last word only — name order, particles, and single-name cultures are locale questions, and §6 says locale is consumer-supplied
+- There is no `initials` prop: they are derived from `name`, so the two cannot disagree
+- `size` sets the diameter; the frame is square by ratio, so there is no separate width and height
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | `""` | The person's name. It is the accessible name of the image and the source of the initials — one field, so the two cannot disagree. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Diameter. An avatar is square by ratio, so `size` is one axis. |
+| `src` | `string` | `""` | Image source. Without it, the initials render. |
+
+## sk-avatar-group
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A stacked row of avatars, with the ones past `max` collapsed into a named count.
+
+**When to use**
+
+- A task, review, or thread shows several people in one row
+- The list is longer than the space, so the tail becomes a count
+- The group needs one accessible name, such as 'Assigned to'
+
+**When not to use**
+
+- There is one person — use an Avatar on its own
+- Each person is separately actionable — use Buttons or Links; a group is not a menu
+- You need each name announced individually — a group announces one sentence, not five stops
+
+**Accessibility**
+
+`role="group"` with the consumer's `label`, not a `list`: these are people, and a list would announce "list, 5 items" and walk the reader through each one when one sentence is more useful. The overflow is a `<span>` with `aria-label="N more"`, not a fourth avatar — '+3' is not a person and a circle would have no name. Avatars past `max` get `display: none`, which removes them from the accessibility tree, so the group announces exactly what it shows instead of reading five names over three visible ones. Without a `label` the group carries no role at all, because an unnamed `group` is skipped by most screen readers.
+
+**Example**
+
+```html
+<sk-avatar-group max="3" label="Assigned to"><sk-avatar name="Ada Lovelace"></sk-avatar></sk-avatar-group>
+```
+
+**Known limitations**
+
+- The avatars are slotted `sk-avatar` elements, not a data array — a `people` prop would put name and initials logic in two places
+- Overlap is a negative `margin-inline-start`, so it mirrors in RTL; nothing is absolutely positioned
+- The count is recomputed at render time, not observed — adding avatars later requires a re-render
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `""` | The accessible name for the group — "Assigned to", "Contributors". A bare `role="group"` with no label is skipped by most screen readers, so the label is what makes the group announce at all. |
+| `max` | `number` | `3` | How many avatars to show before collapsing the rest into a count. `0` means show all. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Diameter applied to every avatar in the group. |
+
 ## sk-badge
 
 - Stability: stable
@@ -288,6 +376,92 @@ Static text, so it exposes no role and no tab stop. Each variant sets a foregrou
 | `size` | `"sm" \| "md"` | `"md"` | Control height. |
 | `statusLabel` | `string` | `""` | Screen-reader text for the dot variant. Required when `dot` is set. |
 | `variant` | `"neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis. |
+
+## sk-banner
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+A page-level message that spans its container above the content it is about.
+
+**When to use**
+
+- A site-wide notice — maintenance, degraded service, an expiring trial
+- A message that belongs to the whole page rather than to one section
+- A persistent status the reader can act on from an actions slot
+
+**When not to use**
+
+- It belongs to one section and sits in the flow — use an Alert
+- It must interrupt after a user action — use an Alert or a Toast
+- It floats above the page and dismisses — use a Toast
+
+**Accessibility**
+
+Sets `role="region"`, not `role="banner"` — in ARIA `banner` is the site header and is one-per-page, so using it here would collide with the consumer's real `<header>`. A `region` is only exposed as a landmark when it has an accessible name, so `aria-label` or `aria-labelledby` is required for the banner to be reachable by landmark navigation; the React type enforces one of the two. An unnamed banner is left unnamed rather than given a made-up label. It is not a live region: a banner was already present when the page loaded, and announcing it as an interruption would talk over the content the reader came for. The glyph is decorative and hidden.
+
+**Example**
+
+```html
+<sk-banner variant="warning" heading="Scheduled maintenance" aria-label="Service status">Read-only on Saturday.</sk-banner>
+```
+
+**Known limitations**
+
+- No dismiss button, by design: dismissing needs a close affordance, focus into it, and a focus return — a different component
+- `fullWidth` is geometry, not material: it drops the offset shadow and side borders because a shadow makes a box read as floating above the page
+- `heading` is a string, not a heading element — the component does not know its level in the document outline
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `fullWidth` | `boolean` | `true` | Whether the banner spans its container as a full-width strip.  `false` keeps it in the flow as a block with the standard chrome, for a message about one section rather than the whole page. |
+| `heading` | `string` | `""` | Heading text. Named `heading`, not `title`, for the reason `sk-alert` records: `title` is a standardized `HTMLElement` member, so a prop by that name is shadowed by the prototype and the browser would surface it as a hover tooltip over the whole banner. |
+| `variant` | `"neutral" \| "primary" \| "success" \| "warning" \| "danger"` | `"neutral"` | Visual emphasis. |
+
+## sk-breadcrumb
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Shows where the current page sits in a hierarchy, oldest ancestor first.
+
+**When to use**
+
+- The page is more than two levels deep
+- The reader needs to move up one or more levels
+- The hierarchy, not the history, is what matters — this is not a back button
+
+**When not to use**
+
+- The page is flat or one level deep — a breadcrumb with one item says nothing
+- You want to go back to where the reader came from — use a Link or the browser's back
+- The trail is a stepped process — use a Stepper
+
+**Accessibility**
+
+`<nav aria-label="Breadcrumb">` wrapping an `<ol>`, so it is a landmark a screen reader can jump to and announces as a hierarchy rather than as unrelated links. The last item carries `aria-current="page"` and is not a link — a link to the page you are on is a no-op that reads as actionable. Separators are drawn with `::before` and carry no text, so nothing announces between the items.
+
+**Example**
+
+```html
+<sk-breadcrumb items='[{"label":"Home","href":"/"},{"label":"Projects","href":"/projects"},{"label":"Santaka"}]'></sk-breadcrumb>
+```
+
+**Known limitations**
+
+- An empty trail renders nothing at all rather than an empty landmark
+- `items` is JSON, not slotted children, because the component must know which entry is last
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `items` | `string \| Array<{ label: string` | `"[]"` | The trail, oldest first — the last entry is the current page.  A JSON array of `{ label, href? }`. `href` is optional precisely because the last item normally has none: the current page is not a link. |
+| `label` | `string` | `"Breadcrumb"` | Accessible name for the landmark. Defaults to "Breadcrumb". |
 
 ## sk-button
 
@@ -433,6 +607,57 @@ Renders a real native `<input type="checkbox">`, so the browser supplies constra
 | `value` | `string` | `"on"` | The submitted value when checked. `"on"` is the platform default, kept so a plain form reads exactly what a native checkbox would send. |
 | `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
 | `name` | `string` | — | The name of the element, used when submitting an HTML form. |
+
+## sk-combobox
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+- Events: `sk-value-change`
+
+A text field with a filterable list of options — type to narrow, arrows to choose.
+
+**When to use**
+
+- There are more options than fit in a Select — roughly more than fifteen
+- The reader may know part of the name and want to type it
+- Options have labels the reader searches by, not just values
+
+**When not to use**
+
+- There are fewer than about eight options — use a Radio Group or Select
+- Free text is a valid answer — use an Input
+- Multiple selections are needed — use a multi-select pattern instead
+
+**Accessibility**
+
+The ARIA 1.2 combobox pattern: the input carries `role="combobox"` with `aria-expanded` and `aria-controls` naming the listbox, and **focus never leaves the input** — the active option is reported through `aria-activedescendant` instead. Moving focus into the list is the common mistake: it blurs the field the reader is typing into and every screen reader announces it as leaving. Arrows wrap rather than dead-ending. Escape closes without clearing the typed text, because closing is not the same command as reverting. `sk-value-change` fires only for a committed selection — typing filters and is not a value change (§4).
+
+**Example**
+
+```html
+<sk-combobox label="Country" options='[{"value":"id","label":"Indonesia"}]'></sk-combobox>
+```
+
+**Known limitations**
+
+- Matching is a plain case-insensitive substring — the wrong collation for some locales, and §6 leaves locale to the consumer, who may pass pre-filtered options
+- No `aria-live` result count: it interrupts on every keystroke, and the listbox relationship already conveys the change
+- SSR consumers must pass an explicit id — the counter differs between server and client
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `description` | `string` | `""` | Persistent helper text. |
+| `disabled` | `boolean` | `false` | Disables the control. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `invalid` | `boolean` | `false` | Marks the field invalid independently of whether `error` is set. |
+| `label` | `string` | `""` | The accessible name, and the label rendered above the field. |
+| `name` | `string` | `""` | Native form semantics. |
+| `options` | `string \| Array<{ value: string` | `"[]"` | The options, as JSON: `[{ "value": "…", "label": "…" }]`. |
+| `placeholder` | `string` | `""` | Placeholder. Never a substitute for a label. |
+| `value` | `string` | `""` | The selected value. |
 
 ## dashboard
 
@@ -705,6 +930,54 @@ Renders the native `<dialog>` element: focus trapping, Escape, and inert backgro
 | `open` | `boolean` | `false` | Whether the dialog is showing. Reflects so page CSS can target it. |
 | `showModal` | `() => Promise<void>` | — | Imperative open/close for non-template consumers. The props stay the declarative path; these exist because some callers (a toast-style flow) want to open without re-rendering. |
 
+## sk-drawer
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+- Events: `sk-open-change`
+
+A panel that slides in from one edge, for navigation or a persistent side task.
+
+**When to use**
+
+- Navigation or filters live beside the content rather than over it
+- The panel stays open while the reader works — a non-modal side panel
+- The content is taller than it is wide, such as a menu or a filter list
+
+**When not to use**
+
+- It must interrupt and demand a decision — use a Dialog or Alert Dialog
+- The content is a short description of a control — use a Tooltip
+- The content is a small menu anchored to a button — use a Popover
+
+**Accessibility**
+
+Reuses the dialog mechanics in `shared/dialog-base.ts`, so the native `<dialog>` owns focus trapping, Escape, `::backdrop`, and inert background content — nothing is reimplemented. Focus returns to the trigger on close. `side` is logical: `start` and `end` mirror under `dir="rtl"` (ADR-016), and there is deliberately no physical `left`/`right` pair, because a fixed edge is exactly what puts a drawer on the wrong side of a right-to-left document.
+
+**Example**
+
+```html
+<sk-drawer side="end" label="Settings"><sk-button slot="trigger">Open</sk-button><h3 slot="title">Settings</h3></sk-drawer>
+```
+
+**Known limitations**
+
+- The panel needs an `[hidden][open]` rule: scoped mode writes `hidden` onto elements hosting a `<slot>`, which otherwise leaves an open drawer invisible
+- No physical side values — see the accessibility note
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `close` | `() => Promise<void>` | — | Closes the drawer. |
+| `dismissible` | `boolean` | `true` | Closes when the backdrop is clicked. |
+| `label` | `string` | `""` | Accessible name for the panel. The consumer's title slot supplies it best. |
+| `modal` | `boolean` | `true` | Modal is the default: the page behind is inert and focus is trapped. A non-modal drawer is for a persistent side panel the reader keeps open while working. |
+| `open` | `boolean` | `false` | Whether the drawer is showing. Reflects so page CSS can target it. |
+| `show` | `() => Promise<void>` | — | Opens the drawer. Equivalent to setting `open`. |
+| `side` | `"start" \| "end"` | `"end"` | Which edge it slides from.  Both values are logical and mirror under `dir="rtl"`, which is ADR-016's requirement. There is no physical pair — see the note at the top of the stylesheet for why. |
+
 ## sk-empty-state
 
 - Stability: stable
@@ -750,6 +1023,53 @@ Not focusable, with no role and no live region: an empty state is content, not a
 | `heading` | `string` | `""` | Plain text in a `<span>`, not a heading element. This component does not know what level it sits at in the document's outline, and a hard-coded heading inside it contradicts the surrounding structure. Decision shared with sk-card. |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | Density axis: block padding and glyph size. `md` is the default because an empty state usually fills the whole area left by the missing content. |
 | `variant` | `"default" \| "bare"` | `"default"` | Visual treatment.  `default` is the stroked, shadowed surface. `bare` drops the fill, the stroke and the shadow for an empty state nested inside another surface, where two competing boundaries would fight. |
+
+## sk-field
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Labels, describes, and marks a form control the consumer already owns.
+
+**When to use**
+
+- The control is a plain `<input>`, a third-party widget, or not one of ours
+- Several controls share one label and one error
+- You need label, description, and error wiring without a form-associated wrapper
+
+**When not to use**
+
+- The control is `sk-input`, `sk-textarea`, or `sk-select` — those render their own label, description, and error
+- You want a form-associated control — use Input; a Field is not form-associated and never submits
+- You need a layout wrapper with no labelling — use a plain container
+
+**Accessibility**
+
+Puts `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required` on the **control**, because that is the element a screen reader is on when it announces them, and sets nothing else — `value`, `name`, `disabled`, and validity stay the control's own. The description and error ids are appended together, not one replacing the other: an error that silences the hint removes the format instruction exactly when the user needs it. `invalid` and `error` are separate, so a field can be invalid before the consumer knows why. `required` renders an asterisk that is `aria-hidden` and a visually hidden word, so a reader hears 'required' rather than a symbol. The error carries a glyph as well as colour (WCAG 1.4.1).
+
+**Example**
+
+```html
+<sk-field label="Workspace name" description="Lowercase letters and dashes."><input type="text" /></sk-field>
+```
+
+**Known limitations**
+
+- The field is not form-associated: it never sets `name`, never calls `setFormValue`, and does not participate in submission
+- It adopts the first form control in its slot; a field wrapping several controls labels only the first
+- It draws no chrome of its own — a box around a control that already has one reads as two nested inputs
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `description` | `string` | `""` | Persistent helper text, announced through `aria-describedby`. |
+| `disabled` | `boolean` | `false` | Announces the field as disabled. Does not disable the control itself. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `invalid` | `boolean` | `false` | Marks the field invalid independently of whether `error` is set. |
+| `label` | `string` | `""` | Label text. Becomes the accessible name of the control inside. |
+| `required` | `boolean` | `false` | Marks the field required. Announced through `aria-required` on the control. |
 
 ## sk-icon-button
 
@@ -858,6 +1178,47 @@ Renders a real native `<input>`, so the browser supplies constraint validation, 
 | `variant` | `"default" \| "quiet"` | `"default"` | Visual emphasis. |
 | `name` | `string` | — | The name of the element, used when submitting an HTML form. |
 
+## sk-kbd
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Marks up a keyboard shortcut as a real `<kbd>` element, styled as hard-edged chrome.
+
+**When to use**
+
+- Documentation or a menu item names a key the reader should press
+- A shortcut appears inline with copy describing what it does
+- Several keys form one combination, such as Ctrl, Shift, and K
+
+**When not to use**
+
+- The keys are not actually pressable here — use Text; `<kbd>` promises input the reader can make
+- It is a button the user clicks with a keyboard shortcut beside it — the shortcut is a Kbd, the control is a Button
+- It is a code sample or a terminal command — that is a Code block, not input
+
+**Accessibility**
+
+Renders a real `<kbd>` in the light DOM rather than a styled `<span>`, so assistive technology can identify the text as key input instead of reading a bare word — the difference between 'Shift' the key and 'shift' the sentence. It takes no role and no tab stop: a shortcut is text, not a control. The monospace family is functional, not decorative — 'l', '1', and 'I' are the same glyph in most UI faces and a shortcut is copied by eye.
+
+**Example**
+
+```html
+<sk-kbd>Ctrl</sk-kbd> <sk-kbd>Shift</sk-kbd> <sk-kbd>K</sk-kbd>
+```
+
+**Known limitations**
+
+- There is no `variant` prop: this component has one look, and §4's two-prop rule applies to components with an axis to vary on
+- It renders the key combination as plain text; separating multiple keys with '+' is the consumer's choice, and the component adds no separator
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `size` | `"sm" \| "md"` | `"md"` | The type step the shortcut is set in. |
+
 ## sk-label
 
 - Stability: stable
@@ -947,6 +1308,98 @@ Native anchor role, so middle-click, open-in-new-tab, and copy-link work. `exter
 | `rel` | `string` | — | Forwarded to the underlying anchor. |
 | `subtle` | `boolean` | `false` | Suppresses the underline until hover or focus. |
 | `target` | `string` | — | Opens in a new tab without the external treatment. |
+
+## sk-pagination
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+- Events: `sk-page-change`
+
+Moves between pages of a list, with a window around the current page.
+
+**When to use**
+
+- A list is split into numbered pages
+- The reader needs to jump to a known page, not just the next one
+- The total number of pages is known
+
+**When not to use**
+
+- Items load as you scroll — use infinite scrolling instead
+- There are only two or three pages — Prev/Next alone is less to read
+- The pages are steps in a process — use a Stepper
+
+**Accessibility**
+
+`<nav>` with an accessible name, and page numbers are links because a page is a destination — a `<button>` would misdescribe navigation as an action. The current page carries `aria-current="page"` and is not a link. The ellipsis is empty and `aria-hidden`, so it is not announced as a stop and cannot take focus. Prev and Next carry visually hidden words, because "‹" alone announces as punctuation.
+
+**Example**
+
+```html
+<sk-pagination count={12} page={6}></sk-pagination>
+```
+
+**Known limitations**
+
+- The window is computed here; `siblings` controls how many pages sit either side
+- Without an `href` template the component handles the navigation and emits `sk-page-change`; with one, the links are real and the browser navigates
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `count` | `number` | `1` | Total number of pages. |
+| `href` | `string` | `""` | Builds the href for a page number. `$p` is replaced with the page. |
+| `label` | `string` | `"Pagination"` | Accessible name for the landmark. |
+| `page` | `number` | `1` | The current page, 1-based. |
+| `siblings` | `number` | `1` | How many page numbers to show between the ellipses. Small enough that the row never wraps on a 320px viewport. |
+
+## sk-popover
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+- Events: `sk-open-change`
+
+A floating panel that holds controls, anchored to a trigger.
+
+**When to use**
+
+- A button opens a small panel of controls, such as filters or a menu
+- The panel content is interactive — links, checkboxes, a form
+- The panel needs to close on Escape and on an outside click
+
+**When not to use**
+
+- The content is only a description of the trigger — use a Tooltip
+- It must interrupt and demand a decision — use a Dialog
+- The content is navigation beside the page — use a Drawer
+
+**Accessibility**
+
+`role="dialog"` on the panel, with `aria-haspopup="dialog"` and `aria-expanded` on the trigger — not `aria-describedby`, which would announce the whole panel as the trigger's description. Focus moves into the panel on open and returns to the trigger on close. Escape and an outside click both dismiss. Unlike a Tooltip, it takes pointer events, because it holds controls. `placement` is logical on the inline axis: `start` and `end` mirror under `dir="rtl"` (ADR-016).
+
+**Example**
+
+```html
+<sk-popover placement="bottom" label="Filters"><sk-button slot="trigger">Filters</sk-button><sk-checkbox label="Failed only"></sk-checkbox></sk-popover>
+```
+
+**Known limitations**
+
+- The panel is rendered by Stencil with real `<slot>` elements — the consumer's children are never relocated, which is what keeps a click on slotted content inside the panel
+- The flip at the viewport edge is computed for the block axis only; inline-axis placement does not flip
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `hide` | `() => Promise<void>` | — | Closes the popover and returns focus to the trigger. |
+| `label` | `string` | `""` | Accessible name for the panel, needed when there is no visible heading. |
+| `open` | `boolean` | `false` | Whether the popover is showing. Reflects so page CSS can target it. |
+| `placement` | `"top" \| "bottom" \| "start" \| "end"` | `"bottom"` | Preferred side. Flips at the viewport edge rather than clipping, so a `bottom` popover on a trigger near the bottom of the screen renders above. |
+| `show` | `() => Promise<void>` | — | Opens the popover. |
 
 ## sk-progress
 
@@ -1345,6 +1798,59 @@ A grey placeholder in the shape of content that is loading, so the page does not
 | `direction` | `"ltr" \| "rtl"` | `"ltr"` | The shimmer's direction. Reversed for a right-to-left reading context, set by the consumer because the component does not know its locale. |
 | `variant` | `"text" \| "rect" \| "circle"` | `"text"` | The shape being promised. `text` is a full-width line with the body line height, `circle` is a square bounding box with the full radius (a shape, not a style — same ruling as the Badge dot), `rect` is whatever box the consumer sizes. |
 
+## sk-slider
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+Picks one number from a range, on a track the reader drags or arrows across.
+
+**When to use**
+
+- The value is a number on a known range, such as volume or a budget ceiling
+- The exact number matters less than where it sits in the range
+- Steps are meaningful — volume in fives, budget in tens
+
+**When not to use**
+
+- The reader must type an exact figure — use an Input with type=number
+- There are fewer than five discrete choices — use a Radio Group
+- You need two ends of a range — use two sliders, or a dedicated range control
+
+**Accessibility**
+
+A real `<input type="range">`, so the platform owns the slider role, `aria-valuenow`, the arrow/Page/Home/End model, and the touch target — all of which a `<div role="slider">` reimplementation tends to lose. `aria-valuetext` takes a consumer-supplied `format` template ("$v of $m"), because §6 says locale is consumer-supplied. The label points at the control by id; the description and error ids are appended together rather than one replacing the other.
+
+**Example**
+
+```html
+<sk-slider name="volume" label="Volume" value="40" show-value format="$v of $m"></sk-slider>
+```
+
+**Known limitations**
+
+- The thumb's square shape is asserted on Chromium and Firefox; WebKit exposes neither thumb pseudo-element to getComputedStyle
+- SSR consumers must pass an explicit id — the counter differs between server and client
+- The visual fill on Chromium comes from the platform's own rendering, not a custom element
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `description` | `string` | `""` | Persistent helper text. |
+| `disabled` | `boolean` | `false` | Disables the control and withholds it from submission. |
+| `error` | `string` | `""` | The validation message. Its presence drives `aria-invalid`. |
+| `format` | `string` | `""` | A template for `aria-valuetext`, where `$v` is the value and `$m` is the maximum — "$v of $m". What a screen reader announces instead of a bare number. |
+| `invalid` | `boolean` | `false` | Marks the field invalid independently of whether `error` is set. |
+| `label` | `string` | `""` | The accessible name, and the label rendered above the control. |
+| `max` | `number` | `100` | Largest value. |
+| `min` | `number` | `0` | Smallest value. |
+| `name` | `string` | `""` | Native form semantics. The control is named by the host attribute. |
+| `showValue` | `boolean` | `false` | Renders the numeric output beside the label.  Off by default: a value the consumer is already displaying in their own UI should not be duplicated here, and a bare number with no unit is often worse than none. |
+| `step` | `number` | `1` | Granularity. `0` means any value the browser can represent. |
+| `value` | `number` | `50` | The current value. |
+
 ## sk-spinner
 
 - Stability: stable
@@ -1540,6 +2046,48 @@ The ARIA tabs pattern's hard rule is enforced: only the active tab is in the tab
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `active` | `number` | `0` | The active tab's index. Zero-based, over the tabs in DOM order. |
+
+## sk-taka
+
+- Stability: stable
+- Framework packages: react, vue, svelte, angular, web-components
+- Locales covered: en-US
+
+The project mascot, for onboarding, empty states, and easter eggs.
+
+**When to use**
+
+- An empty state would otherwise read as a failure
+- Onboarding or a first-run screen needs a face
+- A small easter egg, where §1.8's playfulness is welcome
+
+**When not to use**
+
+- It would be the only carrier of meaning — a mascot is decorative by rule
+- The screen is dense with real information — §1.8 reserves it, not every screen
+- You need a status marker or an icon — use a Badge for status, and slotted SVG for an icon; Taka is a character, not an icon set
+
+**Accessibility**
+
+Decorative always: `aria-hidden` on the host and `role="presentation"` on the `<svg>`, so a screen reader never announces it. The heading beside it does the talking. Artwork is drawn as SVG paths rather than imported, per §13's requirement that the mascot be original artwork. `mood` adds an idle animation that `prefers-reduced-motion` removes outright rather than shortening.
+
+**Example**
+
+```html
+<sk-taka mood="wave" size="lg"></sk-taka>
+```
+
+**Known limitations**
+
+- Purely decorative — it must never be the only signal
+- The `wave` and `bounce` moods animate and are cancelled under reduced motion
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `mood` | `"idle" \| "wave" \| "bounce"` | `"idle"` | What Taka is doing. `idle` is a still portrait; the other two add an idle animation that reduced motion removes entirely. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Rendered size, in the icon scale. |
 
 ## sk-text
 

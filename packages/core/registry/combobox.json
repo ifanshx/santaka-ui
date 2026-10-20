@@ -1,0 +1,140 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "combobox",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-combobox/sk-combobox.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-3cf55054175ae6d6e741484b73f27104b688391518f1ca79445a6b1dc8400beb"
+    },
+    {
+      "path": "src/components/sk-combobox/sk-combobox.css",
+      "type": "registry:style",
+      "checksum": "sha256-f07d2619d7e049e5cf88c26c1f9adf453999c5c9c1d6add4425dca24196cd8c9"
+    }
+  ],
+  "cssVariables": [
+    "--sk-border-thick",
+    "--sk-color-border-strong",
+    "--sk-color-danger-fg",
+    "--sk-color-primary",
+    "--sk-color-primary-fg",
+    "--sk-color-surface",
+    "--sk-color-surface-sunken",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-space-1",
+    "--sk-space-2",
+    "--sk-space-3",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight",
+    "--sk-z-popover"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables the control."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid independently of whether `error` is set."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The accessible name, and the label rendered above the field."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Native form semantics."
+    },
+    {
+      "name": "options",
+      "type": "string | Array<{ value: string",
+      "default": "\"[]\"",
+      "description": "The options, as JSON: `[{ \"value\": \"…\", \"label\": \"…\" }]`."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Placeholder. Never a substitute for a label."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The selected value."
+    }
+  ],
+  "events": [
+    "sk-value-change"
+  ],
+  "ai": {
+    "summary": "A text field with a filterable list of options — type to narrow, arrows to choose.",
+    "whenToUse": [
+      "There are more options than fit in a Select — roughly more than fifteen",
+      "The reader may know part of the name and want to type it",
+      "Options have labels the reader searches by, not just values"
+    ],
+    "whenNotToUse": [
+      "There are fewer than about eight options — use a Radio Group or Select",
+      "Free text is a valid answer — use an Input",
+      "Multiple selections are needed — use a multi-select pattern instead"
+    ],
+    "accessibility": "The ARIA 1.2 combobox pattern: the input carries `role=\"combobox\"` with `aria-expanded` and `aria-controls` naming the listbox, and **focus never leaves the input** — the active option is reported through `aria-activedescendant` instead. Moving focus into the list is the common mistake: it blurs the field the reader is typing into and every screen reader announces it as leaving. Arrows wrap rather than dead-ending. Escape closes without clearing the typed text, because closing is not the same command as reverting. `sk-value-change` fires only for a committed selection — typing filters and is not a value change (§4).",
+    "example": "<sk-combobox label=\"Country\" options='[{\"value\":\"id\",\"label\":\"Indonesia\"}]'></sk-combobox>",
+    "knownLimitations": [
+      "Matching is a plain case-insensitive substring — the wrong collation for some locales, and §6 leaves locale to the consumer, who may pass pre-filtered options",
+      "No `aria-live` result count: it interrupts on every keystroke, and the listbox relationship already conveys the change",
+      "SSR consumers must pass an explicit id — the counter differs between server and client"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

@@ -1,31 +1,32 @@
 # Implementation status
 
-Verified against `plan.md` on 2026-10-12. This is a status readout, not a plan:
+Verified against `plan.md` on 2026-10-20. This is a status readout, not a plan:
 `plan.md` is the plan, `docs/adr/` records the decisions, and this file records
 what exists today. Every claim below is checked against the repository.
 
 ## Summary
 
-Weeks 1–4 of the roadmap. The token layer and the universal Web Components
-package are real, tested, and green; the React package now covers all
-twenty-six shipped components and three starter blocks; the CLI, registry
-hosting, documentation site, and the Storybook workshop exist and are tested.
-**Section 10's deliverables are all present** — stories, controls, interaction
-tests, the a11y addon, and the framework decision (ADR-020). §17's starter-block
-gate is closed (ADR-022): `dashboard`, `settings`, and `authentication` ship as
-markup plus layout CSS, their `registryDependencies` are derived from the markup
-rather than authored, and `santaka add` resolves that closure — a field the
-registry had declared and no code had ever read.
+The token layer and the universal Web Components package are real, tested, and
+green. **38 components ship** in the registry, plus three starter blocks; the
+React and Vue adapters cover them, and Svelte carries typed declarations. The
+CLI, registry hosting, documentation site, Storybook workshop, and MCP server all
+exist and are tested. §17's starter-block gate is closed (ADR-022).
 
-`pnpm run verify` exits 0 from a cold cache. **1227 tests pass** — 48 token, 20
-utilities, 187 core, 220 React, 122 Vue, 9 Svelte, 28 MCP server, 45 CLI, 181
-Storybook interaction tests, 341 Chromium Playwright in the universal package, 7
-in each of the React and Vue examples, and 12 in the Svelte example. (The
-Playwright figure is the `chromium-baseline` project, which is what runs locally;
-CI's `browsers` job runs the same 341 on Firefox and WebKit (682 passed on the
-last local cross-engine run). The Svelte example's 12 are Chromium-only by
-design — the framework path, not a browser-support claim.)
+Tier 1 is complete, and so is the v1.0 Tier 2 scope from §7: Dialog, Alert
+Dialog, Toast, Tooltip, Select, Tabs, Checkbox, Switch, Radio Group, plus the
+surfaces and, in this pass, Slider, Breadcrumb, Pagination, Drawer, Popover, and
+Combobox.
+
+`pnpm run verify` exits 0 from a cold cache. (Test counts below are the last full
+three-engine run.)
+
+**1,308 browser tests pass** across Chromium, Firefox, and WebKit, on top of the
+unit and adapter suites. That figure is the full three-engine run, not the
+single-project count this file used to quote; CI's `browsers` job runs the same
+suite on all three engines on every push.
+
 All ten publishable packages pass `publint` and `attw --pack`.
+
 
 ## Done
 
@@ -42,10 +43,11 @@ All ten publishable packages pass `publint` and `attw --pack`.
 
 ### Components
 
-Twenty-six universal custom elements — Tier 1 complete; **Tier 2 v1.0 scope
-complete**: Dialog, Alert Dialog, Toast, Tooltip, Select, Tabs, Checkbox,
-Switch, Radio Group, plus the surfaces and the compound pair added last, each
-with browser tests against real Chromium:
+Thirty-eight registered components — Tier 1 complete and **Tier 2 v1.0 scope
+complete**: Dialog, Alert Dialog, Toast, Tooltip, Select, Tabs, Checkbox, Switch,
+Radio Group, plus the surfaces, the compound pair, and the six added in this pass
+(Slider, Breadcrumb, Pagination, Drawer, Popover, Combobox) — each with browser
+tests against real Chromium:
 
 | Component | Notable coverage |
 |---|---|
@@ -75,8 +77,15 @@ with browser tests against real Chromium:
 | `sk-progress` | `aria-valuenow` omitted when indeterminate rather than sent as `0`, size scales the track only, the sweep stops under reduced motion with the state still visible |
 | `sk-accordion` | real <details>/<summary> pair, Enter/Space activation, the marker swap is a drawn stroke rather than a class, `multiple` governs sibling exclusion, `sk-open-change` bubbles with `detail.open` and reports changes only — WebKit's extra `toggle` for the sibling a group closes is not reported |
 | `sk-table` | the consumer's table semantics survive untouched, the scroll region is the keyboard stop and carries the group name, `striped` and `compact`, `plain` leaves the stroke unpainted without changing its width |
+| `sk-slider` | a real `<input type=range>`, so the platform owns the slider role, `aria-valuenow`, and the arrow/Page/Home/End model; `aria-valuetext` takes a consumer-supplied `format` |
+| `sk-breadcrumb` | `<nav aria-label="Breadcrumb">` over an `<ol>`, `aria-current="page"` on the last item and no link on it, separators drawn with `::before` so nothing announces between items |
+| `sk-pagination` | page numbers are links because a page is a destination, the current one is `aria-current` and not a link, the ellipsis is empty and hidden, Prev/Next carry visually hidden words |
+| `sk-drawer` | reuses `shared/dialog-base.ts` so the native `<dialog>` owns focus trapping and Escape; `side` is logical and mirrors under `dir="rtl"` with no physical pair |
+| `sk-popover` | `role="dialog"` with `aria-haspopup`/`aria-expanded` on the trigger and no `aria-describedby`; focus moves in on open and returns on close; Escape and outside click both dismiss |
+| `sk-combobox` | ARIA 1.2 pattern: focus never leaves the input and the active option is reported through `aria-activedescendant`; arrows wrap, Escape closes without clearing |
 
-**341 Playwright tests** plus the barrel-export contract tests. Chrome carries
+**436 Playwright tests per engine** (1,308 across the three) plus the barrel-export
+contract tests. Chrome carries
 the brutalist treatment — 3px stroke,
 `border-radius: 0`, zero-blur offset shadow — with the press measured in a
 browser: hover lifts to `-2px -2px` with a `7px 7px` shadow, press moves to
@@ -164,8 +173,8 @@ failure ADR-005's R2 names.
 
 ### Storybook
 
-§10's workshop now exists: `apps/storybook`, `@storybook/react-vite`, twenty-six
-story files covering all twenty-six shipped components — **181 stories** with the
+§10's workshop now exists: `apps/storybook`, `@storybook/react-vite`, thirty-eight
+story files — one per registered component — with **237 stories** covering the
 documented variants (default, sizes, disabled, loading, error/invalid, long
 content), a light/dark theme toolbar, and the a11y addon. The framework choice
 and, more importantly, **what it cannot host** are recorded in ADR-020 rather
@@ -636,7 +645,7 @@ The three rules that shape it:
 A CI job runs both suites on Linux, macOS, and Windows, per §8.
 
 **Registry dependencies are resolved, and that is new.** `registryDependencies`
-was declared in the schema, in the types, and in all twenty-six entries, and no
+was declared in the schema, in the types, and in all thirty-eight entries, and no
 code read it: `add` copied one entry's own files and stopped. A block is the
 first item where that is a broken install rather than an inert field, so `add`
 now walks the closure depth-first, deduplicates by name, refuses a cycle with the
@@ -711,9 +720,9 @@ The decisions are recorded in ADR-015.
 
 All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB with the rationale recorded in measure-bundle.mjs: twelve components where 12 KB covered eight, and the per-component CSS average *fell* from 2.45 to 2.11 KB.
 - ~~**No Storybook.**~~ **Done** — `apps/storybook`, `@storybook/react-vite`,
-  ADR-020. Twenty-six story files, 181 stories, fourteen `play` functions that run as
-  real Chromium tests through `@storybook/addon-vitest`, and the a11y addon. The
-  framework decision names what it cannot host (Vue, Svelte, Angular adapters)
+  ADR-020. Thirty-eight story files, 237 stories, twenty-two `play` functions that
+  run as real Chromium tests through `@storybook/addon-vitest`, and the a11y addon.
+  The framework decision names what it cannot host (Vue, Svelte, Angular adapters)
   instead of pretending one setup covers them. The `visual` bullet above is
   satisfied by ADR-019's example-page baselines, not by a second story-level set.
 
@@ -742,7 +751,7 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   (`scripts/visual-baseline-docker.mjs`), not by whoever ran
   `--update-snapshots` last.
 - ~~**No `axe-core`.**~~ **Done** — ADR-008 written; axe scans the example page
-  in light, dark, and invalid-submit states on every run (WCAG 2.0/2.1 A+AA,
+  in light, dark, and invalid-submit states on every run (WCAG 2.0/2.1/2.2 A+AA,
   nothing disabled). The first run found four real defect classes, all fixed
   (separator ARIA, tablist role, nested-interactive tab, three dark-contrast
   token misuses), and added `--sk-color-primary-text` (gates 25 → 27).

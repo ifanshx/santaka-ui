@@ -1,0 +1,112 @@
+{
+  "$schema": "https://santaka.dev/schema/registry-item-v1.json",
+  "schemaVersion": 1,
+  "name": "field",
+  "namespace": null,
+  "type": "component",
+  "frameworks": [
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "web-components"
+  ],
+  "stability": "stable",
+  "behaviorOwner": "web-components",
+  "version": "0.1.0",
+  "dependencies": {},
+  "peerDependencies": {},
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/sk-field/sk-field.tsx",
+      "type": "registry:component",
+      "checksum": "sha256-7d8260e0c57d73b83c24fd0f95e4adff84be7aad299b231b522611c4da2a756c"
+    },
+    {
+      "path": "src/components/sk-field/sk-field.css",
+      "type": "registry:style",
+      "checksum": "sha256-dd81cc9b4743997aeb71e11881541f1d30a8acba2f0f4e157c7eaa06532b8ecf"
+    }
+  ],
+  "cssVariables": [
+    "--sk-color-danger-fg",
+    "--sk-color-text",
+    "--sk-color-text-muted",
+    "--sk-font-sans",
+    "--sk-space-1",
+    "--sk-text-sm-line-height",
+    "--sk-text-sm-size",
+    "--sk-text-sm-tracking",
+    "--sk-text-sm-weight",
+    "--sk-text-xs-line-height",
+    "--sk-text-xs-size",
+    "--sk-text-xs-weight"
+  ],
+  "localesCovered": [
+    "en-US"
+  ],
+  "license": "MIT",
+  "props": [
+    {
+      "name": "description",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Persistent helper text, announced through `aria-describedby`."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Announces the field as disabled. Does not disable the control itself."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "\"\"",
+      "description": "The validation message. Its presence drives `aria-invalid`."
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field invalid independently of whether `error` is set."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "\"\"",
+      "description": "Label text. Becomes the accessible name of the control inside."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "Marks the field required. Announced through `aria-required` on the control."
+    }
+  ],
+  "events": [],
+  "ai": {
+    "summary": "Labels, describes, and marks a form control the consumer already owns.",
+    "whenToUse": [
+      "The control is a plain `<input>`, a third-party widget, or not one of ours",
+      "Several controls share one label and one error",
+      "You need label, description, and error wiring without a form-associated wrapper"
+    ],
+    "whenNotToUse": [
+      "The control is `sk-input`, `sk-textarea`, or `sk-select` — those render their own label, description, and error",
+      "You want a form-associated control — use Input; a Field is not form-associated and never submits",
+      "You need a layout wrapper with no labelling — use a plain container"
+    ],
+    "accessibility": "Puts `aria-labelledby`, `aria-describedby`, `aria-invalid`, and `aria-required` on the **control**, because that is the element a screen reader is on when it announces them, and sets nothing else — `value`, `name`, `disabled`, and validity stay the control's own. The description and error ids are appended together, not one replacing the other: an error that silences the hint removes the format instruction exactly when the user needs it. `invalid` and `error` are separate, so a field can be invalid before the consumer knows why. `required` renders an asterisk that is `aria-hidden` and a visually hidden word, so a reader hears 'required' rather than a symbol. The error carries a glyph as well as colour (WCAG 1.4.1).",
+    "example": "<sk-field label=\"Workspace name\" description=\"Lowercase letters and dashes.\"><input type=\"text\" /></sk-field>",
+    "knownLimitations": [
+      "The field is not form-associated: it never sets `name`, never calls `setFormValue`, and does not participate in submission",
+      "It adopts the first form control in its slot; a field wrapping several controls labels only the first",
+      "It draws no chrome of its own — a box around a control that already has one reads as two nested inputs"
+    ],
+    "localesCovered": [
+      "en-US"
+    ]
+  }
+}

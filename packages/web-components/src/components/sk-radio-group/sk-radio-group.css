@@ -106,8 +106,12 @@ sk-radio-group .sk-radio-group__control:disabled {
   box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
 }
 
-sk-radio-group .sk-radio-group__option:has(.sk-radio-group__control:disabled) {
-  cursor: not-allowed;
+/* `:has()` is Baseline-tier only (§4); a Core browser must skip this rule
+   rather than fail to parse past it. */
+@supports selector(:has(*)) {
+  sk-radio-group .sk-radio-group__option:has(.sk-radio-group__control:disabled) {
+    cursor: not-allowed;
+  }
 }
 
 sk-radio-group[data-invalid] {
