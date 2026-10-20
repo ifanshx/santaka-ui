@@ -350,10 +350,12 @@ stable across re-renders.
 ### Vue package
 
 `@santaka-ui/vue` is a Vue 3 adapter over the same custom elements, exporting
-the same names in the same order as the React adapter — 26 components plus
-`ThemeScript` / `useTheme`. **122 tests** cover prop mapping, the class merge, the
-exposed ref, form `name` wiring, and the no-slot boundary. Behavior stays owned
-and proven in `@santaka-ui/web-components`.
+the same names in the same order as the React adapter — 38 components plus
+`ThemeScript` / `useTheme`. **163 tests** cover prop mapping, the class merge, the
+exposed ref, form `name` wiring, the no-slot boundary, and a parity test that
+derives the wrapper set from the universal package's own component directories,
+so a component that ships without a Vue adapter fails CI rather than the docs.
+Behavior stays owned and proven in `@santaka-ui/web-components`.
 
 Two defects the tests found are recorded in the changeset. Six field adapters
 declared a `default` slot the element does not have — React takes no `children`
@@ -654,7 +656,7 @@ puts the whole closure through the existing conflict, `--skip`/`--overwrite`,
 journal, and manifest rules as one plan. A dependency-free install is unchanged —
 checked by diffing an `add button accordion` run against the previous binary.
 
-`list` reports counts by type (`26 components, 3 blocks`), derived from the
+`list` reports counts by type (`38 components, 3 blocks`), derived from the
 entries, so an entry with an unexpected type is still counted rather than dropped.
 
 ### Starter blocks

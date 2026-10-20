@@ -6,6 +6,12 @@ loader/
 coverage/
 .turbo/
 *.tsbuildinfo
+apps/storybook/.tmp-sb.log
+# The generated validator: produced by scripts/build-validator.mjs before tsc
+# runs, and regenerated on every clean install. Committing it would let `tsc`
+# succeed against code that drifted from the schema it claims to validate.
+packages/core/src/registry-item-validator.js
+packages/core/src/registry-item-validator.d.ts
 
 # Playwright
 playwright-report/
