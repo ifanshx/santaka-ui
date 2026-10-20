@@ -20,7 +20,7 @@
  * Ajv stays a devDependency: it runs here, at build time, and never ships.
  */
 import { createRequire } from "node:module"
-import { writeFileSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import * as esbuild from "esbuild"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -84,6 +84,11 @@ if (!/\bexport\s*[{]/.test(code) && !/export (const|default) /.test(code)) {
 }
 
 writeFileSync(srcFile, code)
+// `dist/` may not exist yet: this script runs *before* `tsc`, since `tsc`
+// compiles `src/validate-item.ts`, which imports the file written here. A warm
+// checkout has `dist/` from an earlier build, which is why the missing
+// directory only ever surfaced on a cold CI runner.
+mkdirSync(dirname(outFile), { recursive: true })
 writeFileSync(outFile, code)
 
 // TypeScript resolves `./registry-item-validator.js` to a sibling `.d.ts`, and
