@@ -57,11 +57,30 @@ const BUILD_BEFORE_TEST = [
     dir: "apps/docs",
     why: "tests/site.test.mjs asserts against the built `dist/` pages and registry payload",
   },
+  {
+    dir: "packages/core",
+    why:
+      "`pretest` and `pretypecheck` compile the validator from `dist/`; the tests also " +
+      "assert `react`'s and `styles`' published output, which runs the other way and so " +
+      "is named explicitly",
+  },
+  {
+    dir: "packages/svelte",
+    why: "the theme suite imports through the package graph to `web-components`' build output",
+  },
+  {
+    dir: "apps/storybook",
+    why: "the interaction suites render stories through `@santaka-ui/react`, which is build output",
+  },
 ]
 
 describe("turbo task graph", () => {
-  it("root test depends on dependencies' builds", () => {
-    assert.deepEqual(rootConfig.tasks.test.dependsOn, ["^build"])
+  it("root test depends on builds", () => {
+    // `^build` is the dependencies' builds; `build` is the package's own. The
+    // second was added for the same class of bug the scoped overrides below
+    // cover: three of `core`'s scripts read or regenerate its own `dist/`, which
+    // passes on a warm checkout for months and fails on a cold runner.
+    assert.deepEqual(rootConfig.tasks.test.dependsOn, ["^build", "build"])
   })
 
   for (const { dir, why } of BUILD_BEFORE_TEST) {
