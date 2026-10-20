@@ -32,7 +32,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "node scripts/emit-schema.mjs && node scripts/build-validator.mjs && tsc -p tsconfig.build.json && node scripts/generate-registry.mjs && node scripts/build-registry-index.mjs && node scripts/build-registry-payload.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-schema.mjs && node scripts/build-validator.mjs && node scripts/generate-registry.mjs && node scripts/build-registry-index.mjs && node scripts/build-registry-payload.mjs",
     "clean": "rimraf dist schema",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

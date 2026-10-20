@@ -22,16 +22,25 @@
       // turbo too would double the storage for no benefit.
       "outputs": ["dist/**", "www/**", "loader/**", ".stencil/**", ".next/**", "!.next/cache/**"]
     },
+    // `build` alongside `^build` on the tasks below, not just on `test`: three of
+    // `core`'s scripts (`pretest`, `pretypecheck`, and the build itself) read or
+    // regenerate files under its own `dist/`. Depending on *upstream* builds alone
+    // leaves a clean checkout running them against output that does not exist yet.
+    // It passes locally for months because `dist/` is already there from an
+    // earlier build, and fails on a CI runner the first time the cache is cold —
+    // which is exactly how a green local `verify` shipped a red CI run.
+
     "typecheck": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "outputs": []
     },
     "lint": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^build"],
+      // See the note above `typecheck` for why `build` is listed here too.
+      "dependsOn": ["^build", "build"],
       "outputs": ["coverage/**", "playwright-report/**", "test-results/**"]
     },
     "test:e2e": {

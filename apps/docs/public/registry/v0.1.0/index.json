@@ -143,7 +143,7 @@
         {
           "path": "src/components/sk-alert-dialog/sk-alert-dialog.tsx",
           "type": "registry:component",
-          "checksum": "sha256-3f2756779ef607f8b551d89158677c118794173f7f952863d8fea94db0ffc98c"
+          "checksum": "sha256-56d9ca8ecec7140b59f5cb366924140ba50b8c63ed0fd657537e8776f92d8db6"
         },
         {
           "path": "src/components/sk-alert-dialog/sk-alert-dialog.css",
@@ -1523,7 +1523,7 @@
         {
           "path": "src/components/sk-dialog/sk-dialog.tsx",
           "type": "registry:component",
-          "checksum": "sha256-b118f34213f589144441e5f9cf442a460b6916c8ba91329e7df99e69e3aa0fd2"
+          "checksum": "sha256-3b4d93e5fddcff13a903d88371c85cc9d42ae79cea891088cb13bc53f55fe554"
         },
         {
           "path": "src/components/sk-dialog/sk-dialog.css",

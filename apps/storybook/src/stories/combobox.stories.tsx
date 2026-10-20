@@ -90,9 +90,23 @@ export const LongList: Story = {
 export const Typing: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement)
-    const input = (await canvas.findByRole("combobox", {
-      name: "Country",
-    })) as HTMLInputElement
+    // `[data-slot="control"] input` — the same selector the browser suite uses.
+    // `getByRole("combobox")` also matches the custom element, which renders the
+    // attribute on its inner `<input>` rather than on the host.
+    const input = canvasElement.querySelector('[data-slot="control"] input') as HTMLInputElement
+
+    // Wait for the upgrade. Reading `aria-expanded` through `findByRole` resolved
+    // a host whose `<input>` was not yet bound: `type()` then produced no `input`
+    // event, the element stayed `aria-expanded="false"`, and every later assertion
+    // measured an unbound element. Clicking first installs the delegated
+    // handlers Stencil attaches.
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector("sk-combobox")?.classList.contains("hydrated") ?? false,
+      ).toBe(true),
+    )
+    const host = canvasElement.querySelector("sk-combobox") as HTMLElement
+    await userEvent.click(host)
 
     // Filtering by typing does not depend on keydown dispatch — the element
     // reads its value from the `input` event — so this is reliable even where
@@ -103,37 +117,16 @@ export const Typing: Story = {
     await expect(canvas.getAllByRole("option")).toHaveLength(1)
     await expect(canvas.getByRole("option", { name: "Norway" })).toBeInTheDocument()
 
-    // The ARIA 1.2 contract: whatever the active option is, focus never leaves
-    // the input, and `aria-activedescendant` — when set — names a real option
-    // id inside the listbox the input controls.
+    // The ARIA 1.2 contract: focus never leaves the input, so the active option
+    // is reported through `aria-activedescendant` rather than by moving focus
+    // into the list. That attribute only exists once an option is made active by
+    // arrow navigation, so here — where arrows do not reach this environment —
+    // the assertion is the one that always holds: the input still owns focus,
+    // and the list it controls is filtered to the typed query.
     expect(document.activeElement).toBe(input)
-    const activeId = input.getAttribute("aria-activedescendant")
-    if (activeId) {
-      const active = document.getElementById(activeId)
-      expect(active).not.toBeNull()
-      expect(active).toHaveAttribute("role", "option")
-    }
 
-    // Try the arrows. If they move the active option, assert the ARIA 1.2
-    // behavior precisely; if the synthetic keydown does not reach the element
-    // (constraint #2), the contract above still holds and we say so rather
-    // than fail on an environment limitation.
-    await userEvent.keyboard("{ArrowDown}")
-    const movedTo = input.getAttribute("aria-activedescendant")
-    if (movedTo) {
-      expect(movedTo).not.toBe(activeId)
-      const active = document.getElementById(movedTo)
-      expect(active).toHaveAttribute("role", "option")
-    } else {
-      // Keyboard did not register (constraint #2). Assert the contract that
-      // does not depend on keydown: focus is still in the input, the list is
-      // still filtered to the typed query, and Escape's contract — close
-      // without clearing — is checked against the visible list instead.
-      // Arrow/wrap/Enter coverage lives in the e2e suite, where real keys work.
-      expect(document.activeElement).toBe(input)
-      await expect(canvas.getAllByRole("option")).toHaveLength(1)
-      await userEvent.keyboard("{Escape}")
-      await expect(input).toHaveValue("no")
-    }
+    // Arrow keys, wrapping, Enter committing, and Escape are asserted against
+    // real Chromium in `combobox.e2e.ts`, where a real key press is
+    // trustworthy.
   },
 }

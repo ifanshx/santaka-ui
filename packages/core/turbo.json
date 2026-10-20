@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      // `core`'s own tests assert the *published* surface of other packages, not
+      // only its own source: `src/exports-contract.test.ts` reads
+      // `packages/react/package.json` and then checks that the file its `./jsx`
+      // export names really exists on disk. That file is `react`'s build output.
+      // Another asserts every stylesheet `styles` exports actually builds.
+      //
+      // Nothing declared either dependency, because neither runs in the usual
+      // direction — those packages depend on `core`, not the other way round, so
+      // `^build` (the dependencies' builds) never reaches them. On a warm `dist/`
+      // the tests pass for months; on a cold CI runner they fail with their own
+      // messages, which name the missing file correctly.
+      //
+      // Both builds are named explicitly. It is not a cycle: these tests read
+      // those packages' output, and their builds read `core`'s source — never
+      // its test results.
+      "dependsOn": ["^build", "build", "@santaka-ui/react#build", "@santaka-ui/styles#build"]
+    }
+  }
+}

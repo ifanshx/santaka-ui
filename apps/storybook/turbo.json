@@ -1,0 +1,16 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      // The interaction suites are tests of build output, not of source: they
+      // render stories through `@santaka-ui/react`, and the react wrapper's
+      // `custom-elements.d.ts` and the elements themselves are what a consumer
+      // installs. The root `test` task depends only on `^build` — the
+      // *dependencies'* builds — which says nothing about this app's own, so it
+      // passes on a warm `dist/` and fails on a cold runner. Same shape as the
+      // note in `packages/web-components/turbo.json`, and the same failure mode.
+      "dependsOn": ["^build", "build"]
+    }
+  }
+}

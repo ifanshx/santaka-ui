@@ -1,0 +1,16 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      // The Svelte package ships no component wrappers — Svelte 5's compiler
+      // already assigns properties and attributes for custom elements — so its
+      // only test is the theme store. That test still imports through the package
+      // graph to `web-components`, whose `dist/` and `loader/` are build output.
+      // The root `test` task depends only on `^build`, so a cold runner can start
+      // this suite before the elements exist. Same shape as the notes in
+      // `packages/web-components/turbo.json` and `packages/core/turbo.json`.
+      "dependsOn": ["^build", "build"]
+    }
+  }
+}
