@@ -28,7 +28,10 @@ jobs:
   verify:
     name: lint, typecheck, test, build, budgets, packages
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 20 minutes was not enough once the run compiled everything from cold and
+    # then ran 437 browser tests on top of the unit suites. A job that times out
+    # reports nothing about what passed, so the budget has to cover the work.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -78,7 +81,10 @@ jobs:
   browsers:
     name: browser matrix (${{ matrix.project }})
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # 437 tests per engine, and the suite grew by ~100 tests per engine when the
+    # six newest components landed. 25 minutes no longer covers one engine on a
+    # runner, and a cancelled matrix tells you nothing about the other two.
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
