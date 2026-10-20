@@ -402,9 +402,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm --filter @santaka-ui/core build
-      - run: pnpm --filter @santaka-ui/web-components build
-      - run: pnpm --filter @santaka-ui/cli build
+      # `turbo run build --filter=…cli...`, not three hand-listed
+      # `pnpm --filter` builds: the list has to name every transitive build
+      # dependency by hand, and it stopped being complete the moment
+      # `web-components` began importing `@santaka-ui/utilities`. The graph is
+      # what knows the order, so the graph is what runs here.
+      - run: pnpm exec turbo run build --filter=@santaka-ui/cli...
 
       # The unit tests cover the pieces; the e2e run drives the built binary in a
       # real subprocess against a real temporary project, which is the only way to
@@ -434,6 +437,13 @@ jobs:
       # Every package must be built before it is packed, because the tarballs are
       # what the fixture installs.
       - run: pnpm run build
+
+      # One of the thirteen checks loads the elements in a real browser to prove
+      # they *upgrade* from the tarball. `pnpm install` fetches the Playwright
+      # package but not the browser binary, so the launch fails here: the `verify`
+      # job installs the browser, and this job runs the same check without one.
+      - name: Install Playwright browser
+        run: pnpm --filter @santaka-ui/web-components exec playwright install --with-deps chromium
 
       # `plan.md` section 17: "Public TypeScript types and package exports validate in clean
       # consumer projects ... Nothing has yet installed the package into a scratch
@@ -502,10 +512,12 @@ jobs:
       - name: Security classifier tests
         run: pnpm run test:security
 
-      # Severity alone is what makes a security report useless, so the scan
-      # classifies advisories by reach: a critical in an example application and
-      # the same advisory in a published package are different obligations. The
-      # reach is read from the audit's own dependency paths, so a transitive
-      # dependency under a published package counts as shipping and blocks too.
+      # The scan reads `pnpm audit`'s own dependency paths, and a workspace
+      # package's reach is derived from its published manifest and built output —
+      # so a cold checkout with no `dist/` classifies `ajv` as unowned and the
+      # reach test fails before a single advisory is examined. Build first.
+      - name: Build (the reach test reads published output)
+        run: pnpm exec turbo run build --filter=@santaka-ui/core
+
       - name: Security scan
         run: pnpm run audit:security
