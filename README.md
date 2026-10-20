@@ -26,7 +26,12 @@ quick start.
 
 ## Requirements
 
-Node.js **22.11.0+** and pnpm **10**. Corepack installs the right pnpm:
+Node.js **22.12.0+** and pnpm **10**. Corepack installs the right pnpm:
+
+The floor is 22.12, not 22.11: Astro refuses to build on 22.11 and names the
+version it wants. CI pinned 22.11 everywhere, so it passed on a newer local
+Node and failed on the runner — the pin is the requirement, so the requirement
+is what gets pinned.
 
 ```bash
 corepack enable
