@@ -215,7 +215,7 @@ Writing them found things a rendering-only story cannot:
 One §10 bullet is satisfied structurally rather than by a new artifact: **visual
 regression for key stories**. ADR-019 photographs the vanilla example page —
 every component in its documented states, in light/ltr, light/rtl, and dark/ltr,
-72 baselines owned by the pinned Playwright image — and deliberately keeps that
+105 baselines owned by the pinned Playwright image — and deliberately keeps that
 out of `verify`. Story screenshots would add a second baseline set owned by
 whoever ran `--update-snapshots` last, which is the failure ADR-019 exists to
 prevent.
@@ -746,7 +746,7 @@ All twelve Tier 1 components exist. The runtime budget was raised 12 → 13 KB w
   existed but nothing ran it, so nothing defended it against regression.
 - ~~**No visual regression in RTL.**~~ **Done** — ADR-019; a dedicated `visual`
   Playwright project photographs every example-page section in light/ltr,
-  light/rtl, and dark/ltr (72 baselines), so §17's per-component RTL case is a
+  light/rtl, and dark/ltr (105 baselines), so §17's per-component RTL case is a
   property of the spec rather than a per-file promise. It is deliberately not a
   CI gate: a screenshot diff needs a reviewer, not a red build, and the
   baselines are owned by the pinned Playwright image

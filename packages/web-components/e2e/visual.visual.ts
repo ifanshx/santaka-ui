@@ -33,6 +33,8 @@ const SECTIONS = [
   ["textarea", "textarea"],
   ["card", "card"],
   ["select", "select"],
+  ["combobox", "combobox"],
+  ["popover", "popover"],
   ["tooltip", "tooltip"],
   ["toast", "toast"],
   ["tabs", "tabs"],
@@ -91,6 +93,31 @@ async function prepare(page: Page, dir: "ltr" | "rtl", theme: "light" | "dark") 
   )
   expect(colorScheme, `the ${theme} token stylesheet must be loaded`).toBe(theme)
 }
+
+test("the section list covers every section the example page renders", async ({ page }) => {
+  // The list above is hand-maintained, and it drifted: `combobox` and `popover`
+  // were rendered in the example page and photographed by no test, so the two
+  // newest interactive components had zero visual-regression coverage and
+  // nothing said so. Read the page instead of trusting the list.
+  await prepare(page, "ltr", "light")
+
+  const onPage = await page.evaluate(() =>
+    [...document.querySelectorAll("section[aria-labelledby]")].map((el) =>
+      (el.getAttribute("aria-labelledby") ?? "").replace(/-heading$/, ""),
+    ),
+  )
+  const inSpec = SECTIONS.map(([id]) => id)
+
+  expect(onPage.length, "the example page must render sections to compare").toBeGreaterThan(0)
+  expect(
+    inSpec.filter((id) => !onPage.includes(id)),
+    "listed but not on the page",
+  ).toEqual([])
+  expect(
+    onPage.filter((id) => !inSpec.includes(id)),
+    "on the page but never photographed",
+  ).toEqual([])
+})
 
 test.describe("visual regression — light theme", () => {
   test.beforeEach(async ({ page }) => {

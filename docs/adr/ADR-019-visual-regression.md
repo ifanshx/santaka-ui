@@ -63,10 +63,17 @@ pinned Docker image.**
 
 Every section of the vanilla example page — which mounts every component in
 its documented states — in three passes: **light/ltr, light/rtl, dark/ltr**.
-That is 24 sections × 3 = 72 baselines, and it satisfies §17's per-component
+That is 35 sections × 3 = 105 baselines, and it satisfies §17's per-component
 RTL requirement in the cheapest honest way: the same component photographed in
 both directions, rather than a hand-written RTL assertion per file that could
 silently stop covering a component.
+
+The count is enforced rather than counted by hand. `SECTIONS` in the spec was
+maintained manually and drifted: `combobox` and `popover` rendered in the example
+page and were photographed by no test, so two of the six newest components had
+zero visual-regression coverage with nothing saying so. A guard test now reads
+every `section[aria-labelledby]` off the page and fails when the two lists
+disagree in either direction.
 
 The example page is photographed rather than purpose-built fixtures because it
 is the artifact a human actually reviews: a diff here is a picture someone can
