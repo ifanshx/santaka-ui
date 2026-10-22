@@ -46,7 +46,11 @@ test("a single-word name still yields one initial", async ({ page }) => {
 
 test("an image that loads is announced by the host, not by the img", async ({ page }) => {
   const avatar = page.locator("#avatar-image")
-  await expect(avatar).toHaveAttribute("data-state", "loaded")
+  // The image load is a network fetch, and `data-state` starts at `loading`.
+  // Reading it once asserted the frame before the load finished — which is why
+  // this failed on Firefox and passed on Chromium, where the fetch resolved
+  // first. Polling waits for the state the test is actually about.
+  await expect(avatar).toHaveAttribute("data-state", "loaded", { timeout: 10_000 })
   await expect(avatar).toHaveAttribute("aria-label", "Grace Hopper")
 
   // `alt=""` on the inner image: the name lives on the host, and a second
@@ -61,11 +65,13 @@ test("a broken image falls back to initials and says so", async ({ page }) => {
   // `data-state` exists. A screenshot diff cannot tell a missing `src` from a
   // 404, and a reviewer looking at the page cannot either.
   const broken = page.locator("#avatar-broken")
-  await expect(broken).toHaveAttribute("data-state", "error")
+  // Same race as the loaded case above: `error` arrives when the fetch fails,
+  // which on a slower engine is later than a one-shot read allows.
+  await expect(broken).toHaveAttribute("data-state", "error", { timeout: 10_000 })
   await expect(broken.locator('[data-slot="initials"]')).toHaveText("AT")
 
   const absent = page.locator("#avatar-initials")
-  await expect(absent).toHaveAttribute("data-state", "absent")
+  await expect(absent).toHaveAttribute("data-state", "absent", { timeout: 10_000 })
 
   // Same pixels, different causes: both show initials, and the states differ.
   expect(await broken.getAttribute("data-state")).not.toBe(await absent.getAttribute("data-state"))
