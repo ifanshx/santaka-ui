@@ -15,6 +15,11 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Manual runs. Push events over SSH do not always reach GitHub's webhook for
+  # this repository — three consecutive pushes landed with no run created — so
+  # a dispatch trigger is the way to start a run without waiting on a webhook
+  # that may not fire. It also lets a maintainer re-run the suite on demand.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
