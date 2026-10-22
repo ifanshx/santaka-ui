@@ -114,7 +114,11 @@ export const Typing: Story = {
     await userEvent.type(input, "no")
     await waitFor(() => expect(input).toHaveAttribute("aria-expanded", "true"))
     await expect(canvas.getByRole("listbox", { name: "Country" })).toBeVisible()
-    await expect(canvas.getAllByRole("option")).toHaveLength(1)
+    // The list opens with all six options before the filter lands, so a one-shot
+    // count measures the unfiltered frame — measured on the hosted runner, where
+    // scheduling is slower than locally. The count and the surviving option are
+    // both polled until the filter has actually applied.
+    await waitFor(() => expect(canvas.getAllByRole("option")).toHaveLength(1))
     await expect(canvas.getByRole("option", { name: "Norway" })).toBeInTheDocument()
 
     // The ARIA 1.2 contract: focus never leaves the input, so the active option
