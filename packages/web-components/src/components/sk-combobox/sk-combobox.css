@@ -75,6 +75,15 @@ sk-combobox .sk-combobox__listbox[hidden] {
 sk-combobox .sk-combobox__option {
   padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
   cursor: pointer;
+  /* The active row moves under `aria-activedescendant` on every arrow press, so
+     the highlight travelling is what tells a reader the selection moved — a hard
+     cut reads as a different row appearing rather than the marker following the
+     key. Short and without overshoot: this is a marker, not a control. */
+  transition:
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 /*
@@ -133,5 +142,14 @@ sk-combobox .sk-combobox__error-icon {
 
   sk-combobox .sk-combobox__error-icon {
     background-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The active row still moves under `aria-activedescendant`; it just arrives
+     instead of travelling. Removing the transition never removes the state —
+     the highlight is the signal, the travel was the flourish. */
+  sk-combobox .sk-combobox__option {
+    transition: none;
   }
 }

@@ -47,6 +47,19 @@ sk-pagination .sk-pagination__step {
   font-weight: var(--sk-text-sm-weight, 600);
   text-decoration: none;
   cursor: pointer;
+  /* The same arcade press language as Button: hover lifts the box and grows the
+     offset shadow, so the page numbers feel pressable rather than printed. The
+     curve overshoots deliberately — that spring is the house style, not a
+     decoration added here. */
+  transition:
+    translate var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 sk-pagination .sk-pagination__page:hover,
@@ -119,5 +132,14 @@ sk-pagination .sk-pagination__ellipsis::before {
 
   sk-pagination .sk-pagination__step[aria-disabled="true"] {
     color: GrayText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The hover lift and the shadow growth are the flourish; the colour change
+     that says "clickable" stays, so the control is still legible without it. */
+  sk-pagination .sk-pagination__page,
+  sk-pagination .sk-pagination__step {
+    transition: none;
   }
 }

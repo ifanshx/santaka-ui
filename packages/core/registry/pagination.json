@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-pagination/sk-pagination.css",
       "type": "registry:style",
-      "checksum": "sha256-0492b9c63ebd98101d8db26410454077e32e892fa18fd922c8a1c551f0a1d279"
+      "checksum": "sha256-c064c4f574ca7824324a9164c717a378a294e52fca4ab362ced5c73e7bb94e53"
     }
   ],
   "cssVariables": [

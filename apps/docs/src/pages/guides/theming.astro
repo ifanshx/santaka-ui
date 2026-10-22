@@ -149,6 +149,43 @@ themes/dark.tokens.json   the same roles, dark values</code></pre>
   </section>
 
   <section>
+    <h2>Motion</h2>
+    <p>
+      Duration and easing are tokens, split by layer rather than shared. A
+      control settles quickly; an overlay floats. Both curves are the house
+      style, so a consumer overriding one of them is changing the feel of the
+      whole system in one place:
+    </p>
+    <pre><code>--sk-duration-instant       0ms
+--sk-duration-control-fast  90ms     hover, colour
+--sk-duration-control       140ms    press, lift
+--sk-duration-control-slow  180ms
+--sk-duration-overlay       280ms    dialog, drawer, popover
+--sk-duration-overlay-slow  420ms
+
+--sk-ease-arcade        cubic-bezier(0.34, 1.56, 0.64, 1)   overshoots
+--sk-ease-arcade-exit   cubic-bezier(0.4, 0, 0.6, 1)
+--sk-ease-glass         cubic-bezier(0.32, 0.72, 0, 1)      settles long
+--sk-ease-glass-exit    cubic-bezier(0.4, 0, 1, 1)</code></pre>
+    <p>
+      <code>arcade</code> is for anything you press: the curve overshoots so
+      the control visibly springs back, which is what makes the brutalist
+      shadow read as physical. <code>glass</code> is for anything that appears
+      over the page: it starts fast and settles long, so a panel arrives without
+      feeling thrown.
+    </p>
+    <p>
+      Two rules are enforced by <code>conventions.e2e.ts</code> rather than left
+      to review. Every <code>transition</code> and <code>animation</code> must
+      take its duration and curve from a token — a literal is allowed only as the
+      fallback inside <code>var(--token, literal)</code> — and any stylesheet
+      that animates must carry a <code>prefers-reduced-motion</code> block.
+      Both were written after an audit found twenty-five stylesheets with motion
+      and no contract for it: <code>combobox</code>, <code>tabs</code>, and
+      <code>pagination</code> all changed state on interaction and all three
+      snapped, while nothing distinguished that from a component that is static
+      by design.
+    </p>
     <h2>What components already handle</h2>
     <p>
       A theme change does not have to re-earn accessibility behaviors the
@@ -156,21 +193,17 @@ themes/dark.tokens.json   the same roles, dark values</code></pre>
     </p>
     <ul>
       <li>
-        <strong>Reduced motion:</strong> 13 component stylesheets under
-        <code>packages/web-components/src/components/*/&lt;component&gt;.css</code>
-        (<code>sk-accordion</code>, <code>sk-button</code>,
-        <code>sk-checkbox</code>, <code>sk-icon-button</code>,
-        <code>sk-input</code>, <code>sk-link</code>, <code>sk-progress</code>,
-        <code>sk-radio-group</code>, <code>sk-select</code>,
-        <code>sk-skeleton</code>, <code>sk-spinner</code>,
-        <code>sk-switch</code>, <code>sk-textarea</code>) carry
-        <code>@media (prefers-reduced-motion: reduce)</code> blocks. They remove
-        the movement — <code>translate: none</code>, <code>animation: none</code>,
-        <code>transition: none</code> — rather than shortening it, because a 1ms
-        slide is still a slide.
+        <strong>Reduced motion:</strong> all 25 stylesheets that animate carry a
+        <code>@media (prefers-reduced-motion: reduce)</code> block, and a
+        conformance test fails the build when one animates without it. They
+        remove the movement — <code>translate: none</code>,
+        <code>animation: none</code>, <code>transition: none</code> — rather
+        than shortening it, because a 1ms slide is still a slide. The state
+        change always survives: a spinner stops spinning, it does not stop
+        being busy.
       </li>
       <li>
-        <strong>Forced colors:</strong> 22 component stylesheets carry
+        <strong>Forced colors:</strong> 35 component stylesheets carry
         <code>@media (forced-colors: active)</code> overrides
         (<code>sk-separator</code> is the one exception it documents itself: a
         Canvas-colored hairline is already the forced palette's intent). The

@@ -45,6 +45,16 @@ sk-tab.sk-tab__button {
   /* The active tab's border must reach down to swallow the tablist rule; a
      margin would break the connection. */
   margin-block-end: -3px;
+  /* Colour and border settle rather than snap, so switching tabs reads as one
+     position marker moving instead of two separate repaints. No transform: a
+     tab is a position marker, not a pressable control, so it must not lift. */
+  transition:
+    color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    border-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1)),
+    background-color var(--sk-duration-control-fast, 90ms)
+      var(--sk-ease-arcade-exit, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 sk-tab.sk-tab__button:hover {
@@ -80,5 +90,13 @@ sk-tab-panel[data-slot="panel"] {
   sk-tab.sk-tab__button[data-state="active"] {
     border-color: CanvasText;
     background-color: Canvas;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The active tab's border and fill land at once. Switching tabs is a state
+     change, not an animation, so nothing is lost when the settle is removed. */
+  sk-tab.sk-tab__button {
+    transition: none;
   }
 }

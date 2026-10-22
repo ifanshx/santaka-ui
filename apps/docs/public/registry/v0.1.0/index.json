@@ -1318,7 +1318,7 @@
         {
           "path": "src/components/sk-combobox/sk-combobox.css",
           "type": "registry:style",
-          "checksum": "sha256-f07d2619d7e049e5cf88c26c1f9adf453999c5c9c1d6add4425dca24196cd8c9"
+          "checksum": "sha256-2a4e3948713370e4440d3cf056c08b00de0905b67a8a2eb9e319d4f6b75c2005"
         }
       ],
       "cssVariables": [
@@ -2606,7 +2606,7 @@
         {
           "path": "src/components/sk-pagination/sk-pagination.css",
           "type": "registry:style",
-          "checksum": "sha256-0492b9c63ebd98101d8db26410454077e32e892fa18fd922c8a1c551f0a1d279"
+          "checksum": "sha256-c064c4f574ca7824324a9164c717a378a294e52fca4ab362ced5c73e7bb94e53"
         }
       ],
       "cssVariables": [
@@ -4027,7 +4027,7 @@
         {
           "path": "src/components/sk-tabs/sk-tabs.css",
           "type": "registry:style",
-          "checksum": "sha256-407b3baa0eca3bca37e83976dd0fa4450428e2c7bf71476496efda9148c3fb45"
+          "checksum": "sha256-b43fd0b42f4dfe609b8245d7fd5964debda5a28f3d861252af19a6a5fbb7cf74"
         },
         {
           "path": "src/components/sk-tabs/sk-tab.tsx",

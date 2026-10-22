@@ -381,6 +381,56 @@ test.describe("API conventions (static)", () => {
       }
     }
   })
+
+  test("motion comes from the token layer, and anything that animates respects reduced motion", () => {
+    // Two rules, both §6's: durations and easing are tokens (`--sk-duration-*`,
+    // `--sk-ease-*`) so a theme can retune them in one place, and anything that
+    // moves must be removable for a reader who asked for that.
+    //
+    // Written because the system had motion but no contract for it: twenty-one
+    // of thirty-eight stylesheets used the tokens, seventeen did not, and
+    // nothing distinguished "this component is static by design" from "someone
+    // forgot". `combobox`, `tabs`, and `pagination` were the second kind — all
+    // three change state on interaction and all three snapped.
+    const LITERAL_TIME = /(?:transition|animation)[^;]*?\b\d+(?:\.\d+)?m?s\b/
+    const LITERAL_CURVE = /(?:transition|animation)[^;]*?cubic-bezier\(/
+
+    for (const tag of COMPONENTS) {
+      const cssPath = resolve(componentsDir, tag, `${tag}.css`)
+      let css: string
+      try {
+        css = readFileSync(cssPath, "utf8")
+      } catch {
+        continue
+      }
+      const code = css.replace(/\/\*[\s\S]*?\*\//g, "")
+      const animates = /transition\s*:|animation\s*:/.test(code)
+
+      if (!animates) continue
+
+      // A literal is allowed only as the fallback inside `var(--token, literal)`,
+      // which is what makes the stylesheet work when tokens fail to load.
+      const declaration = code.match(/transition\s*:[^;]+;|animation\s*:[^;]+;/g) ?? []
+      for (const rule of declaration) {
+        const withoutFallbacks = rule.replace(/var\([^)]*\)/g, "")
+        expect(
+          withoutFallbacks.match(LITERAL_TIME),
+          `${tag}.css hard-codes a duration outside a token fallback: ${JSON.stringify(
+            withoutFallbacks.trim().slice(0, 80),
+          )}`,
+        ).toBeNull()
+        expect(
+          withoutFallbacks.match(LITERAL_CURVE),
+          `${tag}.css hard-codes an easing curve outside a token fallback`,
+        ).toBeNull()
+      }
+
+      expect(
+        /prefers-reduced-motion/.test(code),
+        `${tag}.css animates but has no prefers-reduced-motion rule; §6 requires the motion be removable`,
+      ).toBe(true)
+    }
+  })
 })
 
 test.describe("API conventions (runtime)", () => {
