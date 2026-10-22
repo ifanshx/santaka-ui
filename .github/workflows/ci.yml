@@ -107,6 +107,15 @@ jobs:
 
       - run: pnpm --filter @santaka-ui/web-components exec playwright install --with-deps ${{ matrix.project == 'chromium-baseline' && 'chromium' || matrix.project == 'firefox-baseline' && 'firefox' || 'webkit' }}
 
+      # The example page loads `/packages/web-components/dist/...` by relative URL
+      # — the real build output, deliberately (ADR-011) — so the suite is a test
+      # of what ships. On a warm checkout `dist/` already exists and the suite
+      # passes; on a fresh one it 404s, `main.js`'s eager import registers
+      # nothing, and every test fails with the same symptom: elements that never
+      # upgrade. That is what the first two public runs died of — 0 of 437
+      # passing — while `verify` stayed green, because verify builds first.
+      - run: pnpm exec turbo run build --filter=@santaka-ui/web-components
+
       - run: pnpm --filter @santaka-ui/web-components exec playwright test --project ${{ matrix.project }}
         env:
           # This job runs one Playwright task alone, so the shared worker cap of
