@@ -81,10 +81,14 @@ jobs:
   browsers:
     name: browser matrix (${{ matrix.project }})
     runs-on: ubuntu-latest
-    # 437 tests per engine, and the suite grew by ~100 tests per engine when the
-    # six newest components landed. 25 minutes no longer covers one engine on a
-    # runner, and a cancelled matrix tells you nothing about the other two.
-    timeout-minutes: 45
+    # 437 tests per engine. The budget is a function of workers, and workers are
+    # a function of the runner: 4 workers on the hosted runner swapped the
+    # browser for a thrash victim — 777 queue entries (437 tests + retries) in
+    # 45 minutes, nearly every click timing out at the 30s test timeout, which
+    # is what the first public run's cancellation was. 3 workers with a 75-minute
+    # budget gives the suite the room its local 2-worker run (13 minutes) says
+    # it actually needs, without fighting the machine.
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
@@ -107,8 +111,11 @@ jobs:
         env:
           # This job runs one Playwright task alone, so the shared worker cap of
           # two — which exists because turbo runs several browser-bearing tasks
-          # at once — only makes one engine take longer than the job's budget.
-          PLAYWRIGHT_WORKERS: 4
+          # at once — is raised here. Four was measured too many: on the hosted
+          # runner it thrashed (30s click timeouts across the board) where the
+          # local machine runs the same suite in 13 minutes on two. Three is the
+          # measured middle on a 4-vCPU runner.
+          PLAYWRIGHT_WORKERS: 3
 
   react-example:
     name: React example submits through a plain form
