@@ -22,7 +22,18 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # `event_name` is part of the group so a manual dispatch can never cancel a
+  # push run for the same commit. Without it, both land in `workflow-ref`, the
+  # newer kills the older, and every killed job leaves a `cancelled` check run
+  # attached to that commit — which GitHub reports as "Some checks were not
+  # successful" even when the surviving run passed. That is exactly what
+  # happened on 544f0c2: 76 check runs on one commit, 13 of them cancelled by a
+  # dispatch I fired while the push run was still going.
+  #
+  # Cancelling still applies within one event type, which is the case that
+  # matters: a newer push supersedes an older push, and those two are on
+  # different commits anyway.
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 env:
