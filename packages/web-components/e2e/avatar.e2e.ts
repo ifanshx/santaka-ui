@@ -46,10 +46,12 @@ test("a single-word name still yields one initial", async ({ page }) => {
 
 test("an image that loads is announced by the host, not by the img", async ({ page }) => {
   const avatar = page.locator("#avatar-image")
-  // The image load is a network fetch, and `data-state` starts at `loading`.
-  // Reading it once asserted the frame before the load finished — which is why
-  // this failed on Firefox and passed on Chromium, where the fetch resolved
-  // first. Polling waits for the state the test is actually about.
+  // The image is `loading="lazy"` — a deliberate choice, so an avatar below the
+  // fold costs nothing until it is near it. The consequence for this test is
+  // that the load does not start until the element is scrolled into view, so a
+  // poll alone never turns `loading` into `loaded` on an engine that keeps it
+  // off-screen. Scroll first, then wait.
+  await avatar.scrollIntoViewIfNeeded()
   await expect(avatar).toHaveAttribute("data-state", "loaded", { timeout: 10_000 })
   await expect(avatar).toHaveAttribute("aria-label", "Grace Hopper")
 
@@ -65,8 +67,10 @@ test("a broken image falls back to initials and says so", async ({ page }) => {
   // `data-state` exists. A screenshot diff cannot tell a missing `src` from a
   // 404, and a reviewer looking at the page cannot either.
   const broken = page.locator("#avatar-broken")
-  // Same race as the loaded case above: `error` arrives when the fetch fails,
-  // which on a slower engine is later than a one-shot read allows.
+  // `loading="lazy"` again: the request that produces `error` is not made until
+  // the element is near the viewport, so scrolling is what starts the state
+  // machine rather than an optimisation here.
+  await broken.scrollIntoViewIfNeeded()
   await expect(broken).toHaveAttribute("data-state", "error", { timeout: 10_000 })
   await expect(broken.locator('[data-slot="initials"]')).toHaveText("AT")
 
