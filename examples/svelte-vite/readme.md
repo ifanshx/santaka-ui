@@ -5,10 +5,10 @@ A server-rendered Svelte 5 app consuming `@santaka-ui/svelte` and
 
 ## What this exists to prove
 
-`plan.md` §3 gives the Svelte row one gate: **"Props/events, SSR and hydration
+`docs/ARCHITECTURE.md` §3 gives the Svelte row one gate: **"Props/events, SSR and hydration
 tests."** The framework support matrix recorded the row as `Planned` with the note
 that a *claimed* integration needs a package, an example, and the SSR/hydration
-proof. This directory is the third of those; §17's *"every form control submits
+proof. This directory is the third of those; §16's *"every form control submits
 through a plain `<form>`"* is the second claim it carries, because a framework
 path that renders but cannot submit is not an integration.
 

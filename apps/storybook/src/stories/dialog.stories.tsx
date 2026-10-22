@@ -75,7 +75,7 @@ export const TriggerDriven: Story = {
     </Dialog>
   ),
   /**
-   * Interaction test (plan.md §10): clicking the trigger opens the dialog, and
+   * Interaction test (docs/ARCHITECTURE.md §10): clicking the trigger opens the dialog, and
    * the panel is a real modal `<dialog>` in the document. This covers the
    * open path the component owns; the focus trap and dismissal rules are
    * proven in the browser suite (`packages/web-components/e2e/dialog.e2e.ts`).

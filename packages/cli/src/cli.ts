@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * The `santaka` bin (plan.md §8).
+ * The `santaka` bin (docs/ARCHITECTURE.md §8).
  *
  * Argument parsing is `cac` and colour is `kleur`, per §5's toolchain table.
  * The command implementations return their output as lines rather than printing,

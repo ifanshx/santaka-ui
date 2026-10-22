@@ -35,7 +35,7 @@ const THEMES = ["light", "dark"]
 
 /**
  * Contrast pairs the build refuses to ship without. Targets are the WCAG
- * levels; section 6 of plan.md records the measured values in the token
+ * levels; section 6 of docs/ARCHITECTURE.md records the measured values in the token
  * descriptions themselves.
  */
 const CONTRAST_GATES = [

@@ -54,7 +54,7 @@ export const Uncontrolled: Story = {
     </Tabs>
   ),
   /**
-   * Interaction test (plan.md §10): selecting a tab moves `aria-selected` and
+   * Interaction test (docs/ARCHITECTURE.md §10): selecting a tab moves `aria-selected` and
    * the visible panel. The widget owns its state here (no `active` prop), so
    * this proves the internal switch rather than a controlled write.
    */

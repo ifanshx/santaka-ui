@@ -1,5 +1,5 @@
 /**
- * Filesystem safety (plan.md §8 and §9's registry safety rules).
+ * Filesystem safety (docs/ARCHITECTURE.md §8 and §9's registry safety rules).
  *
  * Two rules govern everything here, and both exist because the alternative is a
  * CLI that can destroy a consumer's work:

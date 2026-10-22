@@ -1,9 +1,9 @@
 # ADR-026: The web-components runtime budget rises 21 → 23 → 26 → 28 KB
 
-- **Status:** Accepted (amends `plan.md` §12's runtime budget; follows ADR-010's
+- **Status:** Accepted (amends `docs/ARCHITECTURE.md` §12's runtime budget; follows ADR-010's
   headroom rule and ADR-023's precedent)
 - **Date:** 2026-10-19, amended 2026-10-20
-- **Plan reference:** `plan.md` §12 "Performance budgets"
+- **Plan reference:** `docs/ARCHITECTURE.md` §12 "Performance budgets"
 
 ## Context
 

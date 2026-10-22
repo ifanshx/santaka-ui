@@ -1,5 +1,5 @@
 /**
- * The install manifest and the conflict rule (plan.md §8, "Source-mode upgrades
+ * The install manifest and the conflict rule (docs/ARCHITECTURE.md §8, "Source-mode upgrades
  * and conflicts"; the decision is recorded in ADR-009).
  *
  * Source mode copies files into a consumer's repo, so the CLI has to remember

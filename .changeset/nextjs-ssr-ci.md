@@ -9,7 +9,7 @@ their public attributes, no server chunk calls `customElements.define`, and the
 tree hydrates clean with scoped styles already applied — but no CI job ran it.
 A proof nothing runs is a claim nothing defends, so the Next.js target was
 Preview in practice however it was written down. The `nextjs-example` job runs
-it on every change; `plan.md` §3 now carries a State column and says why each
+it on every change; `docs/ARCHITECTURE.md` §3 now carries a State column and says why each
 target is Stable, Preview, or Planned.
 
 Three defects surfaced while wiring it, all of the same class: something worked

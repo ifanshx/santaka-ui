@@ -77,7 +77,7 @@ export const CustomMax: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): the honest aria state — `aria-valuenow`
+ * Interaction test (docs/ARCHITECTURE.md §10): the honest aria state — `aria-valuenow`
  * present when determinate, absent here — is what the story cannot show
  * statically, because the paint looks plausible either way.
  */

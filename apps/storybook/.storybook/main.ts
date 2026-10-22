@@ -1,7 +1,7 @@
 import type { StorybookConfig } from "@storybook/react-vite"
 
 /**
- * Storybook configuration (plan.md section 10).
+ * Storybook configuration (docs/ARCHITECTURE.md section 10).
  *
  * The framework is `@storybook/react-vite`, and that is a decision, not a
  * default: it is recorded in ADR-020. The React adapter is the reference

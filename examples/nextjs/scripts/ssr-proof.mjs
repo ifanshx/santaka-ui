@@ -1,5 +1,5 @@
 /**
- * The Next.js SSR proof (ADR-005, plan.md risk R2).
+ * The Next.js SSR proof (ADR-005, docs/ARCHITECTURE.md risk R2).
  *
  * Builds the Next.js app, serves it, and asserts the three claims that make
  * the support matrix honest:

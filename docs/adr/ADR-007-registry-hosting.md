@@ -2,13 +2,13 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-15
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §9 requires "Public and private registries with explicit trust
+`docs/ARCHITECTURE.md` §9 requires "Public and private registries with explicit trust
 boundaries", and §8 gives the CLI a `registry add <registry-url>` command. The
-open question §18 asks this record to settle is whether a registry is **static
+open question §17 asks this record to settle is whether a registry is **static
 versioned JSON** or a **live endpoint** — a service that answers queries, accepts
 submissions, and resolves versions at request time.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * End-to-end CLI tests (plan.md §12 test layer 9: "CLI end-to-end tests:
+ * End-to-end CLI tests (docs/ARCHITECTURE.md §12 test layer 9: "CLI end-to-end tests:
  * initial setup, adding components, conflicts, private registry config, dry run,
  * and recovery").
  *

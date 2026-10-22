@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Consumer fixture (plan.md §17: "Public TypeScript types and package exports
+ * Consumer fixture (docs/ARCHITECTURE.md §16: "Public TypeScript types and package exports
  * validate in clean consumer projects ... Nothing has yet installed the package
  * into a scratch project and imported it, which is what this gate actually
  * asks for").
@@ -488,7 +488,7 @@ check("the universal packages typecheck without @types/node", () => {
       target: "ES2022",
       lib: ["ES2023", "DOM", "DOM.Iterable"],
       module: "NodeNext",
-      // The gate §17 actually names: `node16`-family resolution. It is the mode
+      // The gate §16 actually names: `node16`-family resolution. It is the mode
       // where Stencil's directory-specifier re-exports failed to resolve, which
       // is why `attw` is release-blocking.
       moduleResolution: "NodeNext",

@@ -1,6 +1,6 @@
 ---
 /**
- * Accessibility (ADR-008, plan.md §17).
+ * Accessibility (ADR-008, docs/ARCHITECTURE.md §16).
  *
  * What is automated here is what the e2e suite measures, not what the library
  * intends. The manual gate at the end stays open on purpose.
@@ -123,7 +123,7 @@ import Layout from "../../layouts/Layout.astro"
       covers what a rule can check — semantic names, contrast, ARIA wiring, landmark
       structure — and cannot check keyboard flow or screen-reader output. It is a
       regression net across the whole example page on every commit; the per-component
-      browser tests remain the keyboard-and-behavior evidence. plan.md §17 marks
+      browser tests remain the keyboard-and-behavior evidence. docs/ARCHITECTURE.md §16 marks
       "Keyboard navigation and focus management have been manually reviewed" as unchecked
       — that gate needs a human, and this guide does not claim it. The per-component
       browser tests remain the keyboard-and-behavior evidence: dialogs trap and
@@ -135,7 +135,7 @@ import Layout from "../../layouts/Layout.astro"
       and screen-reader review</a>. It states what the automated suite already covers,
       so a reviewer does not re-verify it, and lists the 33 checks that need a person —
       focus order, focus visibility, announcement, direction, and motion. It also
-      carries the sign-off table. Until someone fills that table in, §17 stays
+      carries the sign-off table. Until someone fills that table in, §16 stays
       unticked, which is the honest state: a checklist is not the review.
     </p>
   </section>

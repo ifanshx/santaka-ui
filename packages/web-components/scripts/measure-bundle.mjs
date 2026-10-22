@@ -1,5 +1,5 @@
 /**
- * Bundle budget measurement (section 12 of plan.md, Performance budgets).
+ * Bundle budget measurement (section 12 of docs/ARCHITECTURE.md, Performance budgets).
  *
  * The budgets are release gates: CI fails when one is exceeded. This script
  * bundles a fixture that imports the public entrypoint the way an application

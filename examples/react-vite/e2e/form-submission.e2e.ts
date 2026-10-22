@@ -4,7 +4,7 @@ import type { Page } from "@playwright/test"
 /**
  * The React adapter submits through a plain `<form>`.
  *
- * This is the browser half of plan.md section 17's gate — "Every form control
+ * This is the browser half of docs/ARCHITECTURE.md section 16's gate — "Every form control
  * submits through a plain `<form>` in React, Vue, and the universal package" —
  * and it is the half that did not exist. The React adapter's unit tests run
  * under jsdom, which has no form submission and no form-associated custom

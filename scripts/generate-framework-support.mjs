@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Framework support matrix (plan.md §3 and §17, "The public framework/browser
+ * Framework support matrix (docs/ARCHITECTURE.md §3 and §16, "The public framework/browser
  * support matrix reflects tested evidence").
  *
  * The browser half of that gate is `docs/browser-support.md`, derived from the
@@ -57,7 +57,7 @@ export const NON_FRAMEWORK_PACKAGES = ["cli", "core", "mcp", "styles", "tokens",
 export const NON_FRAMEWORK_APPS = ["docs", "storybook"]
 
 /**
- * The matrix, in the order `plan.md` §3 lists it. Values are the states, not
+ * The matrix, in the order `docs/ARCHITECTURE.md` §3 lists it. Values are the states, not
  * goals: a row is Stable only while the artifacts it names exist and a CI job
  * runs its gate.
  *
@@ -334,7 +334,7 @@ export function renderDocument(rows) {
   lines.push("")
   lines.push(
     ...wrap(
-      "Three states (plan.md §3), and the difference between them is what is defended " +
+      "Three states (docs/ARCHITECTURE.md §3), and the difference between them is what is defended " +
         "automatically, not how much code exists. **Stable** means the release gate runs in " +
         "CI on every change. **Preview** means an example exists and works but the gate is " +
         "not enforced automatically, so the claim is not defended against regression. " +

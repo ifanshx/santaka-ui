@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** with the first component of each family (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §4's implementation ownership rule exists to stop one failure mode:
+`docs/ARCHITECTURE.md` §4's implementation ownership rule exists to stop one failure mode:
 paying the full Definition of Done twice for the same interaction model. If the
 React package and the universal package each implement their own focus trap, they
 drift, and every bug is fixed twice or fixed once and left broken on the other
@@ -15,7 +15,7 @@ every interactive component" — and the mitigation is an ownership rule.
 
 This record is required before the first component of each family ships, and it
 was cited from `sk-switch`'s and `sk-checkbox`'s decisions (ADR-013 amendments)
-before it existed. It is the earliest-deadline ADR still missing.
+before it existed. It was the last of the foundation ADRs to be written.
 
 ## Decision
 

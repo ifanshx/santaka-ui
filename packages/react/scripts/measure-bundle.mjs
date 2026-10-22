@@ -1,5 +1,5 @@
 /**
- * Bundle budget for `@santaka-ui/react` (plan.md §12: runtime overhead ≤ 15 KB).
+ * Bundle budget for `@santaka-ui/react` (docs/ARCHITECTURE.md §12: runtime overhead ≤ 15 KB).
  *
  * This row was the last one in the budget table with no measurement. It is not
  * a formality: the React package is a thin wrapper, and the failure mode a

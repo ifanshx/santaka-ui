@@ -2,7 +2,7 @@
   "name": "@santaka-ui/storybook",
   "version": "0.1.0",
   "private": true,
-  "description": "Storybook workshop for the Santaka UI component set (plan.md section 10).",
+  "description": "Storybook workshop for the Santaka UI component set (docs/ARCHITECTURE.md section 10).",
   "type": "module",
   "scripts": {
     "dev": "storybook dev --port 6006",

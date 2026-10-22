@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §4 fixes the npm scope as `@santaka-ui/<name>` and §14 makes **MIT** the
+`docs/ARCHITECTURE.md` §4 fixes the npm scope as `@santaka-ui/<name>` and §14 makes **MIT** the
 license, with a note that switching later is a breaking change for adopters. §13
 lists legal preconditions — trademark search, npm scope availability, domain,
 mascot originality — that must be resolved *before* any public commitment, because

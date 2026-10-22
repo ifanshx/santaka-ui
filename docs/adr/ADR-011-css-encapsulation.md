@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §4 Layer B lists "CSS encapsulation" among the decisions that must be
+`docs/ARCHITECTURE.md` §4 Layer B lists "CSS encapsulation" among the decisions that must be
 recorded, and the choice is between Stencil's two modes: a **shadow root**
 (`shadow: true`, the platform's own encapsulation) or **scoped styles**
 (`scoped: true`, an attribute stamped onto every element the component renders,
@@ -52,7 +52,7 @@ document stylesheet to cross, so the CSS in the document payload styles the
 markup the moment the browser parses it. Scoped styles are what make that file
 able to address the internals; *shipping it as a file rather than injecting it
 from JavaScript* is the other half, and it is a separate decision recorded in
-`build-css.mjs`, driven by `plan.md` §4's "no JavaScript injects a `<style>` or
+`build-css.mjs`, driven by `docs/ARCHITECTURE.md` §4's "no JavaScript injects a `<style>` or
 `<link>` tag at runtime". Two decisions, kept distinct, and ADR-005 cites this
 one for the boundary half.
 

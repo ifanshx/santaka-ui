@@ -12,7 +12,7 @@ import {
 } from "./index.js"
 
 /**
- * Controlled and uncontrolled value semantics (plan.md §15: "keyboard
+ * Controlled and uncontrolled value semantics (docs/ARCHITECTURE.md §15: "keyboard
  * interaction, focus return, accessible labeling, and controlled/uncontrolled
  * behavior").
  *

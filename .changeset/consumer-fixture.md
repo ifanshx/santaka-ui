@@ -2,7 +2,7 @@
 "@santaka-ui/web-components": minor
 ---
 
-plan.md section 17 asked for "Public TypeScript types and package exports
+docs/ARCHITECTURE.md section 16 asked for "Public TypeScript types and package exports
 validate in clean consumer projects", and noted the gap honestly: attw --pack
 and publint inspect the tarball, and neither can say whether
 import "@santaka-ui/react" actually loads in a project that is not this one.

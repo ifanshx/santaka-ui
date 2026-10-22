@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Release-document tests (plan.md §17: "Changelog, semver policy, upgrade notes,
+ * Release-document tests (docs/ARCHITECTURE.md §16: "Changelog, semver policy, upgrade notes,
  * and migration guidance are prepared").
  *
  * These exist because a release document can be present and still useless: a

@@ -1,14 +1,14 @@
 # ADR-023: Two plan budgets were measured for the first time, and one could not be met
 
-- **Status:** Accepted (amends `plan.md` §12's ten-component budget; supersedes the
+- **Status:** Accepted (amends `docs/ARCHITECTURE.md` §12's ten-component budget; supersedes the
   "unmeasured" gap in ADR-010)
 - **Date:** 2026-10-17
-- **Plan deadline:** `plan.md` §12 ("Performance budgets")
+- **Specification:** `docs/ARCHITECTURE.md` §12 ("Performance budgets")
 - **Related:** ADR-010 (the budget table and its headroom rule)
 
 ## Context
 
-`plan.md` §12 lists four budgets and calls them release gates. ADR-010 recorded
+`docs/ARCHITECTURE.md` §12 lists four budgets and calls them release gates. ADR-010 recorded
 that three were measured and one — `@santaka-ui/tokens + @santaka-ui/core` at
 ≤ 8 KB — was not, and left it as an open gap. `packages/react` had no size script
 at all, so the fourth row had never been measured either.

@@ -3,8 +3,8 @@ import type { Page } from "@playwright/test"
 import { THEME_INIT_SCRIPT, THEME_STORAGE_KEY } from "@santaka-ui/svelte"
 
 /**
- * The Svelte example's browser suite: plan.md section 17's Svelte row —
- * "Props/events, SSR and hydration tests" — plus section 17's form gate, "every
+ * The Svelte example's browser suite: docs/ARCHITECTURE.md section 16's Svelte row —
+ * "Props/events, SSR and hydration tests" — plus section 16's form gate, "every
  * form control submits through a plain `<form>`".
  *
  * Two claims need a real browser and neither can be made anywhere else:

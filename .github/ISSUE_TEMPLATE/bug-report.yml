@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. Section 12 of `plan.md` sets the definition of
+        Thanks for the report. Section 12 of `docs/ARCHITECTURE.md` sets the definition of
         Done; a bug is anything that violates it or the documentation.
 
   - type: dropdown

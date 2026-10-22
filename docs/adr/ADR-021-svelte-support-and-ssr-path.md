@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-17
-- **Plan deadline:** `plan.md` §3 (Svelte / SvelteKit row) and §17 (the release gates)
+- **Specification:** §3 of [ARCHITECTURE.md](../ARCHITECTURE.md) (Svelte / SvelteKit row) and the release gates in §16
 
 ## Context
 
-`plan.md` §3 lists Svelte as a target with a deliberately unhelpful-looking
+`docs/ARCHITECTURE.md` §3 lists Svelte as a target with a deliberately unhelpful-looking
 instruction — *"Native wrappers where needed and Web Components usage path"* — and
 one gate: **"Props/events, SSR and hydration tests."** The words "where needed"
 are the decision this ADR has to make. The support matrix

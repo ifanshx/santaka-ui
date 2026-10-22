@@ -12,9 +12,9 @@ import { defineComponent, h, onScopeDispose, readonly, ref, type Ref } from "vue
  * imported from it: a Vue application must not pull in React to switch themes,
  * and the two adapters are peers, not one built on the other. The duplication is
  * a deliberate coupling to section 6, not an oversight — a test asserts the
- * snippet is byte-identical to the one in `plan.md`, which is the document both
+ * snippet is byte-identical to the one in `docs/ARCHITECTURE.md`, which is the document both
  * adapters answer to. If the snippet ever needs to change, it changes in
- * `plan.md` first.
+ * `docs/ARCHITECTURE.md` first.
  */
 export type ThemePreference = "light" | "dark" | "system"
 export type ResolvedTheme = "light" | "dark"

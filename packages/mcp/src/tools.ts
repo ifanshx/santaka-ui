@@ -1,5 +1,5 @@
 /**
- * The four MCP tools (plan.md §11).
+ * The four MCP tools (docs/ARCHITECTURE.md §11).
  *
  * Each is a pure function over the registry data: no model, no network, no
  * filesystem beyond the metadata loaded at startup. That is the whole point of

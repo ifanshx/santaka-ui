@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 
 /**
- * Package exports contract (plan.md §4, "Distribution and exports contract").
+ * Package exports contract (docs/ARCHITECTURE.md §4, "Distribution and exports contract").
  *
  * This exists because of a shipped bug, not a hypothetical one. `glass.css`
  * was built into `packages/styles/dist/` and was listed in the styles

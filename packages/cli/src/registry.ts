@@ -1,5 +1,5 @@
 /**
- * Registry resolution and source-file lookup (plan.md §8 and §9).
+ * Registry resolution and source-file lookup (docs/ARCHITECTURE.md §8 and §9).
  *
  * Two registries are supported, and the distinction is a trust boundary rather
  * than a feature:

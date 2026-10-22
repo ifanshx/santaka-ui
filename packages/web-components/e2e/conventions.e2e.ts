@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
 
 /**
- * Component API conformance (plan.md §17: "Component API conventions are
+ * Component API conformance (docs/ARCHITECTURE.md §16: "Component API conventions are
  * enforced by a conformance test, and no Stable component deviates").
  *
  * §4 states the conventions are normative and that a deviating component "does

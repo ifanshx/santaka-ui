@@ -11,7 +11,7 @@ import vueParser from "vue-eslint-parser"
  * Scope is deliberately narrow: JavaScript/TypeScript correctness and
  * formatting-adjacent rules only. Stylistic rules belong to Prettier
  * (`prettier --check .`), and type-level rules belong to `tsc --noEmit`.
- * Adding a second linter is an ADR (section 18 of plan.md).
+ * Adding a second linter is an ADR (section 17 of docs/ARCHITECTURE.md).
  */
 export default tseslint.config(
   {

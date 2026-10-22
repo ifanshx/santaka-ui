@@ -13,7 +13,7 @@ import {
 } from "@santaka-ui/react"
 
 /**
- * The React example (plan.md section 10, framework examples; section 17).
+ * The React example (docs/ARCHITECTURE.md section 10, framework examples; section 16).
  *
  * The page is deliberately a single real form containing all six form-associated
  * controls, because the claim under test is not "the adapter renders" — jsdom

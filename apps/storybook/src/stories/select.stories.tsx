@@ -134,7 +134,7 @@ export const LongOptionList: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): choosing an option updates the real native
+ * Interaction test (docs/ARCHITECTURE.md §10): choosing an option updates the real native
  * `<select>`. The control is a visible `<select>`, not a custom listbox over a
  * hidden one (ADR-013), so `selectOptions` drives the platform directly.
  */

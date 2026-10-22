@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-14
-- **Plan deadline:** end of weeks 11–12 (`plan.md` §18, §17 RTL requirement)
+- **Specification:** §12 of [ARCHITECTURE.md](../ARCHITECTURE.md) and the release gates in §16
 
 ## Context
 
-`plan.md` §12 lists visual regression as test layer 7, and §17 makes two
+`docs/ARCHITECTURE.md` §12 lists visual regression as test layer 7, and §16 makes two
 requirements concrete: **every component has an RTL visual regression case**,
 and a component with no RTL story is not Stable. Neither exists. Button is the
 only component with an RTL test at all, and it is an interaction test.
@@ -63,7 +63,7 @@ pinned Docker image.**
 
 Every section of the vanilla example page — which mounts every component in
 its documented states — in three passes: **light/ltr, light/rtl, dark/ltr**.
-That is 35 sections × 3 = 105 baselines, and it satisfies §17's per-component
+That is 35 sections × 3 = 105 baselines, and it satisfies §16's per-component
 RTL requirement in the cheapest honest way: the same component photographed in
 both directions, rather than a hand-written RTL assertion per file that could
 silently stop covering a component.

@@ -136,7 +136,7 @@ export const AllVariants: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): selecting a radio checks it. The options are
+ * Interaction test (docs/ARCHITECTURE.md §10): selecting a radio checks it. The options are
  * real native radios inside `role="radiogroup"`, so the assertion reads the
  * platform's own checked state.
  */

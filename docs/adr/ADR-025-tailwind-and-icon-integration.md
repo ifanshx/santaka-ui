@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-19
-- **Plan reference:** `plan.md` §4 "Styling strategy" and "Icons", §5 "Suggested Monorepo"
+- **Plan reference:** `docs/ARCHITECTURE.md` §4 "Styling strategy" and "Icons", §5 "Suggested Monorepo"
 
 ## Context
 
-Two integrations named in `plan.md` do not exist in the repository, and an audit
+Two integrations named in `docs/ARCHITECTURE.md` do not exist in the repository, and an audit
 found both absences were undocumented — so a reader diffing the plan against the
 tree could not tell whether either was a decision or an oversight. That is the
 failure ADR-018 exists to prevent for tooling, and the same rule applies here.

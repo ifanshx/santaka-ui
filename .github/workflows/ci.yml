@@ -1,9 +1,9 @@
 name: CI
 
-# One required workflow, in the order section 18 of plan.md specifies:
+# One required workflow, in the order section 17 of docs/ARCHITECTURE.md specifies:
 # lint -> typecheck -> test -> build -> size -> publint + attw.
 #
-# plan.md section 5 names size-limit for budgets and section 4 requires
+# docs/ARCHITECTURE.md section 5 names size-limit for budgets and section 4 requires
 # publint AND attw. The budgets are measured by a hand-rolled script instead
 # (ADR-010), and the attw profile is esm-only because section 4 mandates
 # ESM-only output; both deviations are recorded rather than silent.
@@ -182,7 +182,7 @@ jobs:
       - name: Build the workspace packages
         run: pnpm run build
 
-      # `plan.md` section 17: every form control submits through a plain form in
+      # `docs/ARCHITECTURE.md` section 16: every form control submits through a plain form in
       # React. The universal half is proven in the web-components suite; this is
       # the React half, and it is a separate job because it is a separate claim —
       # the adapter dropping `name` is invisible to the universal tests.
@@ -221,7 +221,7 @@ jobs:
       - name: Build the workspace packages
         run: pnpm run build
 
-      # `plan.md` section 17: every form control submits through a plain form in
+      # `docs/ARCHITECTURE.md` section 16: every form control submits through a plain form in
       # Vue. This is the Vue half, and it is a separate job rather than a second
       # step in the React job because it is a separate claim: Vue chooses between
       # a property and an attribute per component, so a control can take a route
@@ -302,7 +302,7 @@ jobs:
       - name: Build the workspace packages
         run: pnpm run build
 
-      # `plan.md` section 3 and risk R2: the server output must carry the custom
+      # `docs/ARCHITECTURE.md` section 3 and risk R2: the server output must carry the custom
       # element tags with their public attributes and must NOT define them, so the
       # tree the server produced is the tree the client hydrates against. The
       # example built and proved this locally but no job ran it, which left the
@@ -352,7 +352,7 @@ jobs:
       # three must be installed before it can reproduce the document.
       - run: pnpm --filter @santaka-ui/web-components exec playwright install chromium firefox webkit
 
-      # `plan.md` section 4: adding a browser to the documentation without a test job
+      # `docs/ARCHITECTURE.md` section 4: adding a browser to the documentation without a test job
       # is a release blocker. This fails when the document and the Playwright
       # projects disagree, which is the only way the two can drift.
       - name: Check the generated support matrix
@@ -374,7 +374,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # plan.md section 17: "The public framework/browser support matrix reflects
+      # docs/ARCHITECTURE.md section 16: "The public framework/browser support matrix reflects
       # tested evidence." The browser half is the job above, derived from the
       # Playwright projects. This is the framework half, and it needs no build:
       # every claim it checks is a directory or a package script, both of which
@@ -405,7 +405,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # `plan.md` section 11: regenerate and verify in CI so the files cannot go
+      # `docs/ARCHITECTURE.md` section 11: regenerate and verify in CI so the files cannot go
       # stale. The generator reads the registry metadata and the committed
       # components.d.ts, but the token-group counts come from the compiled CSS,
       # so the tokens package is built first.
@@ -434,7 +434,7 @@ jobs:
       - run: pnpm --filter @santaka-ui/tokens build
       - run: pnpm --filter @santaka-ui/mcp build
 
-      # `plan.md` section 11: the server is smoke-tested by launching it and asserting
+      # `docs/ARCHITECTURE.md` section 11: the server is smoke-tested by launching it and asserting
       # one response shape per tool. The test drives a real MCP client over an
       # in-memory transport pair, so it covers registration, input schemas, and
       # serialization rather than only the tool functions.
@@ -447,7 +447,7 @@ jobs:
     timeout-minutes: 15
     strategy:
       fail-fast: false
-      # plan.md section 8 requires CLI behavior tested on Windows, macOS, and Linux.
+      # docs/ARCHITECTURE.md section 8 requires CLI behavior tested on Windows, macOS, and Linux.
       # The paths, the exit codes, and the executable bit all differ per platform,
       # and each has been wrong in some CLI at some point.
       matrix:
@@ -507,7 +507,7 @@ jobs:
       - name: Install Playwright browser
         run: pnpm --filter @santaka-ui/web-components exec playwright install --with-deps chromium
 
-      # `plan.md` section 17: "Public TypeScript types and package exports validate in clean
+      # `docs/ARCHITECTURE.md` section 16: "Public TypeScript types and package exports validate in clean
       # consumer projects ... Nothing has yet installed the package into a scratch
       # project and imported it, which is what this gate actually asks for." This
       # job is that gate: it packs all eight packages, installs the tarballs into a
@@ -559,7 +559,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # plan.md section 17: "Dependency licenses and security scans are reviewed."
+      # docs/ARCHITECTURE.md section 16: "Dependency licenses and security scans are reviewed."
       # A denied license (strong copyleft) fails here. A license needing review is
       # reported, not failed, because it needs a person to read it rather than a
       # string match to allow it.

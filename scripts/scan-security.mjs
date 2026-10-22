@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Security scan (plan.md §17, "Dependency licenses and security scans are
+ * Security scan (docs/ARCHITECTURE.md §16, "Dependency licenses and security scans are
  * reviewed").
  *
  * Runs `pnpm audit --json` and classifies every advisory by **reach**, because a

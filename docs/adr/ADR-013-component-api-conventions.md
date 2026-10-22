@@ -6,9 +6,9 @@
 
 ## Context
 
-`plan.md` §4 states the API conventions are "normative" and that a component
+`docs/ARCHITECTURE.md` §4 states the API conventions are "normative" and that a component
 which deviates "does not ship as Stable; the deviation is a design decision that
-needs ADR-013". §17 requires that they be "enforced by a conformance test, and
+needs ADR-013". §16 requires that they be "enforced by a conformance test, and
 no Stable component deviates".
 
 No such test existed. Writing it surfaced an ambiguity in the conventions

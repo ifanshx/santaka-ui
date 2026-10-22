@@ -11,7 +11,7 @@ import {
 /**
  * The token pipeline is where a wrong number becomes a silent visual bug, so
  * its math is tested rather than trusted. The figures below are the ones
- * recorded in the token descriptions in section 6 of plan.md.
+ * recorded in the token descriptions in section 6 of docs/ARCHITECTURE.md.
  */
 describe("contrastRatio", () => {
   it("returns 21:1 for black on white", () => {

@@ -2,18 +2,18 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §4 Layer B names Stencil as the default for authoring the universal
+`docs/ARCHITECTURE.md` §4 Layer B names Stencil as the default for authoring the universal
 Web Components package, with a time-boxed comparison against **Lit** allowed to
 override it — but only with a written ADR recording bundle-size evidence,
 SSR/hydration behavior, and the reason for changing course. The plan is explicit
 that both toolchains must not be carried.
 
 The time box was: "If no decisive evidence appears within the box, keep Stencil
-and move on." `plan.md` §15 Weeks 1–2 marks that comparison as **done**.
+and move on." The comparison below is the record of that box being closed.
 
 ## Evidence
 
@@ -30,7 +30,7 @@ form-associated, keyboard-interactive control rather than a static element.
 | Documentation output | `docs-json` + `docs` for custom-elements manifest | Hand-written |
 
 Two of these are decisive rather than merely convenient. Form association is
-mandatory by `plan.md` §4's forms contract, and Stencil's generated typings are
+mandatory by `docs/ARCHITECTURE.md` §4's forms contract, and Stencil's generated typings are
 what let the React package type its adapters against the real element type
 (`SkButtonElement`, `HTMLButtonElement`) without a second hand-maintained
 declaration file.

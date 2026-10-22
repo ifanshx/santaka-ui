@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Compile the registry validator ahead of time (plan.md §12 budget:
+ * Compile the registry validator ahead of time (docs/ARCHITECTURE.md §12 budget:
  * `@santaka-ui/tokens` + `@santaka-ui/core` ≤ 8 KB).
  *
  * `validateRegistryItem` used to import Ajv at runtime and compile the schema

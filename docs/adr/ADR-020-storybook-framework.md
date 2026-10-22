@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-16
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §10; §19 task 9)
+- **Specification:** §10 of [ARCHITECTURE.md](../ARCHITECTURE.md) (documentation and component workshop)
 
 ## Context
 
-`plan.md` §10 asks for a component workshop with stories, controls, interaction
+`docs/ARCHITECTURE.md` §10 asks for a component workshop with stories, controls, interaction
 tests, an accessibility addon, and visual regression for key stories — and it
 asks for one more thing that is easy to skip: **"Document Storybook framework
 choice and compatibility instead of assuming one Storybook setup can directly
@@ -102,7 +102,7 @@ that is correct everywhere, and it is what the workshop uses.
 
 - **Vue, Svelte, and Angular adapters.** Vue is published but has no stories
   here yet; Svelte is published too as of ADR-021 and likewise has none; Angular
-  does not exist. `plan.md` §7 is explicit that
+  does not exist. `docs/ARCHITECTURE.md` §7 is explicit that
   component and integration counts are planning targets, not a promise that
   every item ships in v1.0, so an absent renderer is recorded as absent rather
   than implied by a "universal" workshop that renders one framework.

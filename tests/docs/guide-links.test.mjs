@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Docs guide links (plan.md §15: "Document supported setups and errors").
+ * Docs guide links (docs/ARCHITECTURE.md §15: "Document supported setups and errors").
  *
  * The quick-start page links four guides. Three of them did not exist, and
  * nothing caught it: a missing page is a 404 for a reader and a green build for

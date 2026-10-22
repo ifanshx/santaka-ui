@@ -130,7 +130,7 @@ export const AllVariants: Story = {
 }
 
 /**
- * Interaction test (plan.md §10). The control is a real `<input
+ * Interaction test (docs/ARCHITECTURE.md §10). The control is a real `<input
  * type="checkbox">` in light DOM, so `getByRole` finds it and a real click
  * flips it — the same path a consumer's form uses, not a synthetic state write.
  */

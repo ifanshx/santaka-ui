@@ -115,7 +115,7 @@ export const AllVariants: Story = {
 }
 
 /**
- * Interaction test (plan.md §10). The control is a native checkbox carrying
+ * Interaction test (docs/ARCHITECTURE.md §10). The control is a native checkbox carrying
  * `role="switch"`, so the assertion queries by that role and a real click
  * toggles it.
  */

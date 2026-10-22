@@ -1,12 +1,12 @@
 # ADR-017: Starter token values, type scale, and motion values
 
-- **Status:** Accepted (amends the values previously recorded in `plan.md` §6)
+- **Status:** Accepted (amends the values previously recorded in `docs/ARCHITECTURE.md` §6)
 - **Date:** 2026-10-12
-- **Supersedes:** the "Starter token values" tables in `plan.md` §6, lines 417–526
+- **Supersedes:** the "Starter token values" tables in `docs/ARCHITECTURE.md` §6, lines 417–526
 
 ## Context
 
-`plan.md` §6 fixed the v1.0 starter tokens and stated that "every value is a
+`docs/ARCHITECTURE.md` §6 fixed the v1.0 starter tokens and stated that "every value is a
 decision, not a placeholder: change one and the change is a design change with a
 contrast re-check, not a tweak." It also set a visual direction in §6 "Visual
 identity": **Playful Engineering** — "polished and professional", with the
@@ -23,9 +23,9 @@ geometry, borders, elevation, fills, motion timing, and typography for every
 component that ships.
 
 Doing this without recording it left the repository holding two conflicting
-conventions at once — `plan.md` still documented `0.375rem` and
+conventions at once — `docs/ARCHITECTURE.md` still documented `0.375rem` and
 `0 1px 3px rgb(23 20 28 / 0.10)` as the starter values, while the compiled
-tokens emitted `0` and `2px 2px 0 0`. §18 states the reason plainly:
+tokens emitted `0` and `2px 2px 0 0`. §17 states the reason plainly:
 "Undocumented defaults are how a project acquires two conflicting conventions."
 
 ## Decision
@@ -78,7 +78,7 @@ deliberate and is what makes a press visibly spring back.
 
 `font.display` is added alongside `font.sans`. The declared stack is the platform
 fallback: **no webfont ships in the default path**, which was already a recorded
-decision in `plan.md` §6. The token exists so a consumer can swap in a geometric
+decision in `docs/ARCHITECTURE.md` §6. The token exists so a consumer can swap in a geometric
 or techno sans (Space Grotesk, Chakra Petch) by setting one custom property.
 Two heavy display steps are added at weight 800 with tight tracking
 (`text.display` -0.03em, `text.display-sm` -0.02em); the arcade character comes

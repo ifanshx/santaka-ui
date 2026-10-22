@@ -1,5 +1,5 @@
 /**
- * The stdio MCP server (plan.md §11).
+ * The stdio MCP server (docs/ARCHITECTURE.md §11).
  *
  * A thin transport over the four tools in `tools.ts`: it declares each tool's
  * input schema, calls the pure function, and returns the result as JSON text.

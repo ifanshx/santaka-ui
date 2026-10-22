@@ -3,7 +3,7 @@
   import { setTheme, theme } from "@santaka-ui/svelte"
 
   /**
-   * The Svelte example (plan.md section 10, framework examples; section 17, and
+   * The Svelte example (docs/ARCHITECTURE.md section 10, framework examples; section 16, and
    * the Svelte row's "Props/events, SSR and hydration tests").
    *
    * The page is deliberately a single real form containing all six

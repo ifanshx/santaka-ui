@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Run the browser matrix locally and refresh the support matrix document
- * (`plan.md` §4, §17).
+ * (`docs/ARCHITECTURE.md` §4, §16).
  *
  * Each project runs on its own so its exit code is the result — no reporter
  * parsing is needed to attribute a failure to an engine. The document itself is

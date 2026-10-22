@@ -2,17 +2,17 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §4 fixes the distribution shape for every published package: ESM only,
+`docs/ARCHITECTURE.md` §4 fixes the distribution shape for every published package: ESM only,
 an explicit `exports` table, and peer dependency ranges. This ADR records the
 decision and, more usefully, the two defects the contract caught — because the
 value of an exports table is not that it exists, it is that it turns a class of
 mistake into a failing check.
 
-`plan.md` §18 also requires this record; until it existed, ADR-005 cited it for
+`docs/ARCHITECTURE.md` §17 also requires this record; until it existed, ADR-005 cited it for
 "weight" and `examples/nextjs/next.config.mjs` cited it for the resolution rule.
 
 ## Evidence
@@ -79,7 +79,7 @@ and `@santaka-ui/utilities`; `@santaka-ui/react` peers
 the consumer must install deliberately, not a transitive surprise.
 
 Node `>=22.11.0` is an `engines` field on all nine, and CI includes the oldest
-supported version in its matrix (`plan.md` §4).
+supported version in its matrix (`docs/ARCHITECTURE.md` §4).
 
 ## Decision
 
@@ -98,7 +98,7 @@ Enforced by three gates that all run in CI:
 ## Consequences
 
 - A CommonJS consumer cannot `require()` any of these packages. That is the
-  decision; `plan.md` §4 rules out a dual build, and the reasoning is that a
+  decision; `docs/ARCHITECTURE.md` §4 rules out a dual build, and the reasoning is that a
   second format doubles the surface for the two defects above to recur.
 - Adding a new artifact (a stylesheet, a schema, a subpath) means adding an
   `exports` entry, or it is unreachable and unmeasured. `exports-contract.test.ts`

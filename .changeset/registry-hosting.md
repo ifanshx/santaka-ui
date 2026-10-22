@@ -2,7 +2,7 @@
 "@santaka-ui/core": minor
 ---
 
-plan.md section 9 asked for "public and private registries with explicit trust
+docs/ARCHITECTURE.md section 9 asked for "public and private registries with explicit trust
 boundaries" and section 8 gave the CLI a `registry add <url>` command. What was
 missing was the decision, and the CLI already had code for both.
 

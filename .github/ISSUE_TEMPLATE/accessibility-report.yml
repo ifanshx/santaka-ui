@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Section 12 of `plan.md` sets WCAG 2.2 AA as the product target and states
+        Section 12 of `docs/ARCHITECTURE.md` sets WCAG 2.2 AA as the product target and states
         honestly what that covers. A report needs the specific criterion, the
         assistive technology, and what a user would experience — an automated
         scan result alone is not enough to act on.

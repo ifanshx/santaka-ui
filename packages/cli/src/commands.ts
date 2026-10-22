@@ -1,5 +1,5 @@
 /**
- * CLI commands (plan.md §8).
+ * CLI commands (docs/ARCHITECTURE.md §8).
  *
  * Every command returns a result and a stream of lines rather than printing
  * directly, so the same code path serves `--dry-run`, the tests, and a real run.

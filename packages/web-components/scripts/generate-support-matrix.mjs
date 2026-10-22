@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Generate the browser support matrix from the Playwright projects that
- * actually run (`plan.md` §4 and §17: "The documented support matrix is
+ * actually run (`docs/ARCHITECTURE.md` §4 and §16: "The documented support matrix is
  * generated from the Playwright projects that actually run, not hand-
  * maintained. Adding a browser to the documentation without a test job is a
  * release blocker.").

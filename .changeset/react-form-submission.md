@@ -3,12 +3,12 @@
 "@santaka-ui/react": patch
 ---
 
-Prove React form submission in a real browser (plan.md §17), and fix the two
+Prove React form submission in a real browser (docs/ARCHITECTURE.md §16), and fix the two
 defects it found.
 
 `examples/react-vite/e2e/form-submission.e2e.ts` renders all six form controls
 through `@santaka-ui/react`, submits a plain `<form>`, and reads the entries back
-out of the browser's own `FormData`. It is the React half of the §17 gate; the
+out of the browser's own `FormData`. It is the React half of the §16 gate; the
 universal half was already covered, and the two are different claims — an adapter
 that drops an attribute renders and validates correctly while the form submits
 without the control.

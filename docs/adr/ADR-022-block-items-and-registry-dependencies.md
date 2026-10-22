@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-17
-- **Plan deadline:** `plan.md` §17 ("Publish starter blocks for dashboard, settings, and authentication screens") and §9 ("Component, block, theme, and utility metadata", "Dependency declarations and peer dependency constraints")
+- **Specification:** `docs/ARCHITECTURE.md` §16 ("Publish starter blocks for dashboard, settings, and authentication screens") and §9 ("Component, block, theme, and utility metadata", "Dependency declarations and peer dependency constraints")
 
 ## Context
 
-`plan.md` §17 closes with one engineering item: three starter blocks. The schema
+`docs/ARCHITECTURE.md` §16 closes with one engineering item: three starter blocks. The schema
 was built for it — `type` already accepts `block`, and `props`/`events` are the
 only optional surface fields, which is exactly what a block lacks — and the
 registry aggregate, the CLI, `llms.txt`, and the docs all carry `type` through
@@ -107,7 +107,7 @@ Each block is exercised the way the rest of the library is: an example page in
 `examples/vanilla-html/` that the axe suite scans, a CLI test that adds the block
 into a temporary project and asserts that the block's files *and* every
 dependency's files land, and a checksum in the published entry. No screenshot
-baseline: the visual-regression requirement in §17 is per component, and a block
+baseline: the visual-regression requirement in §16 is per component, and a block
 page's layout is expected to be edited by the consumer — a baseline there would
 pin something the consumer is invited to change, and it would fail on the first
 sensible edit.
@@ -124,5 +124,5 @@ sensible edit.
 - Registering a block makes the docs, `llms.txt`, and the MCP server describe it
   without further code, because all three already read the registry rather than a
   hand-written list.
-- It does not publish anything. `1.0.0` still waits on the support matrix, §17's
+- It does not publish anything. `1.0.0` still waits on the support matrix, §16's
   remaining gates, and the legal preconditions in §13.

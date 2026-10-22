@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate `llms.txt` and `llms-full.txt` (plan.md §11, AI metadata).
+ * Generate `llms.txt` and `llms-full.txt` (docs/ARCHITECTURE.md §11, AI metadata).
  *
  * §11 asks for two files with different jobs:
  *

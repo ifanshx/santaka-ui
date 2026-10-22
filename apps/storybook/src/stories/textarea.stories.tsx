@@ -109,7 +109,7 @@ export const LongValue: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): typing reaches the native `<textarea>`, which
+ * Interaction test (docs/ARCHITECTURE.md §10): typing reaches the native `<textarea>`, which
  * owns the value. Unlike `<input>`, a textarea takes its content as children,
  * which is the reason this is worth proving rather than assuming.
  */

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test"
 
 /**
- * Responsive-state audit (plan.md §15: "accessibility, theme contrast, reduced
+ * Responsive-state audit (docs/ARCHITECTURE.md §15: "accessibility, theme contrast, reduced
  * motion, and responsive states").
  *
  * There are no layout breakpoints in the component CSS — `@media` appears only

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Security-scan classifier tests (plan.md §17, "Dependency licenses and security
+ * Security-scan classifier tests (docs/ARCHITECTURE.md §16, "Dependency licenses and security
  * scans are reviewed").
  *
  * These exist because the scan's reach classification cannot be checked by reading

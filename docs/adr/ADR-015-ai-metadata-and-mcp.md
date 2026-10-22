@@ -2,18 +2,18 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-14
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §11 makes the component metadata a first-class product surface for AI
+`docs/ARCHITECTURE.md` §11 makes the component metadata a first-class product surface for AI
 tooling, and names three deliverables: the `ai` block on every registry entry,
 `llms.txt` + `llms-full.txt`, and a `@santaka-ui/mcp` stdio server. It also
 fixes the scope — "the tooling serves validated JSON. No model is called at
 build time or at query time, and nothing in this section requires a hosted
 service."
 
-This ADR records the schema and the packaging, which is what §18 asks for. All
+This ADR records the schema and the packaging, which is what §17 asks for. All
 three deliverables now exist; the decisions below are the ones that were not
 obvious once the code existed.
 

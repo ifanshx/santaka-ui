@@ -1,6 +1,6 @@
 {
   "color": {
-    "$description": "Semantic color contract. Every token documents its fallback value here; see section 4 of plan.md.",
+    "$description": "Semantic color contract. Every token documents its fallback value here; see section 4 of docs/ARCHITECTURE.md.",
     "surface": {
       "$value": "{color.white}",
       "$description": "Page background."

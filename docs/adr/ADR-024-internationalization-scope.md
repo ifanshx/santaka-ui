@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-19
-- **Plan reference:** `plan.md` §6 "Internationalization and formatting"
+- **Plan reference:** `docs/ARCHITECTURE.md` §6 "Internationalization and formatting"
 
 ## Context
 
@@ -22,7 +22,7 @@ support after those components ship causes breaking changes. It then requires:
 
 The repository ships **none** of the five components that motivate the
 requirement, and has **no** locale API. The audit found this to be the largest
-gap between what `plan.md` claims and what exists, and it was previously
+gap between what `docs/ARCHITECTURE.md` claims and what exists, and it was previously
 invisible because nothing cross-checks §6 — the same way §4's physical-property
 ban was prose until ADR-016's conformance test enforced it.
 

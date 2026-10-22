@@ -2,8 +2,8 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 
 /**
- * Vite configuration for the React example (plan.md section 10, framework
- * examples; section 17, "Every form control submits through a plain `<form>` in
+ * Vite configuration for the React example (docs/ARCHITECTURE.md section 10, framework
+ * examples; section 16, "Every form control submits through a plain `<form>` in
  * React, Vue, and the universal package").
  *
  * This example exists to close a specific gap rather than to look nice. The

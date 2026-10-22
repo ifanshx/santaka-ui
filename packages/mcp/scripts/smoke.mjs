@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * CI smoke test: launch the server and assert one response per tool
- * (plan.md §11 — "smoke-tested in CI by launching it and asserting one response
+ * (docs/ARCHITECTURE.md §11 — "smoke-tested in CI by launching it and asserting one response
  * shape per tool").
  *
  * This connects over a **real in-memory MCP transport pair**, not by importing

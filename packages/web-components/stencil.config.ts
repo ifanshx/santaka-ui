@@ -34,7 +34,7 @@ export const config: Config = {
   taskQueue: "async",
   sourceMap: true,
   outputTargets: [
-    // ESM only (plan.md section 4: "No CommonJS build is emitted"). Stencil's
+    // ESM only (docs/ARCHITECTURE.md section 4: "No CommonJS build is emitted"). Stencil's
     // `dist` target emits `dist/cjs/` and `index.cjs.js` unconditionally — there
     // is no `generateCjs` option on `OutputTargetDist` — which put 358 KB of
     // CommonJS in the published tarball. It was unreachable, because the exports

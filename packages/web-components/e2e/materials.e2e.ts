@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 /**
  * The neo-brutalist and glass system, asserted against real Chromium.
  *
- * Section 9 of plan.md is the source of these checks. What they share is that
+ * Section 9 of docs/ARCHITECTURE.md is the source of these checks. What they share is that
  * each one fails if a token reference silently falls back to its inline literal
  * — which is the failure mode a re-skin actually produces. A renamed token does
  * not throw; it quietly renders the fallback that was written to cover the case

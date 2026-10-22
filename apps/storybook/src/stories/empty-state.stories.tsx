@@ -114,7 +114,7 @@ export const WithActions: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): the component owns no state and takes no
+ * Interaction test (docs/ARCHITECTURE.md §10): the component owns no state and takes no
  * focus, so the one behavioural claim the markup cannot show statically is
  * that nothing here is in the tab order for a keyboard-only reader — the
  * buttons are, and they land in the actions wrapper, not loose in the body.

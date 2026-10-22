@@ -6,7 +6,7 @@
 
 ## Context
 
-`plan.md` §4 defines two tiers, tested separately:
+`docs/ARCHITECTURE.md` §4 defines two tiers, tested separately:
 
 | Tier | Meaning | Chrome / Edge | Firefox | Safari | iOS Safari |
 |---|---|---|---|---|---|
@@ -50,7 +50,7 @@ Two changes, both testable:
    `box-sizing: border-box` itself. The fixed sizes are written against
    `border-box`, and the only thing that supplied it was the optional
    `@santaka-ui/styles` reset — a package a consumer is explicitly told they do
-   not need (`plan.md` §4: "a consumer that imports only components still gets
+   not need (`docs/ARCHITECTURE.md` §4: "a consumer that imports only components still gets
    sane defaults"). Without the reset, a consumer measured a 66×50 box.
 
 ## Evidence
@@ -80,6 +80,6 @@ Two changes, both testable:
 
 Evidence that the Core tier's degraded styling is costing more than the extra
 rule is worth. The cheap alternative is dropping Core support for components
-where the fix is genuinely awkward — but `plan.md` §4 is explicit that Core
+where the fix is genuinely awkward — but `docs/ARCHITECTURE.md` §4 is explicit that Core
 exists so the prebuilt-CSS path "reach[es] further than Tailwind does", so the
 tier is load-bearing for the product's reach claim.

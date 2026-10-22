@@ -2,11 +2,11 @@
 
 - **Status:** Accepted (with a recorded deviation from §5's toolchain table)
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §5's toolchain table names **`style-dictionary`** with DTCG input as
+`docs/ARCHITECTURE.md` §5's toolchain table names **`style-dictionary`** with DTCG input as
 the token pipeline, and §6 requires tokens authored in **DTCG format**
 (`tokens.dev` draft) as the neutral source of truth. The plan also requires:
 

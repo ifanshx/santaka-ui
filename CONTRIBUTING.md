@@ -1,6 +1,6 @@
 # Contributing to Santaka UI
 
-Thanks for helping build Santaka. This document is the short version; `plan.md`
+Thanks for helping build Santaka. This document is the short version; `docs/ARCHITECTURE.md`
 is the source of truth for what the project is and why.
 
 ## Setup
@@ -31,12 +31,12 @@ Useful subsets while you work:
 | `pnpm run test` | Unit and component tests (Vitest) |
 | `pnpm run test:e2e` | Browser tests (Playwright) |
 | `pnpm run build` | Build every package |
-| `pnpm run size` | Measure the bundle budgets in `plan.md` §12 |
+| `pnpm run size` | Measure the bundle budgets in `docs/ARCHITECTURE.md` §12 |
 | `pnpm run docs:tokens` | Rebuild tokens only, with the contrast report |
 
 ## Definition of Done
 
-A component is not done until it satisfies section 7 of `plan.md`. The short
+A component is not done until it satisfies section 7 of `docs/ARCHITECTURE.md`. The short
 version:
 
 - Typed public API that follows the conventions in section 4.
@@ -57,7 +57,7 @@ a discipline problem — split it, defer it, or use a specialist library.
 
 Anything that would be expensive to reverse gets an ADR under `docs/adr/`,
 written as context, decision, evidence, and what would reverse it. The table in
-section 18 of `plan.md` lists which decisions are already recorded and when
+section 17 of `docs/ARCHITECTURE.md` lists which decisions are already recorded and when
 each is due. New ADRs go in the same table.
 
 Two decisions constrain almost every change:
@@ -81,7 +81,7 @@ Two decisions constrain almost every change:
 ## Commit and release
 
 Conventional Commits drive Changesets. `0.x` releases may break; `1.0.0` waits
-for the release gates in section 17 of `plan.md`. Publishing happens from CI
+for the release gates in section 16 of `docs/ARCHITECTURE.md`. Publishing happens from CI
 only.
 
 ## Code of Conduct

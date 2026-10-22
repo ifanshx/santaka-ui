@@ -8,7 +8,7 @@
 
 ## Context
 
-`plan.md` §12 sets four budgets and states they are release gates, not
+`docs/ARCHITECTURE.md` §12 sets four budgets and states they are release gates, not
 aspirations: "CI fails the build when a budget is exceeded." It also sets the
 rule for exceeding one: "A regression beyond the budget requires an explicit PR
 note explaining why, or a budget change recorded as an ADR."

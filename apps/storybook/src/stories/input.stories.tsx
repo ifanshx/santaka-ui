@@ -126,7 +126,7 @@ export const LongValue: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): typing reaches the native `<input>`, which
+ * Interaction test (docs/ARCHITECTURE.md §10): typing reaches the native `<input>`, which
  * owns the value. The accessible name comes from the element's own `<label>`,
  * so `getByRole` with a name is also a check that the label wiring held.
  */

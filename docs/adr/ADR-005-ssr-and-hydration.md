@@ -2,13 +2,13 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 3–4 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
 Web Components are defined by the browser, so a custom element tag in server
 output is inert HTML until something calls `customElements.define`. Two failure
-modes follow, and `plan.md` risk R2 rates the second as the one that makes
+modes follow, and `docs/ARCHITECTURE.md` risk R2 rates the second as the one that makes
 support-matrix claims false:
 
 - **R3, flash of unstyled content.** Closed by ADR-011 — scoped styles arrive in

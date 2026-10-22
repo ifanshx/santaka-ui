@@ -3,7 +3,7 @@
 "@santaka-ui/mcp": minor
 ---
 
-A stdio MCP server over the registry metadata, with the four tools plan.md
+A stdio MCP server over the registry metadata, with the four tools docs/ARCHITECTURE.md
 section 11 names. No model is called and no network is reached — the only I/O is
 reading the registry and the compiled token CSS at startup, which is what makes
 this shippable into an editor without a key or a telemetry disclosure.

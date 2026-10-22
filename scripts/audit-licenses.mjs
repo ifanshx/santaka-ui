@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Dependency license audit (plan.md §17, "Dependency licenses and security
+ * Dependency license audit (docs/ARCHITECTURE.md §16, "Dependency licenses and security
  * scans are reviewed").
  *
  * Every dependency's license is listed and checked against an allow-list, because
@@ -129,7 +129,7 @@ lines.push(
 )
 lines.push("")
 lines.push(
-  "The audit is part of §17's release gate. Licenses are classified into three tiers: allowed, needs review, and denied. A denied license fails the build; a license needing review is listed here so it is read by a person rather than allowed by a string match.",
+  "The audit is part of §16's release gate. Licenses are classified into three tiers: allowed, needs review, and denied. A denied license fails the build; a license needing review is listed here so it is read by a person rather than allowed by a string match.",
 )
 lines.push("")
 lines.push("## Needs review")

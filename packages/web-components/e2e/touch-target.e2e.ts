@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test"
 
 /**
- * Touch-target coverage for every interactive component (plan.md §17:
+ * Touch-target coverage for every interactive component (docs/ARCHITECTURE.md §16:
  * "Every component has an RTL visual regression case and a `--sk-touch-min`
  * compliant target").
  *

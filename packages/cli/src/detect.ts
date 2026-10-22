@@ -1,5 +1,5 @@
 /**
- * Project detection (plan.md §8, CLI requirements: "Detect supported framework,
+ * Project detection (docs/ARCHITECTURE.md §8, CLI requirements: "Detect supported framework,
  * package manager, TypeScript usage, existing styling setup, and relevant config
  * files", with an explicit override and actionable guidance when detection
  * cannot decide).

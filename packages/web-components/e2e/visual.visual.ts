@@ -1,10 +1,10 @@
 import { expect, test, type Page } from "@playwright/test"
 
 /**
- * Visual regression (ADR-019, plan.md §12 test layer 7).
+ * Visual regression (ADR-019, docs/ARCHITECTURE.md §12 test layer 7).
  *
  * Every screenshot is taken twice: once with the document in `ltr` and once
- * with `dir="rtl"`. §17 requires an RTL visual case per component, and the
+ * with `dir="rtl"`. §16 requires an RTL visual case per component, and the
  * cheapest honest way to satisfy that is to photograph the same component in
  * both directions rather than to hand-write an RTL assertion per file.
  *
@@ -133,7 +133,7 @@ test.describe("visual regression — light theme", () => {
   }
 })
 
-test.describe("visual regression — rtl, the §17 per-component case", () => {
+test.describe("visual regression — rtl, the §16 per-component case", () => {
   test.beforeEach(async ({ page }) => {
     await prepare(page, "rtl", "light")
   })

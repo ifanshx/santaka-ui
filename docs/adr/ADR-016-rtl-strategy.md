@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 3–4 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §6's RTL section states the position in one line: *"RTL is a Definition
+`docs/ARCHITECTURE.md` §6's RTL section states the position in one line: *"RTL is a Definition
 of Done item, not a follow-up. Retrofitting logical properties across forty
 components is the expensive path."* This ADR records how that is made true, and
 adds the enforcement the section implies but the repository did not have: until
@@ -67,7 +67,7 @@ re-registering the component.
 
 ### Coverage is a property of the spec, not a per-file promise
 
-`plan.md` §6 requires that every component render in both directions and have at
+`docs/ARCHITECTURE.md` §6 requires that every component render in both directions and have at
 least one RTL visual regression case. ADR-019 satisfies this structurally: the
 `visual` project photographs every example-page section in light/ltr, light/rtl,
 and dark/ltr. A new component section in the example automatically gains its RTL

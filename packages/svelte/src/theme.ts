@@ -11,8 +11,8 @@
  * not pull in React or Vue to switch themes, and the three adapters are peers,
  * not one built on another. The duplication is a deliberate coupling to section
  * 6, not an oversight — a test asserts the snippet is byte-identical to the one
- * in `plan.md`, which is the document every adapter answers to. If the snippet
- * ever needs to change, it changes in `plan.md` first.
+ * in `docs/ARCHITECTURE.md`, which is the document every adapter answers to. If the snippet
+ * ever needs to change, it changes in `docs/ARCHITECTURE.md` first.
  *
  * This is a Svelte **store**, not a rune. Runes in a `.svelte.ts` module are
  * compiled by the Svelte compiler, and this package is compiled by `tsc` so that

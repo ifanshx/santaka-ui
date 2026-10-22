@@ -6,11 +6,11 @@
      exist. A Planned target must not name a package that has been built.
      Regenerate with `pnpm run framework-support`. -->
 
-Three states (plan.md §3), and the difference between them is what is defended
-automatically, not how much code exists. **Stable** means the release gate runs in CI on
-every change. **Preview** means an example exists and works but the gate is not enforced
-automatically, so the claim is not defended against regression. **Planned** means
-nothing has been built. No target is currently at Preview.
+Three states (docs/ARCHITECTURE.md §3), and the difference between them is what is
+defended automatically, not how much code exists. **Stable** means the release gate runs
+in CI on every change. **Preview** means an example exists and works but the gate is not
+enforced automatically, so the claim is not defended against regression. **Planned**
+means nothing has been built. No target is currently at Preview.
 
 | Target | State | Implementation | Release gate | Defended by |
 |---|---|---|---|---|

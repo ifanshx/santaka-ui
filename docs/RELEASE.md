@@ -1,6 +1,6 @@
 # Release and versioning policy
 
-This repository follows `plan.md` §14, and this file is where the policy is made
+This repository follows `docs/ARCHITECTURE.md` §14, and this file is where the policy is made
 concrete enough to follow without re-reading the plan.
 
 **Current state:** every published package is `0.1.0`. Nothing has been released
@@ -11,7 +11,7 @@ to npm yet.
 | Stage | Meaning | Exit criteria |
 |---|---|---|
 | `0.x` | API may evolve rapidly. Breaking changes are allowed in a **minor** bump, and must be documented. | — |
-| `1.0.0` | Public API is stable. | The stable support matrix and §17's release gates are met. |
+| `1.0.0` | Public API is stable. | The stable support matrix and §16's release gates are met. |
 
 Under `0.x`, a breaking change is a minor bump and is still recorded in the
 changelog with a migration note. This is the honest reading of §14: `0.x` buys
@@ -147,4 +147,4 @@ generated from the registry; a rename shows up everywhere or nowhere.
 - No package has been published to npm.
 - The legal preconditions in §13 (trademark, npm scope, domain, mascot) are
   unresolved, and publishing waits on them.
-- `1.0.0` waits on the support matrix and §17's gates.
+- `1.0.0` waits on the support matrix and §16's gates.

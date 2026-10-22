@@ -4,7 +4,7 @@ import { playwright } from "@vitest/browser-playwright"
 import { fileURLToPath } from "node:url"
 
 /**
- * Runs the `play` functions attached to stories as real tests (plan.md section
+ * Runs the `play` functions attached to stories as real tests (docs/ARCHITECTURE.md section
  * 10, "controls and interaction tests for interactive components").
  *
  * Two deliberate choices:

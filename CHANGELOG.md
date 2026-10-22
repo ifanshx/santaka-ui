@@ -76,10 +76,10 @@ changes get a pointer to [MIGRATIONS.md](./docs/MIGRATIONS.md).
   Deliberately not a CI gate, because a screenshot diff needs a reviewer
   (ADR-019).
 - **Consumer fixture.** Packs all eight packages, installs the tarballs into a
-  scratch project outside the workspace, and runs 11 checks (§17).
+  scratch project outside the workspace, and runs 11 checks (§16).
 - **Touch-target coverage** for all eleven interactive components — 15 tests, with
-  the threshold read from `--sk-touch-min` rather than asserted as 44 (§17).
-- **Dependency license and security audits** (§17).
+  the threshold read from `--sk-touch-min` rather than asserted as 44 (§16).
+- **Dependency license and security audits** (§16).
 - **Registry `props` and `events`**, derived from the committed declarations and
   component sources rather than authored — which is what lets `get_component` and
   the docs page report them.

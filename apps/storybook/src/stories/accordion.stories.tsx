@@ -116,7 +116,7 @@ export const Plain: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): native `<details>` owns Enter and the
+ * Interaction test (docs/ARCHITECTURE.md §10): native `<details>` owns Enter and the
  * panel's `hidden` state, and the exclusive policy is the widget's real
  * behaviour — opening the last item must close the initially-open one. This
  * is the assertion a static screenshot cannot make.
@@ -152,7 +152,7 @@ export const ExcludesSiblings: Story = {
 }
 
 /**
- * Interaction test (plan.md §10) for `multiple`: two panels open at once,
+ * Interaction test (docs/ARCHITECTURE.md §10) for `multiple`: two panels open at once,
  * which the exclusive default in `ExcludesSiblings` forbids — the one
  * behavioural difference between the two props.
  */

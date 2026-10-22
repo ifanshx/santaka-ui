@@ -2,8 +2,8 @@ import { svelte } from "@sveltejs/vite-plugin-svelte"
 import { defineConfig } from "vite"
 
 /**
- * Vite configuration for the Svelte example (plan.md section 10, framework
- * examples; section 17, "Every form control submits through a plain `<form>`",
+ * Vite configuration for the Svelte example (docs/ARCHITECTURE.md section 10, framework
+ * examples; section 16, "Every form control submits through a plain `<form>`",
  * and the Svelte row's "SSR and hydration tests").
  *
  * This example is the **server-rendered** path, which is the one difference from

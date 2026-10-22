@@ -2,12 +2,12 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-14
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §12 lists accessibility as a test layer and names `axe-core` +
-`@axe-core/playwright` as the stack; §17 makes "automated accessibility checks"
+`docs/ARCHITECTURE.md` §12 lists accessibility as a test layer and names `axe-core` +
+`@axe-core/playwright` as the stack; §16 makes "automated accessibility checks"
 a release-readiness item. Until now no automated scan ran: accessibility was
 covered by the per-component browser tests, which assert *behavior* (focus
 wiring, keyboard flow, `aria-invalid`, label association) but never re-check
@@ -42,7 +42,7 @@ states: light theme, dark theme, and after an invalid form submit.**
 
 axe covers what a rule can check: names, contrast, ARIA structure and
 permitted attributes, landmark hygiene. It cannot check keyboard *flow*,
-focus order, or screen-reader output. `plan.md` §12's honesty requirement
+focus order, or screen-reader output. `docs/ARCHITECTURE.md` §12's honesty requirement
 stands: the per-component browser tests remain the keyboard-and-behavior
 evidence, and axe is the regression net, not the certificate. A component
 passes neither on axe alone nor on behavior tests alone.

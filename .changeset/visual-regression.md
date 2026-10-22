@@ -2,7 +2,7 @@
 "@santaka-ui/web-components": minor
 ---
 
-plan.md §12 lists visual regression as test layer 7 and §17 requires an RTL
+docs/ARCHITECTURE.md §12 lists visual regression as test layer 7 and §16 requires an RTL
 visual case per component. Neither existed; Button had an RTL test, but it is
 an interaction test, and no other component had one at all.
 
@@ -17,7 +17,7 @@ is the only sanctioned way to write them, so they belong to the environment the
 project declares rather than to whoever last ran `--update-snapshots`.
 
 The spec photographs every section of the vanilla example page in light/ltr,
-light/rtl, and dark/ltr — 57 baselines. §17's per-component RTL requirement
+light/rtl, and dark/ltr — 57 baselines. §16's per-component RTL requirement
 becomes a property of the spec: adding a component section to the example adds
 its RTL and dark cases automatically.
 

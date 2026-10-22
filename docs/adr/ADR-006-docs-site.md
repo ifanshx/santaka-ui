@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-15
-- **Plan deadline:** end of weeks 5–6 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §10 names what the documentation site must carry — quick start per
+`docs/ARCHITECTURE.md` §10 names what the documentation site must carry — quick start per
 framework and install mode, a searchable component catalogue and API reference,
 copy-ready examples, live previews with a light/dark toggle and viewport
 controls, theme and token documentation, accessibility notes, keyboard tables,
@@ -15,7 +15,7 @@ Tailwind v4, forms, customization, and migrations — plus "separate labels for
 Stable, Preview, Experimental, and Deprecated".
 
 §5's toolchain table already names the two tools: **Astro with content
-collections** for the site and **Pagefind** for search. What §18 asks this record
+collections** for the site and **Pagefind** for search. What §17 asks this record
 to settle is *why*, and what it commits the project to.
 
 ## Evidence
@@ -79,7 +79,7 @@ for the MCP server's local index.
 A preview island imports from `@santaka-ui/web-components` — or the loader, for
 the SSR path — rather than from a path inside the monorepo. A preview that works
 only in this workspace would be a demo of something consumers cannot install,
-which is the defect class the consumer fixture (§17) was built to catch.
+which is the defect class the consumer fixture (§16) was built to catch.
 
 ### Stability labels are data, not prose
 

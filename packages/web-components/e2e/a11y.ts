@@ -5,7 +5,7 @@ import { expect, type Page } from "@playwright/test"
  * Automated accessibility scans (ADR-008).
  *
  * axe-core covers what a rule can check: semantic names, contrast, ARIA
- * wiring, landmark structure. It does NOT certify a component — plan.md §12
+ * wiring, landmark structure. It does NOT certify a component — docs/ARCHITECTURE.md §12
  * says so explicitly — and it cannot check keyboard flow or screen-reader
  * output, which the per-component browser tests cover by asserting behavior.
  * What it adds is a regression net across the whole example page on every
@@ -21,7 +21,7 @@ import { expect, type Page } from "@playwright/test"
 /**
  * The WCAG 2.0/2.1/2.2 A + AA tags axe implements, pinned for stability.
  *
- * 2.2 is the product target (plan.md §12) and axe-core 4.14 ships `wcag22aa`,
+ * 2.2 is the product target (docs/ARCHITECTURE.md §12) and axe-core 4.14 ships `wcag22aa`,
  * so scanning one version below the target was a claim the docs could not
  * make. Pinning the whole ladder rather than `wcag22aa` alone keeps 2.0 and
  * 2.1 regressions visible: a rule that regressed to the 2.0 level still fails.

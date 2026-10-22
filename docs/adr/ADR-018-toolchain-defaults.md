@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-12
-- **Plan deadline:** end of weeks 1–2 (`plan.md` §18)
+- **Specification:** §4 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §5 lists the toolchain as "decisions, not suggestions", each to be
+`docs/ARCHITECTURE.md` §5 lists the toolchain as "decisions, not suggestions", each to be
 re-affirmed here. The point of writing it down is not the list; it is the rule at
 the bottom of that section — *no additional linter is added without an ADR* —
 which only has force if there is a document saying which tools are in and which
@@ -56,7 +56,7 @@ to find out whether an absence is a decision or an oversight.
   Chromium by Playwright, which §5 explicitly permits ("real browser behavior is
   covered by Playwright"). The honest statement is that the jsdom component-test
   layer §5 describes does not exist for the universal package, and the browser
-  suite is what stands in for it. Recorded in `plan.md` §17 rather than claimed.
+  suite is what stands in for it. Recorded in `docs/ARCHITECTURE.md` §16 rather than claimed.
 - **Playwright Core and Baseline projects.** The three baseline projects
   (`chromium-baseline`, `firefox-baseline`, `webkit-baseline`) exist. A separate
   **Core-tier** project does not, and cannot: Playwright bundles one revision

@@ -4,7 +4,7 @@ A single-page Vue 3 app consuming `@santaka-ui/vue` through a real bundler.
 
 ## What this exists to prove
 
-plan.md section 17 has a release gate: *"Every form control submits through a
+docs/ARCHITECTURE.md section 16 has a release gate: *"Every form control submits through a
 plain `<form>` in React, Vue, and the universal package."*
 
 The universal half is proven in `packages/web-components/e2e/` — all six

@@ -125,7 +125,7 @@ export const LongLabel: Story = {
 }
 
 /**
- * Interaction test (plan.md §10, "controls and interaction tests for
+ * Interaction test (docs/ARCHITECTURE.md §10, "controls and interaction tests for
  * interactive components"). A reviewer can read the assertions and watch them
  * run in the Interactions panel; CI runs them for real through
  * `@storybook/addon-vitest` (`apps/storybook/vitest.config.ts`).

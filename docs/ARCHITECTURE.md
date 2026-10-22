@@ -1,12 +1,40 @@
-# Santaka UI — Master Project Plan
+# Santaka UI — Architecture and Specification
 
 > **Tagline:** One Design System. Every Framework. Your Code.
 >
-> **Status:** Weeks 1–4 in progress — foundation and first component implemented
-> **Product type:** Open-source, cross-framework UI ecosystem  
-> **Primary language:** TypeScript  
-> **Initial styling target:** CSS variables + Tailwind CSS v4 integration  
-> **Primary goals:** beautiful defaults, accessible behavior, code ownership, framework flexibility, a first-class CLI, and reliable documentation.
+> **Status:** thirty-eight components, ten publishable packages. The release
+> gates and what remains open are in `STATUS.md`; the reasoning behind each
+> decision below is in the ADR that recorded it.
+>
+> **Product type:** open-source, cross-framework UI ecosystem
+> **Primary language:** TypeScript
+> **Primary goals:** beautiful defaults, accessible behavior, code ownership,
+> framework flexibility, a first-class CLI, and reliable documentation.
+
+This is the specification: what the system is, what it guarantees, and why. Every
+ADR cites a section of it. It is not a work log — progress lives in `STATUS.md`,
+and the roadmap below is the forward-looking one, not a schedule of past work.
+
+## Contents
+
+1. Product Vision
+2. Goals and Non-Goals
+3. Framework Support Strategy
+4. Technical Architecture
+5. Monorepo Layout
+6. Design System
+7. Component Roadmap
+8. CLI Specification
+9. Registry and Distribution
+10. Documentation and Component Workshop
+11. AI and LLM Integration
+12. Quality, Accessibility, and Test Strategy
+13. Security, Licensing, and Governance
+14. Release and Versioning Policy
+15. Future Roadmap
+16. Release Gates
+17. Architecture Decision Records
+18. Definition of Success
 
 ---
 
@@ -328,7 +356,7 @@ One package per implementation, with subpath exports. Do not split per component
 - Keep icon sizing, weight, decorative/meaningful semantics, and accessible labels documented.
 - Do not require the React icon package in non-React integrations; add framework-specific bindings or an appropriate web icon strategy.
 
-## 5. Suggested Monorepo
+## 5. Monorepo Layout
 
 ```text
 santaka-ui/
@@ -995,87 +1023,9 @@ These must be resolved **before** the first public npm publish, and ideally duri
 - Major releases: breaking changes with migration guide and codemods where practical.
 - Publish packages in a coordinated, documented sequence; do not force every framework adapter to the same maturity level.
 
-## 15. Proposed 12-Week MVP Roadmap
 
-This is a planning estimate for a small team of roughly 2–4 experienced contributors. Actual timing depends on scope, design capacity, complex widget requirements, and framework parity.
+## 15. Future Roadmap
 
-### Weeks 1–2 — Architecture and foundation
-
-- [x] Confirm scope, package naming, licensing, and public API conventions. Default license is **MIT**; switching later is a breaking change for adopters.
-- [x] Time-box a Web Components tooling comparison (Stencil default vs Lit) using one realistic interactive component, and record the outcome as an ADR. If no decisive evidence appears within the box, keep Stencil and move on.
-- [x] Define token schema, themes, component metadata, and framework support labels.
-- [x] Set up the monorepo, CI, linting, formatting, type checks, and release conventions.
-- [x] Verify the legal preconditions in section 13: trademark search, npm scope availability, domain, mascot originality. *(Settled on 2026-10-21, with the one caveat that a registry search is evidence of absence in the registers consulted, not a clearance opinion. **Trademark:** the name "Santaka" is not in use anywhere the owner could find — no registered mark surfaced in the owner's search, and no public use of the name for software. **npm scope:** `@santaka-ui` is unregistered — `npm view @santaka-ui/core` returns 404, so the scope exists to claim. **Domain:** `santaka.dev` does not resolve, so it is unregistered. **Mascot:** `sk-taka` is original SVG drawn for this repo rather than traced or borrowed, which is what §13 asks of the artwork. What a formal registration would add — and why npm publish still waits on a decision rather than on this checkbox — is recorded in §17 below.)*
-- [x] Build a small visual prototype and test package architecture decisions early. *(The prototype's output was the architecture, and it is committed: ADR-001 (web components toolchain), ADR-002 (token pipeline), ADR-003 (behavior ownership), and ADR-004 (naming, scope, license) were all decided in weeks 1–2 against a running component rather than on paper. Two of them were decisions the prototype forced and would not have been obvious otherwise: ADR-002 carries a recorded deviation from §5's toolchain table because the expected token transformer did not do what the plan assumed, and ADR-003 assigns behavior to the universal custom elements rather than to the React adapter, which is what the adapters being thin follows from.)*
-- [x] Write the API conventions, forms contract, and starter token values into the shared `tooling/` config, then implement Button against them as the first conformance test.
-- [x] Record ADR-011 through ADR-014, ADR-017, and ADR-018, and prove scoped styles plus lazy registration work under Next.js SSR before committing to them. *(All six of those ADRs now exist, and so does every ADR through ADR-021. ADR-006 (docs site) and ADR-007 (registry hosting) are now recorded as well, and ADR-020 (Storybook framework) and ADR-021 (the Svelte path, including the registration-order rule) follow them, so the set is complete. The Next.js SSR proof is done — `examples/nextjs` builds, renders every tag on the server, defines nothing server-side, and hydrates cleanly; evidence in ADR-005.)*
-
-**Exit criteria:** architecture decision record, working monorepo, first token build, and a documented proof of concept.
-
-### Risk register
-
-Review this list at the end of every two-week phase. A risk without a named owner is a risk that gets discovered late.
-
-| # | Risk | Impact | Mitigation |
-|---|---|---|---|
-| R1 | The Web Components toolchain choice (Stencil vs Lit) proves wrong late, after component code exists | Rework across the entire universal package | Time-box the comparison in weeks 1–2 and record an ADR; keep the PoC small enough to throw away |
-| R2 | Custom elements hydrate or upgrade badly under SSR frameworks (Next.js, Nuxt, SvelteKit) | Support-matrix claims become false; the section 17 release gate fails | Test one component under SSR in weeks 1–2, not week 11; publish an explicit lazy-registration and client-only guidance path. **The risk was real and it was found**: registering the elements *before* hydration makes Svelte discard the server's markup, which is what a scoped element with no shadow root (ADR-011) does to any hydrating tree. The guidance is now published rather than implied — `apps/docs/.../guides/ssr.astro` carries the ordering rule with the failure it prevents, `examples/svelte-vite` asserts that hydration reused the server's nodes, and ADR-021 records the 117-vs-274-node measurement behind it. Next.js was never at risk in the same way, because React runs effects after hydration (ADR-005); measured for Svelte, read for React, still unmeasured for Nuxt |
-| R3 | Flash of unstyled or unhydrated custom elements in real apps | Visible quality defect on the headline framework-neutral path | Closed by the scoped-styles decision in section 4 (ADR-011), which removes the shadow-root FOUC mechanism entirely; keep the zero-flash vanilla example as the regression check |
-| R4 | Dual implementation cost silently doubles every interactive component | Weeks 5–8 overrun, Definition of Done quietly dropped | Enforce the ownership rule and the per-component time budget; the second implementation is an adapter, never a rewrite |
-| R5 | `1.0.0` is declared before Tier 2 scope is genuinely complete | Permanent credibility damage with adopters | Weeks are estimates and exit criteria are gates; the support matrix reflects test evidence only |
-| R6 | npm scope, trademark, or domain conflict surfaces after dependents exist | Cannot publish; renaming forces breaking churn | Resolve in weeks 1–2 via the section 13 preconditions, before any public commitment |
-| R7 | Bundle budgets are never measured, so tree-shaking claims stay unproven | Performance claims in the documentation become false | Enforce the section 12 budget table in CI on every commit, measured per import |
-
-### Weeks 3–4 — Tokens and core UI
-
-- [x] Implement semantic tokens and light/dark themes.
-- [x] Build Button, Icon Button, Link, Badge, Card, Typography, Separator, Spinner, Skeleton, Input, Textarea, and Label. *(Done and proven in Chromium: Button, Icon Button, Link, Badge, Card, Text, Spinner, Skeleton, Label, Separator, Input, Textarea — Tier 1 complete.)*
-- [x] Add React and universal Web Components implementations for the agreed core subset. *(Complete for all thirty-eight shipped components, each with universal and React implementations.)*
-- [x] Add Storybook stories and baseline tests. *(`apps/storybook` is the section 10 workshop. Thirty-eight story files — one per registered component — carry **234 stories** with the documented variants: default, sizes, disabled, loading, error/invalid, long content, and dark via the theme toolbar — plus the a11y addon and fourteen interaction tests that run as real Chromium tests through `@storybook/addon-vitest` (`vitest.config.ts`, `play` functions in the story files themselves). The framework choice and its limits are recorded in ADR-020. `pnpm run verify` builds, typechecks, lints, and tests it like every other workspace package.)*
-- [x] Prove plain `<form>` submission for Input and Select in all three targets, including `formResetCallback` in the universal package. *(All three targets are now proven. **Universal:** Input, Textarea, and Select are proven in Chromium — submission through a plain form, `formResetCallback` restoring the initial value, `formDisabledCallback` withholding a disabled field, and `formStateRestoreCallback` on restore. **React:** `examples/react-vite/e2e/form-submission.e2e.ts` renders all six form controls through `@santaka-ui/react`, submits a plain `<form>`, and reads the entries out of the browser's own `FormData`; it runs as the `react-example` CI job. Writing it found two real defects — `Checkbox` never forwarded `value`, and `Radio Group` submitted every field twice because the inner radios and the form-associated host both submitted. **Vue:** `examples/vue-vite/e2e/form-submission.e2e.ts` does the same through `@santaka-ui/vue` and runs as the `vue-example` CI job; it is a separate job because Vue chooses between a property and an attribute per component, so a control can take a route React never takes and still be wrong. Negative-tested by dropping `name` from the Checkbox adapter: two tests fail. React 19 form actions remain untested.)*
-
-**Exit criteria:** basic components work in React + Vite and plain HTML, with a repeatable build.
-
-### Weeks 5–6 — Interactions and forms
-
-- [x] Add Checkbox, Radio Group, Switch, Tabs, Select, Tooltip, Dialog, Alert Dialog, and Toast — the v1.0 Tier 2 scope from section 7. *(Complete: all nine shipped and proven in Chromium, each with universal + React implementations, keyboard tests, and registry `ai` blocks. `llms.txt` and `llms-full.txt` have since shipped and are verified in CI; the remaining v1.0 gap is the MCP server.)*
-- [x] Validate keyboard interaction, focus return, accessible labeling, and controlled/uncontrolled behavior. *(Keyboard: every interactive component has its own Chromium spec — Tab and Shift+Tab traversal in `tabs.e2e.ts`, arrow-key radio navigation in `radio-group.e2e.ts`, Escape and the focus trap in `dialog.e2e.ts` and `alert-dialog.e2e.ts`. Focus return: the same two specs assert it — "escape closes it, and focus returns to the trigger", "the actions close it, and focus returns to the invoker". Accessible labeling: axe-core runs over the assembled page in light and dark palettes and over the glass material (`a11y.e2e.ts`), and `conventions.e2e.ts` holds the per-component conventions rather than trusting review. Controlled/uncontrolled: `packages/react/src/controlled.test.tsx` asserts both channels for Input, Textarea, Radio Group and Checkbox — the controlled prop reaches the element's controlled property, the uncontrolled prop reaches its initial-value channel, and the uncontrolled prop does *not* populate the controlled one, which is the bug that makes a controlled field un-controllable. Writing it found a hole in the suite rather than in an adapter: `sk-checkbox` had no definition in `packages/react/src/test-setup.ts`, so React treated the tag as a plain element and wrote attributes — attribute assertions passed while the property channel, the one a browser takes, was never exercised. The stub now exists and `form-name.test.tsx`'s `value` assertion reads the property.)*
-- [x] Name the behavior owner (section 4) for each interactive component in its documentation; undocumented divergence blocks the Stable label. *(All thirty-eight components declare `behaviorOwner: "web-components"` in their registry entries, validated by `packages/core`'s registry tests, and the decision is recorded in ADR-003: the universal package owns every component's behavior, React is a thin adapter, and there is no Radix dependency to make the React package the owner of anything. No divergences exist, which the adapter structure supports rather than asserts.)*
-- [x] Add interaction, keyboard, and accessibility tests. *(Forty Chromium specs, 416 tests per engine: one per component plus the cross-cutting ones — `a11y.e2e.ts`, `conventions.e2e.ts`, `structure.e2e.ts`, `materials.e2e.ts`, `form-state-restore.e2e.ts`, `touch-target.e2e.ts`, and `responsive.e2e.ts`. Interactions are tested where they happen rather than in one lump: tooltips on hover *and* focus, toast dismissal, dialog open/close, form submission through a real `<form>`, combobox filtering and arrow navigation. Keyboard and accessibility are the two items above and below this one, so this line is about the suite existing and running in CI — it does, in the `browsers` job across Chromium, Firefox and WebKit (1246 tests on the last full three-engine run), while the fourteen Storybook interaction tests run through `@storybook/addon-vitest` in `verify`.)*
-- [x] Ship `llms.txt`, the MCP server, and the registry `ai` block for the v1.0 component set. *(`apps/docs/public/llms.txt` and `llms-full.txt` are generated from the registry and verified in CI. `@santaka-ui/mcp` is a stdio server over the same metadata with the four tools section 11 names, unit-tested (19 tests) and smoke-tested in CI by driving a real MCP client over an in-memory transport pair. The registry `ai` blocks have existed for every component since Tier 1 — thirty-eight of them now — and the schema that requires them is now recorded in ADR-015, along with the `props`/`events` fields `get_component` reports — derived from the committed declarations and component sources rather than authored.)*
-
-**Exit criteria:** core interactive workflows pass the defined component and browser checks.
-
-### Weeks 7–8 — Navigation, data patterns, and blocks
-
-- [x] Add Alert, Progress, Empty State, Accordion, and a basic Table/Data Table. *(All five shipped and proven in Chromium, in the universal package and through the React adapter, with registry entries and `ai` blocks: `alert.e2e.ts`, `progress.e2e.ts`, `empty-state.e2e.ts`, `accordion.e2e.ts`, `table.e2e.ts`. The table's own scroll region is asserted in `table.e2e.ts`, and `responsive.e2e.ts` covers it at 320px inside a 200px wrapper.)*
-- [x] Publish starter blocks for dashboard, settings, and authentication screens. *(`packages/web-components/src/blocks/` ships the three blocks as `.html` plus layout CSS — no JavaScript, because the elements own their behavior (ADR-003), and no per-framework variants, because a block is a page composition rather than an adapter surface. Their entries are generated by `packages/core/scripts/generate-registry.mjs`, which derives `registryDependencies` from the custom elements the markup actually opens and the CSS variables from the stylesheet it actually reads: a block that composes an element with no registry entry fails the build instead of shipping markup whose elements the consumer does not have. ADR-022 records the four decisions this needed. The first one is not about blocks: `registryDependencies` had been declared in the schema, in the types, and in all forty-one entries since the registry existed and was read by **no code** — `santaka add` copied one entry's own files and stopped — so the CLI now resolves the dependency closure depth-first, deduplicates, refuses a cycle with the chain named, reports a missing dependency with the entry that asked for it, and applies the conflict/diff/journaled-write rules to the closure as one plan. A dependency-free install is byte-identical to before, checked against the previous binary. Proof: six axe scans (three block pages, light and dark) pass, negative-tested by injecting an unlabelled `<input>` and watching the scan fail; `tests/consumer/run.mjs` installs `settings` from the packed tarball outside the workspace and asserts that all eleven composed components land with it; and the CLI's subprocess suite asserts the same against the bundled registry. The plan's earlier note that "the CLI, `llms.txt` and the docs all carry `type` through without filtering on it" was wrong in three places, which the same change fixes: `santaka list` counted every entry as a component, the docs mapped every entry to a `/components/<name>` page with an `sk-<name>` heading, and the MCP tools emitted `tag: sk-<name>` for any entry — each would have named a custom element that no package registers. No screenshot baseline: a block page's layout is meant to be edited by the consumer, so a baseline would pin the thing the block invites you to change.)*
-- [x] Create example applications for React + Vite, Vue + Vite, Next.js, and vanilla HTML. *(`examples/react-vite`, `examples/vue-vite`, `examples/nextjs`, and `examples/vanilla-html` all exist. The React + Vite example closes section 17's "submits through a plain `<form>` in React" gate: `examples/react-vite/e2e/form-submission.e2e.ts` renders every form control through `@santaka-ui/react`, submits a plain `<form>`, and reads the entries back out of the browser's own `FormData`. The Vue + Vite example closes the Vue half the same way, in `examples/vue-vite/e2e/form-submission.e2e.ts`. Each runs in CI as its own job (`react-example`, `vue-example`), separate from the universal browser matrix, because "the adapter forwards `name`" is a different claim from "the universal element submits" — the adapter dropping `name` is invisible to the universal suite — and separate from each other because Vue's property-versus-attribute choice per component is a route React never takes.)*
-- [x] Measure bundle size against the section 12 budgets and resolve integration issues. *(`packages/web-components/scripts/measure-bundle.mjs` measures each budget as its own entrypoint — the runtime, and the components that carry a per-component budget — so the figure answers "is this one oversized" rather than "is the library large". The budgets are enforced, not reported: the script exits non-zero when a measurement exceeds its `budgetKb`, and the entrypoint list is read from `src/index.ts` rather than hardcoded, so a new component cannot silently escape measurement. ADR-010 records the budget table and what tree-shaking is and is not claimed to do. CI runs it as its own step after `pnpm run verify`, with `if: always()`, so a size failure is reported even when the build it depends on already failed.)*
-
-**Exit criteria:** examples prove the system can build real application screens without requiring Next.js.
-
-### Weeks 9–10 — CLI and registry
-
-- [x] Implement project detection, explicit framework selection, and install modes. *(`packages/cli` detects framework, package manager, TypeScript, styling, and config files, with evidence for each conclusion; `--framework` overrides without silencing detection, and an unknown value fails with the supported list. Two distribution modes: `add` copies source (the default), and the install commands for package mode are printed rather than run — a scaffolder that shells out to a package manager can no longer tell a network failure from a permissions failure from a version conflict.)*
-- [x] Implement `init`, `add`, `theme init`, `list`, and `doctor` as the initial command set. *(`init`, `add`, `list`, `doctor`, `diff`, `theme init`, `registry`, and `update` all ship, plus `diff` as a CI check. 37 unit tests and 18 end-to-end tests that drive the built binary in a real subprocess.)*
-- [x] Validate registry schemas, dependency metadata, safe paths, and diff output. *(Every entry is validated against `registry-item-v1` before use; destinations are confirmed inside the project root with a `relative()` check rather than a string prefix; source bytes are hashed against the entry's declared checksum; `diff` renders a unified diff and exits 2 on drift.)*
-- [x] Add CLI tests across Windows, macOS, and Linux. *(The `cli` CI job runs the unit and end-to-end suites on `ubuntu-latest`, `macos-latest`, and `windows-latest`. The paths, the exit codes, and the executable bit all differ per platform, which is why the matrix is the check rather than a note.)*
-- [x] Document supported setups and errors. *(Supported setups are the generated pair — `docs/framework-support.md` (checked against the tree in both directions by the `framework-matrix` CI job) and `docs/browser-support.md` (derived from the Playwright projects) — plus `apps/docs/src/pages/quick-start.astro`. Errors are now written down: `apps/docs/src/pages/guides/cli.astro` documents the source/package modes, the detected setups, the eight commands with their flags, the three exit codes (0 ok, 1 error, 2 conflict), the path and checksum refusals quoted verbatim from `packages/cli/src`, an error-to-fix table, and what a failed run leaves behind. Writing it found the docs had four guide links and one guide: `forms`, `theming` and `accessibility` were 404s. All four now exist, and `tests/docs/guide-links.test.mjs` resolves every internal link on every page against the page tree, the static files, and the routes generated from the registry — with a negative case, because a check that cannot fail asserts nothing. It runs in the `test:docs` suite.)*
-
-**Exit criteria:** a developer can initialize a supported project, install a component, and troubleshoot common setup issues.
-
-### Weeks 11–12 — Stabilization and release candidate
-
-- [x] Audit accessibility, theme contrast, reduced motion, and responsive states. *(**Accessibility:** axe-core runs the full assembled example page twice, once in the light palette and once with `data-sk-theme="dark"` so the contrast rules re-evaluate against the dark tokens (`packages/web-components/e2e/a11y.e2e.ts`, helper `a11y.ts`), and `conventions.e2e.ts` asserts the per-component conventions rather than trusting review. **Contrast** is a build gate rather than a review: `packages/tokens/scripts/build-tokens.mjs` holds a `CONTRAST_GATES` table with a required minimum per token pair and fails the token build when a ratio drops below it (0.005 of slack for float noise at an exact boundary), writing the measured ratios to `dist/css/contrast-report.txt` — 18.21:1 and 17.54:1 for body text on the surface, 6.64:1 and 7.96:1 for the muted text, and the pair closest to its own floor is 4.83:1 against a 4.5:1 minimum. **Reduced motion:** thirteen component stylesheets carry `@media (prefers-reduced-motion: reduce)`, and the ones that animate are asserted individually — six tests across five specs, each checking that the animation is *gone* rather than merely faster: the spinner stops instead of slowing, the skeleton's shimmer stops travelling, the progress sweep stops with its state still visible, the dialog's entrance animation is removed, the accordion's content wrapper has no animation and no transform, and the glass material's press animation is removed rather than shortened. **Responsive:** `responsive.e2e.ts` measures the page at 320, 360 and 768 pixels, squeezes a section to 240px and four components into a 200px wrapper, checks that a component neither overflows its box nor widens the page, that the touch target still clears the token at the narrowest width, and that the accordion marker mirrors in RTL. Writing it found a real defect — two empty-state demos pinned `min-inline-size: 20rem`, which put a 32px horizontal scroll on the page at 320px — and it is fixed in the example page with `min(20rem, 100%)` rather than in the component, because the component sets `inline-size: 100%` and was never the problem.)*
-- [x] Test production builds, SSR/hydration for claimed integrations, package exports, and tree-shaking. *(**Production builds and exports:** `tests/consumer/` packs every published package with `pnpm pack` and installs the tarballs outside the workspace, then checks the exports each one advertises, the type declarations (`attw`), and the CLI and MCP entrypoints — a route no workspace-relative import can take, which is why it finds what the unit tests cannot. **SSR and hydration:** `examples/nextjs` builds and server-renders every tag, defines nothing on the server, and hydrates cleanly (ADR-005); `examples/svelte` is the second proof, run as its own CI job. **Tree-shaking:** `measure-bundle.mjs` measures a fixture that imports one component, so the number is what a consumer's bundler produces rather than what is on disk — and the budgets fail on regression, which is what keeps the claim from quietly becoming false (risk R7 in the register).)*
-- [x] Run visual regression and cross-browser tests for supported targets. *(**Visual:** one hundred and five baselines — thirty-five example-page sections, each photographed in LTR, in RTL, and in dark — captured and compared in the pinned Docker Playwright image (ADR-019), so a rendering difference is a diff and not an environment. The project is not a CI gate, which ADR-019 states twice and honestly: deliberate in the sense that a visual diff must not turn a required job red, and recorded as debt in the sense that making it blocking needs a CI job that runs the pinned image. Until then it runs on demand and in review, and the rule for changing a baseline is a reviewed diff, not a re-record. **Cross-browser:** the `browsers` CI job runs the whole universal suite on Chromium, Firefox and WebKit — **436 tests per engine, 1,308 total**, all passing with no retries — and `docs/browser-support.md` is generated from the Playwright projects that exist, so the matrix cannot claim an engine the suite does not run.)*
-- [x] Complete documentation, release notes, contribution guide, and license audit. *(**Documentation:** `apps/docs` is the site (ADR-006) — a page per registry entry generated from the registry itself, the four guides, and the generated `llms.txt`/`llms-full.txt`, with internal links resolved by `tests/docs/guide-links.test.mjs`. **Release notes:** `CHANGELOG.md` (154 lines) records what has landed since the foundation and is honest that nothing has been published; `docs/RELEASE.md` is the versioning policy — version stages, what each bump means with "breaking" defined as *whether adopting code has to change*, what counts as public API, coordinated publishing, why internal dependencies sit at the `minor` threshold, and a "Not yet done" section that names the npm and legal gaps rather than implying a release. **Contribution guide:** `CONTRIBUTING.md` (94 lines) covers setup, the loop, a Definition of Done, how an architecture decision is made, pull requests, the commit and release convention, the Code of Conduct, and how to report a security issue — plus `CODE_OF_CONDUCT.md`. **License audit:** `scripts/audit-licenses.mjs` classifies every dependency into allow / review / deny, writes the inventory to `docs/dependency-licenses.md`, fails on a denied license, and runs as the `audit` CI job. The project's own `LICENSE` is MIT, decided in ADR-004. The *name* question is settled as of 2026-10-21 — see the legal-preconditions item above; what remains open is the choice to publish, not the search.)* *(**The CI surface is fully named here**, because three jobs ran on every push without appearing in either document: `changesets` (a malformed changeset fails the build before it reaches the release step), `registry` (the registry payload and its remote path), and `audit` (dependency licenses and security, above). A job nobody has written down is a job nobody thinks to check when it silently stops mattering.)*
-- [ ] Publish a release candidate and gather feedback before declaring v1.0 stable. *(Everything needed to cut one exists — `docs/RELEASE.md` defines the versions, `.changeset/config.json` and the changesets describe the pending bumps, `CHANGELOG.md` is current, `.github/workflows/publish.yml` is the publish path, and `pnpm run verify` is green. The §13 name search is settled — "Santaka" is not in use, `@santaka-ui` is unclaimed, `santaka.dev` is open — so the blockers are now three **choices**, not missing work: the owner has not said "publish under this name"; the npm org and domain are unregistered until that decision lands; and the manual keyboard review below is part of what a candidate is supposed to validate. Publishing under a scope that later has to change would make every adopter's first install a rename, which is exactly the breaking change §14 says to avoid. So this waits on those, deliberately.)*
-
-**Exit criteria:** all release gates below pass and the support matrix accurately reflects test evidence.
-
-## 16. Future Roadmap
 
 ### v1.x — Adoption and component breadth
 
@@ -1100,9 +1050,13 @@ Review this list at the end of every two-week phase. A risk without a named owne
 - Advanced data components and specialist package integrations.
 - Native mobile support only as a separate implementation strategy, not by implying web components are native widgets.
 
-## 17. Release Readiness Checklist
 
-A release candidate is ready only when the applicable items are checked and evidence is recorded.
+## 16. Release Gates
+
+A release candidate is ready only when every applicable gate below is met
+and its evidence is recorded. This is the definition of done for a release,
+not a status report: which gates are met today is in `STATUS.md`.
+
 
 - [x] Core component documentation and examples are complete. *(The **framework and search decisions** are recorded in ADR-006 — Astro with content collections, Pagefind for a build-time index, static by default with preview islands — and the component documentation itself is generated from the registry, so a prop rename reaches the docs, the CLI, the MCP server, and `llms.txt` together or not at all. `apps/docs` is that application: component pages derived from `RegistryItem`, a Pagefind index over the built site, and preview islands that import the consumer-facing `@santaka-ui/web-components` package, alongside the generated `llms.txt`, `llms-full.txt`, and `registry/` payload under `apps/docs/public/`.)*
 - [x] Public TypeScript types and package exports validate in clean consumer projects. *(`tests/consumer/run.mjs` packs all ten packages with `pnpm pack`, installs the tarballs into a scratch project outside the workspace, and runs thirteen checks: every documented export subpath resolves; the ESM entrypoints import and export what they claim; the loader registers nothing on import (ADR-005); the stylesheets are real files with the tokens the components need; no export resolves to CommonJS (ADR-012); the CLI detects a project and installs a component from the tarball; the MCP server answers over a real transport from the tarball; the **universal** packages typecheck with `skipLibCheck: false` and **without** `@types/node`; the Node packages typecheck with it; the elements upgrade in a real browser; the React adapter server-renders the elements it wraps; and the Vue adapter does the same through `vue/server-renderer`. A `consumer` CI job runs it. It found a real defect on first run: `loader/cdn.js` was a CommonJS shim pointing at `dist/cjs/loader.cjs.js`, a file the build deletes — unreachable and broken, and shipped in every tarball.)* *(The React package's element declarations are hand-written, so `src/custom-elements.test.ts` compares every element type against the `@Prop` decorators in `packages/web-components/src` in both directions for all thirty-eight components, and checks the JSX tag list against the tags the element sources actually render. The file had drifted: seven components were missing a property the element really exposes, and three declared an `onValueChange` handler no element has — those dispatch `sk-value-change` directly, so reading it would have been `undefined` while TypeScript said otherwise. Both directions were proven to fail by injecting one of each.)*
@@ -1129,52 +1083,45 @@ A release candidate is ready only when the applicable items are checked and evid
 - [x] The public framework/browser support matrix reflects tested evidence. *(Both halves are now generated and checked rather than written. The browser half is `docs/browser-support.md`, derived from the Playwright projects and checked by the `support-matrix` job. The framework half is `docs/framework-support.md`, derived from `scripts/generate-framework-support.mjs` and checked by the `framework-matrix` job, which also runs `pnpm run test:docs`. A **Stable** target must name a package, an example, and a test script that exist — React + Vite, Next.js, Plain HTML/JavaScript, and Vue 3 + Vite each do — and a **Planned** target names the directory where that support would live, which must *not* exist, so building an adapter cannot leave the document claiming it is unbuilt. Every directory in `packages/`, `examples/`, and `apps/` must be accounted for by a row, which is the check that catches support that exists and was never written down. No target is at Preview.)*
 - [x] Legal preconditions in section 13 are resolved: license, trademark, npm scope, domain, mascot rights. *(Settled 2026-10-21, with one honest caveat: a search is evidence of absence in the registers consulted, not a legal clearance opinion — only a trademark attorney can give the latter, and using the name commercially without one is a risk the owner chose to accept. **License:** MIT (ADR-004), `LICENSE` in the tree, `scripts/audit-licenses.mjs` reviews every dependency with three flagged for human reading. **Trademark:** the owner searched and "Santaka" is not in use — no registered mark and no public software use of the name surfaced. **npm scope:** `@santaka-ui` is unregistered — `npm view @santaka-ui/core` returns 404 — so the scope exists to claim when publishing starts. **Domain:** `santaka.dev` does not resolve, so it is unregistered. **Mascot:** `sk-taka` is original SVG drawn for this repo rather than traced or borrowed, and its provenance as artwork is recorded here; a formal mark registration is a separate decision the owner can make later. What still waits is a *choice*, not a search: cutting the release candidate below needs the owner to decide to publish under this name, and to register the scope and domain when they do.)*
 
-## 18. Architecture Decision Records
 
-The following decisions must be recorded as ADRs under `docs/adr/` before dependent work begins. An ADR is short: context, decision, evidence, and what would reverse it. Undocumented defaults are how a project acquires two conflicting conventions.
+## 17. Architecture Decision Records
 
-| ADR | Decision | Deadline |
+Every decision that a future change would have to argue against is recorded in
+the [`adr/`](adr/) directory. An ADR is short — context, decision, evidence, and
+what would reverse it — because an undocumented default is how a project ends up
+with two conflicting conventions and no memory of choosing either.
+
+| ADR | Decision | Note |
 |---|---|---|
-| ADR-001 | Web Components authoring toolchain (Stencil default, Lit as the alternative) | End of weeks 1–2 |
-| ADR-002 | Token source format and build pipeline (DTCG as source, CSS variables as contract) | End of weeks 1–2 |
-| ADR-003 | Behavior ownership per component family | With the first component of each family |
-| ADR-004 | Package naming, publish scope, and license (MIT) | End of weeks 1–2 |
-| ADR-005 | SSR and hydration strategy for the universal package, including custom-element registration timing | End of weeks 3–4 |
-| ADR-006 | Documentation site framework and search approach | End of weeks 3–4 |
-| ADR-007 | Registry hosting model: static versioned JSON versus a live endpoint | End of weeks 5–6 |
-| ADR-008 | Accessibility testing stack: axe-core plus `@axe-core/playwright` in browser tests, with manual review recorded per component | End of weeks 5–6 |
-| ADR-009 | Source-mode upgrade path for locally modified components | With the first CLI release |
-| ADR-010 | Bundle budgets and how they are enforced | End of weeks 1–2 |
-| ADR-011 | CSS encapsulation: scoped styles over Shadow DOM | End of weeks 1–2 |
-| ADR-012 | Distribution contract: ESM-only, subpath exports table, peer ranges | End of weeks 1–2 |
-| ADR-013 | Component API conventions and naming grammar | End of weeks 1–2 |
-| ADR-014 | Browser support baseline and Core tier | End of weeks 1–2 |
-| ADR-015 | AI metadata schema, llms.txt, and MCP server packaging | End of weeks 5–6 |
-| ADR-016 | RTL strategy: logical properties, direction-derived keyboard behavior | End of weeks 3–4 |
-| ADR-017 | Starter token values, type scale, and motion values | End of weeks 1–2 |
-| ADR-018 | Toolchain defaults table | End of weeks 1–2 |
-| ADR-019 | Visual-regression baselines and the environment that owns them | End of weeks 11–12 |
-| ADR-020 | Storybook framework choice and what one React-renderer setup cannot host | End of weeks 5–6 |
-| ADR-021 to ADR-026 | Recorded as decisions arose, past the original twenty: Svelte support and the SSR registration order, block items and registry dependencies, measured bundle budgets, internationalization scope, Tailwind and icon integrations, and the runtime budget raise | As each arose |
+| [001](adr/ADR-001-web-components-toolchain.md) | Web Components authoring toolchain | Stencil over Lit, with the evidence |
+| [002](adr/ADR-002-token-pipeline.md) | Token source format and build pipeline | DTCG as source, CSS custom properties as the contract |
+| [003](adr/ADR-003-behavior-ownership.md) | Behavior ownership per component family | The universal elements own behavior; adapters are thin |
+| [004](adr/ADR-004-package-naming-and-license.md) | Package naming, publish scope, and license | MIT,  scope |
+| [005](adr/ADR-005-ssr-and-hydration.md) | SSR and hydration strategy | Custom-element registration timing |
+| [006](adr/ADR-006-docs-site.md) | Documentation site framework and search | Astro with content collections, Pagefind |
+| [007](adr/ADR-007-registry-hosting.md) | Registry hosting model | Static versioned JSON, not a live endpoint |
+| [008](adr/ADR-008-accessibility-testing.md) | Accessibility testing stack | axe-core in browser tests plus recorded manual review |
+| [009](adr/ADR-009-source-mode-upgrades.md) | Source-mode upgrade path | For locally modified components |
+| [010](adr/ADR-010-bundle-budgets.md) | Bundle budgets and how they are enforced |  |
+| [011](adr/ADR-011-css-encapsulation.md) | CSS encapsulation | Scoped styles over Shadow DOM |
+| [012](adr/ADR-012-distribution-contract.md) | Distribution contract | ESM-only, subpath exports, peer ranges |
+| [013](adr/ADR-013-component-api-conventions.md) | Component API conventions and naming grammar |  |
+| [014](adr/ADR-014-browser-support-baseline.md) | Browser support baseline and Core tier |  |
+| [015](adr/ADR-015-ai-metadata-and-mcp.md) | AI metadata schema, llms.txt, and MCP packaging |  |
+| [016](adr/ADR-016-rtl-strategy.md) | RTL strategy | Logical properties, direction-derived keyboard behavior |
+| [017](adr/ADR-017-token-values-and-type-scale.md) | Starter token values, type scale, and motion |  |
+| [018](adr/ADR-018-toolchain-defaults.md) | Toolchain defaults table |  |
+| [019](adr/ADR-019-visual-regression.md) | Visual-regression baselines and the environment that owns them |  |
+| [020](adr/ADR-020-storybook-framework.md) | Storybook framework choice | And what one React-renderer setup cannot host |
+| [021](adr/ADR-021-svelte-support-and-ssr-path.md) | Svelte support and the SSR path |  |
+| [022](adr/ADR-022-block-items-and-registry-dependencies.md) | Block items and registry dependencies |  |
+| [023](adr/ADR-023-measured-bundle-budgets.md) | Measured bundle budgets |  |
+| [024](adr/ADR-024-internationalization-scope.md) | Internationalization scope |  |
+| [025](adr/ADR-025-tailwind-and-icon-integration.md) | Tailwind and icon integration |  |
+| [026](adr/ADR-026-runtime-budget-tier-1-completion.md) | Runtime budget after Tier 1 completion |  |
 
-## 19. First Implementation Tasks
+## 18. Definition of Success
 
-
-Start with this order to avoid building the entire ecosystem before its key assumptions are proven:
-
-1. Create the monorepo and CI baseline.
-2. Record ADR-001, ADR-002, ADR-004, ADR-010, ADR-011, ADR-012, ADR-013, ADR-014, ADR-017, and ADR-018, and resolve the section 13 legal preconditions.
-3. Define the public token schema and CSS custom-property contract.
-4. Implement one foundational component (Button) in React and in the universal package, naming its behavior owner per ADR-003.
-5. Test Button in React + Vite, Next.js, and plain HTML fixtures.
-6. Verify theme switching, keyboard/focus behavior, packaging, bundle budgets, and SSR/hydration requirements; record ADR-005.
-7. Prove scoped styles, plain-form submission, and lazy custom-element registration in all three targets; that proof is the gate for building any other component.
-8. Use lessons from that proof of concept to finalize component APIs and package boundaries.
-9. Build the initial component subset and the Storybook workshop.
-10. Implement CLI and registry only after package layouts and metadata contracts have stabilized; record ADR-009.
-11. Expand framework adapters based on passing integration tests and validated user demand.
-
-## 20. Definition of Success
 
 Santaka v1.0 succeeds when a developer can use the documentation to choose a supported environment, initialize a project with the CLI, apply a theme, add a component, understand and edit the source or install a versioned package, and build a real UI without being forced to use Next.js.
 
@@ -1182,7 +1129,11 @@ The most important differentiators are not a raw component count. They are relia
 
 ---
 
+
+---
+
 ## Reference Links
+
 
 These are primary documentation sources to re-check when implementation begins; exact versions and APIs may change.
 

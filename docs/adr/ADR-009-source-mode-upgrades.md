@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-15
-- **Plan deadline:** with the first CLI release (`plan.md` §18)
+- **Specification:** §8 of [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ## Context
 
-`plan.md` §8 offers two distribution modes, and the choice is not about
+`docs/ARCHITECTURE.md` §8 offers two distribution modes, and the choice is not about
 convenience:
 
 - **Package mode** — install versioned npm packages. Upgrades are the package
@@ -26,10 +26,9 @@ discovered later, in a diff nobody expected. Refusing to update ever makes the
 component un-upgradable. Treating "the file changed" as "the consumer changed it"
 is wrong too, because the CLI's own earlier write also changed it.
 
-This ADR records the answer the CLI implements. §18 places the deadline with the
-first CLI release because the manifest format is a compatibility surface — it
-lives in the consumer's repository, and changing it later means migrating every
-install.
+This ADR records the answer the CLI implements. It is settled with the first CLI
+release because the manifest format is a compatibility surface — it lives in the
+consumer's repository, and changing it later means migrating every install.
 
 ## Decision
 
@@ -49,7 +48,7 @@ manifest tracked upstream, every upstream release would look like a consumer edi
 
 ### A modified file is never overwritten without consent
 
-`plan.md` §8's rule, and the CLI enforces it as an exit code:
+`docs/ARCHITECTURE.md` §8's rule, and the CLI enforces it as an exit code:
 
 | Situation | Behaviour |
 |---|---|

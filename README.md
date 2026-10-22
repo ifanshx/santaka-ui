@@ -7,8 +7,10 @@ components, framework adapters, themes, a CLI, a component registry, and
 documentation — designed so that adopting it never means being locked into one
 framework, or into a runtime you do not control.
 
-This repository is the monorepo. `plan.md` is the specification; this file is the
-quick start.
+This repository is the monorepo. This file gets you running; the design
+decisions and the guarantees behind them are in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and the reasoning for each
+individual choice is in [`docs/adr/`](docs/adr).
 
 ## Packages
 
@@ -102,7 +104,7 @@ export default function App() {
   `pnpm --filter @santaka-ui/web-components test:support-matrix` runs the suite on
   each engine and writes `docs/browser-support.md`, so a browser appears in the
   document only if a project launches it and passes. Adding a browser to the docs
-  without a test job is a release blocker (`plan.md` §4).
+  without a test job is a release blocker (`docs/ARCHITECTURE.md` §4).
 - **Framework support is the same kind of claim.** `docs/framework-support.md`
   gives each target a state — Stable, Preview, or Planned — plus the adapter
   package, the example application, and the test command that back it.

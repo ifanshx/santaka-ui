@@ -5,7 +5,7 @@ import type { ComponentDetail } from "./tools.js"
 import { makeBlock, makeComponent, registryWithBlock } from "./fixtures.js"
 
 /**
- * Tool behavior tests (plan.md §11).
+ * Tool behavior tests (docs/ARCHITECTURE.md §11).
  *
  * The smoke test proves the server answers over a real transport; these prove
  * the answers are *right*. They are separate because they fail for different

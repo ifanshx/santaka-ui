@@ -150,7 +150,7 @@ export const Striped: Story = {
 }
 
 /**
- * Interaction test (plan.md §10): the scroll region is keyboard-focusable
+ * Interaction test (docs/ARCHITECTURE.md §10): the scroll region is keyboard-focusable
  * because a scrollable region a keyboard cannot reach is unreachable content
  * (WCAG 2.1.1). The `role="group"` + name pair is the other claim the paint
  * cannot show statically — and it appears only when `label` is supplied.

@@ -26,4 +26,4 @@ Negative-tested by renaming one prop in the docs alone (variant -> appearance):
 the "no documented prop is invented" test fails, which is the hand-edited page
 this ADR exists to prevent.
 
-All eighteen section 18 ADRs are now recorded.
+All eighteen section 17 ADRs are now recorded.

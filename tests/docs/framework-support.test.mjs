@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Framework support matrix tests (plan.md §3, §17: "The public framework/browser
+ * Framework support matrix tests (docs/ARCHITECTURE.md §3, §16: "The public framework/browser
  * support matrix reflects tested evidence").
  *
  * The matrix's whole value is that a claim in it is backed, so the checks that

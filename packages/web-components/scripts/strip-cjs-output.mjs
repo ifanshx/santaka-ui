@@ -1,7 +1,7 @@
 /**
  * Remove the CommonJS output Stencil emits unconditionally.
  *
- * plan.md §4 mandates ESM only: "No CommonJS build is emitted. Dual-format
+ * docs/ARCHITECTURE.md §4 mandates ESM only: "No CommonJS build is emitted. Dual-format
  * output doubles the CI matrix and the exports surface while serving no consumer
  * that a modern bundler or Node 22 cannot reach."
  *

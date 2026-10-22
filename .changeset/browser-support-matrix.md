@@ -3,7 +3,7 @@
 ---
 
 The README claimed "the published matrix comes from the Playwright projects
-that actually run", and there was no matrix. plan.md section 17 listed it as an
+that actually run", and there was no matrix. docs/ARCHITECTURE.md section 16 listed it as an
 open gate and section 4 makes documenting a browser without a test job a release
 blocker.
 
