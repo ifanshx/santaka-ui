@@ -6,9 +6,11 @@
  * Experimental / Deprecated labels — and the labels come from the registry
  * rather than from an author's heading (ADR-006).
  *
- * The page is laid out as a landing page rather than a list: a reader arriving
- * from a search engine needs to know what this is, what it costs them, and how
- * to try it, in that order. The catalogue follows.
+ * The page is built from the system's own components — `<sk-button>`,
+ * `<sk-card>`, `<sk-badge>`, `<sk-text>`, `<sk-separator>` — rather than from
+ * bespoke CSS that imitates them. A design system's own site is the first
+ * demonstration of the system; styling it by hand is an argument that the
+ * components are not good enough to use.
  */
 import Layout from "../layouts/Layout.astro"
 import { blockPages, componentPages, stabilityGroups } from "../lib/components"
@@ -25,96 +27,111 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   description={`${pages.length} accessible web components with thin React, Vue, and Svelte adapters. Tokens, a CLI, a versioned registry, and MCP metadata — no framework lock-in.`}
 >
   <section class="hero">
-    <p class="eyebrow">Design system</p>
-    <h1>
+    <sk-badge variant="primary" size="sm">Design system</sk-badge>
+
+    <sk-text variant="display" family="display" class="headline">
       One design system.<br />Every framework.<br /><span class="accent">Your code.</span>
-    </h1>
-    <p class="lede">
+    </sk-text>
+
+    <sk-text variant="lg" muted class="lede">
       {pages.length} accessible components built as web components, with thin adapters for React, Vue, and Svelte. The
       behavior lives in one place, so an app in any framework gets the same keyboard model, the same ARIA wiring, and the
       same bug fixes.
-    </p>
+    </sk-text>
 
     <div class="cta">
-      <a class="btn btn--primary" href="/quick-start">Quick start</a>
-      <a class="btn" href="/showcase">See them rendered</a>
+      <sk-button variant="primary" size="lg" href="/quick-start">Quick start</sk-button>
+      <sk-button variant="outline" size="lg" href="/showcase">See them rendered</sk-button>
     </div>
 
-    <pre class="install"><code>{install}</code></pre>
-
-    <dl class="facts">
-      <div>
-        <dt>Components</dt>
-        <dd>{pages.length}</dd>
+    <div class="install">
+      <sk-text variant="sm" muted>Install</sk-text>
+      <div class="install-row">
+        <pre><code>{install}</code></pre>
+        <sk-button variant="outline" size="sm" id="copy-install" data-copy={install}>Copy</sk-button>
       </div>
-      <div>
-        <dt>Blocks</dt>
-        <dd>{blocks.length}</dd>
-      </div>
-      <div>
-        <dt>Behavior owners</dt>
-        <dd>1</dd>
-      </div>
-      <div>
-        <dt>Runtime deps</dt>
-        <dd>0</dd>
-      </div>
-    </dl>
+    </div>
   </section>
+
+  <section class="facts" aria-label="At a glance">
+    <sk-card variant="default" padding="sm">
+      <sk-text variant="2xl" family="display" class="stat">{pages.length}</sk-text>
+      <sk-text variant="sm" muted>Components</sk-text>
+    </sk-card>
+    <sk-card variant="default" padding="sm">
+      <sk-text variant="2xl" family="display" class="stat">{blocks.length}</sk-text>
+      <sk-text variant="sm" muted>Blocks</sk-text>
+    </sk-card>
+    <sk-card variant="default" padding="sm">
+      <sk-text variant="2xl" family="display" class="stat">1</sk-text>
+      <sk-text variant="sm" muted>Behavior owner</sk-text>
+    </sk-card>
+    <sk-card variant="default" padding="sm">
+      <sk-text variant="2xl" family="display" class="stat">0</sk-text>
+      <sk-text variant="sm" muted>Runtime deps</sk-text>
+    </sk-card>
+  </section>
+
+  <sk-separator decorative />
 
   <section class="why">
-    <h2>Why this exists</h2>
+    <sk-text variant="3xl" family="display">Why this exists</sk-text>
+
     <div class="why-grid">
-      <article>
-        <h3>One behavior owner</h3>
-        <p>
+      <sk-card heading="One behavior owner" padding="md">
+        <sk-text variant="sm" muted>
           Every component's ARIA wiring, keyboard model, and form participation lives in the web component. The React and
-          Vue packages adapt it; they do not reimplement it. That is why a fix reaches every framework at once, and why
+          Vue packages adapt it; they do not reimplement it — which is why a fix reaches every framework at once, and why
           the adapters stay under 4 KB.
-        </p>
-      </article>
-      <article>
-        <h3>Tokens, not a theme object</h3>
-        <p>
+        </sk-text>
+      </sk-card>
+      <sk-card heading="Tokens, not a theme object" padding="md">
+        <sk-text variant="sm" muted>
           DTCG source compiled to CSS custom properties. Overriding <code>--sk-color-primary</code> on a scope is the
           whole customization contract — no build step, no provider, no runtime.
-        </p>
-      </article>
-      <article>
-        <h3>Accessible by test, not by claim</h3>
-        <p>
+        </sk-text>
+      </sk-card>
+      <sk-card heading="Accessible by test, not by claim" padding="md">
+        <sk-text variant="sm" muted>
           axe-core runs over the assembled page in light and dark on every push, and every component has browser tests
           for its keyboard model. Reduced motion removes the movement rather than shortening it.
-        </p>
-      </article>
-      <article>
-        <h3>Generated, never hand-maintained</h3>
-        <p>
+        </sk-text>
+      </sk-card>
+      <sk-card heading="Generated, never hand-maintained" padding="md">
+        <sk-text variant="sm" muted>
           This page, every component page, <code>llms.txt</code>, and the registry payload are all derived from one
           registry. A prop rename reaches all of them or none — it cannot reach one and miss another.
-        </p>
-      </article>
+        </sk-text>
+      </sk-card>
     </div>
   </section>
 
-  {groups.map((group) => (
-    <section class="group">
-      <h2>
-        <span class={`badge badge--${group.label}`}>{group.label}</span>
-        <span class="count">{group.pages.length}</span>
-      </h2>
-      <ul class="cards">
-        {group.pages.map((page) => (
-          <li class="card">
-            <a href={`/components/${page.name}/`}>
-              <code class="tag">{page.tag}</code>
-              <span class="summary">{page.summary}</span>
+  {
+    groups.map((group) => (
+      <section class="group">
+        <div class="group-head">
+          <sk-text variant="2xl" family="display">
+            {group.label}
+          </sk-text>
+          <sk-badge variant={group.label === "stable" ? "success" : "warning"} size="sm">
+            {group.pages.length}
+          </sk-badge>
+        </div>
+
+        <div class="cards">
+          {group.pages.map((page) => (
+            <a class="card-link" href={`/components/${page.name}/`}>
+              <sk-card variant="default" padding="sm" heading={page.tag}>
+                <sk-text variant="sm" muted>
+                  {page.summary}
+                </sk-text>
+              </sk-card>
             </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
+          ))}
+        </div>
+      </section>
+    ))
+  }
 
   {
     // Blocks are not components: they have no tag, no props, and no page-sized
@@ -122,302 +139,230 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     // stability group where a reader would look for an element to import.
     blocks.length > 0 && (
       <section class="group" id="blocks">
-        <h2>
-          <span class="badge">blocks</span>
-          <span class="count">{blocks.length}</span>
-        </h2>
-        <p class="hint">
+        <div class="group-head">
+          <sk-text variant="2xl" family="display">
+            Blocks
+          </sk-text>
+          <sk-badge variant="neutral" size="sm">
+            {blocks.length}
+          </sk-badge>
+        </div>
+        <sk-text variant="sm" muted class="hint">
           Page compositions: markup that uses the components above, plus layout CSS. <code>santaka add</code> installs a
           block together with every component it composes.
-        </p>
-        <ul class="cards">
+        </sk-text>
+        <div class="cards">
           {blocks.map((page) => (
-            <li class="card">
-              <a href={`/blocks/${page.name}/`}>
-                <code class="tag">{page.name}</code>
-                <span class="summary">{page.summary}</span>
-              </a>
-            </li>
+            <a class="card-link" href={`/blocks/${page.name}/`}>
+              <sk-card variant="default" padding="sm" heading={page.name}>
+                <sk-text variant="sm" muted>
+                  {page.summary}
+                </sk-text>
+              </sk-card>
+            </a>
           ))}
-        </ul>
+        </div>
       </section>
     )
   }
 
+  <sk-separator decorative />
+
   <section class="machine">
-    <h2>For machines</h2>
-    <p>
-      The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page:
-    </p>
+    <sk-text variant="2xl" family="display">For machines</sk-text>
+    <sk-text variant="sm" muted>
+      The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page.
+    </sk-text>
     <ul class="links">
-      <li><a href="/registry/index.json"><code>registry/index.json</code></a> — every item, versioned and checksummed</li>
-      <li><a href="/llms.txt"><code>llms.txt</code></a> — the inventory as prose, for a model's context window</li>
-      <li><a href="/llms-full.txt"><code>llms-full.txt</code></a> — props, events, and limitations for every component</li>
-      <li><a href="/schema/registry-item-v1.json"><code>registry-item-v1.json</code></a> — the JSON Schema entries validate against</li>
+      <li>
+        <a href="/registry/index.json"><code>registry/index.json</code></a> — every item, versioned and checksummed
+      </li>
+      <li>
+        <a href="/llms.txt"><code>llms.txt</code></a> — the inventory as prose, for a model's context window
+      </li>
+      <li>
+        <a href="/llms-full.txt"><code>llms-full.txt</code></a> — props, events, and limitations for every component
+      </li>
+      <li>
+        <a href="/schema/registry-item-v1.json"><code>registry-item-v1.json</code></a> — the JSON Schema entries validate against
+      </li>
     </ul>
   </section>
 </Layout>
 
 <style>
-  /* ── Hero ────────────────────────────────────────────────────────────── */
+  /* Layout only. Every visual decision — stroke, shadow, colour, radius, motion —
+     comes from the components and the tokens. What is left here is where things
+     sit, because that is the one thing a component cannot decide for a page. */
+
   .hero {
     padding-block: clamp(1rem, 4vw, 2.5rem) 1rem;
   }
 
-  .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--sk-color-primary-text, #4c1d95);
-    margin-block: 0 0.75rem;
-  }
-
-  .hero h1 {
-    font-size: clamp(2.1rem, 6.5vw, 3.9rem);
+  .headline {
+    display: block;
+    margin-block: 0.75rem 0;
     line-height: 1.02;
     letter-spacing: -0.035em;
-    margin-block: 0;
   }
 
   .accent {
-    color: var(--sk-color-primary, #6d28d9);
+    color: var(--sk-color-primary);
+  }
+
+  .lede {
+    display: block;
+    margin-block-start: 1.25rem;
+    max-inline-size: 62ch;
+    line-height: 1.55;
   }
 
   .cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-block: 1.75rem 1.25rem;
-  }
-
-  /* The site's own buttons: same stroke, square corners, and offset shadow the
-     components use. A docs site that renders `<sk-button>` on every page but
-     styles its own calls to action differently is telling the reader the system
-     is not good enough to use for itself. */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.15rem;
-    border: var(--docs-stroke) solid var(--docs-edge);
-    background: var(--sk-color-surface, #fff);
-    color: var(--sk-color-text, #17141c);
-    font-weight: 700;
-    font-size: 0.95rem;
-    text-decoration: none;
-    box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
-    transition:
-      translate var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
-      box-shadow var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
-  }
-
-  .btn:hover {
-    translate: -1px -1px;
-    box-shadow: var(--docs-shadow-lg) var(--sk-color-shadow, #17141c);
-  }
-
-  .btn:active {
-    translate: 2px 2px;
-    box-shadow: 1px 1px 0 0 var(--sk-color-shadow, #17141c);
-  }
-
-  .btn--primary {
-    background: var(--sk-color-primary, #6d28d9);
-    border-color: var(--sk-color-primary, #6d28d9);
-    color: var(--sk-color-primary-fg, #fff);
+    gap: 0.85rem;
+    margin-block: 1.75rem 1.5rem;
   }
 
   .install {
-    max-inline-size: 100%;
-    font-size: 0.82rem;
+    display: grid;
+    gap: 0.35rem;
+    max-inline-size: 46rem;
   }
 
-  /* ── Facts row ───────────────────────────────────────────────────────── */
+  .install-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .install-row pre {
+    flex: 1 1 22rem;
+    margin: 0;
+  }
+
   .facts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: 0.75rem;
-    margin-block: 2rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.85rem;
+    margin-block: 2rem;
   }
 
-  .facts > div {
-    padding: 0.75rem 1rem;
-    border: var(--docs-stroke) solid var(--docs-edge);
-    background: var(--docs-raised);
+  .facts sk-card {
+    display: block;
   }
 
-  .facts dt {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--docs-muted);
+  .stat {
+    display: block;
+    line-height: 1;
+    letter-spacing: -0.03em;
   }
 
-  .facts dd {
-    margin: 0.15rem 0 0;
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+  .why {
+    margin-block: 2rem;
   }
 
-  /* ── Why grid ────────────────────────────────────────────────────────── */
   .why-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-    gap: 1rem;
-    margin-block-start: 1.25rem;
+    gap: 0.85rem;
+    margin-block-start: 1rem;
   }
 
-  .why-grid article {
-    padding: 1.1rem 1.25rem;
-    border: var(--docs-stroke) solid var(--docs-edge);
+  .why-grid sk-card {
+    display: block;
   }
 
-  .why-grid h3 {
-    margin-block-start: 0;
-    font-size: 1rem;
-  }
-
-  .why-grid p {
-    margin-block-end: 0;
-    font-size: 0.92rem;
-    color: var(--docs-muted);
-  }
-
-  /* ── Catalogue ───────────────────────────────────────────────────────── */
-  .group h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  .group {
     margin-block-start: 2.75rem;
   }
 
-  .count {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--docs-muted);
+  .group-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-block-end: 0.85rem;
+  }
+
+  .group-head sk-text {
+    display: block;
   }
 
   .cards {
-    list-style: none;
-    padding: 0;
-    margin-block: 1rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
     gap: 0.85rem;
   }
 
-  .card a {
+  /* The link wraps the card so the whole surface is clickable; the card is the
+     visual, the anchor is the target. */
+  .card-link {
     display: block;
-    block-size: 100%;
-    padding: 0.9rem 1.05rem;
-    border: var(--docs-stroke) solid var(--docs-edge);
     color: inherit;
     text-decoration: none;
-    background: var(--sk-color-surface, #fff);
-    transition:
-      translate var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
-      box-shadow var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
   }
 
-  .card a:hover {
-    translate: -1px -1px;
-    box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
-  }
-
-  .tag {
-    display: inline-block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    padding: 0.1rem 0.4rem;
-    border: 1px solid var(--docs-edge);
-    background: var(--docs-raised);
-  }
-
-  .summary {
+  .card-link sk-card {
     display: block;
-    margin-block-start: 0.5rem;
-    font-size: 0.88rem;
-    line-height: 1.45;
-    color: var(--docs-muted);
-  }
-
-  .badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.2rem 0.55rem;
-    border: 1px solid currentColor;
-  }
-
-  .badge--stable {
-    color: var(--sk-color-primary-text, #4c1d95);
-  }
-
-  .badge--preview,
-  .badge--experimental {
-    color: var(--sk-color-warning, #92400e);
-  }
-
-  .badge--deprecated {
-    color: var(--sk-color-danger, #b91c1c);
+    block-size: 100%;
   }
 
   .hint {
-    font-size: 0.85rem;
-    color: var(--docs-muted);
+    display: block;
+    margin-block-end: 0.85rem;
     max-inline-size: 65ch;
   }
 
-  /* ── For machines ────────────────────────────────────────────────────── */
+  .machine {
+    margin-block-start: 2.5rem;
+  }
+
+  .machine > sk-text {
+    display: block;
+    margin-block-end: 0.5rem;
+  }
+
   .machine ul.links {
     list-style: none;
     padding: 0;
+    margin-block-start: 1rem;
     display: grid;
     gap: 0.4rem;
   }
 
   .machine li {
-    font-size: 0.92rem;
-    color: var(--docs-muted);
+    font-size: 0.9rem;
+    color: var(--sk-color-text-muted);
   }
 
-  /* On a narrow screen the catalogue is a long list of similar boxes, and the
-     reader loses their place between one card and the next. Tighter vertical
-     rhythm and a smaller gap keep the group reading as one block rather than
-     38 separate stops. */
   @media (max-width: 40rem) {
     .cards {
       grid-template-columns: 1fr;
       gap: 0.5rem;
     }
 
-    .card a {
-      padding: 0.7rem 0.85rem;
-    }
-
-    .group h2 {
-      margin-block-start: 2rem;
-    }
-
     .facts {
       grid-template-columns: repeat(2, 1fr);
     }
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .btn,
-    .card a {
-      transition: none;
-    }
-
-    .btn:hover,
-    .btn:active,
-    .card a:hover {
-      translate: none;
-    }
-  }
 </style>
+
+<script>
+  // A one-line install command is meant to be copied, not retyped. The button
+  // reports its own outcome instead of relying on a toast, so the feedback is
+  // where the reader is looking.
+  const copy = document.getElementById("copy-install")
+  copy?.addEventListener("click", async () => {
+    const text = copy.getAttribute("data-copy") ?? ""
+    try {
+      await navigator.clipboard.writeText(text)
+      copy.textContent = "Copied"
+    } catch {
+      copy.textContent = "Press Ctrl+C"
+    }
+    setTimeout(() => {
+      copy.textContent = "Copy"
+    }, 1600)
+  })
+</script>
