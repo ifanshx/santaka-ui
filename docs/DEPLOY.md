@@ -58,6 +58,8 @@ Output, all of it under `apps/docs/dist`:
 | `pagefind/` | The search index, built from the pages |
 | `llms.txt`, `llms-full.txt` | Generated from the registry for AI tooling |
 | `registry/` | The versioned registry payload the CLI reads |
+| `schema/` | The JSON Schemas every registry entry advertises via `$schema` |
+| `404.html` | What a static host serves for an unknown path |
 
 The build is deterministic: the same source produces the same bytes, which is
 what the `llms` and `support-matrix` CI jobs rely on.
@@ -270,6 +272,26 @@ already there.
 Set the custom domain in the platform's dashboard, then make `site` in
 `astro.config.mjs` match it.
 
+## What the deploy host needs installed
+
+The build is a pnpm workspace, so a host with the wrong toolchain fails before
+it reaches Astro. These are pinned in the repository, not chosen by the host:
+
+| Requirement | Value | Where it is pinned |
+|---|---|---|
+| Node | `>=22.12.0` | `engines.node` in the root `package.json` |
+| pnpm | `10.34.7` | `packageManager` in the root `package.json` |
+| turbo | `2.11.7` | `devDependencies.turbo` — `pnpm exec` finds it, no global install |
+
+`corepack enable` is the one-line way to get the pinned pnpm rather than
+whatever the host ships. Node 22.11 is not enough: Astro refuses to build on it
+and says so by name.
+
+The docs build depends on three workspace packages — `core`, `mcp`, and
+`web-components` — because the registry payload and the element types come from
+them. `--filter=@santaka-ui/docs` builds those first through the task graph, so
+there is no separate build step to remember.
+
 ## Verifying a deploy
 
 A deploy is not done when the files land. Check these, in this order — each one
@@ -291,6 +313,13 @@ curl -sI https://<host>/components/slider/ | head -1
 # 3. Search works (the Pagefind index shipped)
 curl -sI https://<host>/pagefind/pagefind.js | head -1
 
+# 4. The 404 page is served for an unknown path (not the host default)
+curl -s https://<host>/components/does-not-exist/ | grep -c "Not found"
+
+# 5. The schema an entry advertises is reachable
+curl -s https://<host>/registry/index.json | node -e 'let d="";
+  process.stdin.on("data",c=>d+=c).on("end",()=>{
+    console.log(JSON.parse(d).$schema)}) '
 # 4. The AI surfaces resolve
 curl -sI https://<host>/llms.txt | head -1
 curl -sI https://<host>/llms-full.txt | head -1

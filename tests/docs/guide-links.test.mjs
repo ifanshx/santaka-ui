@@ -14,7 +14,7 @@
  *
  * `node --test`, no dependencies.
  */
-import { readFileSync, readdirSync, statSync } from "node:fs"
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs"
 import { join, relative, resolve } from "node:path"
 import { it } from "node:test"
 import assert from "node:assert/strict"
@@ -159,4 +159,26 @@ it("a real component link does resolve, so the generated-route branch is exercis
   const { routes, publicFiles, generated } = tree()
   const outcome = resolveLink("/components/button/", { routes, publicFiles, generated })
   assert.equal(outcome.ok, true)
+})
+
+it("ships a 404 page, and every link on it resolves", () => {
+  // Astro writes `src/pages/404.astro` to `dist/404.html`, which is the file a
+  // static host serves for an unknown path. Without it a mistyped component
+  // name gets the host's own error page — off-brand, and with no way back into
+  // the docs. The page is also the one page nobody navigates to during review,
+  // so its links are checked here rather than by eye.
+  const file = join(PAGES, "404.astro")
+  assert.ok(existsSync(file), "src/pages/404.astro is missing; a static host needs dist/404.html")
+
+  const source = readFileSync(file, "utf8")
+  const hrefs = [...source.matchAll(/href="(\/[^"]*)"/g)].map((m) => m[1])
+  assert.ok(hrefs.length > 0, "the 404 page offers no way back, so it asserts nothing")
+
+  const { routes, publicFiles, generated } = tree()
+  const broken = hrefs.filter((href) => !resolveLink(href, { routes, publicFiles, generated }).ok)
+  assert.deepEqual(
+    broken,
+    [],
+    `the 404 page links to paths that do not exist:\n${broken.join("\n")}`,
+  )
 })

@@ -39,6 +39,22 @@ const { title, description } = Astro.props
         document.documentElement.setAttribute("data-sk-theme", dark ? "dark" : "light")
       } catch {}
     </script>
+
+    {/*
+      Canonical and social tags. `Astro.site` is the origin the build is told it
+      will be served from (`astro.config.mjs`), so the canonical URL is generated
+      rather than written — a hand-written one is the first thing to go stale
+      when a host changes, and a wrong canonical is worse than none.
+
+      A page served from a static host has no server to add these later, so if
+      they are missing here they are missing everywhere.
+    */}
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary" />
   </head>
 
   <body>

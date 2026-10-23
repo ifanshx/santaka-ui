@@ -1,0 +1,33 @@
+---
+/**
+ * Not found.
+ *
+ * Astro writes this to `dist/404.html`, which is the file every static host
+ * looks for when a path does not exist — Cloudflare Pages, Netlify, GitHub
+ * Pages, nginx with `error_page`. Without it, a mistyped component name serves
+ * the host's own error page: off-brand, and with no way back into the docs.
+ */
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout
+  title="Not found — Santaka UI"
+  description="That page does not exist. The component reference and the guides are one link away."
+>
+  <h1>Not found</h1>
+  <p class="lede">
+    There is no page at this address. If you followed a link from somewhere else,
+    the component may have been renamed — the registry is the source of truth for
+    what exists.
+  </p>
+
+  <section>
+    <h2>Where to go</h2>
+    <ul>
+      <li><a href="/">The landing page</a> — what Santaka is and how to install it.</li>
+      <li><a href="/quick-start/">Quick start</a> — install, import the CSS, add a component.</li>
+      <li><a href="/registry/index.json">The registry payload</a> — every component that exists, as JSON.</li>
+      <li><a href="/llms.txt">llms.txt</a> — the same inventory for AI tooling.</li>
+    </ul>
+  </section>
+</Layout>
