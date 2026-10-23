@@ -251,6 +251,18 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   .facts sk-card {
     display: block;
+    block-size: 100%;
+  }
+
+  /* The card is not a shadow root (ADR-011), so the internal body is reachable
+     by its data-slot hook. Making it a flex column with space-between pins the
+     label to the bottom, which is what keeps four cards of different number
+     widths reading as one row rather than four staggered boxes. */
+  .facts sk-card [data-slot="body"] {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    block-size: 100%;
   }
 
   .stat {
