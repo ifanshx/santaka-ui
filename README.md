@@ -112,6 +112,17 @@ export default function App() {
   or a Planned target's package has appeared, so the table cannot describe a
   repository that does not exist.
 
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | The specification: architecture, tokens, component contract, CLI, registry, test strategy, release gates. |
+| [`docs/adr/`](docs/adr/) | One short record per decision — context, evidence, and what would reverse it. |
+| [`docs/STATUS.md`](docs/STATUS.md) | What is built, what is tested, and what is still open. |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | How to host the documentation site, and how to publish the packages. |
+| [`docs/RELEASE.md`](docs/RELEASE.md) · [`docs/MIGRATIONS.md`](docs/MIGRATIONS.md) | Versioning policy, and the shape of a migration note. |
+| [`docs/browser-support.md`](docs/browser-support.md) · [`docs/framework-support.md`](docs/framework-support.md) | Generated support matrices, each checked against the repository. |
+
 ## License
 
 MIT. See the license field in each `package.json`.
