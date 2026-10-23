@@ -4023,7 +4023,7 @@
         {
           "path": "src/components/sk-tabs/sk-tabs.tsx",
           "type": "registry:component",
-          "checksum": "sha256-6023bfdc13c76980f1988d1c427b715910e9b8e818c8a8586f0ff307f00589e4"
+          "checksum": "sha256-31078cbdcafdc4b05c031362f88a835ddc50fa477448c0aaf6d641df4d497427"
         },
         {
           "path": "src/components/sk-tabs/sk-tabs.css",

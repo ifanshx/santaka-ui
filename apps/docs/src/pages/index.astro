@@ -72,6 +72,74 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     </sk-card>
   </section>
 
+  {/* A live bento, not a list of names: the reader should see the components
+      working before they read a word about them. Every panel below is real
+      markup from the system — nothing is a screenshot. */}
+  <section class="bento" aria-label="Live components">
+    <sk-card class="bento-form" heading="Controls" padding="md">
+      <div class="bento-stack">
+        <sk-input label="Email" type="email" placeholder="you@example.com" />
+        <sk-select label="Plan" options={JSON.stringify([{ value: "free", label: "Free" }, { value: "pro", label: "Pro" }])} />
+        <sk-checkbox label="Email me about releases" />
+        <div class="bento-row">
+          <sk-button variant="primary" size="sm">Save</sk-button>
+          <sk-button variant="ghost" size="sm">Cancel</sk-button>
+        </div>
+      </div>
+    </sk-card>
+
+    <sk-card class="bento-signal" heading="Status" padding="md">
+      <div class="bento-stack">
+        <div class="bento-row">
+          <sk-badge variant="success" size="sm">Stable</sk-badge>
+          <sk-badge variant="warning" size="sm">Preview</sk-badge>
+          <sk-badge variant="danger" size="sm">Deprecated</sk-badge>
+        </div>
+        <sk-alert variant="success" heading="Saved">Your changes are live.</sk-alert>
+        <sk-progress value={72} label="Uploading" />
+      </div>
+    </sk-card>
+
+    <sk-card class="bento-people" heading="Avatars" padding="md">
+      <div class="bento-stack">
+        <sk-avatar-group>
+          <sk-avatar name="Grace Hopper" />
+          <sk-avatar name="Ada Lovelace" />
+          <sk-avatar name="Alan Turing" />
+        </sk-avatar-group>
+        <sk-text variant="sm" muted>A group collapses to a count when it runs out of room.</sk-text>
+      </div>
+    </sk-card>
+
+    <sk-card class="bento-tabs" heading="Tabs" padding="md">
+      <sk-tabs active={0}>
+        <sk-tab label="Overview">One behaviour owner, three adapters.</sk-tab>
+        <sk-tab label="Tokens">Override a custom property; nothing else changes.</sk-tab>
+      </sk-tabs>
+    </sk-card>
+
+    <sk-card class="bento-slider" heading="Range" padding="md">
+      <div class="bento-stack">
+        <sk-slider label="Volume" value={40} show-value format="%" />
+        <sk-switch label="Reduce motion" />
+      </div>
+    </sk-card>
+
+    <sk-card class="bento-table" heading="Table" padding="none">
+      <sk-table striped compact>
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>sk-button</code></td><td>web-components</td></tr>
+            <tr><td><code>sk-dialog</code></td><td>web-components</td></tr>
+            <tr><td><code>sk-select</code></td><td>web-components</td></tr>
+          </tbody>
+        </table>
+      </sk-table>
+    </sk-card>
+  </section>
   <sk-separator decorative />
 
   <section class="why">
@@ -378,3 +446,71 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     }, 1600)
   })
 </script>
+
+<style>
+  /* Bento: panels of different sizes on one grid, so the section reads as a
+     composition rather than a list. Every panel is a real component; the grid
+     only decides which is wide. */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.85rem;
+    margin-block: 2rem;
+  }
+
+  .bento > sk-card {
+    display: block;
+    grid-column: span 3;
+    min-inline-size: 0;
+  }
+
+  /* Two columns of three, deliberately equal: a panel spanning two rows left a
+     hole under the shorter stack, and a bento with a hole reads as a mistake
+     rather than as composition. */
+  .bento-form {
+    grid-column: span 3;
+  }
+
+  .bento-signal {
+    grid-column: span 3;
+  }
+
+  .bento-people,
+  .bento-tabs {
+    grid-column: span 3;
+  }
+
+  .bento-slider,
+  .bento-table {
+    grid-column: span 3;
+  }
+
+  .bento-stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .bento-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 62rem) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+
+    .bento > sk-card,
+    .bento-form,
+    .bento-signal,
+    .bento-people,
+    .bento-tabs,
+    .bento-slider,
+    .bento-table {
+      grid-column: span 1;
+      grid-row: auto;
+    }
+  }
+</style>

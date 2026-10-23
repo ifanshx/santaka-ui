@@ -30,7 +30,7 @@ export function getStaticPaths() {
 const { page } = Astro.props
 ---
 
-<Layout title={`${page.tag} — Santaka UI`} description={page.summary}>
+<Layout title={`${page.tag} — Santaka UI`} description={page.summary} sidebar>
   <p class="crumbs"><a href="/">Components</a> / {page.tag}</p>
 
   <header class="head">

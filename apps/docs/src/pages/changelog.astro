@@ -1,0 +1,164 @@
+---
+/**
+ * Changelog.
+ *
+ * Rendered from `CHANGELOG.md` at the repository root rather than retyped, so
+ * the page cannot describe a release the file does not. That is the same rule
+ * the component pages follow with the registry: one source, many readers.
+ *
+ * The Markdown is parsed here rather than by a dependency. The file uses a
+ * narrow, known shape — `## [version]`, `### Category`, then `- item` bullets —
+ * and a parser for that shape is twenty lines against a dependency that would
+ * ship to every visitor.
+ */
+import Layout from "../layouts/Layout.astro"
+import { existsSync, readFileSync } from "node:fs"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+
+/**
+ * Walk up from this file until `CHANGELOG.md` appears.
+ *
+ * Counting `../` segments is the obvious approach and it broke twice: the depth
+ * differs between dev and build, and a wrong guess fails as an empty page rather
+ * than an error. Searching upward is the same amount of code and cannot be
+ * off by one.
+ */
+function findChangelog(): string {
+  let dir = dirname(fileURLToPath(import.meta.url))
+  for (let i = 0; i < 8; i++) {
+    const candidate = join(dir, "CHANGELOG.md")
+    if (existsSync(candidate)) return readFileSync(candidate, "utf8")
+    dir = dirname(dir)
+  }
+  throw new Error("CHANGELOG.md not found above the docs app")
+}
+
+const raw = findChangelog()
+
+type Section = { title: string; items: string[] }
+type Release = { version: string; sections: Section[] }
+
+const releases: Release[] = []
+for (const line of raw.split("\n")) {
+  const release = /^##\s+(.+)$/.exec(line)
+  if (release) {
+    releases.push({ version: release[1].trim(), sections: [] })
+    continue
+  }
+  const section = /^###\s+(.+)$/.exec(line)
+  if (section && releases.length) {
+    releases.at(-1)!.sections.push({ title: section[1].trim(), items: [] })
+    continue
+  }
+  const item = /^-\s+(.+)$/.exec(line)
+  if (item && releases.length) {
+    const last = releases.at(-1)!.sections.at(-1)
+    if (last) last.items.push(item[1].trim())
+  }
+}
+
+const total = releases.reduce((n, r) => n + r.sections.reduce((m, s) => m + s.items.length, 0), 0)
+---
+
+<Layout
+  title="Changelog — Santaka UI"
+  description="Every change that has landed in the repository, and what is still a known limitation."
+  sidebar
+>
+  <h1>Changelog</h1>
+  <p class="lede">
+    Every change that has landed, rendered from <code>CHANGELOG.md</code> at the repository root. The page cannot
+    describe a release the file does not, which is the point.
+  </p>
+
+  <p class="note">
+    <strong>No release has been published to npm yet.</strong> Every package is <code>0.1.0</code>, and this history is
+    what the first release will carry. {total} entries below.
+  </p>
+
+  {
+    releases
+      .filter((r) => r.sections.length > 0)
+      .map((release) => (
+        <section class="release">
+          <h2>
+            <span class="version">{release.version}</span>
+          </h2>
+          {release.sections.map((section) => (
+            <div class="section">
+              <h3>{section.title}</h3>
+              <ul>
+                {section.items.map((item) => (
+                  <li>
+                    <span
+                      set:html={item
+                        // Escape first, then add the two inline forms. The
+                        // changelog is prose that mentions real tags — "a real
+                        // `<table>` inside" — and injecting it raw closed the
+                        // element it was inside, which broke the list structure
+                        // and failed axe's `listitem` rule.
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+                        .replace(/`([^`]+)`/g, "<code>$1</code>")}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      ))
+  }
+</Layout>
+
+<style>
+  .note {
+    padding: 0.85rem 1rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
+    background: var(--docs-raised);
+    font-size: 0.92rem;
+    max-inline-size: var(--docs-measure);
+  }
+
+  .release {
+    margin-block-start: 2.5rem;
+    padding-block-start: 1.5rem;
+    border-block-start: var(--docs-stroke) solid var(--docs-edge);
+  }
+
+  .version {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--docs-edge);
+    background: var(--docs-raised);
+    font-family: var(--docs-code);
+    font-size: 1rem;
+  }
+
+  .section {
+    margin-block-start: 1.5rem;
+  }
+
+  .section h3 {
+    margin-block: 0 0.5rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--docs-muted);
+  }
+
+  .section ul {
+    margin: 0;
+    padding-inline-start: 1.1rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .section li {
+    font-size: 0.93rem;
+    max-inline-size: var(--docs-measure);
+  }
+</style>

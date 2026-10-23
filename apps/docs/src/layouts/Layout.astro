@@ -13,13 +13,16 @@
  */
 import "../styles/global.css"
 import Search from "../components/Search.astro"
+import Sidebar from "../components/Sidebar.astro"
 
 interface Props {
   title: string
   description?: string
+  /** Render the component sidebar. Off on the landing page, where it would compete with the hero. */
+  sidebar?: boolean
 }
 
-const { title, description } = Astro.props
+const { title, description, sidebar = false } = Astro.props
 const path = Astro.url.pathname
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
@@ -79,9 +82,12 @@ const isCurrent = (href: string) =>
       </nav>
     </header>
 
-    <main id="main">
-      <slot />
-    </main>
+    <div class:list={["shell", sidebar && "shell--with-sidebar"]}>
+      {sidebar && <Sidebar />}
+      <main id="main">
+        <slot />
+      </main>
+    </div>
 
     <footer class="site">
       <nav aria-label="Project">

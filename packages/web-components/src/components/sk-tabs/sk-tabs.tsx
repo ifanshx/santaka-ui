@@ -1,4 +1,4 @@
-import { Component, Element, h, Host, Listen, Prop, State, Watch } from "@stencil/core"
+import { Component, Element, Fragment, h, Host, Listen, Prop, State, Watch } from "@stencil/core"
 
 /**
  * Tabs — Tier 2, and the last v1.0 component.
@@ -56,6 +56,18 @@ export class SkTabs {
 
   @State() private tabCount = 0
 
+  /**
+   * Whether the consumer supplied their own tablist wrapper.
+   *
+   * `role="tablist"` must sit on an ancestor of every `role="tab"`, and the slot
+   * wrapper a consumer authors is plain markup until this component names it. If
+   * the consumer forgets the wrapper entirely, every tab ends up with no required
+   * parent — axe reports `aria-required-parent`, and the ARIA pattern is broken
+   * in a way the page cannot see. So the component supplies the wrapper when it
+   * is missing: the failure mode becomes impossible rather than documented.
+   */
+  @State() private hasTablist = false
+
   private tablist: HTMLElement | null = null
 
   /**
@@ -65,6 +77,19 @@ export class SkTabs {
   private applying = false
 
   componentDidLoad() {
+    this.sync()
+  }
+
+  /**
+   * Re-sync after every render, not only the first.
+   *
+   * `hasTablist` is state: when the component decides to supply its own tablist
+   * wrapper, that decision changes the DOM, which needs a render, which changes
+   * which element carries `role="tablist"`. A one-shot sync in `componentDidLoad`
+   * named the role on the first pass and never saw the wrapper it had just
+   * created — measured: axe still reported `aria-required-parent` after the fix.
+   */
+  componentDidRender() {
     this.sync()
   }
 
@@ -81,6 +106,12 @@ export class SkTabs {
   private sync() {
     const tabs = this.tabs()
     this.tabCount = tabs.length
+    // The consumer's wrapper is in the light DOM before this component renders,
+    // so it can be found by attribute. Slot assignment is not usable here: the
+    // <slot> element only exists on one render branch, and at first render
+    // nothing has been assigned to it yet — which made the check report
+    // "not authored" even when a wrapper was right there.
+    this.hasTablist = !!this.host.querySelector("[slot='tablist']")
     this.tablist = this.host.querySelector("[data-slot='tablist']")
     // `role="tablist"` belongs on the container: axe's aria-required-parent
     // rule (and the ARIA APG) require each `role="tab"` to be owned by one.
@@ -212,8 +243,16 @@ export class SkTabs {
   render() {
     return (
       <Host data-slot="tabs">
-        <slot name="tablist" />
-        <slot />
+        {this.hasTablist ? (
+          <Fragment>
+            <slot name="tablist" />
+            <slot />
+          </Fragment>
+        ) : (
+          <div data-slot="tablist">
+            <slot />
+          </div>
+        )}
       </Host>
     )
   }

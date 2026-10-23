@@ -148,11 +148,54 @@ body {
   box-shadow: 1px 1px 0 0 var(--sk-color-shadow, #17141c);
 }
 
-/* ── Main column ─────────────────────────────────────────────────────────── */
-main {
+/* ── Shell and main column ─────────────────────────────────────────────────
+   The sidebar is a grid column, not a fixed overlay: it scrolls with the page
+   until it sticks, and the reading column keeps its measure either way. */
+.shell {
   max-inline-size: 62rem;
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 3rem) var(--docs-gutter) 5rem;
+}
+
+.shell--with-sidebar {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 2.5rem;
+  max-inline-size: 84rem;
+  align-items: start;
+}
+
+main {
+  min-inline-size: 0;
+}
+
+/* Below the sidebar breakpoint the list would take the whole width, so it
+   collapses to a horizontal scroller above the content instead of vanishing:
+   a reader on a phone still needs to move between components. */
+@media (max-width: 62rem) {
+  .shell--with-sidebar {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .shell--with-sidebar .sidebar {
+    position: static;
+    max-block-size: none;
+    overflow-x: auto;
+    padding-block-end: 0.5rem;
+    border-block-end: var(--docs-stroke) solid var(--docs-edge);
+  }
+
+  .shell--with-sidebar .sidebar nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .shell--with-sidebar .sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────
