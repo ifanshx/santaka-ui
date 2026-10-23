@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+  "$id": "https://santaka.my.id/schema/registry-item-v1.json",
   "title": "Santaka UI registry item",
   "type": "object",
   "additionalProperties": false,
@@ -46,20 +46,40 @@
       ]
     },
     "type": {
-      "enum": ["component", "block", "theme", "utility"]
+      "enum": [
+        "component",
+        "block",
+        "theme",
+        "utility"
+      ]
     },
     "frameworks": {
       "type": "array",
       "minItems": 1,
       "items": {
-        "enum": ["react", "vue", "svelte", "angular", "web-components"]
+        "enum": [
+          "react",
+          "vue",
+          "svelte",
+          "angular",
+          "web-components"
+        ]
       }
     },
     "stability": {
-      "enum": ["stable", "preview", "experimental", "deprecated"]
+      "enum": [
+        "stable",
+        "preview",
+        "experimental",
+        "deprecated"
+      ]
     },
     "behaviorOwner": {
-      "enum": ["web-components", "react", "framework-neutral"]
+      "enum": [
+        "web-components",
+        "react",
+        "framework-neutral"
+      ]
     },
     "version": {
       "type": "string",
@@ -89,7 +109,11 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "type", "checksum"],
+        "required": [
+          "path",
+          "type",
+          "checksum"
+        ],
         "properties": {
           "path": {
             "type": "string",
@@ -129,7 +153,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "properties": {
           "name": {
             "type": "string",

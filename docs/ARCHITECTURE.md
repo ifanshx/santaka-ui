@@ -822,7 +822,7 @@ Every registry entry is one JSON object validated against a versioned JSON Schem
 
 ```json
 {
-  "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+  "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
   "schemaVersion": 1,
   "name": "select",
   "namespace": null,

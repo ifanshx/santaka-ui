@@ -3,6 +3,26 @@
   "version": "0.1.0",
   "description": "Santaka UI universal custom elements: the default owner of component behavior.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ifanshx/santaka-ui.git",
+    "directory": "packages/web-components"
+  },
+  "homepage": "https://santaka.my.id",
+  "bugs": {
+    "url": "https://github.com/ifanshx/santaka-ui/issues"
+  },
+  "author": {
+    "name": "ifanshx",
+    "url": "https://github.com/ifanshx"
+  },
+  "keywords": [
+    "design-system",
+    "web-components",
+    "custom-elements",
+    "accessibility",
+    "ui"
+  ],
   "type": "module",
   "sideEffects": [
     "**/*.css",

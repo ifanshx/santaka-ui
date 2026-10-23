@@ -340,7 +340,7 @@ describe("unified diff", () => {
 /** A self-contained registry item for the closure tests: nothing is read from disk. */
 function syntheticItem(name: string, registryDependencies: string[]): RegistryItem {
   return {
-    $schema: "https://ui.santaka.my.id/schema/registry-item-v1.json",
+    $schema: "https://santaka.my.id/schema/registry-item-v1.json",
     schemaVersion: 1,
     name,
     namespace: null,

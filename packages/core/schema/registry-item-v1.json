@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+  "$id": "https://santaka.my.id/schema/registry-item-v1.json",
   "title": "Santaka UI registry item",
   "type": "object",
   "additionalProperties": false,

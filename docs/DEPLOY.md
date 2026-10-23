@@ -15,18 +15,18 @@ decide which host you can use at all.
 The build emits absolute asset paths (`/_astro/index.D6A7zbHe.css`). That is
 deliberate — the registry payload and `llms.txt` are linked absolutely too — but
 it means the site cannot be mounted at `https://example.com/santaka/`. It needs a
-domain root — `https://ui.santaka.my.id/` is one, which is why the subdomain
-choice avoids this problem entirely.
+domain root — `https://santaka.my.id/` is one, which is why serving the apex
+domain avoids this problem entirely.
 
 If you do want a subpath, set `base` in `apps/docs/astro.config.mjs` and rebuild;
 do not hand-edit the output.
 
-**2. The canonical host is `https://ui.santaka.my.id`.**
+**2. The canonical host is `https://santaka.my.id`.**
 
 `apps/docs/astro.config.mjs` sets `site` to it, and the registry schema IDs
-(`$schema`, `$id`) use the same origin. A subdomain rather than a path is what
-makes constraint 1 a non-issue — `ui.santaka.my.id` is a domain root, so the
-absolute asset paths resolve.
+(`$schema`, `$id`) use the same origin. The apex domain is what makes
+constraint 1 a non-issue — `santaka.my.id` is a domain root, so the absolute
+asset paths resolve.
 
 Changing the host means changing it in four places, all of which are checked by
 tests: `apps/docs/astro.config.mjs` (`site`), `packages/core/src/registry-item-schema.ts`
@@ -66,8 +66,8 @@ what the `llms` and `support-matrix` CI jobs rely on.
 
 ## Option 0 — Cloudflare, with the domain already owned
 
-The project owns `santaka.my.id` on Cloudflare, so `ui.santaka.my.id` is the
-cheapest correct host: a subdomain is a domain root for the purposes of
+The project owns `santaka.my.id` on Cloudflare, so `santaka.my.id` is the
+cheapest correct host: an apex domain is a domain root for the purposes of
 constraint 1, and DNS and TLS are already there.
 
 Two ways, pick one.
@@ -84,7 +84,11 @@ Two ways, pick one.
 | Build cache | disabled — a stale `dist/` is worse than a slow build |
 
 Then in **Workers & Pages → the project → Custom domains**, add
-`ui.santaka.my.id`. Cloudflare creates the CNAME and issues the certificate.
+`santaka.my.id`. Cloudflare creates the record and issues the certificate.
+
+On an apex domain Cloudflare flattens the CNAME automatically, so no A record is
+needed — but the record must be **proxied** (orange cloud), not DNS-only, or the
+certificate is not issued for the hostname.
 
 Pages needs `_headers` and `_redirects` in the output root for cache policy. Add
 `apps/docs/public/_headers`:
@@ -104,7 +108,7 @@ If the deploy runs on your home server, do not open a port — run a tunnel.
 ```bash
 # On the home server
 cloudflared tunnel create santaka-docs
-cloudflared tunnel route dns santaka-docs ui.santaka.my.id
+cloudflared tunnel route dns santaka-docs santaka.my.id
 
 # Serve the built directory directly; no nginx needed
 cloudflared tunnel run --url http://localhost:8080 santaka-docs
@@ -127,12 +131,12 @@ and Cloudflare terminates TLS. Two things to set at the edge:
 Cloudflare serves `.json` as `application/json` and compresses text automatically,
 so no header configuration is needed beyond the cache rules.
 
-### Verify the subdomain before announcing it
+### Verify the domain before announcing it
 
 ```bash
-dig +short ui.santaka.my.id
-curl -sI https://ui.santaka.my.id/ | head -1
-curl -s https://ui.santaka.my.id/ | grep -o "/_astro/[^"]*.css" | head -1
+dig +short santaka.my.id
+curl -sI https://santaka.my.id/ | head -1
+curl -s https://santaka.my.id/ | grep -o "/_astro/[^"]*.css" | head -1
 ```
 
 The third command is the one that matters: if it prints nothing, the asset paths
@@ -187,7 +191,7 @@ gzip_types text/css application/javascript application/json text/plain image/svg
 Caddy is equivalent and shorter:
 
 ```
-ui.santaka.my.id {
+santaka.my.id {
     root * /var/www/santaka
     encode gzip
     try_files {path} {path}/ {path}/index.html

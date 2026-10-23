@@ -3,6 +3,24 @@
   "version": "0.1.0",
   "description": "Minimal framework-neutral helpers shared by every Santaka UI implementation.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ifanshx/santaka-ui.git",
+    "directory": "packages/utilities"
+  },
+  "homepage": "https://santaka.my.id",
+  "bugs": {
+    "url": "https://github.com/ifanshx/santaka-ui/issues"
+  },
+  "author": {
+    "name": "ifanshx",
+    "url": "https://github.com/ifanshx"
+  },
+  "keywords": [
+    "design-system",
+    "utilities",
+    "ui"
+  ],
   "type": "module",
   "sideEffects": false,
   "engines": {

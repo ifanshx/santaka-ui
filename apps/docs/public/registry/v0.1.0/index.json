@@ -1,11 +1,11 @@
 {
-  "$schema": "https://ui.santaka.my.id/schema/registry-index-v1.json",
+  "$schema": "https://santaka.my.id/schema/registry-index-v1.json",
   "version": 1,
   "registryVersion": "0.1.0",
   "generatedAt": "2026-10-23",
   "items": [
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "accordion",
       "namespace": null,
@@ -122,7 +122,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "alert-dialog",
       "namespace": null,
@@ -209,7 +209,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "alert",
       "namespace": null,
@@ -316,7 +316,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "authentication",
       "namespace": null,
@@ -381,7 +381,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "avatar-group",
       "namespace": null,
@@ -477,7 +477,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "avatar",
       "namespace": null,
@@ -577,7 +577,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "badge",
       "namespace": null,
@@ -683,7 +683,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "banner",
       "namespace": null,
@@ -797,7 +797,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "breadcrumb",
       "namespace": null,
@@ -881,7 +881,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "button",
       "namespace": null,
@@ -1005,7 +1005,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "card",
       "namespace": null,
@@ -1114,7 +1114,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "checkbox",
       "namespace": null,
@@ -1292,7 +1292,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "combobox",
       "namespace": null,
@@ -1432,7 +1432,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "dashboard",
       "namespace": null,
@@ -1502,7 +1502,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "dialog",
       "namespace": null,
@@ -1614,7 +1614,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "drawer",
       "namespace": null,
@@ -1732,7 +1732,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "empty-state",
       "namespace": null,
@@ -1842,7 +1842,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "field",
       "namespace": null,
@@ -1954,7 +1954,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "icon-button",
       "namespace": null,
@@ -2089,7 +2089,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "input",
       "namespace": null,
@@ -2303,7 +2303,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "kbd",
       "namespace": null,
@@ -2390,7 +2390,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "label",
       "namespace": null,
@@ -2478,7 +2478,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "link",
       "namespace": null,
@@ -2580,7 +2580,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "pagination",
       "namespace": null,
@@ -2692,7 +2692,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "popover",
       "namespace": null,
@@ -2796,7 +2796,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "progress",
       "namespace": null,
@@ -2893,7 +2893,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "radio-group",
       "namespace": null,
@@ -3066,7 +3066,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "select",
       "namespace": null,
@@ -3248,7 +3248,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "separator",
       "namespace": null,
@@ -3331,7 +3331,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "settings",
       "namespace": null,
@@ -3400,7 +3400,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "skeleton",
       "namespace": null,
@@ -3480,7 +3480,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "slider",
       "namespace": null,
@@ -3636,7 +3636,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "spinner",
       "namespace": null,
@@ -3720,7 +3720,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "switch",
       "namespace": null,
@@ -3891,7 +3891,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "table",
       "namespace": null,
@@ -4001,7 +4001,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "tabs",
       "namespace": null,
@@ -4112,7 +4112,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "taka",
       "namespace": null,
@@ -4195,7 +4195,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "text",
       "namespace": null,
@@ -4320,7 +4320,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "textarea",
       "namespace": null,
@@ -4519,7 +4519,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "toast",
       "namespace": null,
@@ -4612,7 +4612,7 @@
       }
     },
     {
-      "$schema": "https://ui.santaka.my.id/schema/registry-item-v1.json",
+      "$schema": "https://santaka.my.id/schema/registry-item-v1.json",
       "schemaVersion": 1,
       "name": "tooltip",
       "namespace": null,

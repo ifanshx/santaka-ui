@@ -3,6 +3,25 @@
   "version": "0.1.0",
   "description": "Santaka UI design tokens: DTCG source of truth compiled to CSS custom properties.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ifanshx/santaka-ui.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://santaka.my.id",
+  "bugs": {
+    "url": "https://github.com/ifanshx/santaka-ui/issues"
+  },
+  "author": {
+    "name": "ifanshx",
+    "url": "https://github.com/ifanshx"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "css",
+    "theming"
+  ],
   "type": "module",
   "sideEffects": false,
   "engines": {
