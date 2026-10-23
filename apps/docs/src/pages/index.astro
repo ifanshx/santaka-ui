@@ -5,6 +5,10 @@
  * Grouped by stability, because §10 asks for separate Stable / Preview /
  * Experimental / Deprecated labels — and the labels come from the registry
  * rather than from an author's heading (ADR-006).
+ *
+ * The page is laid out as a landing page rather than a list: a reader arriving
+ * from a search engine needs to know what this is, what it costs them, and how
+ * to try it, in that order. The catalogue follows.
  */
 import Layout from "../layouts/Layout.astro"
 import { blockPages, componentPages, stabilityGroups } from "../lib/components"
@@ -12,19 +16,86 @@ import { blockPages, componentPages, stabilityGroups } from "../lib/components"
 const pages = componentPages()
 const groups = stabilityGroups()
 const blocks = blockPages()
+
+const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka-ui/styles"
 ---
 
-<Layout title="Components" description={`${pages.length} Santaka UI components and ${blocks.length} blocks, generated from the registry.`}>
-  <h1>Components</h1>
-  <p class="lede">
-    Every page below is generated from the same registry entry the CLI installs from, the MCP server answers from, and
-    <code>llms.txt</code> is written from. Nothing here is hand-maintained, so a prop rename cannot reach one and miss
-    another.
-  </p>
-  <p>
-    To see them all rendered live rather than listed, use the
-    <a href="/showcase">showcase</a>.
-  </p>
+<Layout
+  title="Santaka UI — one design system, every framework"
+  description={`${pages.length} accessible web components with thin React, Vue, and Svelte adapters. Tokens, a CLI, a versioned registry, and MCP metadata — no framework lock-in.`}
+>
+  <section class="hero">
+    <p class="eyebrow">Design system</p>
+    <h1>
+      One design system.<br />Every framework.<br /><span class="accent">Your code.</span>
+    </h1>
+    <p class="lede">
+      {pages.length} accessible components built as web components, with thin adapters for React, Vue, and Svelte. The
+      behavior lives in one place, so an app in any framework gets the same keyboard model, the same ARIA wiring, and the
+      same bug fixes.
+    </p>
+
+    <div class="cta">
+      <a class="btn btn--primary" href="/quick-start">Quick start</a>
+      <a class="btn" href="/showcase">See them rendered</a>
+    </div>
+
+    <pre class="install"><code>{install}</code></pre>
+
+    <dl class="facts">
+      <div>
+        <dt>Components</dt>
+        <dd>{pages.length}</dd>
+      </div>
+      <div>
+        <dt>Blocks</dt>
+        <dd>{blocks.length}</dd>
+      </div>
+      <div>
+        <dt>Behavior owners</dt>
+        <dd>1</dd>
+      </div>
+      <div>
+        <dt>Runtime deps</dt>
+        <dd>0</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="why">
+    <h2>Why this exists</h2>
+    <div class="why-grid">
+      <article>
+        <h3>One behavior owner</h3>
+        <p>
+          Every component's ARIA wiring, keyboard model, and form participation lives in the web component. The React and
+          Vue packages adapt it; they do not reimplement it. That is why a fix reaches every framework at once, and why
+          the adapters stay under 4 KB.
+        </p>
+      </article>
+      <article>
+        <h3>Tokens, not a theme object</h3>
+        <p>
+          DTCG source compiled to CSS custom properties. Overriding <code>--sk-color-primary</code> on a scope is the
+          whole customization contract — no build step, no provider, no runtime.
+        </p>
+      </article>
+      <article>
+        <h3>Accessible by test, not by claim</h3>
+        <p>
+          axe-core runs over the assembled page in light and dark on every push, and every component has browser tests
+          for its keyboard model. Reduced motion removes the movement rather than shortening it.
+        </p>
+      </article>
+      <article>
+        <h3>Generated, never hand-maintained</h3>
+        <p>
+          This page, every component page, <code>llms.txt</code>, and the registry payload are all derived from one
+          registry. A prop rename reaches all of them or none — it cannot reach one and miss another.
+        </p>
+      </article>
+    </div>
+  </section>
 
   {groups.map((group) => (
     <section class="group">
@@ -36,7 +107,7 @@ const blocks = blockPages()
         {group.pages.map((page) => (
           <li class="card">
             <a href={`/components/${page.name}/`}>
-              <strong>{page.tag}</strong>
+              <code class="tag">{page.tag}</code>
               <span class="summary">{page.summary}</span>
             </a>
           </li>
@@ -63,7 +134,7 @@ const blocks = blockPages()
           {blocks.map((page) => (
             <li class="card">
               <a href={`/blocks/${page.name}/`}>
-                <strong>{page.name}</strong>
+                <code class="tag">{page.name}</code>
                 <span class="summary">{page.summary}</span>
               </a>
             </li>
@@ -73,78 +144,280 @@ const blocks = blockPages()
     )
   }
 
-  <footer class="note">
+  <section class="machine">
+    <h2>For machines</h2>
     <p>
-      Machine-readable versions of this catalogue: <a href="/registry/index.json">registry/index.json</a>,
-      <a href="/llms.txt">llms.txt</a>, and <a href="/llms-full.txt">llms-full.txt</a>.
+      The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page:
     </p>
-  </footer>
+    <ul class="links">
+      <li><a href="/registry/index.json"><code>registry/index.json</code></a> — every item, versioned and checksummed</li>
+      <li><a href="/llms.txt"><code>llms.txt</code></a> — the inventory as prose, for a model's context window</li>
+      <li><a href="/llms-full.txt"><code>llms-full.txt</code></a> — props, events, and limitations for every component</li>
+      <li><a href="/schema/registry-item-v1.json"><code>registry-item-v1.json</code></a> — the JSON Schema entries validate against</li>
+    </ul>
+  </section>
 </Layout>
 
 <style>
-  .lede {
-    max-inline-size: 60ch;
-    color: var(--muted);
+  /* ── Hero ────────────────────────────────────────────────────────────── */
+  .hero {
+    padding-block: clamp(1rem, 4vw, 2.5rem) 1rem;
   }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sk-color-primary-text, #4c1d95);
+    margin-block: 0 0.75rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.1rem, 6.5vw, 3.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin-block: 0;
+  }
+
+  .accent {
+    color: var(--sk-color-primary, #6d28d9);
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block: 1.75rem 1.25rem;
+  }
+
+  /* The site's own buttons: same stroke, square corners, and offset shadow the
+     components use. A docs site that renders `<sk-button>` on every page but
+     styles its own calls to action differently is telling the reader the system
+     is not good enough to use for itself. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.15rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
+    background: var(--sk-color-surface, #fff);
+    color: var(--sk-color-text, #17141c);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
+    transition:
+      translate var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+      box-shadow var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
+  }
+
+  .btn:hover {
+    translate: -1px -1px;
+    box-shadow: var(--docs-shadow-lg) var(--sk-color-shadow, #17141c);
+  }
+
+  .btn:active {
+    translate: 2px 2px;
+    box-shadow: 1px 1px 0 0 var(--sk-color-shadow, #17141c);
+  }
+
+  .btn--primary {
+    background: var(--sk-color-primary, #6d28d9);
+    border-color: var(--sk-color-primary, #6d28d9);
+    color: var(--sk-color-primary-fg, #fff);
+  }
+
+  .install {
+    max-inline-size: 100%;
+    font-size: 0.82rem;
+  }
+
+  /* ── Facts row ───────────────────────────────────────────────────────── */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.75rem;
+    margin-block: 2rem 0;
+  }
+
+  .facts > div {
+    padding: 0.75rem 1rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
+    background: var(--docs-raised);
+  }
+
+  .facts dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--docs-muted);
+  }
+
+  .facts dd {
+    margin: 0.15rem 0 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Why grid ────────────────────────────────────────────────────────── */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+    margin-block-start: 1.25rem;
+  }
+
+  .why-grid article {
+    padding: 1.1rem 1.25rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
+  }
+
+  .why-grid h3 {
+    margin-block-start: 0;
+    font-size: 1rem;
+  }
+
+  .why-grid p {
+    margin-block-end: 0;
+    font-size: 0.92rem;
+    color: var(--docs-muted);
+  }
+
+  /* ── Catalogue ───────────────────────────────────────────────────────── */
   .group h2 {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-block-start: 2.5rem;
+    margin-block-start: 2.75rem;
   }
+
   .count {
     font-size: 0.85rem;
-    color: var(--muted);
+    font-weight: 600;
+    color: var(--docs-muted);
   }
+
   .cards {
     list-style: none;
     padding: 0;
+    margin-block: 1rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
+
   .card a {
     display: block;
-    padding: 0.75rem 1rem;
-    border: var(--stroke) solid var(--edge);
-    border-radius: 0;
-    text-decoration: none;
+    block-size: 100%;
+    padding: 0.9rem 1.05rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
     color: inherit;
+    text-decoration: none;
+    background: var(--sk-color-surface, #fff);
+    transition:
+      translate var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+      box-shadow var(--sk-duration-control, 140ms) var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
   }
+
   .card a:hover {
-    background: var(--surface-raised);
+    translate: -1px -1px;
+    box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
   }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--docs-edge);
+    background: var(--docs-raised);
+  }
+
   .summary {
     display: block;
-    margin-block-start: 0.25rem;
-    font-size: 0.9rem;
-    color: var(--muted);
+    margin-block-start: 0.5rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--docs-muted);
   }
+
   .badge {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.15rem 0.5rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.55rem;
     border: 1px solid currentColor;
   }
+
   .badge--stable {
-    color: #0d9488;
+    color: var(--sk-color-primary-text, #4c1d95);
   }
+
   .badge--preview,
   .badge--experimental {
-    color: #b45309;
+    color: var(--sk-color-warning, #92400e);
   }
+
   .badge--deprecated {
-    color: #b91c1c;
+    color: var(--sk-color-danger, #b91c1c);
   }
-  .note {
-    margin-block-start: 3rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
+
   .hint {
     font-size: 0.85rem;
-    color: var(--muted);
+    color: var(--docs-muted);
     max-inline-size: 65ch;
+  }
+
+  /* ── For machines ────────────────────────────────────────────────────── */
+  .machine ul.links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .machine li {
+    font-size: 0.92rem;
+    color: var(--docs-muted);
+  }
+
+  /* On a narrow screen the catalogue is a long list of similar boxes, and the
+     reader loses their place between one card and the next. Tighter vertical
+     rhythm and a smaller gap keep the group reading as one block rather than
+     38 separate stops. */
+  @media (max-width: 40rem) {
+    .cards {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .card a {
+      padding: 0.7rem 0.85rem;
+    }
+
+    .group h2 {
+      margin-block-start: 2rem;
+    }
+
+    .facts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    .card a {
+      transition: none;
+    }
+
+    .btn:hover,
+    .btn:active,
+    .card a:hover {
+      translate: none;
+    }
   }
 </style>

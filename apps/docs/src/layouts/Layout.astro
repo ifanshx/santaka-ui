@@ -6,6 +6,10 @@
  * distribution contract): tokens, then the component stylesheet. Light/dark is an
  * attribute on the root element, which works before any script runs — the same
  * contract the components ship with (ADR-005, no flash of wrong theme).
+ *
+ * All styling lives in `src/styles/site.css`. It used to be duplicated here in a
+ * `<style is:global>` block as well, which meant two sources of truth for the
+ * same rules and a change that had to be made twice.
  */
 import "../styles/global.css"
 import Search from "../components/Search.astro"
@@ -16,6 +20,9 @@ interface Props {
 }
 
 const { title, description } = Astro.props
+const path = Astro.url.pathname
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
 ---
 
 <!doctype html>
@@ -28,11 +35,10 @@ const { title, description } = Astro.props
     <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
 
     <script is:inline>
-      // Set before paint, so a dark reader never sees a light flash. The same
-      // storage key the components' own example page uses, so a preference
-      // carries across this site and a consumer's app.
+      // Applied before paint, so the page never flashes the wrong theme. The
+      // stored preference wins; otherwise the system preference decides.
       try {
-        const stored = localStorage.getItem("sk-theme") || "system"
+        const stored = localStorage.getItem("sk-theme")
         const dark =
           stored === "dark" ||
           (stored === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
@@ -45,9 +51,6 @@ const { title, description } = Astro.props
       will be served from (`astro.config.mjs`), so the canonical URL is generated
       rather than written — a hand-written one is the first thing to go stale
       when a host changes, and a wrong canonical is worse than none.
-
-      A page served from a static host has no server to add these later, so if
-      they are missing here they are missing everywhere.
     */}
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <meta property="og:type" content="website" />
@@ -58,93 +61,72 @@ const { title, description } = Astro.props
   </head>
 
   <body>
+    <a class="skip" href="#main">Skip to content</a>
+
     <header class="bar">
-      <a class="brand" href="/">Santaka UI</a>
+      <a class="brand" href="/">
+        <sk-taka size="sm" mood="idle" aria-hidden="true" />
+        <span>Santaka UI</span>
+      </a>
       <Search />
-      <nav>
-        <a href="/">Components</a>
-        <a href="/showcase">Showcase</a>
+      <nav aria-label="Main">
+        <a href="/" aria-current={isCurrent("/") ? "page" : undefined}>Components</a>
+        <a href="/showcase" aria-current={isCurrent("/showcase") ? "page" : undefined}>Showcase</a>
+        <a href="/quick-start" aria-current={isCurrent("/quick-start") ? "page" : undefined}>Quick start</a>
         <a href="/registry/index.json">Registry</a>
         <a href="/llms.txt">llms.txt</a>
-        <button id="theme-toggle" type="button" aria-label="Toggle dark theme">◐</button>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark theme" aria-pressed="false">◐</button>
       </nav>
     </header>
 
-    <main>
+    <main id="main">
       <slot />
     </main>
+
+    <footer class="site">
+      <nav aria-label="Project">
+        <a href="https://github.com/ifanshx/santaka-ui">GitHub</a>
+        <a href="https://github.com/ifanshx/santaka-ui/blob/main/docs/ARCHITECTURE.md">Specification</a>
+        <a href="https://github.com/ifanshx/santaka-ui/tree/main/docs/adr">Decisions</a>
+        <a href="/registry/index.json">Registry</a>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="/llms-full.txt">llms-full.txt</a>
+      </nav>
+      <p>MIT licensed. Every page is generated from the registry — nothing here is hand-maintained.</p>
+    </footer>
   </body>
 </html>
 
 <script>
+  // The elements are registered here, once, for the whole shell — not only in
+  // the component previews. The mascot in the header is an `<sk-taka>`, and
+  // without this it renders as an empty inline tag: the markup is there, the
+  // stylesheet is bundled, and nothing upgrades. Registration is a side effect,
+  // so it belongs in the browser only.
+  import("@santaka-ui/web-components")
+</script>
+
+<script>
   // The toggle is the only script the shell needs. It writes the same attribute
-  // the components read, so switching theme needs no re-render.
+  // the components read, so switching theme needs no re-render — and it keeps
+  // `aria-pressed` in step, because a toggle that announces the wrong state is
+  // worse than one that announces nothing.
   const toggle = document.getElementById("theme-toggle")
+  const root = document.documentElement
+  const isDark = () => root.getAttribute("data-sk-theme") === "dark"
+
+  const paint = () => {
+    toggle?.setAttribute("aria-pressed", String(isDark()))
+    if (toggle) toggle.textContent = isDark() ? "◑" : "◐"
+  }
+  paint()
+
   toggle?.addEventListener("click", () => {
-    const root = document.documentElement
-    const next = root.getAttribute("data-sk-theme") === "dark" ? "light" : "dark"
+    const next = isDark() ? "light" : "dark"
     root.setAttribute("data-sk-theme", next)
     try {
       localStorage.setItem("sk-theme", next)
     } catch {}
+    paint()
   })
 </script>
-
-<style is:global>
-  :root {
-    --muted: #5b5566;
-    --edge: #d8d3e0;
-    --surface-raised: #f4f1f8;
-    --stroke: 3px;
-  }
-
-  [data-sk-theme="dark"] {
-    --muted: #a49fb0;
-    --edge: #3a3543;
-    --surface-raised: #211d28;
-  }
-
-  body {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    line-height: 1.6;
-    background: var(--sk-color-surface);
-    color: var(--sk-color-text);
-  }
-
-  .bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1.5rem;
-    border-block-end: var(--stroke) solid var(--edge);
-  }
-
-  .brand {
-    font-weight: 800;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.9rem;
-  }
-
-  main {
-    max-inline-size: 60rem;
-    margin-inline: auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  #theme-toggle {
-    background: none;
-    border: var(--stroke) solid var(--edge);
-    color: inherit;
-    cursor: pointer;
-    padding: 0.1rem 0.5rem;
-    border-radius: 0;
-  }
-</style>

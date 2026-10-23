@@ -112,7 +112,7 @@ const { page } = Astro.props
 <style>
   .crumbs {
     font-size: 0.85rem;
-    color: var(--muted);
+    color: var(--docs-muted);
   }
   .head {
     display: flex;
@@ -131,7 +131,7 @@ const { page } = Astro.props
     padding: 0;
   }
   .meta div {
-    border: var(--stroke) solid var(--edge);
+    border: var(--docs-stroke) solid var(--docs-edge);
     padding: 0.5rem 0.75rem;
   }
   .meta span {
@@ -139,7 +139,7 @@ const { page } = Astro.props
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--muted);
+    color: var(--docs-muted);
   }
   .composes {
     display: flex;
@@ -151,7 +151,7 @@ const { page } = Astro.props
   pre {
     overflow-x: auto;
     padding: 0.75rem 1rem;
-    border: var(--stroke) solid var(--edge);
+    border: var(--docs-stroke) solid var(--docs-edge);
   }
   .vars {
     display: flex;
@@ -162,12 +162,12 @@ const { page } = Astro.props
   }
   .vars li {
     font-size: 0.8rem;
-    border: 1px solid var(--edge);
+    border: 1px solid var(--docs-edge);
     padding: 0.1rem 0.4rem;
   }
   .hint {
     font-size: 0.85rem;
-    color: var(--muted);
+    color: var(--docs-muted);
   }
   .badge {
     font-size: 0.7rem;
@@ -177,18 +177,18 @@ const { page } = Astro.props
     border: 1px solid currentColor;
   }
   .badge--stable {
-    color: #0d9488;
+    color: var(--sk-color-success, #047857);
   }
   .badge--preview,
   .badge--experimental {
-    color: #b45309;
+    color: var(--sk-color-warning, #92400e);
   }
   .badge--deprecated {
-    color: #b91c1c;
+    color: var(--sk-color-danger, #b91c1c);
   }
   .note {
     margin-block-start: 3rem;
     font-size: 0.9rem;
-    color: var(--muted);
+    color: var(--docs-muted);
   }
 </style>

@@ -1,65 +1,306 @@
 /*
- * Site stylesheet: only what the docs shell itself needs.
+ * Site stylesheet: the docs shell's own design layer.
  *
- * Component and token styling is bundled through `src/styles/global.css`, not
- * served from `public/` — because the packages' exports map is the contract
- * (ADR-012), and a path in `public/` would be a second copy of the same bytes
- * that could drift.
+ * Everything here is built from the token contract the components use — no
+ * second colour scale, no local grey ramp. That is what makes the docs a
+ * demonstration of the system rather than a brochure about it: change
+ * `--sk-color-primary` and the site follows.
+ *
+ * The house style is brutalist: a 3px stroke, square corners, and a hard offset
+ * shadow with no blur. The shadow is the one thing the components had and this
+ * shell did not, which made the site read as documentation *about* the
+ * components rather than built from them.
  */
 
 :root {
-  --muted: #5b5566;
-  --edge: #d8d3e0;
-  --surface-raised: #f4f1f8;
-  --stroke: 3px;
+  --docs-stroke: var(--sk-border-thick, 3px);
+  --docs-edge: var(--sk-color-border-strong, #8b85a0);
+  --docs-muted: var(--sk-color-text-muted, #5f5a6b);
+  --docs-raised: color-mix(
+    in oklab,
+    var(--sk-color-surface, #fff) 92%,
+    var(--sk-color-text, #17141c)
+  );
+  --docs-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
+  --docs-shadow-lg: var(--sk-shadow-brutal, 5px 5px 0 0);
+  --docs-gutter: clamp(1rem, 4vw, 2.5rem);
+  --docs-measure: 68ch;
+  --docs-code: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 }
 
-[data-sk-theme="dark"] {
-  --muted: #a49fb0;
-  --edge: #3a3543;
-  --surface-raised: #211d28;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  line-height: 1.6;
-  background: var(--sk-color-surface);
-  color: var(--sk-color-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.65;
+  background: var(--sk-color-surface, #fff);
+  color: var(--sk-color-text, #17141c);
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── Skip link ───────────────────────────────────────────────────────────
+   The first tab stop, and the only one that must be invisible until it is
+   focused: a keyboard reader should be able to jump the header on every page. */
+.skip {
+  position: absolute;
+  inset-block-start: -100%;
+  inset-inline-start: var(--docs-gutter);
+  z-index: 10;
+  padding: 0.6rem 1rem;
+  background: var(--sk-color-primary, #6d28d9);
+  color: var(--sk-color-primary-fg, #fff);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.skip:focus-visible {
+  inset-block-start: 0.75rem;
+  outline: var(--docs-stroke) solid var(--sk-color-text, #17141c);
+  outline-offset: 3px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────
+   Sticky, with the stroke doubling as the divider. The brand carries the mark,
+   because a system with a mascot should show it rather than describe it. */
 .bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.5rem;
-  border-block-end: var(--stroke) solid var(--edge);
+  gap: 1rem 1.5rem;
+  padding: 0.7rem var(--docs-gutter);
+  border-block-end: var(--docs-stroke) solid var(--docs-edge);
+  background: var(--sk-color-surface, #fff);
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
   text-decoration: none;
   color: inherit;
 }
 
-nav {
+.brand sk-taka {
+  --sk-taka-size: 1.6rem;
+}
+
+.bar nav {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+  margin-inline-start: auto;
   font-size: 0.9rem;
 }
 
-main {
-  max-inline-size: 60rem;
-  margin-inline: auto;
-  padding: 2rem 1.5rem 4rem;
+.bar nav a {
+  color: var(--docs-muted);
+  text-decoration: none;
+  padding-block: 0.25rem;
+  border-block-end: 2px solid transparent;
+}
+
+.bar nav a:hover,
+.bar nav a[aria-current="page"] {
+  color: var(--sk-color-text, #17141c);
+  border-block-end-color: var(--sk-color-primary, #6d28d9);
 }
 
 #theme-toggle {
-  background: none;
-  border: var(--stroke) solid var(--edge);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  background: var(--sk-color-surface, #fff);
+  border: var(--docs-stroke) solid var(--docs-edge);
+  box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
   color: inherit;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0.1rem 0.5rem;
-  border-radius: 0;
+  transition:
+    translate var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1)),
+    box-shadow var(--sk-duration-control, 140ms)
+      var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+#theme-toggle:hover {
+  translate: -1px -1px;
+  box-shadow: var(--docs-shadow-lg) var(--sk-color-shadow, #17141c);
+}
+
+#theme-toggle:active {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 0 var(--sk-color-shadow, #17141c);
+}
+
+/* ── Main column ─────────────────────────────────────────────────────────── */
+main {
+  max-inline-size: 62rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3rem) var(--docs-gutter) 5rem;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────────
+   A tight heading scale is most of what makes documentation look designed
+   rather than dumped. Headings get their own tracking and rhythm; body text
+   stays at the measure so a paragraph is readable without a ruler. */
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-block: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+  font-weight: 750;
+  margin-block-start: 2.75rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-block-start: 2rem;
+}
+
+p,
+li {
+  max-inline-size: var(--docs-measure);
+}
+
+p {
+  margin-block: 0.85rem;
+}
+
+a {
+  color: var(--sk-color-primary-text, #4c1d95);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-thickness: 3px;
+}
+
+code {
+  font-family: var(--docs-code);
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--docs-edge);
+  background: var(--docs-raised);
+}
+
+pre {
+  font-family: var(--docs-code);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: var(--docs-stroke) solid var(--docs-edge);
+  background: var(--docs-raised);
+  box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+}
+
+blockquote {
+  margin-inline: 0;
+  padding-inline-start: 1rem;
+  border-inline-start: var(--docs-stroke) solid var(--sk-color-primary, #6d28d9);
+  color: var(--docs-muted);
+}
+
+hr {
+  border: 0;
+  border-block-start: var(--docs-stroke) solid var(--docs-edge);
+  margin-block: 2.5rem;
+}
+
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  margin-block: 1.25rem;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: start;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--docs-edge);
+  vertical-align: top;
+}
+
+th {
+  background: var(--docs-raised);
+  font-weight: 700;
+}
+
+/* ── The lede ────────────────────────────────────────────────────────────
+   One paragraph that says what the page is, set larger than body text. Every
+   page has one; it is what a reader skims before deciding to stay. */
+.lede {
+  font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--docs-muted);
+  max-inline-size: 62ch;
+  margin-block-start: 1rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer.site {
+  margin-block-start: 4rem;
+  padding-block-start: 1.5rem;
+  border-block-start: var(--docs-stroke) solid var(--docs-edge);
+  font-size: 0.875rem;
+  color: var(--docs-muted);
+}
+
+footer.site nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-block-end: 1rem;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────
+   The shell's own motion is a hover lift, which is exactly the kind a reader
+   asking for less motion does not want. The state stays; the travel goes. */
+@media (prefers-reduced-motion: reduce) {
+  #theme-toggle {
+    transition: none;
+  }
+
+  #theme-toggle:hover,
+  #theme-toggle:active {
+    translate: none;
+  }
 }
