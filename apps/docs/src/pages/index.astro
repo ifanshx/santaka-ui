@@ -29,14 +29,20 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   <section class="hero">
     <sk-badge variant="primary" size="sm">Design system</sk-badge>
 
-    <sk-text variant="display" family="display" class="headline">
+    {/* A real <h1>. The page previously had none: `sk-text` renders a <span>,
+        so the headline looked like a headline and was semantically nothing —
+        no document outline, no first landmark for a screen reader. Typography
+        cannot fix that. The element is real; its treatment reuses the display
+        token so the semantic fix does not restyle the page by hand. */}
+    <h1 class="headline">
       One design system.<br />Every framework.<br /><span class="accent">Your code.</span>
-    </sk-text>
+    </h1>
 
     <sk-text variant="lg" muted class="lede">
       {pages.length} accessible components built as web components, with thin adapters for React, Vue, and Svelte. The
       behavior lives in one place, so an app in any framework gets the same keyboard model, the same ARIA wiring, and the
-      same bug fixes.
+      the same bug fixes. Zero runtime dependencies, and <code>{pages.length}</code> components you can filter and open
+      without leaving this page.
     </sk-text>
 
     <div class="cta">
@@ -143,7 +149,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   <sk-separator decorative />
 
   <section class="why">
-    <sk-text variant="3xl" family="display">Why this exists</sk-text>
+    <h2 class="section-title">Why this exists</h2>
 
     <div class="why-grid">
       <sk-card heading="One behavior owner" padding="md">
@@ -173,33 +179,65 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       </sk-card>
     </div>
   </section>
+  {/* Every component on one page, filterable. The catalogue used to be four
+      separate grids the reader scrolled past; with 38 tags, finding one meant
+      knowing its name. The search field and the stability filter are the
+      system's own `sk-input` and `sk-select`, so the page demonstrates the
+      components it is indexing — and `sk-empty-state` handles the case where
+      the filter excludes everything rather than leaving a blank grid. */}
+  <section class="catalogue" id="components">
+    <div class="catalogue-head">
+      <h2 class="section-title">All components</h2>
+      <sk-badge variant="primary" size="sm">{pages.length}</sk-badge>
+    </div>
 
-  {
-    groups.map((group) => (
-      <section class="group">
-        <div class="group-head">
-          <sk-text variant="2xl" family="display">
-            {group.label}
-          </sk-text>
-          <sk-badge variant={group.label === "stable" ? "success" : "warning"} size="sm">
-            {group.pages.length}
-          </sk-badge>
-        </div>
+    <div class="filters">
+      <sk-input
+        id="filter-search"
+        label="Search components"
+        type="search"
+        placeholder="button, dialog, toast…"
+        size="sm"
+      />
+      <sk-select
+        id="filter-stability"
+        value="all"
+        label="Stability"
+        size="sm"
+        options={JSON.stringify([
+          { value: "all", label: "All" },
+          ...groups.map((g) => ({ value: g.label, label: `${g.label} (${g.pages.length})` })),
+        ])}
+      />
+    </div>
 
-        <div class="cards">
-          {group.pages.map((page) => (
-            <a class="card-link" href={`/components/${page.name}/`}>
-              <sk-card variant="default" padding="sm" heading={page.tag}>
-                <sk-text variant="sm" muted>
-                  {page.summary}
-                </sk-text>
-              </sk-card>
-            </a>
-          ))}
-        </div>
-      </section>
-    ))
-  }
+    <div class="cards" id="catalogue-grid">
+      {pages.map((page) => (
+        <a
+          class="card-link"
+          href={`/components/${page.name}/`}
+          data-name={page.name}
+          data-tag={page.tag}
+          data-summary={page.summary}
+          data-stability={page.stability}
+        >
+          <sk-card variant="default" padding="sm" heading={page.tag}>
+            <sk-text variant="sm" muted>{page.summary}</sk-text>
+            <div class="card-meta">
+              <sk-badge
+                variant={page.stability === "stable" ? "success" : "warning"}
+                size="sm"
+              >
+                {page.stability}
+              </sk-badge>
+            </div>
+          </sk-card>
+        </a>
+      ))}
+    </div>
+
+    <sk-empty-state id="catalogue-empty" heading="No components match" description="Try a shorter search or a different stability filter." hidden />
+  </section>
 
   {
     // Blocks are not components: they have no tag, no props, and no page-sized
@@ -208,9 +246,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     blocks.length > 0 && (
       <section class="group" id="blocks">
         <div class="group-head">
-          <sk-text variant="2xl" family="display">
-            Blocks
-          </sk-text>
+          <h2 class="section-title">Blocks</h2>
           <sk-badge variant="neutral" size="sm">
             {blocks.length}
           </sk-badge>
@@ -237,7 +273,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   <sk-separator decorative />
 
   <section class="machine">
-    <sk-text variant="2xl" family="display">For machines</sk-text>
+    <h2 class="section-title">For machines</h2>
     <sk-text variant="sm" muted>
       The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page.
     </sk-text>
@@ -261,16 +297,28 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 <style>
   /* Layout only. Every visual decision — stroke, shadow, colour, radius, motion —
      comes from the components and the tokens. What is left here is where things
-     sit, because that is the one thing a component cannot decide for a page. */
+     sit, because that is the one thing a component cannot decide for a page.
+
+     Vertical rhythm is one token-driven step. The sections previously used
+     32px, 44px and 40px margins from three unrelated rules, which read as
+     uneven even though no single value was wrong; --docs-rhythm makes the
+     spacing between every band identical and the gaps inside them smaller. */
+
+  :root {
+    --docs-rhythm: clamp(2.5rem, 5vw, 4rem);
+  }
 
   .hero {
-    padding-block: clamp(1rem, 4vw, 2.5rem) 1rem;
+    padding-block: clamp(1.5rem, 4vw, 3rem) 0;
   }
 
   .headline {
     display: block;
-    margin-block: 0.75rem 0;
-    line-height: 1.02;
+    margin-block: 0.9rem 0;
+    font-family: var(--sk-font-display, inherit);
+    font-size: var(--sk-font-size-5xl, 3.25rem);
+    font-weight: var(--sk-font-weight-bold, 800);
+    line-height: 1.04;
     letter-spacing: -0.035em;
   }
 
@@ -314,7 +362,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
     gap: 0.85rem;
-    margin-block: 2rem;
+    margin-block: var(--docs-rhythm);
   }
 
   .facts sk-card {
@@ -340,7 +388,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   }
 
   .why {
-    margin-block: 2rem;
+    margin-block: var(--docs-rhythm);
   }
 
   .why-grid {
@@ -355,7 +403,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   }
 
   .group {
-    margin-block-start: 2.75rem;
+    margin-block-start: var(--docs-rhythm);
   }
 
   .group-head {
@@ -388,6 +436,63 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     block-size: 100%;
   }
 
+  /* -- Filterable catalogue --------------------------------------------------
+     The filters are Santaka components in a flex row, so they sit on the
+     component's own sizing rather than a hard-coded width: the field grows,
+     the select keeps its intrinsic size, and both collapse on narrow screens. */
+  .catalogue {
+    margin-block-start: var(--docs-rhythm);
+  }
+
+  .catalogue-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-block-end: 1rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-block-end: 1.25rem;
+    padding: 1rem;
+    border: var(--docs-stroke) solid var(--docs-edge);
+    border-radius: var(--sk-radius-md, 6px);
+    background: var(--docs-raised);
+  }
+
+  .filters sk-input {
+    flex: 1 1 18rem;
+  }
+
+  .filters sk-select {
+    flex: 0 1 14rem;
+  }
+
+  /* A filtered-out card must leave the grid entirely, and it must also leave
+     the tab order: the script sets hidden, which does both, so a keyboard user
+     cannot land on a card they cannot see. */
+  .card-link[hidden] {
+    display: none;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 0.35rem;
+    margin-block-start: 0.6rem;
+  }
+
+  .section-title {
+    margin: 0;
+    font-family: var(--sk-font-display, inherit);
+    font-size: var(--sk-font-size-3xl, 1.875rem);
+    font-weight: var(--sk-font-weight-bold, 800);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
   .hint {
     display: block;
     margin-block-end: 0.85rem;
@@ -395,7 +500,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   }
 
   .machine {
-    margin-block-start: 2.5rem;
+    margin-block-start: var(--docs-rhythm);
   }
 
   .machine > sk-text {
@@ -419,6 +524,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   @media (max-width: 40rem) {
     .cards {
       grid-template-columns: 1fr;
+
+  stability?.addEventListener("change", apply)
       gap: 0.5rem;
     }
 
@@ -426,28 +533,6 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       grid-template-columns: repeat(2, 1fr);
     }
   }
-</style>
-
-<script>
-  // A one-line install command is meant to be copied, not retyped. The button
-  // reports its own outcome instead of relying on a toast, so the feedback is
-  // where the reader is looking.
-  const copy = document.getElementById("copy-install")
-  copy?.addEventListener("click", async () => {
-    const text = copy.getAttribute("data-copy") ?? ""
-    try {
-      await navigator.clipboard.writeText(text)
-      copy.textContent = "Copied"
-    } catch {
-      copy.textContent = "Press Ctrl+C"
-    }
-    setTimeout(() => {
-      copy.textContent = "Copy"
-    }, 1600)
-  })
-</script>
-
-<style>
   /* Bento: panels of different sizes on one grid, so the section reads as a
      composition rather than a list. Every panel is a real component; the grid
      only decides which is wide. */
@@ -455,7 +540,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 0.85rem;
-    margin-block: 2rem;
+    margin-block: var(--docs-rhythm);
   }
 
   .bento > sk-card {
@@ -514,3 +599,66 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     }
   }
 </style>
+
+<script>
+  // A one-line install command is meant to be copied, not retyped. The button
+  // reports its own outcome instead of relying on a toast, so the feedback is
+  // where the reader is looking.
+  const copy = document.getElementById("copy-install")
+  copy?.addEventListener("click", async () => {
+    const text = copy.getAttribute("data-copy") ?? ""
+    try {
+      await navigator.clipboard.writeText(text)
+      copy.textContent = "Copied"
+    } catch {
+      copy.textContent = "Press Ctrl+C"
+    }
+    setTimeout(() => {
+      copy.textContent = "Copy"
+    }, 1600)
+  })
+
+  // The catalogue filter. sk-input renders a plain <input> in its own light DOM
+  // (ADR-011: scoped styles, no shadow root) and re-emits nothing, so the value
+  // is read from the event target — the element the reader actually typed into.
+  // Reading host.value was the obvious approach and it is wrong: the host
+  // property is a reflected attribute that lags the event by a tick, so every
+  // keystroke filtered on the previous character.
+  const search = document.getElementById("filter-search")
+  const stability = document.getElementById("filter-stability")
+  const grid = document.getElementById("catalogue-grid")
+  const empty = document.getElementById("catalogue-empty")
+
+  const cards = grid ? [...grid.querySelectorAll<HTMLElement>(".card-link")] : []
+
+  const apply = (rawValue?: string) => {
+    const source = (rawValue ?? (search as HTMLInputElement | null)?.value ?? "").toString()
+    const q = source.trim().toLowerCase()
+    // sk-select is a custom element, not a <select>: its value is empty until
+    // the reader picks something, so empty has to mean "all" rather than being
+    // matched against the option list and matching nothing.
+    const stab = ((stability as HTMLSelectElement | null)?.value ?? "") || "all"
+
+    let shown = 0
+    for (const card of cards) {
+      const haystack = `${card.dataset.tag ?? ""} ${card.dataset.name ?? ""} ${card.dataset.summary ?? ""}`.toLowerCase()
+      const matches = (!q || haystack.includes(q)) && (stab === "all" || card.dataset.stability === stab)
+      card.hidden = !matches
+      if (matches) shown += 1
+    }
+
+    // hidden removes the card from the grid and from the tab order, so a
+    // keyboard user cannot land on a link they cannot see. The empty state
+    // explains the blank grid instead of leaving it unexplained.
+    if (empty) empty.hidden = shown > 0
+  }
+
+  // Captured on the host rather than the inner field: the component upgrades
+  // after this script runs, so the <input> does not exist yet at load time.
+  // The value comes from the event target, which is correct whenever it fires.
+  search?.addEventListener("input", (event) => {
+    const target = event.target as HTMLInputElement | null
+    apply((target?.value ?? "").toString())
+  })
+  stability?.addEventListener("change", () => apply())
+</script>

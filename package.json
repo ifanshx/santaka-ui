@@ -49,7 +49,9 @@
     "turbo": "2.11.7",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.1",
-    "vue-eslint-parser": "10.4.1"
+    "vue-eslint-parser": "10.4.1",
+    "@axe-core/playwright": "4",
+    "@playwright/test": "1.64.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
