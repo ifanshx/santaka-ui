@@ -85,7 +85,16 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     <sk-card class="bento-form" heading="Controls" padding="md">
       <div class="bento-stack">
         <sk-input label="Email" type="email" placeholder="you@example.com" />
-        <sk-select label="Plan" options={JSON.stringify([{ value: "free", label: "Free" }, { value: "pro", label: "Pro" }])} />
+        <sk-combobox
+          label="Plan"
+          placeholder="Search a plan…"
+          options={JSON.stringify([
+            { value: "free", label: "Free" },
+            { value: "pro", label: "Pro" },
+            { value: "team", label: "Team" },
+            { value: "enterprise", label: "Enterprise" },
+          ])}
+        />
         <sk-checkbox label="Email me about releases" />
         <div class="bento-row">
           <sk-button variant="primary" size="sm">Save</sk-button>
@@ -145,6 +154,58 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         </table>
       </sk-table>
     </sk-card>
+
+    {/* Overlays: the components a reader cannot judge from a static image,
+        because their whole job is what happens after a click. A popover and a
+        drawer are here rather than described, so focus trapping and Escape can
+        be tried on the page that claims them. */}
+    <sk-card class="bento-overlays" heading="Overlays" padding="md">
+      <div class="bento-stack">
+        <div class="bento-row">
+          <sk-popover label="More about focus behaviour">
+            <sk-button slot="trigger" variant="outline" size="sm">Open popover</sk-button>
+            <div class="popover-body">
+              <sk-text variant="sm">
+                Focus moves in on open and returns to the trigger on close. Escape closes it.
+              </sk-text>
+            </div>
+          </sk-popover>
+
+          <sk-drawer label="Component details" side="end">
+            <sk-button slot="trigger" variant="outline" size="sm">Open drawer</sk-button>
+            <div class="drawer-body">
+              <sk-text variant="sm">
+                A drawer is a modal dialog that slides from an edge. Focus is trapped while it is
+                open, Escape closes it, and focus returns to the trigger.
+              </sk-text>
+            </div>
+          </sk-drawer>
+        </div>
+
+        <div class="bento-row">
+          <sk-text variant="sm" muted>
+            Search with <sk-kbd>⌘</sk-kbd> <sk-kbd>K</sk-kbd> anywhere on the site
+          </sk-text>
+        </div>
+
+        <sk-tooltip>
+          <sk-button slot="trigger" variant="ghost" size="sm">Hover for a tooltip</sk-button>
+          <span>Tooltips delay 300ms and dismiss on Escape</span>
+        </sk-tooltip>
+      </div>
+    </sk-card>
+
+    {/* Loading and paging. A skeleton is the one component that only makes
+        sense in motion, and pagination is the one that only makes sense with
+        more than one page — so both are shown in the state they exist for. */}
+    <sk-card class="bento-loading" heading="Loading" padding="md">
+      <div class="bento-stack">
+        <sk-skeleton variant="text" />
+        <sk-skeleton variant="text" />
+        <sk-spinner size="sm" label="Loading components" />
+        <sk-pagination page={3} count={12} />
+      </div>
+    </sk-card>
   </section>
   <sk-separator decorative />
 
@@ -179,6 +240,49 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       </sk-card>
     </div>
   </section>
+  {/* The architecture explained with the system's own disclosure component.
+      The same four points were four static cards: correct, but they asked the
+      reader to read four paragraphs to learn one idea. An accordion lets the
+      page show the shape of the argument — one behaviour owner, three adapters
+      — and let the reader open only the part they doubt. */}
+  <section class="how">
+    <h2 class="section-title">How it works</h2>
+    <sk-text variant="sm" muted class="section-lede">
+      One implementation, three adapters. Open the step you want evidence for.
+    </sk-text>
+
+    <sk-accordion class="how-accordion">
+      <sk-accordion-item heading="1. The behaviour lives in the custom element" open>
+        <sk-text variant="sm">
+          ARIA wiring, the keyboard model, and form participation are implemented once, in
+          <code>sk-*</code>. A screen reader gets the same roles whether the page is React or plain HTML, because it is
+          the same element either way.
+        </sk-text>
+      </sk-accordion-item>
+
+      <sk-accordion-item heading="2. The adapters translate props, nothing else">
+        <sk-text variant="sm">
+          React and Vue packages map props and events to the element and stop there. Measured: the largest adapter file
+          is 1.1 KB, and no adapter reimplements focus management or ARIA.
+        </sk-text>
+      </sk-accordion-item>
+
+      <sk-accordion-item heading="3. Tokens are the whole theming contract">
+        <sk-text variant="sm">
+          Override <code>--sk-color-primary</code> on any scope and every component inside it follows. No provider, no
+          build step, no runtime — which is why the docs site can be themed by changing one declaration.
+        </sk-text>
+      </sk-accordion-item>
+
+      <sk-accordion-item heading="4. The registry is the single source">
+        <sk-text variant="sm">
+          This page, every component page, the CLI, the MCP server, and <code>llms.txt</code> are all generated from one
+          registry. A prop rename cannot reach one surface and miss another.
+        </sk-text>
+      </sk-accordion-item>
+    </sk-accordion>
+  </section>
+
   {/* Every component on one page, filterable. The catalogue used to be four
       separate grids the reader scrolled past; with 38 tags, finding one meant
       knowing its name. The search field and the stability filter are the
@@ -573,6 +677,29 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   .bento-stack {
     display: grid;
     gap: 0.75rem;
+  }
+
+  /* How-it-works: the accordion is the system's own component, so the only
+     thing set here is the measure — a line of prose should not run the full
+     width of a wide viewport, or it stops being read. */
+  .how-accordion {
+    display: block;
+    margin-block-start: 1rem;
+    max-inline-size: 78ch;
+  }
+
+  .section-lede {
+    display: block;
+    margin-block-start: 0.5rem;
+    max-inline-size: 65ch;
+  }
+
+  .popover-body {
+    max-inline-size: 22rem;
+  }
+
+  .drawer-body {
+    max-inline-size: 30ch;
   }
 
   .bento-row {
