@@ -44,7 +44,7 @@ sk-input .sk-input__control {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-input-bg);
   color: var(--sk-input-fg);
-  box-shadow: var(--sk-input-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-input-shadow);
   font-family: inherit;
   font-size: var(--sk-text-base-size, 1rem);
   line-height: var(--sk-text-base-line-height, 1.5rem);
@@ -72,14 +72,14 @@ sk-input .sk-input__control:disabled {
   /* A disabled field keeps its stroke: removing it would make the field's
      boundary harder to see, not easier. */
   background-color: var(--sk-color-surface-sunken, #f1eef8);
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
 }
 
 sk-input .sk-input__control:read-only {
   /* Read-only is not disabled: the value is still submitted and the field is
      still focusable, so it must not read as unavailable. */
   background-color: var(--sk-color-surface-sunken, #f1eef8);
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
 }
 
 sk-input[data-invalid] .sk-input__control {

@@ -57,7 +57,9 @@ test("the default instance paints the brutalist chrome", async ({ page }) => {
     })
 
   // Hard edges: the container is chrome, not a floating layer.
-  expect(style.radius).toBe("0px")
+  expect(style.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   expect(style.width).toBe("3px")
   // A zero-blur offset shadow, which is the brutalist signature.
   expect(style.boxShadow).not.toBe("none")

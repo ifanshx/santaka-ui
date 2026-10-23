@@ -483,12 +483,17 @@ test("the value reaches FormData, not Svelte state", async ({ page }) => {
 
 test("the Svelte-rendered controls carry the brutalist chrome", async ({ page }) => {
   // The example must not bypass the stylesheet: an element rendered through
-  // Svelte is the same element, so it gets the same 3px stroke and zero radius.
-  // This is the cross-check that the page is exercising the real build.
+  // Svelte is the same element, so it gets the same 3px stroke. The radius is
+  // asserted against the token rather than a literal — chrome is a small,
+  // non-zero radius now (a fully square corner read as unfinished at control
+  // sizes), and a second copy of the number here would go stale the next time
+  // the token moves. What matters is that the component reads the token.
   const style = await page.locator("sk-button[type='submit']").evaluate((el) => {
     const cs = getComputedStyle(el)
-    return { borderWidth: cs.borderTopWidth, radius: cs.borderTopLeftRadius }
+    const token = getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()
+    return { borderWidth: cs.borderTopWidth, radius: cs.borderTopLeftRadius, token }
   })
   expect(style.borderWidth).toBe("3px")
-  expect(style.radius).toBe("0px")
+  expect(style.token, "the radius token is published").not.toBe("")
+  expect(style.radius, "the control reads the radius token").toBe(style.token)
 })

@@ -28,7 +28,7 @@ sk-kbd .sk-kbd__key {
   border-radius: var(--sk-radius-sm, 0);
   background-color: var(--sk-color-surface-sunken, #f1eef8);
   color: var(--sk-color-text, #17141c);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   font-family: inherit;
   font-size: var(--sk-text-xs-size, 0.75rem);
   font-weight: var(--sk-text-xs-weight, 500);

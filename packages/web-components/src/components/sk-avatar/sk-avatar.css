@@ -46,7 +46,7 @@ sk-avatar .sk-avatar__frame {
   border-radius: var(--sk-radius-full, 9999px);
   background-color: var(--sk-color-surface-sunken, #f1eef8);
   color: var(--sk-color-text, #17141c);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   font-size: var(--sk-avatar-font);
   font-weight: var(--sk-text-sm-weight, 600);

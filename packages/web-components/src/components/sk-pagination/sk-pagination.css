@@ -43,7 +43,7 @@ sk-pagination .sk-pagination__step {
   border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
   background-color: var(--sk-color-surface, #ffffff);
   color: var(--sk-color-primary-text, #4c1d95);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   font-weight: var(--sk-text-sm-weight, 600);
   text-decoration: none;
   cursor: pointer;
@@ -66,7 +66,7 @@ sk-pagination .sk-pagination__page:hover,
 sk-pagination .sk-pagination__step:hover {
   color: var(--sk-color-primary, #6d28d9);
   translate: -1px -1px;
-  box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
 }
 
 /*

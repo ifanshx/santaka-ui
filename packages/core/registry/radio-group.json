@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-radio-group/sk-radio-group.css",
       "type": "registry:style",
-      "checksum": "sha256-9ff651faf35bade340beb55c732f803b2a5c479740e75d231b7214fe9865e20c"
+      "checksum": "sha256-9faf627b1080a89c19c100d3d1e595dc89b4045a5891f66100eab613561b6500"
     }
   ],
   "cssVariables": [

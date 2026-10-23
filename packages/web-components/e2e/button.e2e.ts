@@ -124,7 +124,9 @@ test("brutalist chrome: thick border, no radius, hard offset shadow", async ({ p
   })
   expect(style.borderWidth).toBe("3px")
   expect(style.borderStyle).toBe("solid")
-  expect(style.radius).toBe("0px")
+  expect(style.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   // A hard offset shadow has a nonzero x/y offset and a zero blur radius.
   // Chromium serializes the token's color as oklch() because the theme emits
   // it inside an @supports block; the geometry, not the color's format, is what

@@ -24,7 +24,7 @@ sk-alert {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-alert-bg);
   color: var(--sk-alert-fg);
-  box-shadow: var(--sk-alert-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-alert-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   font-size: var(--sk-text-sm-size, 0.875rem);
   line-height: var(--sk-text-sm-line-height, 1.25rem);

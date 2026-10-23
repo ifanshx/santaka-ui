@@ -26,7 +26,7 @@ sk-card {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-card-bg);
   color: var(--sk-card-fg);
-  box-shadow: var(--sk-card-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-card-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   /* A card is content, not a control: it takes the width it is given rather than
      shrinking to its content the way an inline-flex box would. */

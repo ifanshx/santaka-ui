@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-banner/sk-banner.css",
       "type": "registry:style",
-      "checksum": "sha256-ba853ef984330aada8258c84662f29f1798c2a68c336ff84c599e95ec4605e24"
+      "checksum": "sha256-7f31e567254d4411568a8710ae4b405679edac3fd3443e7eb69b4da2f215f42f"
     }
   ],
   "cssVariables": [

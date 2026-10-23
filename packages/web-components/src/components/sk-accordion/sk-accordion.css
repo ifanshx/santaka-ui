@@ -32,7 +32,7 @@ sk-accordion {
   color: var(--sk-accordion-fg);
   border: var(--sk-border-thick, 3px) solid var(--sk-accordion-border);
   border-radius: var(--sk-radius-md, 0);
-  box-shadow: var(--sk-accordion-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-accordion-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   box-sizing: border-box;
 }
@@ -62,7 +62,7 @@ sk-accordion[variant="plain"] {
   --sk-accordion-bg: transparent;
   --sk-accordion-shadow: var(--sk-shadow-brutal-none, none);
   border: none;
-  box-shadow: var(--sk-accordion-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-accordion-shadow);
 }
 
 sk-accordion-item .sk-accordion__details {

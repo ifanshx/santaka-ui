@@ -113,7 +113,9 @@ test("the brutalist geometry applies", async ({ page }) => {
   })
 
   // Hard edges: an alert is chrome, not a floating layer.
-  expect(style.radius).toBe("0px")
+  expect(style.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   expect(style.style).toBe("solid")
   expect(style.width).toBe("3px")
   // A zero-blur offset shadow, which is the brutalist signature.

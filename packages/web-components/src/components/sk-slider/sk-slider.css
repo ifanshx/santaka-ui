@@ -12,6 +12,9 @@
  */
 
 sk-slider {
+  /* Copied onto the host so the thumb pseudo-elements, which do not inherit
+     from the document, still see the token. */
+  --sk-slider-thumb-radius: var(--sk-radius-md, 0);
   --sk-slider-track: var(--sk-color-surface-sunken, #f1eef8);
   --sk-slider-fill: var(--sk-color-primary, #6d28d9);
   --sk-slider-thumb: var(--sk-color-surface, #ffffff);
@@ -114,7 +117,7 @@ sk-slider .sk-slider__input::-webkit-slider-thumb {
   border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-slider-thumb);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   cursor: grab;
 }
 
@@ -124,7 +127,7 @@ sk-slider .sk-slider__input::-moz-range-thumb {
   border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-slider-thumb);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   cursor: grab;
 }
 

@@ -30,7 +30,7 @@ sk-empty-state {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-empty-state-bg);
   color: var(--sk-empty-state-fg);
-  box-shadow: var(--sk-empty-state-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-empty-state-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   text-align: center;
 }

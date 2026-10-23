@@ -264,7 +264,9 @@ test("carries the brutalist treatment like every other chrome component", async 
     }
   })
   expect(style.borderWidth).toBe("3px")
-  expect(style.radius).toBe("0px")
+  expect(style.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   expect(style.boxShadow).not.toBe("none")
   expect(style.boxShadow).toMatch(/px 0px/)
 })

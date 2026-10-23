@@ -52,7 +52,7 @@ sk-select .sk-select__control {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-select-bg);
   color: var(--sk-select-fg);
-  box-shadow: var(--sk-select-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-select-shadow);
   font-family: inherit;
   font-size: var(--sk-text-base-size, 1rem);
   line-height: var(--sk-text-base-line-height, 1.5rem);
@@ -76,7 +76,7 @@ sk-select .sk-select__control:disabled {
   /* A disabled field keeps its stroke: removing it would make the field's
      boundary harder to see, not easier. */
   background-color: var(--sk-color-surface-sunken, #f1eef8);
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
 }
 
 sk-select[data-invalid] .sk-select__control {

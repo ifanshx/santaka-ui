@@ -33,7 +33,7 @@ sk-button {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-button-bg);
   color: var(--sk-button-fg);
-  box-shadow: var(--sk-button-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-button-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   font-size: var(--sk-text-sm-size, 0.875rem);
   font-weight: var(--sk-text-sm-weight, 400);
@@ -62,12 +62,12 @@ sk-button {
  * does the moving. Neither needs layout space, so nothing reflows.
  */
 sk-button:hover:not([data-disabled]):not([data-loading]) {
-  box-shadow: var(--sk-shadow-brutal-hover, 7px 7px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-hover, 7px 7px 0 0);
   translate: -2px -2px;
 }
 
 sk-button:active:not([data-disabled]):not([data-loading]) {
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
   translate: 3px 3px;
 }
 

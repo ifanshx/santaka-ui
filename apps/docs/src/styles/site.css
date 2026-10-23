@@ -140,7 +140,8 @@ body {
   padding: 0;
   background: var(--sk-color-surface, #fff);
   border: var(--docs-stroke) solid var(--docs-edge);
-  box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
+  border-radius: var(--sk-radius-md, 4px);
+  box-shadow: var(--docs-shadow);
   color: inherit;
   font-size: 1rem;
   cursor: pointer;
@@ -153,7 +154,7 @@ body {
 
 #theme-toggle:hover {
   translate: -1px -1px;
-  box-shadow: var(--docs-shadow-lg) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--docs-shadow-lg);
 }
 
 #theme-toggle:active {
@@ -286,8 +287,9 @@ pre {
   padding: 1rem 1.15rem;
   overflow-x: auto;
   border: var(--docs-stroke) solid var(--docs-edge);
+  border-radius: var(--sk-radius-md, 4px);
   background: var(--docs-raised);
-  box-shadow: var(--docs-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--docs-shadow);
 }
 
 pre code {

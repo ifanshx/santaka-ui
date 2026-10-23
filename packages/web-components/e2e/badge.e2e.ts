@@ -39,7 +39,9 @@ test("the dot is a circle and the pill is square", async ({ page }) => {
 
   // A status dot is a shape, not a style choice; the pill is chrome.
   expect(await radius("sk-badge[data-dot]")).toBe("9999px")
-  expect(await radius('sk-badge[data-variant="success"]')).toBe("0px")
+  expect(await radius('sk-badge[data-variant="success"]')).toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
 })
 
 test("the brutalist stroke and hard shadow apply to the pill", async ({ page }) => {

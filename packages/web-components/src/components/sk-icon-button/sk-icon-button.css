@@ -47,7 +47,7 @@ sk-icon-button {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-icon-button-bg);
   color: var(--sk-icon-button-fg);
-  box-shadow: var(--sk-icon-button-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-icon-button-shadow);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   line-height: var(--sk-text-sm-line-height, 1.25rem);
   text-align: center;
@@ -67,12 +67,12 @@ sk-icon-button {
 
 /* The press, matching Button: half the 3px stroke, no layout shift. */
 sk-icon-button:hover:not([data-disabled]):not([data-loading]) {
-  box-shadow: var(--sk-shadow-brutal-hover, 7px 7px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-hover, 7px 7px 0 0);
   translate: -2px -2px;
 }
 
 sk-icon-button:active:not([data-disabled]):not([data-loading]) {
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
   translate: 3px 3px;
 }
 

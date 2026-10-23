@@ -52,7 +52,7 @@ sk-checkbox .sk-checkbox__control {
   border: var(--sk-border-thick, 3px) solid var(--sk-checkbox-border);
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-checkbox-bg);
-  box-shadow: var(--sk-checkbox-shadow) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-checkbox-shadow);
   cursor: pointer;
   transition:
     box-shadow var(--sk-duration-control, 140ms)
@@ -108,7 +108,7 @@ sk-checkbox .sk-checkbox__control:disabled {
   cursor: not-allowed;
   opacity: 0.55;
   background-color: var(--sk-color-surface-sunken, #f1eef8);
-  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-brutal-active, 2px 2px 0 0);
 }
 
 /* `:has()` is Baseline-tier only (§4). Wrapping it is what lets a Core browser

@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-kbd/sk-kbd.css",
       "type": "registry:style",
-      "checksum": "sha256-e633e8c834b6559b45259977e508a99754c56eb20d8114b6f1e63d5f45d10219"
+      "checksum": "sha256-bc9e4cb29f241aeb57e8b3be0e8fdbf7057a92d5a4a1b5da1f079d55f024dd53"
     }
   ],
   "cssVariables": [

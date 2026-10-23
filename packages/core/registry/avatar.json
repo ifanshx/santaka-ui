@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-avatar/sk-avatar.css",
       "type": "registry:style",
-      "checksum": "sha256-b0227b6ae4c8d3e8c0c47312cefe54d41acbac22ed58b124f137521c99af6d1d"
+      "checksum": "sha256-e1e76c1041eeb143ef37d30854fd2c43a1f34c0f7872f60d4555c97f4dff44b7"
     }
   ],
   "cssVariables": [

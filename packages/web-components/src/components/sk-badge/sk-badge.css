@@ -26,7 +26,7 @@ sk-badge {
   border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-badge-bg);
   color: var(--sk-badge-fg);
-  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-sm, 3px 3px 0 0);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   font-size: var(--sk-text-xs-size, 0.75rem);
   font-weight: var(--sk-text-xs-weight, 500);

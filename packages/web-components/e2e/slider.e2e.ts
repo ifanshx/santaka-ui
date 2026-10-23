@@ -95,17 +95,25 @@ test("the control is restyled rather than left to the platform", async ({ page }
   expect(appearance).toBe("none")
 })
 
-test("the thumb is square on the engines that expose it", async ({ page, browserName: engine }) => {
-  // Where it can be read, the thumb must be square: most sliders ship a circle
-  // on a pill, which is precisely the look this system avoids.
+test("the thumb carries the chrome radius and the brutalist stroke", async ({ page }) => {
+  // Chromium does not expose ::-webkit-slider-thumb to getComputedStyle: the
+  // call returns the *input's* defaults (radius 0, border 0, width 129px) no
+  // matter what the stylesheet says. This test used to assert that value was
+  // "0px", which passed for every possible stylesheet — it measured nothing.
   //
-  // Two spellings, because Chromium returns an empty string for `::-moz-*` and
-  // Firefox for `::-webkit-*` — which is why the stylesheet carries both.
-  test.skip(engine === "webkit", "WebKit exposes neither thumb pseudo-element to getComputedStyle")
-
-  const pseudo = engine === "firefox" ? "::-moz-range-thumb" : "::-webkit-slider-thumb"
-  const radius = await page
-    .locator("#slider-basic input")
-    .evaluate((el, sel) => getComputedStyle(el, sel).borderTopLeftRadius, pseudo)
-  expect(radius).toBe("0px")
+  // What can be checked without a rendering oracle is that the shipped rule is
+  // present and reads the token. That catches the failure that actually
+  // happens: a shadowed or dropped vendor rule, which makes the control fall
+  // back to the platform's own thumb.
+  const css = await page.evaluate(async () => {
+    const links = [...document.querySelectorAll("link[rel=stylesheet]")].map((l) => l.href)
+    const sheets = await Promise.all(links.map((href) => fetch(href).then((r) => r.text())))
+    return sheets.join("\n")
+  })
+  const thumb = css.match(/::-webkit-slider-thumb\s*\{([^}]*)\}/)
+  expect(thumb, "the WebKit thumb rule ships").not.toBeNull()
+  const body = thumb?.[1] ?? ""
+  expect(body, "the thumb reads the chrome radius").toMatch(/border-radius:\s*var\(--sk-radius-md/)
+  expect(body, "the thumb keeps the 3px stroke").toMatch(/border:\s*var\(--sk-border-thick/)
+  expect(css, "the Firefox rule ships too").toMatch(/::-moz-range-thumb\s*\{/)
 })

@@ -360,7 +360,18 @@ test("carries the brutalist treatment like every other chrome component", async 
   })
   const control = page.locator(`#${formId} sk-radio-group .sk-radio-group__control`).first()
   await expect(control).toHaveCSS("border-width", "3px")
-  await expect(control).toHaveCSS("border-radius", "0px")
+  {
+    // Chrome reads --sk-radius-md, which is a small non-zero value now. Pinning
+    // the literal 0px here was a second copy of a token that has since moved;
+    // what this test is actually for is that the control takes its radius from
+    // the token rather than hard-coding one of its own.
+    const radius = await control.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)
+    const token = await control.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim(),
+    )
+    expect(token, "the radius token is published").not.toBe("")
+    expect(radius, "the control reads the radius token").toBe(token)
+  }
   const shadow = await control.evaluate((el) => getComputedStyle(el).boxShadow)
   expect(shadow).toMatch(/5px 5px 0px 0px/)
 })

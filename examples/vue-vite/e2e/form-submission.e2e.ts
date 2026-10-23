@@ -176,8 +176,12 @@ test("the Vue-rendered controls carry the brutalist chrome", async ({ page }) =>
   // This is the cross-check that the example is exercising the real build.
   const style = await page.locator("sk-button[type='submit']").evaluate((el) => {
     const cs = getComputedStyle(el)
-    return { borderWidth: cs.borderTopWidth, radius: cs.borderTopLeftRadius }
+    const token = getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()
+    return { borderWidth: cs.borderTopWidth, radius: cs.borderTopLeftRadius, token }
   })
   expect(style.borderWidth).toBe("3px")
-  expect(style.radius).toBe("0px")
+  // Asserted against the token, not a literal: chrome is a small non-zero radius
+  // now, and a copy of the number here would go stale when the token moves.
+  expect(style.token, "the radius token is published").not.toBe("")
+  expect(style.radius, "the control reads the radius token").toBe(style.token)
 })

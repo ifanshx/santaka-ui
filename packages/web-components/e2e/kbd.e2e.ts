@@ -50,7 +50,9 @@ test("the brutalist stroke and hard shadow apply", async ({ page }) => {
   expect(style.boxShadow).not.toBe("none")
   // Hard offset shadow, zero blur: the brutalist signature Chrome carries.
   expect(style.boxShadow).toMatch(/px 0px/)
-  expect(style.radius).toBe("0px")
+  expect(style.radius, "the key reads --sk-radius-sm, the smallest chrome step").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-sm").trim()),
+  )
 })
 
 test("the key is set in the monospace stack", async ({ page }) => {

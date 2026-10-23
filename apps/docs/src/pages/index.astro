@@ -42,7 +42,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     <sk-text variant="lg" muted class="lede">
       {pages.length} accessible components built as web components, with thin adapters for React, Vue, and Svelte. The
       behavior lives in one place, so an app in any framework gets the same keyboard model, the same ARIA wiring, and the
-      the same bug fixes. Zero runtime dependencies, and <code>{pages.length}</code> components you can filter and open
+      the same bug fixes. Zero runtime dependencies, and {pages.length} components you can filter and open
       without leaving this page.
     </sk-text>
 
@@ -479,6 +479,10 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     flex: 1 1 14rem;
     min-inline-size: 0;
     margin: 0;
+    /* Same elevation as every other raised surface: the code block is a card
+       with a monospace face, not a flat panel. Without this it was the one
+       surface on the page with a stroke and no shadow. */
+    border-radius: var(--sk-radius-md, 4px);
   }
 
   /* Positioned into the code block instead of after it: the row is the

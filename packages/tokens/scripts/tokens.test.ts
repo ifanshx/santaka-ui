@@ -273,7 +273,11 @@ describe("radius tokens", () => {
       expect(value, "chrome radius stays under a soft 10px").toBeLessThan(10)
     }
     for (let i = 1; i < px.length; i += 1) {
-      expect(px[i], `radius step ${i} grows`).toBeGreaterThan(px[i - 1])
+      const previous = px[i - 1]
+      const current = px[i]
+      expect(previous, `radius step ${i - 1} exists`).toBeTypeOf("number")
+      expect(current, `radius step ${i} exists`).toBeTypeOf("number")
+      expect(current as number, `radius step ${i} grows`).toBeGreaterThan(previous as number)
     }
     // The badge dot and the spinner are circles by shape, not by style.
     expect(dimensions["radius.full"]?.$value).toBe("9999px")

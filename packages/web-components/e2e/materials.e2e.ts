@@ -43,7 +43,9 @@ test("every chrome component has a 3px solid stroke and no rounding", async ({ p
       })
     expect(style.width, `${tag} border width`).toBe("3px")
     expect(style.style, `${tag} border style`).toBe("solid")
-    expect(style.radius, `${tag} radius`).toBe("0px")
+    expect(style.radius, `${tag} radius`).toBe(
+      await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+    )
   }
 })
 
@@ -86,7 +88,9 @@ test("a badge is chrome, but its dot stays a circle", async ({ page }) => {
   // status dot is a shape, so it keeps the full radius. Getting either wrong is
   // a visible regression, and each was true for a different reason.
   const pill = page.locator('sk-badge[data-variant="success"]').first()
-  expect(await pill.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px")
+  expect(await pill.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   expect(await pill.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe("3px")
 
   const dot = page.locator("sk-badge[data-dot]").first()
@@ -174,7 +178,9 @@ test("glass is a separate material from chrome, and both are visible", async ({ 
   // Glass rounds, chrome does not. This is the whole point of the two materials:
   // if glass were hard-edged too, it would read as another button.
   expect(glassStyle.radius).not.toBe("0px")
-  expect(cardStyle.radius).toBe("0px")
+  expect(cardStyle.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
 
   // And glass actually blurs its backdrop rather than being a translucent box.
   // The value serializes as `blur(24px) saturate(1.8)`, so the radius has to be

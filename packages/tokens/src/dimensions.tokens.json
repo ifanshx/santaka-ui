@@ -215,25 +215,25 @@
     }
   },
   "shadow": {
-    "$description": "Hard offsets with zero blur. The color comes from `--sk-color-shadow`, so one ladder serves both themes.",
+    "$description": "Hard offsets layered with an ambient blur. Geometry only, and deliberately so: the colour is consumed from --sk-shadow-color (opaque, hard layer) and --sk-shadow-ambient (translucent, blur), both defined per theme. A literal colour here would force one theme to override the whole ladder. A pure zero-blur offset is flat and disappears on a dark surface; Santaka-Pay pairs the same hard offset with a wide low-opacity shadow behind it, which makes a brutalist surface read as lifted rather than outlined.",
     "xs": {
-      "$value": "2px 2px 0 0"
+      "$value": "2px 2px 0 0 var(--sk-color-shadow), 0 6px 12px -10px var(--sk-shadow-ambient)"
     },
     "sm": {
-      "$value": "3px 3px 0 0"
+      "$value": "3px 3px 0 0 var(--sk-color-shadow), 0 10px 18px -14px var(--sk-shadow-ambient)"
     },
     "md": {
-      "$value": "4px 4px 0 0"
+      "$value": "4px 4px 0 0 var(--sk-color-shadow), 0 16px 28px -20px var(--sk-shadow-ambient)"
     },
     "lg": {
-      "$value": "6px 6px 0 0"
+      "$value": "6px 6px 0 0 var(--sk-color-shadow), 0 26px 44px -28px var(--sk-shadow-ambient)"
     },
     "brutal": {
-      "$value": "5px 5px 0 0",
+      "$value": "5px 5px 0 0 var(--sk-color-shadow), 0 20px 36px -24px var(--sk-shadow-ambient)",
       "$description": "Default chrome elevation."
     },
     "brutal-hover": {
-      "$value": "7px 7px 0 0",
+      "$value": "7px 7px 0 0 var(--sk-color-shadow), 0 30px 50px -30px var(--sk-shadow-ambient)",
       "$description": "Pressed-lift state."
     },
     "brutal-active": {

@@ -23,7 +23,7 @@
   background-color: var(--sk-glass-fallback, rgb(247 245 251 / 0.98));
   border: var(--sk-border-width, 1px) solid var(--sk-glass-border, rgb(255 255 255 / 0.6));
   border-radius: var(--sk-radius-glass, 1.25rem);
-  box-shadow: var(--sk-shadow-lg, 6px 6px 0 0) var(--sk-color-shadow, #17141c);
+  box-shadow: var(--sk-shadow-lg, 6px 6px 0 0);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

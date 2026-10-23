@@ -108,12 +108,16 @@
   },
   "glass": {
     "$description": "Glass overlay roles, dark theme. The only alpha values in the system; `blur` and `saturate` are theme-independent and declared in dimensions.tokens.json, every color here is per theme.",
-    "bg": { "$value": "rgb(26 22 34 / 0.72)" },
+    "bg": {
+      "$value": "rgb(26 22 34 / 0.72)"
+    },
     "bg-strong": {
       "$value": "rgb(20 17 26 / 0.86)",
       "$description": "Panels that sit over busy content and still need to carry text."
     },
-    "border": { "$value": "rgb(255 255 255 / 0.14)" },
+    "border": {
+      "$value": "rgb(255 255 255 / 0.14)"
+    },
     "highlight": {
       "$value": "rgb(255 255 255 / 0.10)",
       "$description": "Top-edge specular line; what reads as iOS rather than a translucent box."
@@ -121,6 +125,17 @@
     "fallback": {
       "$value": "rgb(15 13 20 / 0.98)",
       "$description": "Solid surface used when `backdrop-filter` is unsupported, dark theme. Near-black rather than a light surface: a fallback must never put light text on a light panel."
+    }
+  },
+  "shadow": {
+    "$description": "Per-theme colour for the layered shadow. Kept out of color.* because the ambient layer carries alpha and a colour leaf must be a resolvable hex.",
+    "hard": {
+      "$value": "#0A0910",
+      "$description": "Hard offset shadow color, dark theme. Near-black rather than pure black so the shadow stays a shadow on an already-dark surface. A shadow only darkens, so it cannot meet a 3:1 ratio against a dark surface in either direction; the gate therefore applies to the light theme, and the dark theme gates the visible chrome stroke (`color.border-strong`) instead."
+    },
+    "ambient": {
+      "$value": "rgb(0 0 0 / 0.55)",
+      "$description": "Ambient layer under the hard offset. Darker and stronger than light theme, because a dark surface swallows a light shadow and the hard offset alone would be invisible."
     }
   }
 }

@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-table/sk-table.css",
       "type": "registry:style",
-      "checksum": "sha256-e47fbe8d6fd40739914b99d5d9cb583ad3a4cb0590f9197bc3f4ee28d2aa85fd"
+      "checksum": "sha256-3c53b94e9fcd3c2881660a66095caee9593dc77828b8181e84263700c2872d15"
     }
   ],
   "cssVariables": [

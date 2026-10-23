@@ -290,12 +290,23 @@ const BUDGETS = [
     measure: () => measureCss(componentCssFiles, componentCount),
     budgetKb: 4,
   },
-  // Raised from 12 KB when the neo-brutalist and glass token layer landed. The
-  // growth is the token surface itself — the brutal shadow ladder, the arcade
-  // motion pairs, the glass alpha group, and the four per-theme `*-subtle`
-  // badge fills — not a regression. It is not comment weight: esbuild strips
-  // comments before this measurement, so the emitted `$description` prose
-  // contributes nothing here and trimming it would recover 0 bytes.
+  // Raised 12 → 13 KB when the neo-brutalist and glass token layer landed, and
+  // 13 → 14 KB when the shadow ladder gained an ambient layer.
+  //
+  // The ambient layer is the second half of every `--sk-shadow-*` value: a hard
+  // offset stays, and a wide translucent blur is added behind it. A pure
+  // zero-blur offset is flat and disappears entirely on a dark surface, so this
+  // is what makes a lifted surface read as lifted. It costs two extra length
+  // values and one extra colour per step — ~1.4 KB raw across both themes,
+  // 0.39 KB gzipped, which is what put the row at 13.39 KB.
+  //
+  // Considered and rejected: defining the ambient layer only in dark theme to
+  // stay under budget. It would halve the cost and make light theme the one
+  // theme with a flat shadow, which is the defect the change removes.
+  //
+  // Not comment weight: esbuild strips comments before this measurement, so the
+  // emitted `$description` prose contributes nothing here and trimming it would
+  // recover 0 bytes.
   {
     name: "token themes, light + dark",
     measure: () =>
@@ -303,7 +314,7 @@ const BUDGETS = [
         join(repoRoot, "packages/tokens/dist/css/light.css"),
         join(repoRoot, "packages/tokens/dist/css/dark.css"),
       ]),
-    budgetKb: 13,
+    budgetKb: 14,
   },
   // Section 12, row 1: `@santaka-ui/tokens` + `@santaka-ui/core` ≤ 8 KB.
   //

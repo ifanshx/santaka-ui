@@ -210,15 +210,23 @@ test("the default container is brutalist chrome; plain is none of it", async ({ 
   const def = await read("accordion-basic")
   expect(def.borderWidth).toBe("3px")
   expect(def.borderStyle).toBe("solid")
-  expect(def.radius).toBe("0px")
+  expect(def.radius, "chrome takes its radius from --sk-radius-md").toBe(
+    await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sk-radius-md").trim()),
+  )
   expect(def.boxShadow).not.toBe("none")
   // The harsh-offset signature: two equal offsets, no blur, no spread. The
   // colour is deliberately not asserted — the token paints `oklch()`, and a
   // regex over the colour syntax would fail the day the palette moved while the
   // geometry stayed exactly the same.
-  const offsets = def.boxShadow.match(/(-?\d+(?:\.\d+)?)px (-?\d+(?:\.\d+)?)px 0px 0px$/)
+  // Two layers now: the hard zero-blur offset (the brutalist signature) and an
+  // ambient blur behind it. The offset is asserted rather than the whole
+  // string, because the ambient layer is the part that is allowed to move.
+  const offsets = def.boxShadow.match(/(-?\d+(?:\.\d+)?)px (-?\d+(?:\.\d+)?)px 0px 0px/)
   expect(offsets, `a zero-blur offset shadow, got "${def.boxShadow}"`).not.toBe(null)
   expect(offsets?.[1]).toBe(offsets?.[2])
+  // The ambient layer is what makes the surface read as lifted rather than
+  // outlined; without it a dark theme loses the shadow entirely.
+  expect(def.boxShadow.split(",").length, "the ambient layer ships").toBeGreaterThan(1)
 
   const plain = await read("accordion-open-many")
   expect(plain.borderWidth).toBe("0px")

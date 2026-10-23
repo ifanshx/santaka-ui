@@ -108,12 +108,16 @@
   },
   "glass": {
     "$description": "Glass overlay roles. The only alpha values in the system; `blur` and `saturate` are theme-independent and declared in dimensions.tokens.json, every color here is per theme.",
-    "bg": { "$value": "rgb(255 255 255 / 0.72)" },
+    "bg": {
+      "$value": "rgb(255 255 255 / 0.72)"
+    },
     "bg-strong": {
       "$value": "rgb(255 255 255 / 0.86)",
       "$description": "Panels that sit over busy content and still need to carry text."
     },
-    "border": { "$value": "rgb(255 255 255 / 0.60)" },
+    "border": {
+      "$value": "rgb(255 255 255 / 0.60)"
+    },
     "highlight": {
       "$value": "rgb(255 255 255 / 0.55)",
       "$description": "Top-edge specular line; what reads as iOS rather than a translucent box."
@@ -121,6 +125,17 @@
     "fallback": {
       "$value": "rgb(247 245 251 / 0.98)",
       "$description": "Solid surface used when `backdrop-filter` is unsupported. Near-opaque so text stays legible; it is a theme color because a fallback panel still has to match the theme it renders in."
+    }
+  },
+  "shadow": {
+    "$description": "Per-theme colour for the layered shadow. Kept out of color.* because the ambient layer carries alpha and a colour leaf must be a resolvable hex.",
+    "hard": {
+      "$value": "#17141C",
+      "$description": "Hard offset shadow color for brutalist chrome. 16.34:1 vs surface; gated at 3:1, the same standard as color.focus-ring, because a shadow is not text."
+    },
+    "ambient": {
+      "$value": "rgb(23 20 28 / 0.35)",
+      "$description": "Ambient layer under the hard offset: the same ink at low alpha, so a lifted surface reads as lifted in light theme without a second hard edge."
     }
   }
 }

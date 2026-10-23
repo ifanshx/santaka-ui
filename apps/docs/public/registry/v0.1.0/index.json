@@ -32,7 +32,7 @@
         {
           "path": "src/components/sk-accordion/sk-accordion.css",
           "type": "registry:style",
-          "checksum": "sha256-546295446be2be9f763655514736f9350130d13367c5c2bb672360de7f294bd0"
+          "checksum": "sha256-5e7f1f9414c817481be7b1baf6908daae6d83c022e9135395a66f678851825b9"
         },
         {
           "path": "src/components/sk-accordion/sk-accordion-item.tsx",
@@ -236,7 +236,7 @@
         {
           "path": "src/components/sk-alert/sk-alert.css",
           "type": "registry:style",
-          "checksum": "sha256-2223973e54b77509860238aee209f20bad29631f0e5207913b2c1e5deb234648"
+          "checksum": "sha256-daaf33ee4e377a7e5f301fc756282e14aefdde7ff6f0e61cc71062029c0268fa"
         }
       ],
       "cssVariables": [
@@ -504,7 +504,7 @@
         {
           "path": "src/components/sk-avatar/sk-avatar.css",
           "type": "registry:style",
-          "checksum": "sha256-b0227b6ae4c8d3e8c0c47312cefe54d41acbac22ed58b124f137521c99af6d1d"
+          "checksum": "sha256-e1e76c1041eeb143ef37d30854fd2c43a1f34c0f7872f60d4555c97f4dff44b7"
         }
       ],
       "cssVariables": [
@@ -604,7 +604,7 @@
         {
           "path": "src/components/sk-badge/sk-badge.css",
           "type": "registry:style",
-          "checksum": "sha256-6946ca66b11262f44a3eacc3dc59d74b8584e003ee14a5a690925d0f14e380fc"
+          "checksum": "sha256-8089376511a4b3cc5ebcded5fe0ae1f78d5436bb605f4a4dcf79ac812883b012"
         }
       ],
       "cssVariables": [
@@ -710,7 +710,7 @@
         {
           "path": "src/components/sk-banner/sk-banner.css",
           "type": "registry:style",
-          "checksum": "sha256-ba853ef984330aada8258c84662f29f1798c2a68c336ff84c599e95ec4605e24"
+          "checksum": "sha256-7f31e567254d4411568a8710ae4b405679edac3fd3443e7eb69b4da2f215f42f"
         }
       ],
       "cssVariables": [
@@ -908,7 +908,7 @@
         {
           "path": "src/components/sk-button/sk-button.css",
           "type": "registry:style",
-          "checksum": "sha256-9dfdbd0c9269e45480205a9358eb200e0af81c9b286d12b0cea095b0a7e5a132"
+          "checksum": "sha256-a682973181d6e0d41fae5ca79d951507d492c40360f125f322c3504529400402"
         }
       ],
       "cssVariables": [
@@ -1032,7 +1032,7 @@
         {
           "path": "src/components/sk-card/sk-card.css",
           "type": "registry:style",
-          "checksum": "sha256-040c85bf815d2159b414acf4c25bb4bd0a15822a2431600eb7c0c5ba98b21568"
+          "checksum": "sha256-8de43108759b647fb2db06af65d828e230af41bafc7d0edce51587fa6bdadb01"
         }
       ],
       "cssVariables": [
@@ -1141,7 +1141,7 @@
         {
           "path": "src/components/sk-checkbox/sk-checkbox.css",
           "type": "registry:style",
-          "checksum": "sha256-b795ba557dcf943c9ed0f5b7aa87f9b1990365e05c70d4e8daf2af04c9a3a360"
+          "checksum": "sha256-a808bbedaefadedc4d05db9b0478ffc5053fb18f992a0bedd1bc2dee2abbfa5d"
         }
       ],
       "cssVariables": [
@@ -1759,7 +1759,7 @@
         {
           "path": "src/components/sk-empty-state/sk-empty-state.css",
           "type": "registry:style",
-          "checksum": "sha256-2870d15b43be033458ed2f658b8240dc1f10960ba68471e4c4d699d300c939f3"
+          "checksum": "sha256-61f21f76e13d093a1b8a9e3c008dd723d2de3294a2fb035573731591b09dc14c"
         }
       ],
       "cssVariables": [
@@ -1981,7 +1981,7 @@
         {
           "path": "src/components/sk-icon-button/sk-icon-button.css",
           "type": "registry:style",
-          "checksum": "sha256-77616200f50bb4f52e54b4a73f1e3bbcb3205aed55907cced765b9870e10c76d"
+          "checksum": "sha256-d52bf96e054c879852384dcba667b9eb58513ecac329366c4a777be64d79881b"
         }
       ],
       "cssVariables": [
@@ -2116,7 +2116,7 @@
         {
           "path": "src/components/sk-input/sk-input.css",
           "type": "registry:style",
-          "checksum": "sha256-9b4abfaa3fa1179f002910f70b7e5bf27aaa1fb7da787533903d0246b844faba"
+          "checksum": "sha256-f0c1db07132fb4aff940eb7cfadee28e42995ba8f803566ea669e0628ad82823"
         }
       ],
       "cssVariables": [
@@ -2330,7 +2330,7 @@
         {
           "path": "src/components/sk-kbd/sk-kbd.css",
           "type": "registry:style",
-          "checksum": "sha256-e633e8c834b6559b45259977e508a99754c56eb20d8114b6f1e63d5f45d10219"
+          "checksum": "sha256-bc9e4cb29f241aeb57e8b3be0e8fdbf7057a92d5a4a1b5da1f079d55f024dd53"
         }
       ],
       "cssVariables": [
@@ -2607,7 +2607,7 @@
         {
           "path": "src/components/sk-pagination/sk-pagination.css",
           "type": "registry:style",
-          "checksum": "sha256-c064c4f574ca7824324a9164c717a378a294e52fca4ab362ced5c73e7bb94e53"
+          "checksum": "sha256-3fc7fe8d519047dd83884f70eae6adaf0ba86280f193a5cac142696a1d0ef9ea"
         }
       ],
       "cssVariables": [
@@ -2920,7 +2920,7 @@
         {
           "path": "src/components/sk-radio-group/sk-radio-group.css",
           "type": "registry:style",
-          "checksum": "sha256-9ff651faf35bade340beb55c732f803b2a5c479740e75d231b7214fe9865e20c"
+          "checksum": "sha256-9faf627b1080a89c19c100d3d1e595dc89b4045a5891f66100eab613561b6500"
         }
       ],
       "cssVariables": [
@@ -3093,7 +3093,7 @@
         {
           "path": "src/components/sk-select/sk-select.css",
           "type": "registry:style",
-          "checksum": "sha256-5b9b0b4769848c664a299006f4160e4e09f2df8c686bb869842953c300a70880"
+          "checksum": "sha256-10bf47429f0829c369f9af64270748c9e0b54fe2ece1950a9ff88fc3479bf45e"
         }
       ],
       "cssVariables": [
@@ -3507,7 +3507,7 @@
         {
           "path": "src/components/sk-slider/sk-slider.css",
           "type": "registry:style",
-          "checksum": "sha256-40cd2a256f38814d2c7bf3d85d913e154c6aa35206f25deb7456eaec9622c3e4"
+          "checksum": "sha256-e4a53b16f75317ba0bf756c83477a6abdf073a02ca80cbcb8472479cbf689546"
         }
       ],
       "cssVariables": [
@@ -3747,7 +3747,7 @@
         {
           "path": "src/components/sk-switch/sk-switch.css",
           "type": "registry:style",
-          "checksum": "sha256-b49697734221adac1d1f08f346154c6dff9ddaec64625dba484ee418c485d52d"
+          "checksum": "sha256-8879a68b9f2348ed64ad4675a6835d4559a67681b362ea56560f8d2e0228b365"
         }
       ],
       "cssVariables": [
@@ -3918,7 +3918,7 @@
         {
           "path": "src/components/sk-table/sk-table.css",
           "type": "registry:style",
-          "checksum": "sha256-e47fbe8d6fd40739914b99d5d9cb583ad3a4cb0590f9197bc3f4ee28d2aa85fd"
+          "checksum": "sha256-3c53b94e9fcd3c2881660a66095caee9593dc77828b8181e84263700c2872d15"
         }
       ],
       "cssVariables": [
@@ -4347,7 +4347,7 @@
         {
           "path": "src/components/sk-textarea/sk-textarea.css",
           "type": "registry:style",
-          "checksum": "sha256-212df9b92fdb4a58eb19c2c637ff254640c2b9912dfaf5df65ee32a21b8bd216"
+          "checksum": "sha256-c74b558a5046d35181b39a4aee056aaf75b63cb3af5b297cc55485c9736439f5"
         }
       ],
       "cssVariables": [
