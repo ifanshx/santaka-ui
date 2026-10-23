@@ -20,80 +20,149 @@
     "xs": {
       "$value": "0.75rem / 1rem",
       "$description": "Labels, badges, dense table metadata.",
-      "$extensions": { "sk.fontWeight": "500", "sk.letterSpacing": "0.04em" }
+      "$extensions": {
+        "sk.fontWeight": "500",
+        "sk.letterSpacing": "0.04em"
+      }
     },
     "sm": {
       "$value": "0.875rem / 1.25rem",
       "$description": "Secondary text, help copy.",
-      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0.01em" }
+      "$extensions": {
+        "sk.fontWeight": "400",
+        "sk.letterSpacing": "0.01em"
+      }
     },
     "base": {
       "$value": "1rem / 1.5rem",
       "$description": "Body text.",
-      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0" }
+      "$extensions": {
+        "sk.fontWeight": "400",
+        "sk.letterSpacing": "0"
+      }
     },
     "lg": {
       "$value": "1.125rem / 1.75rem",
       "$description": "Lead paragraphs, card titles.",
-      "$extensions": { "sk.fontWeight": "400", "sk.letterSpacing": "0" }
+      "$extensions": {
+        "sk.fontWeight": "400",
+        "sk.letterSpacing": "0"
+      }
     },
     "xl": {
       "$value": "1.25rem / 1.75rem",
       "$description": "Section headings.",
-      "$extensions": { "sk.fontWeight": "600", "sk.letterSpacing": "0" }
+      "$extensions": {
+        "sk.fontWeight": "600",
+        "sk.letterSpacing": "0"
+      }
     },
     "2xl": {
       "$value": "1.5rem / 2rem",
       "$description": "Page headings.",
-      "$extensions": { "sk.fontWeight": "600", "sk.letterSpacing": "-0.01em" }
+      "$extensions": {
+        "sk.fontWeight": "600",
+        "sk.letterSpacing": "-0.01em"
+      }
     },
     "3xl": {
       "$value": "1.875rem / 2.25rem",
       "$description": "Hero headings.",
-      "$extensions": { "sk.fontWeight": "700", "sk.letterSpacing": "-0.02em" }
+      "$extensions": {
+        "sk.fontWeight": "700",
+        "sk.letterSpacing": "-0.02em"
+      }
     },
     "4xl": {
       "$value": "2.25rem / 2.5rem",
       "$description": "Display headings.",
-      "$extensions": { "sk.fontWeight": "700", "sk.letterSpacing": "-0.02em" }
+      "$extensions": {
+        "sk.fontWeight": "700",
+        "sk.letterSpacing": "-0.02em"
+      }
     },
     "display": {
       "$value": "2.5rem / 3rem",
       "$description": "Display headings. Heavy weight, tight tracking.",
-      "$extensions": { "sk.fontWeight": "800", "sk.letterSpacing": "-0.03em" }
+      "$extensions": {
+        "sk.fontWeight": "800",
+        "sk.letterSpacing": "-0.03em"
+      }
     },
     "display-sm": {
       "$value": "1.75rem / 2.25rem",
       "$description": "Section display headings.",
-      "$extensions": { "sk.fontWeight": "800", "sk.letterSpacing": "-0.02em" }
+      "$extensions": {
+        "sk.fontWeight": "800",
+        "sk.letterSpacing": "-0.02em"
+      }
     }
   },
   "space": {
-    "$description": "Spacing scale, rem-based so it honors the user's root font size.",
-    "1": { "$value": "0.25rem" },
-    "2": { "$value": "0.5rem" },
-    "3": { "$value": "0.75rem" },
-    "4": { "$value": "1rem" },
-    "5": { "$value": "1.25rem" },
-    "6": { "$value": "1.5rem" },
-    "8": { "$value": "2rem" },
-    "10": { "$value": "2.5rem" },
-    "12": { "$value": "3rem" },
-    "16": { "$value": "4rem" },
-    "20": { "$value": "5rem" },
-    "24": { "$value": "6rem" }
+    "1": {
+      "$value": "0.25rem"
+    },
+    "2": {
+      "$value": "0.5rem"
+    },
+    "3": {
+      "$value": "0.75rem"
+    },
+    "4": {
+      "$value": "1rem"
+    },
+    "5": {
+      "$value": "1.25rem"
+    },
+    "6": {
+      "$value": "1.5rem"
+    },
+    "8": {
+      "$value": "2rem"
+    },
+    "10": {
+      "$value": "2.5rem"
+    },
+    "12": {
+      "$value": "3rem"
+    },
+    "16": {
+      "$value": "4rem"
+    },
+    "20": {
+      "$value": "5rem"
+    },
+    "24": {
+      "$value": "6rem"
+    },
+    "$description": "Spacing scale, rem-based so it honors the user's root font size."
   },
   "height": {
     "$description": "Control heights. Icon-only controls must still hit --sk-touch-min.",
-    "sm": { "$value": "1.75rem", "$description": "28px." },
-    "md": { "$value": "2.25rem", "$description": "36px." },
-    "lg": { "$value": "2.75rem", "$description": "44px." }
+    "sm": {
+      "$value": "1.75rem",
+      "$description": "28px."
+    },
+    "md": {
+      "$value": "2.25rem",
+      "$description": "36px."
+    },
+    "lg": {
+      "$value": "2.75rem",
+      "$description": "44px."
+    }
   },
   "icon": {
     "$description": "Icon box sizes.",
-    "sm": { "$value": "1rem" },
-    "md": { "$value": "1.25rem" },
-    "lg": { "$value": "1.5rem" }
+    "sm": {
+      "$value": "1rem"
+    },
+    "md": {
+      "$value": "1.25rem"
+    },
+    "lg": {
+      "$value": "1.5rem"
+    }
   },
   "touch": {
     "min": {
@@ -102,12 +171,22 @@
     }
   },
   "radius": {
-    "$description": "Corner radii. Chrome is square: neo-brutalism has no rounding. `full` is a shape, not a style, for the badge dot and spinner. Glass overlays get their own large radii so they read as a distinct material.",
-    "sm": { "$value": "0" },
-    "md": { "$value": "0" },
-    "lg": { "$value": "0" },
-    "xl": { "$value": "0" },
-    "full": { "$value": "9999px" },
+    "$description": "Corner radii. Chrome is nearly square: the house style is a hard-edged neo-brutalist surface, and 2-6px of rounding softens it without losing that character — a fully sharp corner reads as unfinished at control sizes, and a fully round one reads as a different library. `full` is a shape, not a style, for the badge dot and spinner. Glass overlays keep their own large radii so they read as a distinct material.",
+    "sm": {
+      "$value": "2px"
+    },
+    "md": {
+      "$value": "4px"
+    },
+    "lg": {
+      "$value": "6px"
+    },
+    "xl": {
+      "$value": "8px"
+    },
+    "full": {
+      "$value": "9999px"
+    },
     "glass": {
       "$value": "1.25rem",
       "$description": "Floating overlays: dialog, popover, toast, tooltip, palette."
@@ -119,55 +198,122 @@
   },
   "border": {
     "$description": "Two weights only. `width` is the hairline for separators and input fields; `thick` carries all brutalist chrome.",
-    "width": { "$value": "1px" },
-    "thick": { "$value": "3px" }
+    "width": {
+      "$value": "1px"
+    },
+    "thick": {
+      "$value": "3px"
+    }
   },
   "ring": {
     "$description": "Focus ring geometry. A hard 3px stroke at 3px offset, not a soft glow.",
-    "width": { "$value": "3px" },
-    "offset": { "$value": "3px" }
+    "width": {
+      "$value": "3px"
+    },
+    "offset": {
+      "$value": "3px"
+    }
   },
   "shadow": {
     "$description": "Hard offsets with zero blur. The color comes from `--sk-color-shadow`, so one ladder serves both themes.",
-    "xs": { "$value": "2px 2px 0 0" },
-    "sm": { "$value": "3px 3px 0 0" },
-    "md": { "$value": "4px 4px 0 0" },
-    "lg": { "$value": "6px 6px 0 0" },
-    "brutal": { "$value": "5px 5px 0 0", "$description": "Default chrome elevation." },
-    "brutal-hover": { "$value": "7px 7px 0 0", "$description": "Pressed-lift state." },
-    "brutal-active": { "$value": "2px 2px 0 0", "$description": "Pressed-down state." },
-    "brutal-none": { "$value": "none" }
+    "xs": {
+      "$value": "2px 2px 0 0"
+    },
+    "sm": {
+      "$value": "3px 3px 0 0"
+    },
+    "md": {
+      "$value": "4px 4px 0 0"
+    },
+    "lg": {
+      "$value": "6px 6px 0 0"
+    },
+    "brutal": {
+      "$value": "5px 5px 0 0",
+      "$description": "Default chrome elevation."
+    },
+    "brutal-hover": {
+      "$value": "7px 7px 0 0",
+      "$description": "Pressed-lift state."
+    },
+    "brutal-active": {
+      "$value": "2px 2px 0 0",
+      "$description": "Pressed-down state."
+    },
+    "brutal-none": {
+      "$value": "none"
+    }
   },
   "glass": {
     "$description": "The only alpha values in the system, which is what makes glass read as a distinct material. Every color here is theme-dependent and declared per theme, because a translucent panel has to track the theme's surface; only the effect values are shared.",
-    "blur": { "$value": "24px" },
-    "saturate": { "$value": "180%" }
+    "blur": {
+      "$value": "24px"
+    },
+    "saturate": {
+      "$value": "180%"
+    }
   },
   "duration": {
     "$description": "Motion durations, split by layer. Interactive controls use short arcade timing; floating overlays use longer float timing. The reduced-motion override in styles/reset.css collapses these.",
-    "instant": { "$value": "0ms" },
-    "control-fast": { "$value": "90ms" },
-    "control": { "$value": "140ms" },
-    "control-slow": { "$value": "180ms" },
-    "overlay": { "$value": "280ms" },
-    "overlay-slow": { "$value": "420ms" }
+    "instant": {
+      "$value": "0ms"
+    },
+    "control-fast": {
+      "$value": "90ms"
+    },
+    "control": {
+      "$value": "140ms"
+    },
+    "control-slow": {
+      "$value": "180ms"
+    },
+    "overlay": {
+      "$value": "280ms"
+    },
+    "overlay-slow": {
+      "$value": "420ms"
+    }
   },
   "ease": {
     "$description": "Easing curves, split by layer. `arcade` overshoots so the press visibly springs back; `glass` starts fast and settles long.",
-    "arcade": { "$value": "cubic-bezier(0.34, 1.56, 0.64, 1)" },
-    "arcade-exit": { "$value": "cubic-bezier(0.4, 0, 0.6, 1)" },
-    "glass": { "$value": "cubic-bezier(0.32, 0.72, 0, 1)" },
-    "glass-exit": { "$value": "cubic-bezier(0.4, 0, 1, 1)" }
+    "arcade": {
+      "$value": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+    },
+    "arcade-exit": {
+      "$value": "cubic-bezier(0.4, 0, 0.6, 1)"
+    },
+    "glass": {
+      "$value": "cubic-bezier(0.32, 0.72, 0, 1)"
+    },
+    "glass-exit": {
+      "$value": "cubic-bezier(0.4, 0, 1, 1)"
+    }
   },
   "z": {
     "$description": "Layer tokens. Components read these instead of hard-coding z-index.",
-    "base": { "$value": "0" },
-    "dropdown": { "$value": "1000" },
-    "sticky": { "$value": "1100" },
-    "overlay": { "$value": "1300" },
-    "popover": { "$value": "1400" },
-    "toast": { "$value": "1500" },
-    "tooltip": { "$value": "1600" },
-    "modal": { "$value": "1700" }
+    "base": {
+      "$value": "0"
+    },
+    "dropdown": {
+      "$value": "1000"
+    },
+    "sticky": {
+      "$value": "1100"
+    },
+    "overlay": {
+      "$value": "1300"
+    },
+    "popover": {
+      "$value": "1400"
+    },
+    "toast": {
+      "$value": "1500"
+    },
+    "tooltip": {
+      "$value": "1600"
+    },
+    "modal": {
+      "$value": "1700"
+    }
   }
 }

@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-link/sk-link.css",
       "type": "registry:style",
-      "checksum": "sha256-20a9cc3d17d60ae953a19ec91f2db5ef076f05673ac0ed1f7357a327bda98306"
+      "checksum": "sha256-5c423942988d2692b37da673bd2d9186e210de932c443a7ca54d3b5ae7947e99"
     }
   ],
   "cssVariables": [

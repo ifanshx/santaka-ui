@@ -43,7 +43,7 @@ sk-textarea .sk-textarea__control {
   min-block-size: calc(var(--sk-touch-min, 2.75rem) * 2);
   padding: var(--sk-space-2, 0.5rem) var(--sk-space-3, 0.75rem);
   border: var(--sk-border-thick, 3px) solid var(--sk-textarea-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-textarea-bg);
   color: var(--sk-textarea-fg);
   box-shadow: var(--sk-textarea-shadow) var(--sk-color-shadow, #17141c);

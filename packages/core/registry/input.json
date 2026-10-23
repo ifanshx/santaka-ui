@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-input/sk-input.css",
       "type": "registry:style",
-      "checksum": "sha256-e7f8009ac2683698991be29304ddac82351bd35092bce65c1d66385794a45c66"
+      "checksum": "sha256-9b4abfaa3fa1179f002910f70b7e5bf27aaa1fb7da787533903d0246b844faba"
     }
   ],
   "cssVariables": [

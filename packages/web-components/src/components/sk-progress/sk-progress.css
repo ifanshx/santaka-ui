@@ -22,7 +22,7 @@ sk-progress .sk-progress__track {
   overflow: hidden;
   block-size: var(--sk-progress-block-size);
   border: var(--sk-border-thick, 3px) solid var(--sk-progress-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-progress-track-bg);
 }
 

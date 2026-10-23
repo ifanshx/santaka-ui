@@ -31,7 +31,7 @@ sk-tab.sk-tab__button {
   padding: var(--sk-space-2, 0.5rem) var(--sk-space-4, 1rem);
   border: var(--sk-border-thick, 3px) solid transparent;
   border-block-end: none;
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: transparent;
   color: var(--sk-color-text-muted, #5f5a6b);
   font-family: inherit;

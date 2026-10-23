@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-accordion/sk-accordion.css",
       "type": "registry:style",
-      "checksum": "sha256-bab40138bf7881e69a030ffe25ee1e3d6898ec1bbbeab71ba27f52d46df0f63a"
+      "checksum": "sha256-546295446be2be9f763655514736f9350130d13367c5c2bb672360de7f294bd0"
     },
     {
       "path": "src/components/sk-accordion/sk-accordion-item.tsx",

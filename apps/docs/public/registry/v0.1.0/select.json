@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-select/sk-select.css",
       "type": "registry:style",
-      "checksum": "sha256-234fc536408bcc04bbedc0667e47ffce8cf247a361b4c830681fb04ab5b5b5e8"
+      "checksum": "sha256-5b9b0b4769848c664a299006f4160e4e09f2df8c686bb869842953c300a70880"
     }
   ],
   "cssVariables": [

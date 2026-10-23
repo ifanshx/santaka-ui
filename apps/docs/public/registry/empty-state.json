@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-empty-state/sk-empty-state.css",
       "type": "registry:style",
-      "checksum": "sha256-3b995ce6d1f69c90d344de5a608538a97275691520be942a98d1fd1797a9afc1"
+      "checksum": "sha256-2870d15b43be033458ed2f658b8240dc1f10960ba68471e4c4d699d300c939f3"
     }
   ],
   "cssVariables": [

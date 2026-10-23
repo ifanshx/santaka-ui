@@ -24,7 +24,7 @@ sk-table {
 
 sk-table .sk-table__viewport {
   border: var(--sk-border-thick, 3px) solid var(--sk-table-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-table-bg);
   color: var(--sk-table-fg);
   box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0) var(--sk-color-shadow, #17141c);

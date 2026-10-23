@@ -43,7 +43,7 @@ sk-drawer .sk-glass.sk-drawer__panel {
   overflow-y: auto;
   border: 0;
   border-inline-start: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   color: var(--sk-color-text, #17141c);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   font-size: var(--sk-text-sm-size, 0.875rem);

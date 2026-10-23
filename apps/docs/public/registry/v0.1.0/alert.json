@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-alert/sk-alert.css",
       "type": "registry:style",
-      "checksum": "sha256-a3fac4febeee35c9ba888a7e87c3e62b105948fe91c8ba8b33d455d8ab0ff344"
+      "checksum": "sha256-2223973e54b77509860238aee209f20bad29631f0e5207913b2c1e5deb234648"
     }
   ],
   "cssVariables": [

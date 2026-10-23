@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-progress/sk-progress.css",
       "type": "registry:style",
-      "checksum": "sha256-771c43bc1eb3a44342d30ea8e342cce47f0fdb7fe05886b91f5bb88dbbf0f4e8"
+      "checksum": "sha256-736a9bbddf8aea5944656c0578d04ff32e6daa7bfac820edad118d4710498a66"
     }
   ],
   "cssVariables": [

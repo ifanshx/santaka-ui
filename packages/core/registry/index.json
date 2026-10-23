@@ -73,7 +73,7 @@
         {
           "path": "src/components/sk-accordion/sk-accordion.css",
           "type": "registry:style",
-          "checksum": "sha256-bab40138bf7881e69a030ffe25ee1e3d6898ec1bbbeab71ba27f52d46df0f63a"
+          "checksum": "sha256-546295446be2be9f763655514736f9350130d13367c5c2bb672360de7f294bd0"
         },
         {
           "path": "src/components/sk-accordion/sk-accordion-item.tsx",
@@ -277,7 +277,7 @@
         {
           "path": "src/components/sk-alert/sk-alert.css",
           "type": "registry:style",
-          "checksum": "sha256-a3fac4febeee35c9ba888a7e87c3e62b105948fe91c8ba8b33d455d8ab0ff344"
+          "checksum": "sha256-2223973e54b77509860238aee209f20bad29631f0e5207913b2c1e5deb234648"
         }
       ],
       "cssVariables": [
@@ -645,7 +645,7 @@
         {
           "path": "src/components/sk-badge/sk-badge.css",
           "type": "registry:style",
-          "checksum": "sha256-3226b3c0018aa251d9ac3aa5ce08810d12e693ffc045eb6d9c76aa0d1d8201b6"
+          "checksum": "sha256-6946ca66b11262f44a3eacc3dc59d74b8584e003ee14a5a690925d0f14e380fc"
         }
       ],
       "cssVariables": [
@@ -751,7 +751,7 @@
         {
           "path": "src/components/sk-banner/sk-banner.css",
           "type": "registry:style",
-          "checksum": "sha256-6cd7acefd7c6656d1c90c671a1b78d8dff38baf37e22627b82f727b57c626930"
+          "checksum": "sha256-ba853ef984330aada8258c84662f29f1798c2a68c336ff84c599e95ec4605e24"
         }
       ],
       "cssVariables": [
@@ -949,7 +949,7 @@
         {
           "path": "src/components/sk-button/sk-button.css",
           "type": "registry:style",
-          "checksum": "sha256-0b8dc6be396bd143cf41f977b255d0218152453ee49dc21af6e4b078515cc9db"
+          "checksum": "sha256-9dfdbd0c9269e45480205a9358eb200e0af81c9b286d12b0cea095b0a7e5a132"
         }
       ],
       "cssVariables": [
@@ -1073,7 +1073,7 @@
         {
           "path": "src/components/sk-card/sk-card.css",
           "type": "registry:style",
-          "checksum": "sha256-fe181d029cc6546666c4669755d31713b89938a611e524d852c3fcf0ad5ac66d"
+          "checksum": "sha256-040c85bf815d2159b414acf4c25bb4bd0a15822a2431600eb7c0c5ba98b21568"
         }
       ],
       "cssVariables": [
@@ -1182,7 +1182,7 @@
         {
           "path": "src/components/sk-checkbox/sk-checkbox.css",
           "type": "registry:style",
-          "checksum": "sha256-742e7c4c538f8fd0fa2a0b44a5d64ac5b15c604e13d21d08d9e28eae96cbc212"
+          "checksum": "sha256-b795ba557dcf943c9ed0f5b7aa87f9b1990365e05c70d4e8daf2af04c9a3a360"
         }
       ],
       "cssVariables": [
@@ -1360,7 +1360,7 @@
         {
           "path": "src/components/sk-combobox/sk-combobox.css",
           "type": "registry:style",
-          "checksum": "sha256-2a4e3948713370e4440d3cf056c08b00de0905b67a8a2eb9e319d4f6b75c2005"
+          "checksum": "sha256-a670675237a82e3df5858424216c96c8b1b6db5dcadc8e50e82e1f852f23d392"
         }
       ],
       "cssVariables": [
@@ -1682,7 +1682,7 @@
         {
           "path": "src/components/sk-drawer/sk-drawer.css",
           "type": "registry:style",
-          "checksum": "sha256-74080903d13c544ffe2817263f852dfbcbc579be0722f29786ea0a9785815709"
+          "checksum": "sha256-c1030cef7b9f5e8444cf702b92309845f84bea5c52996698fa21c36fdeee7e39"
         }
       ],
       "cssVariables": [
@@ -1800,7 +1800,7 @@
         {
           "path": "src/components/sk-empty-state/sk-empty-state.css",
           "type": "registry:style",
-          "checksum": "sha256-3b995ce6d1f69c90d344de5a608538a97275691520be942a98d1fd1797a9afc1"
+          "checksum": "sha256-2870d15b43be033458ed2f658b8240dc1f10960ba68471e4c4d699d300c939f3"
         }
       ],
       "cssVariables": [
@@ -2022,7 +2022,7 @@
         {
           "path": "src/components/sk-icon-button/sk-icon-button.css",
           "type": "registry:style",
-          "checksum": "sha256-61bcc51fbee2d0579b1688f9611b3d982c615e3680e2ca93da995cb8fad8531c"
+          "checksum": "sha256-77616200f50bb4f52e54b4a73f1e3bbcb3205aed55907cced765b9870e10c76d"
         }
       ],
       "cssVariables": [
@@ -2157,7 +2157,7 @@
         {
           "path": "src/components/sk-input/sk-input.css",
           "type": "registry:style",
-          "checksum": "sha256-e7f8009ac2683698991be29304ddac82351bd35092bce65c1d66385794a45c66"
+          "checksum": "sha256-9b4abfaa3fa1179f002910f70b7e5bf27aaa1fb7da787533903d0246b844faba"
         }
       ],
       "cssVariables": [
@@ -2546,7 +2546,7 @@
         {
           "path": "src/components/sk-link/sk-link.css",
           "type": "registry:style",
-          "checksum": "sha256-20a9cc3d17d60ae953a19ec91f2db5ef076f05673ac0ed1f7357a327bda98306"
+          "checksum": "sha256-5c423942988d2692b37da673bd2d9186e210de932c443a7ca54d3b5ae7947e99"
         }
       ],
       "cssVariables": [
@@ -2864,7 +2864,7 @@
         {
           "path": "src/components/sk-progress/sk-progress.css",
           "type": "registry:style",
-          "checksum": "sha256-771c43bc1eb3a44342d30ea8e342cce47f0fdb7fe05886b91f5bb88dbbf0f4e8"
+          "checksum": "sha256-736a9bbddf8aea5944656c0578d04ff32e6daa7bfac820edad118d4710498a66"
         }
       ],
       "cssVariables": [
@@ -2961,7 +2961,7 @@
         {
           "path": "src/components/sk-radio-group/sk-radio-group.css",
           "type": "registry:style",
-          "checksum": "sha256-725d4223a2a1fd9e5bba73cfc33060f0af83f57dca89c7c03bf44ca06cbaff2f"
+          "checksum": "sha256-9ff651faf35bade340beb55c732f803b2a5c479740e75d231b7214fe9865e20c"
         }
       ],
       "cssVariables": [
@@ -3134,7 +3134,7 @@
         {
           "path": "src/components/sk-select/sk-select.css",
           "type": "registry:style",
-          "checksum": "sha256-234fc536408bcc04bbedc0667e47ffce8cf247a361b4c830681fb04ab5b5b5e8"
+          "checksum": "sha256-5b9b0b4769848c664a299006f4160e4e09f2df8c686bb869842953c300a70880"
         }
       ],
       "cssVariables": [
@@ -3468,7 +3468,7 @@
         {
           "path": "src/components/sk-skeleton/sk-skeleton.css",
           "type": "registry:style",
-          "checksum": "sha256-b36f71282cc247967fe471bac7e1a71f1758f6aebbad6ae7c9fb6b1730e164c0"
+          "checksum": "sha256-bb27a7d186193648d0500b3223c36a4b2d8ab9fab95494a2b8fa3edbdfc64b83"
         }
       ],
       "cssVariables": [
@@ -3548,7 +3548,7 @@
         {
           "path": "src/components/sk-slider/sk-slider.css",
           "type": "registry:style",
-          "checksum": "sha256-fd4a754205c924ba671d9973d16ecf6ba83accab109d7dbab56aa13a466a06fa"
+          "checksum": "sha256-40cd2a256f38814d2c7bf3d85d913e154c6aa35206f25deb7456eaec9622c3e4"
         }
       ],
       "cssVariables": [
@@ -3788,7 +3788,7 @@
         {
           "path": "src/components/sk-switch/sk-switch.css",
           "type": "registry:style",
-          "checksum": "sha256-0980a90c3646d0d7937d9e80b04d90ff2847227f747f642f5e9355514b901081"
+          "checksum": "sha256-b49697734221adac1d1f08f346154c6dff9ddaec64625dba484ee418c485d52d"
         }
       ],
       "cssVariables": [
@@ -3959,7 +3959,7 @@
         {
           "path": "src/components/sk-table/sk-table.css",
           "type": "registry:style",
-          "checksum": "sha256-a0a7ff098b517d30acff2a6f04e8dc8358c039afd62e639009cc8d8c8f52a92d"
+          "checksum": "sha256-e47fbe8d6fd40739914b99d5d9cb583ad3a4cb0590f9197bc3f4ee28d2aa85fd"
         }
       ],
       "cssVariables": [
@@ -4069,7 +4069,7 @@
         {
           "path": "src/components/sk-tabs/sk-tabs.css",
           "type": "registry:style",
-          "checksum": "sha256-b43fd0b42f4dfe609b8245d7fd5964debda5a28f3d861252af19a6a5fbb7cf74"
+          "checksum": "sha256-9f7c30363723d71a9aa635272b526c48b7910037bea01b30869644b09a12c51a"
         },
         {
           "path": "src/components/sk-tabs/sk-tab.tsx",
@@ -4388,7 +4388,7 @@
         {
           "path": "src/components/sk-textarea/sk-textarea.css",
           "type": "registry:style",
-          "checksum": "sha256-9e54a84dd75f57d6b3fef6f792749fedac16c480d30b18bf4d508053625d7bba"
+          "checksum": "sha256-212df9b92fdb4a58eb19c2c637ff254640c2b9912dfaf5df65ee32a21b8bd216"
         }
       ],
       "cssVariables": [
@@ -4587,7 +4587,7 @@
         {
           "path": "src/components/sk-toast/sk-toast.css",
           "type": "registry:style",
-          "checksum": "sha256-76c23a30c33e26f77d9fb41b56836d71eb11c355d0000fc8ac293d2e8cce0ee4"
+          "checksum": "sha256-693ed0edcc4699e3bc1f1c70a89efb5614a0bf896956d0634de0bc71b4f1a3ac"
         }
       ],
       "cssVariables": [

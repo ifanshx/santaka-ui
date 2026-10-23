@@ -44,7 +44,7 @@ sk-icon-button {
   box-sizing: border-box;
   border: var(--sk-border-thick, 3px) solid var(--sk-icon-button-border);
   padding-inline: var(--sk-space-2, 0.5rem);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-icon-button-bg);
   color: var(--sk-icon-button-fg);
   box-shadow: var(--sk-icon-button-shadow) var(--sk-color-shadow, #17141c);

@@ -112,7 +112,7 @@ sk-slider .sk-slider__input::-webkit-slider-thumb {
   inline-size: 1.25rem;
   block-size: 1.5rem;
   border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-slider-thumb);
   box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
   cursor: grab;
@@ -122,7 +122,7 @@ sk-slider .sk-slider__input::-moz-range-thumb {
   inline-size: 1.25rem;
   block-size: 1.5rem;
   border: var(--sk-border-thick, 3px) solid var(--sk-slider-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-slider-thumb);
   box-shadow: var(--sk-shadow-sm, 3px 3px 0 0) var(--sk-color-shadow, #17141c);
   cursor: grab;

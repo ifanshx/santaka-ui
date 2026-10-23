@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-badge/sk-badge.css",
       "type": "registry:style",
-      "checksum": "sha256-3226b3c0018aa251d9ac3aa5ce08810d12e693ffc045eb6d9c76aa0d1d8201b6"
+      "checksum": "sha256-6946ca66b11262f44a3eacc3dc59d74b8584e003ee14a5a690925d0f14e380fc"
     }
   ],
   "cssVariables": [

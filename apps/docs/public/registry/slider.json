@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-slider/sk-slider.css",
       "type": "registry:style",
-      "checksum": "sha256-fd4a754205c924ba671d9973d16ecf6ba83accab109d7dbab56aa13a466a06fa"
+      "checksum": "sha256-40cd2a256f38814d2c7bf3d85d913e154c6aa35206f25deb7456eaec9622c3e4"
     }
   ],
   "cssVariables": [

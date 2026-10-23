@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-drawer/sk-drawer.css",
       "type": "registry:style",
-      "checksum": "sha256-74080903d13c544ffe2817263f852dfbcbc579be0722f29786ea0a9785815709"
+      "checksum": "sha256-c1030cef7b9f5e8444cf702b92309845f84bea5c52996698fa21c36fdeee7e39"
     }
   ],
   "cssVariables": [

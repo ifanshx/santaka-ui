@@ -255,10 +255,25 @@ describe("shadow tokens", () => {
 })
 
 describe("radius tokens", () => {
-  it("keeps chrome square while leaving circular shapes a full radius", () => {
+  it("keeps chrome nearly square while leaving circular shapes a full radius", () => {
     const dimensions = source("dimensions.tokens.json")
-    for (const step of ["sm", "md", "lg", "xl"] as const) {
-      expect(dimensions[`radius.${step}`]?.$value, `radius.${step}`).toBe("0")
+    // Chrome is 2-8px, not 0 and not the 10px of a soft, generic UI kit. This
+    // assertion used to require exactly 0 — a fully sharp corner — which was the
+    // neo-brutalist rule, and it read as unfinished once the components were
+    // used at control sizes. It now pins the intent rather than one number: a
+    // chrome radius stays small enough that the surface still reads as
+    // hard-edged, and the steps grow monotonically.
+    const chrome = ["sm", "md", "lg", "xl"] as const
+    const px = chrome.map((step) => {
+      const raw = String(dimensions[`radius.${step}`]?.$value)
+      expect(raw, `radius.${step} must be in px`).toMatch(/^\d+px$/)
+      return Number.parseInt(raw, 10)
+    })
+    for (const value of px) {
+      expect(value, "chrome radius stays under a soft 10px").toBeLessThan(10)
+    }
+    for (let i = 1; i < px.length; i += 1) {
+      expect(px[i], `radius step ${i} grows`).toBeGreaterThan(px[i - 1])
     }
     // The badge dot and the spinner are circles by shape, not by style.
     expect(dimensions["radius.full"]?.$value).toBe("9999px")

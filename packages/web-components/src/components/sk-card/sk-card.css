@@ -23,7 +23,7 @@ sk-card {
   gap: var(--sk-card-gap);
   padding: var(--sk-card-padding);
   border: var(--sk-border-thick, 3px) solid var(--sk-card-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-card-bg);
   color: var(--sk-card-fg);
   box-shadow: var(--sk-card-shadow) var(--sk-color-shadow, #17141c);

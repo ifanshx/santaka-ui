@@ -62,7 +62,7 @@ sk-radio-group .sk-radio-group__control {
   block-size: 1.5rem;
   margin: 0;
   border: var(--sk-border-thick, 3px) solid var(--sk-radio-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-radio-bg);
   box-shadow: var(--sk-radio-shadow) var(--sk-color-shadow, #17141c);
   cursor: pointer;

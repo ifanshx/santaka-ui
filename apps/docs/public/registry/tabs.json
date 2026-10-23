@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-tabs/sk-tabs.css",
       "type": "registry:style",
-      "checksum": "sha256-b43fd0b42f4dfe609b8245d7fd5964debda5a28f3d861252af19a6a5fbb7cf74"
+      "checksum": "sha256-9f7c30363723d71a9aa635272b526c48b7910037bea01b30869644b09a12c51a"
     },
     {
       "path": "src/components/sk-tabs/sk-tab.tsx",

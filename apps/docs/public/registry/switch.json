@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-switch/sk-switch.css",
       "type": "registry:style",
-      "checksum": "sha256-0980a90c3646d0d7937d9e80b04d90ff2847227f747f642f5e9355514b901081"
+      "checksum": "sha256-b49697734221adac1d1f08f346154c6dff9ddaec64625dba484ee418c485d52d"
     }
   ],
   "cssVariables": [

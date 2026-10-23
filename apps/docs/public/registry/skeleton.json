@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-skeleton/sk-skeleton.css",
       "type": "registry:style",
-      "checksum": "sha256-b36f71282cc247967fe471bac7e1a71f1758f6aebbad6ae7c9fb6b1730e164c0"
+      "checksum": "sha256-bb27a7d186193648d0500b3223c36a4b2d8ab9fab95494a2b8fa3edbdfc64b83"
     }
   ],
   "cssVariables": [

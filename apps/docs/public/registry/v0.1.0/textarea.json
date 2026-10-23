@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-textarea/sk-textarea.css",
       "type": "registry:style",
-      "checksum": "sha256-9e54a84dd75f57d6b3fef6f792749fedac16c480d30b18bf4d508053625d7bba"
+      "checksum": "sha256-212df9b92fdb4a58eb19c2c637ff254640c2b9912dfaf5df65ee32a21b8bd216"
     }
   ],
   "cssVariables": [

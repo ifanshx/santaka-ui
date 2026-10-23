@@ -57,7 +57,7 @@ sk-toast .sk-toast__close {
   block-size: 1.75rem;
   padding: 0;
   border: var(--sk-border-width, 1px) solid var(--sk-color-border-strong, #8b85a0);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: transparent;
   color: var(--sk-color-text, #17141c);
   font-size: var(--sk-text-lg-size, 1.125rem);

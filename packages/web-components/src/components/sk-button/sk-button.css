@@ -30,7 +30,7 @@ sk-button {
   min-inline-size: var(--sk-touch-min, 2.75rem);
   padding-inline: var(--sk-space-4, 1rem);
   border: var(--sk-border-thick, 3px) solid var(--sk-button-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-button-bg);
   color: var(--sk-button-fg);
   box-shadow: var(--sk-button-shadow) var(--sk-color-shadow, #17141c);

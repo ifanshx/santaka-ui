@@ -31,7 +31,7 @@ sk-accordion {
   background-color: var(--sk-accordion-bg);
   color: var(--sk-accordion-fg);
   border: var(--sk-border-thick, 3px) solid var(--sk-accordion-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   box-shadow: var(--sk-accordion-shadow) var(--sk-color-shadow, #17141c);
   font-family: var(--sk-font-sans, system-ui, sans-serif);
   box-sizing: border-box;

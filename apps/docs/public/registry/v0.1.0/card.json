@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-card/sk-card.css",
       "type": "registry:style",
-      "checksum": "sha256-fe181d029cc6546666c4669755d31713b89938a611e524d852c3fcf0ad5ac66d"
+      "checksum": "sha256-040c85bf815d2159b414acf4c25bb4bd0a15822a2431600eb7c0c5ba98b21568"
     }
   ],
   "cssVariables": [

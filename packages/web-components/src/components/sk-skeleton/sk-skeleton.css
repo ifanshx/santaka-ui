@@ -15,7 +15,7 @@
 sk-skeleton {
   display: block;
   background-color: var(--sk-color-surface-sunken, #f1eef8);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
 }
 
 /* A text line promises the body step's height, so text that replaces it lands

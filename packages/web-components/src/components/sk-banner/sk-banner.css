@@ -40,7 +40,7 @@ sk-banner {
  */
 sk-banner[data-full-width="false"] {
   border: var(--sk-border-thick, 3px) solid var(--sk-banner-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   box-shadow: var(--sk-banner-shadow) var(--sk-color-shadow, #17141c);
 }
 

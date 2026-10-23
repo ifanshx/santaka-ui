@@ -53,9 +53,22 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
     <div class="install">
       <sk-text variant="sm" muted>Install</sk-text>
+      {/* The copy control sits inside the code block, the way shadcn/ui and
+          most developer documentation do, rather than beside it as a second
+          box with its own shadow. Two adjacent bordered boxes read as two
+          components; one box with a control in it reads as one. */}
       <div class="install-row">
         <pre><code>{install}</code></pre>
-        <sk-button variant="outline" size="sm" id="copy-install" data-copy={install}>Copy</sk-button>
+        <sk-button
+          class="install-copy"
+          variant="ghost"
+          size="sm"
+          id="copy-install"
+          data-copy={install}
+          aria-label="Copy the install command"
+        >
+          Copy
+        </sk-button>
       </div>
     </div>
   </section>
@@ -210,37 +223,6 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   </section>
   <sk-separator decorative />
 
-  <section class="why">
-    <h2 class="section-title">Why this exists</h2>
-
-    <div class="why-grid">
-      <sk-card heading="One behavior owner" padding="md">
-        <sk-text variant="sm" muted>
-          Every component's ARIA wiring, keyboard model, and form participation lives in the web component. The React and
-          Vue packages adapt it; they do not reimplement it — which is why a fix reaches every framework at once, and why
-          the adapters stay under 4 KB.
-        </sk-text>
-      </sk-card>
-      <sk-card heading="Tokens, not a theme object" padding="md">
-        <sk-text variant="sm" muted>
-          DTCG source compiled to CSS custom properties. Overriding <code>--sk-color-primary</code> on a scope is the
-          whole customization contract — no build step, no provider, no runtime.
-        </sk-text>
-      </sk-card>
-      <sk-card heading="Accessible by test, not by claim" padding="md">
-        <sk-text variant="sm" muted>
-          axe-core runs over the assembled page in light and dark on every push, and every component has browser tests
-          for its keyboard model. Reduced motion removes the movement rather than shortening it.
-        </sk-text>
-      </sk-card>
-      <sk-card heading="Generated, never hand-maintained" padding="md">
-        <sk-text variant="sm" muted>
-          This page, every component page, <code>llms.txt</code>, and the registry payload are all derived from one
-          registry. A prop rename reaches all of them or none — it cannot reach one and miss another.
-        </sk-text>
-      </sk-card>
-    </div>
-  </section>
   {/* The architecture explained with the system's own disclosure component.
       The same four points were four static cards: correct, but they asked the
       reader to read four paragraphs to learn one idea. An accordion lets the
@@ -340,6 +322,14 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         </a>
       ))}
     </div>
+    {/* Twelve on load, the rest on request. All 38 at once made this section
+        2,353px — 42% of the page, and a reader had to scroll past two screens of
+        cards to reach anything below. shadcn's entire landing page is 1,893px.
+        The filter still searches all 38, so nothing becomes harder to find;
+        only the initial height is capped. */}
+    <div class="catalogue-more">
+      <sk-button id="catalogue-toggle" variant="outline" size="sm">Show all components</sk-button>
+    </div>
 
     <sk-empty-state id="catalogue-empty" heading="No components match" description="Try a shorter search or a different stability filter." hidden />
   </section>
@@ -423,14 +413,19 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
      document with a big first line. The steps below are a deliberate scale:
      title, lede, section title — each about 60% of the one above, so the eye
      moves down the page instead of jumping. */
+  /* Measured against shadcn/ui, whose hero is 48px at weight 600: the weight
+     carries the emphasis there, not the size. This was 68px at 800 on a 1.02
+     line-height, which is loud and leaves no room above it for anything else.
+     56px at 750 on 1.05 keeps the display weight but gives the line air, and
+     text-wrap: balance keeps the three short lines even instead of ragged. */
   .headline {
     display: block;
     margin-block: 1rem 0;
     font-family: var(--sk-font-display, inherit);
-    font-size: clamp(2.5rem, 6vw, 4.25rem);
-    font-weight: var(--sk-font-weight-bold, 800);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 750;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     text-wrap: balance;
   }
 
@@ -484,6 +479,22 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     flex: 1 1 14rem;
     min-inline-size: 0;
     margin: 0;
+  }
+
+  /* Positioned into the code block instead of after it: the row is the
+     positioned ancestor, and the control is lifted out of the flow so it does
+     not add a second box. It keeps its own focus ring and stays a real button,
+     so the affordance is unchanged. */
+  .install-row {
+    position: relative;
+  }
+
+  .install-copy {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
+    z-index: 1;
+    background: var(--sk-color-surface, #fff);
   }
 
   .facts {
@@ -813,6 +824,13 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   const empty = document.getElementById("catalogue-empty")
 
   const cards = grid ? [...grid.querySelectorAll<HTMLElement>(".card-link")] : []
+  const toggle = document.getElementById("catalogue-toggle")
+
+  // Twelve visible on load. The cap is on what is rendered, not on what is
+  // searchable: the filter below runs over all of them, so "toast" still finds
+  // sk-toast when it sits at position 30.
+  const PAGE = 12
+  let expanded = false
 
   const apply = (rawValue?: string) => {
     const source = (rawValue ?? (search as HTMLInputElement | null)?.value ?? "").toString()
@@ -830,10 +848,30 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       if (matches) shown += 1
     }
 
+    // Cap what stays visible unless the reader asked for all of them. The cap
+    // is applied after the filter, so a filter that narrows to eight shows all
+    // eight rather than eight of twelve.
+    let visible = 0
+    if (!expanded && !q && stab === "all") {
+      for (const card of cards) {
+        if (card.hidden) continue
+        if (visible >= PAGE) card.hidden = true
+        else visible += 1
+      }
+    } else {
+      visible = shown
+    }
+
+    if (toggle) {
+      const capped = !expanded && !q && stab === "all" && shown > PAGE
+      toggle.hidden = shown <= PAGE
+      toggle.textContent = capped ? `Show all ${shown} components` : "Show fewer"
+    }
+
     // hidden removes the card from the grid and from the tab order, so a
     // keyboard user cannot land on a link they cannot see. The empty state
     // explains the blank grid instead of leaving it unexplained.
-    if (empty) empty.hidden = shown > 0
+    if (empty) empty.hidden = visible > 0
   }
 
   // sk-value-change carries the committed value in detail and is the contract a
@@ -850,4 +888,14 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     apply((target?.value ?? "").toString())
   })
   stability?.addEventListener("sk-value-change", () => apply())
+
+  toggle?.addEventListener("click", () => {
+    expanded = !expanded
+    apply()
+    // Keep the reader where they were: expanding a grid below the fold
+    // otherwise jumps the page.
+    if (!expanded) grid?.scrollIntoView({ block: "nearest" })
+  })
+
+  apply()
 </script>

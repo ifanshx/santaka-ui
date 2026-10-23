@@ -42,7 +42,7 @@ sk-combobox .sk-combobox__input {
   padding-inline: var(--sk-space-3, 0.75rem);
   padding-block: var(--sk-space-2, 0.5rem);
   border: var(--sk-border-thick, 3px) solid var(--sk-color-border-strong, #8b85a0);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-color-surface, #ffffff);
   color: inherit;
   font: inherit;

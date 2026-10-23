@@ -41,7 +41,7 @@ sk-input .sk-input__control {
   min-block-size: var(--sk-touch-min, 2.75rem);
   padding-inline: var(--sk-space-3, 0.75rem);
   border: var(--sk-border-thick, 3px) solid var(--sk-input-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-input-bg);
   color: var(--sk-input-fg);
   box-shadow: var(--sk-input-shadow) var(--sk-color-shadow, #17141c);

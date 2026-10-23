@@ -49,7 +49,7 @@ sk-select .sk-select__control {
   /* Room for the custom arrow. */
   padding-inline-end: var(--sk-space-8, 2rem);
   border: var(--sk-border-thick, 3px) solid var(--sk-select-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-select-bg);
   color: var(--sk-select-fg);
   box-shadow: var(--sk-select-shadow) var(--sk-color-shadow, #17141c);

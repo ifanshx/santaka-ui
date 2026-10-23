@@ -21,7 +21,7 @@ sk-alert {
   gap: var(--sk-alert-gap);
   padding: var(--sk-alert-padding);
   border: var(--sk-border-thick, 3px) solid var(--sk-alert-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-alert-bg);
   color: var(--sk-alert-fg);
   box-shadow: var(--sk-alert-shadow) var(--sk-color-shadow, #17141c);

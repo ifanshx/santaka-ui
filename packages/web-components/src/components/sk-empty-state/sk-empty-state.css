@@ -27,7 +27,7 @@ sk-empty-state {
   padding: var(--sk-empty-state-padding);
   inline-size: 100%;
   border: var(--sk-border-thick, 3px) solid var(--sk-empty-state-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-empty-state-bg);
   color: var(--sk-empty-state-fg);
   box-shadow: var(--sk-empty-state-shadow) var(--sk-color-shadow, #17141c);
@@ -52,7 +52,7 @@ sk-empty-state .sk-empty-state__glyph {
   inline-size: var(--sk-empty-state-glyph);
   block-size: var(--sk-empty-state-glyph);
   border: var(--sk-border-thick, 3px) dashed var(--sk-color-border, #e2dff0);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: transparent;
 }
 

@@ -74,7 +74,7 @@ sk-switch .sk-switch__track {
   block-size: 1.5rem;
   padding: 3px;
   border: var(--sk-border-thick, 3px) solid var(--sk-switch-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-switch-bg);
   box-shadow: var(--sk-switch-shadow) var(--sk-color-shadow, #17141c);
   cursor: pointer;

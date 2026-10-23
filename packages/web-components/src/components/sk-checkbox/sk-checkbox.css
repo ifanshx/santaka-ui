@@ -50,7 +50,7 @@ sk-checkbox .sk-checkbox__control {
   block-size: 1.5rem;
   margin: 0;
   border: var(--sk-border-thick, 3px) solid var(--sk-checkbox-border);
-  border-radius: 0;
+  border-radius: var(--sk-radius-md, 0);
   background-color: var(--sk-checkbox-bg);
   box-shadow: var(--sk-checkbox-shadow) var(--sk-color-shadow, #17141c);
   cursor: pointer;

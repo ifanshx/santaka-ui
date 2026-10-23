@@ -26,7 +26,7 @@
     {
       "path": "src/components/sk-combobox/sk-combobox.css",
       "type": "registry:style",
-      "checksum": "sha256-2a4e3948713370e4440d3cf056c08b00de0905b67a8a2eb9e319d4f6b75c2005"
+      "checksum": "sha256-a670675237a82e3df5858424216c96c8b1b6db5dcadc8e50e82e1f852f23d392"
     }
   ],
   "cssVariables": [
