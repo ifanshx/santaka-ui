@@ -1905,7 +1905,7 @@ for (const component of COMPONENTS) {
   )
 
   const entry = {
-    $schema: "https://santaka.dev/schema/registry-item-v1.json",
+    $schema: "https://ui.santaka.my.id/schema/registry-item-v1.json",
     schemaVersion: 1,
     name: component.name,
     namespace: null,
@@ -2021,7 +2021,7 @@ for (const block of BLOCKS) {
     : []
 
   const entry = {
-    $schema: "https://santaka.dev/schema/registry-item-v1.json",
+    $schema: "https://ui.santaka.my.id/schema/registry-item-v1.json",
     schemaVersion: 1,
     name: block.name,
     namespace: null,

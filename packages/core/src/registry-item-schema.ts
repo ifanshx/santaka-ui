@@ -9,7 +9,7 @@
  * `$schema` in emitted registry entries is an identifier string only. CI and
  * the CLI always validate against this local copy — never over the network.
  */
-export const REGISTRY_ITEM_SCHEMA_ID = "https://santaka.dev/schema/registry-item-v1.json"
+export const REGISTRY_ITEM_SCHEMA_ID = "https://ui.santaka.my.id/schema/registry-item-v1.json"
 
 const stringArray = { type: "array", items: { type: "string" } } as const
 

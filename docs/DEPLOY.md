@@ -14,23 +14,32 @@ decide which host you can use at all.
 
 The build emits absolute asset paths (`/_astro/index.D6A7zbHe.css`). That is
 deliberate — the registry payload and `llms.txt` are linked absolutely too — but
-it means the site cannot be mounted at `https://example.com/santaka/`. It needs
-`https://santaka.dev/` or a subdomain like `https://docs.santaka.dev/`.
+it means the site cannot be mounted at `https://example.com/santaka/`. It needs a
+domain root — `https://ui.santaka.my.id/` is one, which is why the subdomain
+choice avoids this problem entirely.
 
 If you do want a subpath, set `base` in `apps/docs/astro.config.mjs` and rebuild;
 do not hand-edit the output.
 
-**2. `site` currently claims a domain the project does not own.**
+**2. The canonical host is `https://ui.santaka.my.id`.**
 
-`apps/docs/astro.config.mjs` sets `site: "https://santaka.dev"`, and the registry
-schema IDs (`$schema`, `$id`) use the same host. `santaka.dev` does not resolve —
-it is unregistered. Nothing breaks at runtime, but until the domain is bought and
-pointed at the host, any canonical or schema URL the site advertises is dead.
+`apps/docs/astro.config.mjs` sets `site` to it, and the registry schema IDs
+(`$schema`, `$id`) use the same origin. A subdomain rather than a path is what
+makes constraint 1 a non-issue — `ui.santaka.my.id` is a domain root, so the
+absolute asset paths resolve.
 
-Either buy the domain, or change `site` to the host you actually use. Do not
-deploy and leave the mismatch: a search engine that indexes a dead canonical is
-harder to fix than a config line.
+Changing the host means changing it in four places, all of which are checked by
+tests: `apps/docs/astro.config.mjs` (`site`), `packages/core/src/registry-item-schema.ts`
+(`REGISTRY_ITEM_SCHEMA_ID`), `packages/core/scripts/generate-registry.mjs` (the
+`$schema` each entry advertises), and `packages/core/scripts/build-registry-index.mjs`
+(the index `$schema` and `$id`). Rebuild `core` afterwards — the schema files and
+the published payload are generated from those values.
 
+The schemas are published at `/schema/` in the docs output, so the URL an entry
+advertises has a file behind it. That was not true before: the schema files were
+written to `packages/core/schema/` and never copied into the published tree, and
+the index pointed at `./index.schema.json`, a file that was never written. Both
+are now generated into the payload and guarded by `tests/registry/remote.test.mjs`.
 ## What the build produces
 
 ```bash
@@ -53,6 +62,80 @@ Output, all of it under `apps/docs/dist`:
 The build is deterministic: the same source produces the same bytes, which is
 what the `llms` and `support-matrix` CI jobs rely on.
 
+## Option 0 — Cloudflare, with the domain already owned
+
+The project owns `santaka.my.id` on Cloudflare, so `ui.santaka.my.id` is the
+cheapest correct host: a subdomain is a domain root for the purposes of
+constraint 1, and DNS and TLS are already there.
+
+Two ways, pick one.
+
+### 0a. Cloudflare Pages (no server to run)
+
+| Setting | Value |
+|---|---|
+| Production branch | `main` |
+| Build command | `pnpm exec turbo run build --filter=@santaka-ui/docs` |
+| Output directory | `apps/docs/dist` |
+| Root directory | *(repository root — the build needs the workspace)* |
+| Environment variable | `NODE_VERSION=22.12.0` |
+| Build cache | disabled — a stale `dist/` is worse than a slow build |
+
+Then in **Workers & Pages → the project → Custom domains**, add
+`ui.santaka.my.id`. Cloudflare creates the CNAME and issues the certificate.
+
+Pages needs `_headers` and `_redirects` in the output root for cache policy. Add
+`apps/docs/public/_headers`:
+
+```
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+```
+
+### 0b. Cloudflare Tunnel to your own server (matches your setup)
+
+If the deploy runs on your home server, do not open a port — run a tunnel.
+
+```bash
+# On the home server
+cloudflared tunnel create santaka-docs
+cloudflared tunnel route dns santaka-docs ui.santaka.my.id
+
+# Serve the built directory directly; no nginx needed
+cloudflared tunnel run --url http://localhost:8080 santaka-docs
+```
+
+And serve the files on 8080:
+
+```bash
+cd /srv/santaka-docs && python3 -m http.server 8080 --bind 127.0.0.1
+```
+
+A tunnel is a better fit than an exposed port because the origin stays private
+and Cloudflare terminates TLS. Two things to set at the edge:
+
+- **Cache Rule:** `/_astro/*` → Edge TTL 1 year, Browser TTL 1 year (the names
+  are content-hashed).
+- **Cache Rule:** everything else → bypass cache, or Edge TTL 0. A cached
+  `registry/index.json` would serve a stale registry to the CLI.
+
+Cloudflare serves `.json` as `application/json` and compresses text automatically,
+so no header configuration is needed beyond the cache rules.
+
+### Verify the subdomain before announcing it
+
+```bash
+dig +short ui.santaka.my.id
+curl -sI https://ui.santaka.my.id/ | head -1
+curl -s https://ui.santaka.my.id/ | grep -o "/_astro/[^"]*.css" | head -1
+```
+
+The third command is the one that matters: if it prints nothing, the asset paths
+do not resolve and the page is unstyled — the failure mode constraint 1 warns
+about.
 ## Option A — any static host (recommended)
 
 Because the output is plain files, the deploy is: build, then copy `dist/` to
@@ -102,7 +185,7 @@ gzip_types text/css application/javascript application/json text/plain image/svg
 Caddy is equivalent and shorter:
 
 ```
-santaka.dev {
+ui.santaka.my.id {
     root * /var/www/santaka
     encode gzip
     try_files {path} {path}/ {path}/index.html
@@ -170,11 +253,12 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-## Option C — Netlify, Vercel, Cloudflare Pages
+## Option C — Netlify or Vercel
 
-All three host this without configuration beyond the build command. They exist
+Both host this without configuration beyond the build command. They exist
 as an option, not a recommendation: the point of this project is that it does not
-need a platform.
+need a platform. Cloudflare Pages is covered in Option 0a because the domain is
+already there.
 
 | Setting | Value |
 |---|---|

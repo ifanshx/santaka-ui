@@ -149,6 +149,40 @@ describe("the published registry payload", () => {
       )
     }
   })
+
+  it("serves the schema every entry advertises", () => {
+    // Each entry carries `$schema: "<origin>/schema/registry-item-v1.json"`.
+    // That URL was a dead link for as long as it existed: the schemas were
+    // written to `packages/core/schema/` and never copied into the published
+    // tree, so an editor or a third-party registry following it got a 404 —
+    // regardless of whether the domain resolved. This asserts the address an
+    // entry advertises actually has a file behind it.
+    const document = JSON.parse(readFileSync(join(PAYLOAD, "index.json"), "utf8"))
+    const advertised = document.items[0].$schema
+    assert.ok(advertised, "entries must advertise a $schema")
+
+    const path = new URL(advertised).pathname.replace(/^\//, "")
+    const served = join(repoRoot, "apps", "docs", "public", path)
+    assert.ok(
+      existsSync(served),
+      `every entry advertises ${advertised}, but ${path} is not in the published tree`,
+    )
+  })
+
+  it("publishes both schemas, and the index schema is the one it names", () => {
+    const document = JSON.parse(readFileSync(join(PAYLOAD, "index.json"), "utf8"))
+    for (const name of ["registry-item-v1.json", "registry-index-v1.json"]) {
+      const file = join(repoRoot, "apps", "docs", "public", "schema", name)
+      assert.ok(existsSync(file), `${name} is not published at /schema/${name}`)
+    }
+    const indexSchema = JSON.parse(
+      readFileSync(
+        join(repoRoot, "apps", "docs", "public", "schema", "registry-index-v1.json"),
+        "utf8",
+      ),
+    )
+    assert.equal(indexSchema.$id, document.$schema.replace(/^\.\//, ""))
+  })
 })
 
 describe("a registry over HTTP", () => {

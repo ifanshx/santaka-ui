@@ -61,6 +61,10 @@ if (rejected.length > 0) {
 }
 
 const document = {
+  // The published document carries the schema it conforms to, so a consumer can
+  // validate what it fetched without knowing this repository's conventions. It
+  // was omitted, which left the published payload unvalidatable by design.
+  $schema: index.$schema,
   version: 1,
   registryVersion: version,
   generatedAt: new Date().toISOString().slice(0, 10),
@@ -82,4 +86,19 @@ for (const item of index.items) {
   write(join(outRoot, `v${version}`, `${item.name}.json`), item)
 }
 
+// The schemas, at the URL every entry's `$schema` already advertises.
+//
+// `$schema: "https://<host>/schema/registry-item-v1.json"` was a dead link: the
+// schema files were written to `packages/core/schema/` and never copied into the
+// published tree, so an editor or a third-party registry following that URL got
+// a 404 whether or not the domain existed. Publishing them here is what makes
+// the advertised address real.
+const schemaRoot = join(repoRoot, "packages", "core", "schema")
+const publicRoot = join(repoRoot, "apps", "docs", "public", "schema")
+for (const file of ["registry-item-v1.json", "registry-index-v1.json"]) {
+  mkdirSync(publicRoot, { recursive: true })
+  writeFileSync(join(publicRoot, file), readFileSync(join(schemaRoot, file), "utf8"))
+}
+
 console.log(`[registry] wrote ${outRoot} (${index.items.length} items at v${version})`)
+console.log(`[registry] wrote ${publicRoot} (2 schemas)`)

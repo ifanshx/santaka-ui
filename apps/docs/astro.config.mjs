@@ -18,7 +18,7 @@ import { defineConfig } from "astro/config"
  * agent reads and the payload the CLI fetches are literally the same bytes.
  */
 export default defineConfig({
-  site: "https://santaka.dev",
+  site: "https://ui.santaka.my.id",
   output: "static",
   publicDir: "./public",
   build: {
