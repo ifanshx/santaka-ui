@@ -745,12 +745,12 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     }, 1600)
   })
 
-  // The catalogue filter. sk-input renders a plain <input> in its own light DOM
-  // (ADR-011: scoped styles, no shadow root) and re-emits nothing, so the value
-  // is read from the event target — the element the reader actually typed into.
-  // Reading host.value was the obvious approach and it is wrong: the host
-  // property is a reflected attribute that lags the event by a tick, so every
-  // keystroke filtered on the previous character.
+  // The catalogue filter, driven by the components' own event. Both controls
+  // dispatch sk-value-change for a user-initiated change (the shared wiring in
+  // form-control-base.ts), so the page never reads a DOM property to find out
+  // what the reader did. An earlier version listened for a native input event
+  // and read host.value, which is a reflected attribute that had not been
+  // written yet — every keystroke filtered on the previous character.
   const search = document.getElementById("filter-search")
   const stability = document.getElementById("filter-stability")
   const grid = document.getElementById("catalogue-grid")
@@ -780,12 +780,18 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     if (empty) empty.hidden = shown > 0
   }
 
-  // Captured on the host rather than the inner field: the component upgrades
-  // after this script runs, so the <input> does not exist yet at load time.
-  // The value comes from the event target, which is correct whenever it fires.
+  // sk-value-change carries the committed value in detail and is the contract a
+  // consumer should use — no property read, no timing assumption. It fires on
+  // change, which for a search field is too late: the reader expects the grid to
+  // narrow as they type. The native input event covers the keystrokes, and its
+  // value is read from the event target rather than host.value, which is a
+  // reflected attribute that lags by a tick.
+  search?.addEventListener("sk-value-change", (event) => {
+    apply(String((event as CustomEvent<{ value: string }>).detail?.value ?? ""))
+  })
   search?.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement | null
     apply((target?.value ?? "").toString())
   })
-  stability?.addEventListener("change", () => apply())
+  stability?.addEventListener("sk-value-change", () => apply())
 </script>
