@@ -105,6 +105,19 @@ body {
   font-size: 0.9rem;
 }
 
+/* Below the breakpoint the header links and the search field do not fit on one
+   line, and the row pushed the document wider instead of wrapping — a
+   horizontal scrollbar on a phone. The nav now wraps and the search takes the
+   remaining width instead of a fixed one. */
+@media (max-width: 48rem) {
+  .bar nav {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-inline-start: 0;
+    inline-size: 100%;
+  }
+}
+
 .bar nav a {
   color: var(--docs-muted);
   text-decoration: none;
@@ -155,6 +168,16 @@ body {
   max-inline-size: 62rem;
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 3rem) var(--docs-gutter) 5rem;
+}
+
+/* The landing page is wider than a reading column. 62rem is right for prose —
+   a line of text should be about 60 characters — but the bento is twelve
+   columns showing live components, and at 62rem each panel was 140px wide:
+   enough for a label and not much else. Pages that opt in get 76rem, which
+   gives the panels room without stretching the prose, because the prose keeps
+   its own measure in ch. */
+.shell--wide {
+  max-inline-size: 76rem;
 }
 
 .shell--with-sidebar {

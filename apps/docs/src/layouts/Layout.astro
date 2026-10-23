@@ -20,9 +20,11 @@ interface Props {
   description?: string
   /** Render the component sidebar. Off on the landing page, where it would compete with the hero. */
   sidebar?: boolean
+  /** Wider than a reading column, for pages whose content is a grid rather than prose. */
+  wide?: boolean
 }
 
-const { title, description, sidebar = false } = Astro.props
+const { title, description, sidebar = false, wide = false } = Astro.props
 const path = Astro.url.pathname
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
@@ -82,7 +84,7 @@ const isCurrent = (href: string) =>
       </nav>
     </header>
 
-    <div class:list={["shell", sidebar && "shell--with-sidebar"]}>
+    <div class:list={["shell", sidebar && "shell--with-sidebar", wide && "shell--wide"]}>
       {sidebar && <Sidebar />}
       <main id="main">
         <slot />
