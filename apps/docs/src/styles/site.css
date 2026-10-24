@@ -278,6 +278,10 @@ code {
   padding: 0.1em 0.35em;
   border: 1px solid var(--docs-edge);
   background: var(--docs-raised);
+  /* Ink, not inherited muted: axe flagged `.lede > code` and `.hint > code` —
+     the muted fill tint drops the pill's background below 4.5:1 against muted
+     text. Inline code is content, so it takes the body ink. */
+  color: var(--sk-color-text, #17141c);
 }
 
 pre {

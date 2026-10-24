@@ -28,6 +28,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   description={`${pages.length} accessible web components with thin React, Vue, and Svelte adapters. Tokens, a CLI, a versioned registry, and MCP metadata — no framework lock-in.`}
 >
   <section class="hero">
+    <div class="hero-copy">
     <sk-badge variant="primary" size="sm">Design system</sk-badge>
 
     {/* A real <h1>. The page previously had none: `sk-text` renders a <span>,
@@ -50,6 +51,34 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       <sk-button variant="outline" size="lg" href="/showcase">See them rendered</sk-button>
     </div>
 
+    </div>
+
+    <aside class="hero-demo" aria-label="Live component preview">
+      <div class="demo-chrome" aria-hidden="true">
+        <span class="dot dot-danger"></span>
+        <span class="dot dot-amber"></span>
+        <span class="dot dot-green"></span>
+        <span class="demo-title">santaka — playground</span>
+      </div>
+      <div class="demo-body">
+        <sk-tabs active={0}>
+          <sk-tab label="Overview">One behaviour owner, three adapters. Same keyboard model everywhere.</sk-tab>
+          <sk-tab label="Tokens">Override a custom property; every component follows.</sk-tab>
+        </sk-tabs>
+        <div class="demo-row">
+          <sk-input label="Email" type="email" placeholder="you@example.com" size="sm" />
+          <sk-button variant="primary" size="sm">Save</sk-button>
+        </div>
+        <sk-slider label="Volume" value={40} show-value format="%" />
+        <sk-progress value={72} label="Uploading" />
+        <div class="demo-row">
+          <sk-kbd>⌘</sk-kbd>
+          <sk-kbd>K</sk-kbd>
+          <sk-text variant="sm" muted>opens the command palette anywhere</sk-text>
+        </div>
+      </div>
+    </aside>
+
     <div class="install">
       <sk-text variant="sm" muted>Install</sk-text>
       {/* The copy control sits inside the code block, the way shadcn/ui and
@@ -57,7 +86,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           box with its own shadow. Two adjacent bordered boxes read as two
           components; one box with a control in it reads as one. */}
       <div class="install-row">
-        <pre><code>{install}</code></pre>
+        <pre tabindex="0" aria-label="Install command, scrollable"><code>{install}</code></pre>
         <sk-button
           class="install-copy"
           variant="ghost"
@@ -404,6 +433,76 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   .hero {
     padding-block: clamp(1.5rem, 4vw, 3rem) 0;
+    /* Two-column hero: copy left, live demo right. Fills the right-hand void
+       the page was criticized for, and the demo panel is REAL components — the
+       same trick as the bento, moved above the fold. */
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .hero-demo {
+    display: block;
+    border: var(--docs-stroke) solid var(--sk-color-ink, #1b1714);
+    border-radius: var(--sk-radius-lg, 6px);
+    background: var(--sk-color-ink, #1b1714);
+    color: var(--sk-color-ink-50, #faf5ec);
+    box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+    overflow: hidden;
+    /* The muted-text token is tuned for light surfaces (3.5:1 on ink). Inside
+       the dark demo panel it must flip to a warm light tone or every secondary
+       line — tab labels, helper text — fails WCAG AA. Scoped override, so the
+       components' own styling still applies everywhere else. */
+    --sk-color-text-muted: #C9BCA8;
+  }
+
+  .demo-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.85rem;
+    border-block-end: 2px solid var(--sk-color-ink-200, #e8dfcd);
+  }
+
+  .demo-title {
+    font-family: var(--docs-code);
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-inline-start: 0.35rem;
+  }
+
+  .dot {
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: var(--sk-radius-full, 9999px);
+  }
+  .dot-danger { background: var(--sk-color-danger-fill, #e23b2e); }
+  .dot-amber { background: var(--color-secondary-cta, #ffc531); }
+  .dot-green { background: var(--color-primary-cta, #19c463); }
+
+  .demo-body {
+    display: grid;
+    gap: 1rem;
+    padding: 1.1rem 1.15rem 1.25rem;
+  }
+
+  .demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.6rem;
+  }
+
+  @media (max-width: 62rem) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .hero-demo {
+      margin-block-start: 0.5rem;
+    }
   }
 
   /* The measure of the page. The headline was 52px on a 992px column, which is
