@@ -70,7 +70,7 @@ const isCurrent = (href: string) =>
 
     <header class="bar">
       <a class="brand" href="/">
-        <sk-taka size="sm" mood="idle" aria-hidden="true" />
+        <sk-taka size="sm" mood="idle" class="brand-taka brand-taka--idle" aria-hidden="true" />
         <span>Santaka UI</span>
       </a>
       <Search />
@@ -79,7 +79,6 @@ const isCurrent = (href: string) =>
         <a href="/showcase" aria-current={isCurrent("/showcase") ? "page" : undefined}>Showcase</a>
         <a href="/quick-start" aria-current={isCurrent("/quick-start") ? "page" : undefined}>Quick start</a>
         <a href="/registry/index.json">Registry</a>
-        <a href="/llms.txt">llms.txt</a>
         <button id="theme-toggle" type="button" aria-label="Toggle dark theme" aria-pressed="false">◐</button>
       </nav>
     </header>
@@ -94,7 +93,7 @@ const isCurrent = (href: string) =>
     <footer class="site">
       {/* The strip label is the house chrome: mono uppercase with wide tracking,
           the same treatment every panel header on the site carries. */}
-      <p class="footer-label">Santaka UI</p>
+      <p class="footer-label"><sk-taka size="sm" mood="wave" class="footer-taka" aria-hidden="true" /> Santaka UI</p>
       <nav aria-label="Project">
         <a href="https://github.com/ifanshx/santaka-ui">GitHub</a>
         <a href="https://github.com/ifanshx/santaka-ui/blob/main/docs/ARCHITECTURE.md">Specification</a>

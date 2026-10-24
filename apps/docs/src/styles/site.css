@@ -93,6 +93,24 @@ body {
   color: inherit;
 }
 
+/* The mascot bounces on hover: the playful mark is the one thing allowed to
+   move for its own sake, and it is decorative (aria-hidden), so the motion
+   never carries information. */
+.brand-taka {
+  transition: transform var(--sk-duration-control, 140ms)
+    var(--sk-ease-arcade, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.brand:hover .brand-taka {
+  transform: translateY(-3px) rotate(-6deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand:hover .brand-taka {
+    transform: none;
+  }
+}
+
 .brand sk-taka {
   --sk-taka-size: 1.6rem;
 }
@@ -100,7 +118,7 @@ body {
 .bar nav {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.4rem;
   margin-inline-start: auto;
   font-size: 0.9rem;
 }
@@ -121,8 +139,14 @@ body {
 .bar nav a {
   color: var(--docs-muted);
   text-decoration: none;
-  padding-block: 0.25rem;
+  padding: 0.35rem 0.6rem;
   border-block-end: 2px solid transparent;
+  /* Nav links are chrome, not prose: the mono-uppercase label treatment from
+     Santaka-Pay keeps the bar reading as a control strip. */
+  font-family: var(--docs-code);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .bar nav a:hover,
@@ -359,8 +383,16 @@ footer.site {
 footer.site nav {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem 1.25rem;
   margin-block-end: 1rem;
+}
+
+footer.site .footer-taka {
+  display: inline-block;
+  inline-size: 1.4rem;
+  vertical-align: -0.35rem;
+  margin-inline-end: 0.4rem;
 }
 
 /* The mono-uppercase chrome label, one source for every panel header. */
