@@ -173,16 +173,17 @@
   "radius": {
     "$description": "Corner radii. Chrome is nearly square: the house style is a hard-edged neo-brutalist surface, and 2-6px of rounding softens it without losing that character — a fully sharp corner reads as unfinished at control sizes, and a fully round one reads as a different library. `full` is a shape, not a style, for the badge dot and spinner. Glass overlays keep their own large radii so they read as a distinct material.",
     "sm": {
-      "$value": "2px"
-    },
-    "md": {
-      "$value": "4px"
-    },
-    "lg": {
       "$value": "6px"
     },
+    "md": {
+      "$value": "10px",
+      "$description": "Chrome radius. Matches Santaka-Pay rounded-pixel (10px): large enough to read as soft and intentional, small enough to stay hard-edged."
+    },
+    "lg": {
+      "$value": "14px"
+    },
     "xl": {
-      "$value": "8px"
+      "$value": "18px"
     },
     "full": {
       "$value": "9999px"
@@ -202,7 +203,8 @@
       "$value": "1px"
     },
     "thick": {
-      "$value": "3px"
+      "$value": "2px",
+      "$description": "Chrome stroke. 2px, matched to Santaka-Pay control borders — the previous 3px on every element made the page vibrate; two weights stay (1px hairline, 2px chrome)."
     }
   },
   "ring": {
@@ -217,27 +219,27 @@
   "shadow": {
     "$description": "Hard offsets layered with an ambient blur. Geometry only, and deliberately so: the colour is consumed from --sk-shadow-color (opaque, hard layer) and --sk-shadow-ambient (translucent, blur), both defined per theme. A literal colour here would force one theme to override the whole ladder. A pure zero-blur offset is flat and disappears on a dark surface; Santaka-Pay pairs the same hard offset with a wide low-opacity shadow behind it, which makes a brutalist surface read as lifted rather than outlined.",
     "xs": {
-      "$value": "2px 2px 0 0 var(--sk-color-shadow), 0 6px 12px -10px var(--sk-shadow-ambient)"
+      "$value": "2px 2px 0 0 var(--sk-color-shadow), 0 4px 10px -8px var(--sk-shadow-ambient)"
     },
     "sm": {
-      "$value": "3px 3px 0 0 var(--sk-color-shadow), 0 10px 18px -14px var(--sk-shadow-ambient)"
+      "$value": "3px 3px 0 0 var(--sk-color-shadow), 0 8px 16px -12px var(--sk-shadow-ambient)"
     },
     "md": {
-      "$value": "4px 4px 0 0 var(--sk-color-shadow), 0 16px 28px -20px var(--sk-shadow-ambient)"
+      "$value": "3px 3px 0 0 var(--sk-color-shadow), 0 12px 24px -16px var(--sk-shadow-ambient)"
     },
     "lg": {
-      "$value": "6px 6px 0 0 var(--sk-color-shadow), 0 26px 44px -28px var(--sk-shadow-ambient)"
+      "$value": "4px 4px 0 0 var(--sk-color-shadow), 0 20px 36px -24px var(--sk-shadow-ambient)"
     },
     "brutal": {
-      "$value": "5px 5px 0 0 var(--sk-color-shadow), 0 20px 36px -24px var(--sk-shadow-ambient)",
+      "$value": "4px 4px 0 0 var(--sk-color-shadow), 0 16px 32px -22px var(--sk-shadow-ambient)",
       "$description": "Default chrome elevation."
     },
     "brutal-hover": {
-      "$value": "7px 7px 0 0 var(--sk-color-shadow), 0 30px 50px -30px var(--sk-shadow-ambient)",
+      "$value": "5px 5px 0 0 var(--sk-color-shadow), 0 24px 44px -28px var(--sk-shadow-ambient)",
       "$description": "Pressed-lift state."
     },
     "brutal-active": {
-      "$value": "2px 2px 0 0",
+      "$value": "2px 2px 0 0 var(--sk-color-shadow), 0 4px 10px -8px var(--sk-shadow-ambient)",
       "$description": "Pressed-down state."
     },
     "brutal-none": {

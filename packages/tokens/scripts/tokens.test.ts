@@ -270,7 +270,7 @@ describe("radius tokens", () => {
       return Number.parseInt(raw, 10)
     })
     for (const value of px) {
-      expect(value, "chrome radius stays under a soft 10px").toBeLessThan(10)
+      expect(value, "the xl chrome step stays at the Santaka-Pay pixel scale ceiling (18px)").toBeLessThanOrEqual(18)
     }
     for (let i = 1; i < px.length; i += 1) {
       const previous = px[i - 1]
