@@ -239,6 +239,75 @@ main {
   min-inline-size: 0;
 }
 
+/* ── Prose pages ───────────────────────────────────────────────────────────
+   Quick start, changelog, and the guides were unstyled headings over raw
+   pre blocks — they inherited nothing but the body font, and the h2s read at
+   the same weight as everything around them. One scoped block gives every
+   page the editorial chrome the landing page has. */
+main :where(h1) {
+  font-family: var(--sk-font-display, inherit);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-block: 0 1.25rem;
+}
+
+main :where(h2) {
+  font-family: var(--sk-font-display, inherit);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-block: 2.5rem 0.85rem;
+  padding-block-start: 1.25rem;
+  border-block-start: 1px solid var(--docs-edge);
+}
+
+main :where(h3) {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-block: 1.5rem 0.5rem;
+}
+
+main :where(p) {
+  line-height: 1.7;
+  max-inline-size: 68ch;
+}
+
+main :where(pre) {
+  border-radius: var(--sk-radius-md, 10px);
+  box-shadow: var(--sk-shadow-sm);
+}
+
+  /* Copy control docked inside each code shell — the same affordance and
+     feedback the hero's install block uses, applied to every prose block. */
+  main [data-copy-shell] .copy-btn {
+    position: absolute;
+    inset-block-start: 0.55rem;
+    inset-inline-end: 0.55rem;
+    padding: 0.3rem 0.7rem;
+    font-family: var(--docs-code);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sk-color-text);
+    background: var(--sk-color-surface);
+    border: 1px solid var(--docs-edge);
+    border-radius: var(--sk-radius-sm, 6px);
+    cursor: pointer;
+  }
+
+  main [data-copy-shell] .copy-btn.copied {
+    color: var(--sk-color-primary);
+    border-color: var(--sk-color-primary);
+  }
+
+  main :where(table) {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
 /* Below the sidebar breakpoint the list would take the whole width, so it
    collapses to a horizontal scroller above the content instead of vanishing:
    a reader on a phone still needs to move between components. */

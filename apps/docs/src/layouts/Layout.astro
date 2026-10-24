@@ -104,6 +104,38 @@ const isCurrent = (href: string) =>
       </nav>
       <p>MIT licensed. Every page is generated from the registry — nothing here is hand-maintained.</p>
     </footer>
+  <script>
+    // Copy affordance for every code block on prose pages. The hero already had
+    // one hand-written; this is the general version: wraps each pre in a relative
+    // shell, docks a plain button at its top end, and copies the textContent.
+    // Decorative annoyance avoided: no toast, the button label flips to
+    // "Copied" for 1.6s — the same feedback the hero's control uses.
+    const pres = document.querySelectorAll("main pre:not([data-no-copy])")
+    for (const pre of pres) {
+      if (pre.closest("[data-copy-shell]")) continue
+      const shell = document.createElement("div")
+      shell.setAttribute("data-copy-shell", "")
+      shell.style.position = "relative"
+      pre.replaceWith(shell)
+      shell.appendChild(pre)
+      const btn = document.createElement("button")
+      btn.type = "button"
+      btn.className = "copy-btn"
+      btn.textContent = "Copy"
+      btn.setAttribute("aria-label", "Copy code to clipboard")
+      btn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pre.textContent ?? "")
+          btn.textContent = "Copied"
+          btn.classList.add("copied")
+        } catch {
+          btn.textContent = "Press Ctrl+C"
+        }
+        setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied") }, 1600)
+      })
+      shell.appendChild(btn)
+    }
+  </script>
   </body>
 </html>
 
