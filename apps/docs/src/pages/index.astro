@@ -496,10 +496,10 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   .hero-demo {
     display: block;
-    border: var(--docs-stroke) solid var(--sk-color-ink, #1b1714);
-    border-radius: var(--sk-radius-lg, 6px);
-    background: var(--sk-color-ink, #1b1714);
-    color: var(--sk-color-ink-50, #faf5ec);
+    border: var(--docs-stroke) solid var(--sk-shadow-color, #1b1714);
+    border-radius: var(--sk-radius-lg, 14px);
+    background: var(--sk-shadow-color, #1b1714);
+    color: var(--sk-color-text, #faf5ec);
     box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
     overflow: hidden;
     /* The muted-text token is tuned for light surfaces (3.5:1 on ink). Inside
@@ -514,7 +514,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     align-items: center;
     gap: 0.4rem;
     padding: 0.55rem 0.85rem;
-    border-block-end: 2px solid var(--sk-color-ink-200, #e8dfcd);
+    border-block-end: 2px solid var(--sk-color-border, #e8dfcd);
   }
 
   .demo-title {
@@ -531,9 +531,9 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     block-size: 0.6rem;
     border-radius: var(--sk-radius-full, 9999px);
   }
-  .dot-danger { background: var(--sk-color-danger-fill, #e23b2e); }
-  .dot-amber { background: var(--color-secondary-cta, #ffc531); }
-  .dot-green { background: var(--color-primary-cta, #19c463); }
+  .dot-danger { background: var(--sk-color-danger, #d1331f); }
+  .dot-amber { background: var(--sk-color-warning, #ffc531); }
+  .dot-green { background: var(--sk-color-success, #19c463); }
 
   .demo-body {
     display: grid;
@@ -633,7 +633,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
        with a monospace face, not a flat panel. Without this it was the one
        surface on the page with a stroke and no shadow. The end padding keeps
        the command readable at rest instead of running under the copy control. */
-    border-radius: var(--sk-radius-md, 4px);
+    border-radius: var(--sk-radius-md, 10px);
     padding-inline-end: 5.5rem;
     /* The command is 88+ chars; it will never fit a 594px column, so it
        scrolls — and the fade masks the hard cut at the scroll edge. */
@@ -773,7 +773,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     margin-block-end: 1.25rem;
     padding: 1rem;
     border: var(--docs-stroke) solid var(--docs-edge);
-    border-radius: var(--sk-radius-md, 6px);
+    border-radius: var(--sk-radius-md, 10px);
     background: var(--docs-raised);
   }
 
@@ -859,10 +859,10 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   /* The terminal material: dark chrome + three dots, the visual shorthand for
      "this is where the machine reads". Same construction as the hero demo. */
   .machine-shell {
-    border: var(--docs-stroke) solid var(--sk-color-ink, #1b1714);
-    border-radius: var(--sk-radius-lg, 6px);
-    background: var(--sk-color-ink, #1b1714);
-    color: var(--sk-color-ink-50, #faf5ec);
+    border: var(--docs-stroke) solid var(--sk-shadow-color, #1b1714);
+    border-radius: var(--sk-radius-lg, 14px);
+    background: var(--sk-shadow-color, #1b1714);
+    color: var(--sk-color-text, #faf5ec);
     box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
     overflow: hidden;
   }
@@ -881,7 +881,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   .machine .section-title,
   .machine-body sk-text {
-    color: var(--sk-color-ink-50, #faf5ec);
+    color: var(--sk-color-text, #faf5ec);
   }
 
   .machine-body sk-text[muted] {
@@ -903,7 +903,17 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   }
 
   .machine .links code {
-    color: var(--sk-color-ink-50, #faf5ec);
+    /* Explicit, not --sk-color-text: that token flips with the site theme
+       (ink.800 on light), while this panel is dark in BOTH themes — ink.800 on
+       the raised pill was 1.1:1. Krem on the 8%-white pill is 14.8:1. */
+    color: var(--sk-color-ink-50, #faf5ec) !important;
+  }
+
+  /* Same reason as the code pill: the site link colour is the light-theme
+     primary, which is 3.3:1 on this panel. The link takes cream; the hover
+     underline stays primary-hover for the tactile cue. */
+  .machine .links a {
+    color: var(--sk-color-text, #faf5ec);
   }
 
   .machine > sk-text {
@@ -928,8 +938,6 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   @media (max-width: 40rem) {
     .cards {
       grid-template-columns: 1fr;
-
-  stability?.addEventListener("change", apply)
       gap: 0.5rem;
     }
 

@@ -62,7 +62,11 @@ const isCurrent = (href: string) =>
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
-    <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL('/favicon.svg', Astro.site)} />
+    <meta name="theme-color" content="#0B7A46" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#13100C" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
   <body>
@@ -83,6 +87,13 @@ const isCurrent = (href: string) =>
       </nav>
     </header>
 
+    <noscript>
+      <p
+        style="margin: 0; padding: 0.6rem var(--docs-gutter); background: var(--sk-color-warning-subtle, #fcf3e4); color: var(--sk-color-text, #17141c); font-size: 0.85rem"
+      >
+        JavaScript is off — pages read fine, but search, the theme toggle, and the live component previews need it.
+      </p>
+    </noscript>
     <div class:list={["shell", sidebar && "shell--with-sidebar", wide && "shell--wide"]}>
       {sidebar && <Sidebar />}
       <main id="main">
@@ -99,6 +110,7 @@ const isCurrent = (href: string) =>
         <a href="https://github.com/ifanshx/santaka-ui/blob/main/docs/ARCHITECTURE.md">Specification</a>
         <a href="https://github.com/ifanshx/santaka-ui/tree/main/docs/adr">Decisions</a>
         <a href="/registry/index.json">Registry</a>
+        <a href="/changelog/">Changelog</a>
         <a href="/llms.txt">llms.txt</a>
         <a href="/llms-full.txt">llms-full.txt</a>
       </nav>
