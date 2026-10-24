@@ -18,22 +18,65 @@ interface Props {
   attrs?: Record<string, string>
   /** Text content. */
   text?: string
+  /** Full example markup from the registry ai block — the code tab shows it. */
+  rawExample?: string
 }
 
-const { tag, attrs = {}, text = "" } = Astro.props
+const { tag, attrs = {}, text = "", rawExample } = Astro.props
 const attrString = Object.entries(attrs)
   .map(([key, value]) => `${key}="${value.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`)
   .join(" ")
 ---
 
 <div class="preview" data-preview>
-  <div class="stage">
-    <Fragment set:html={`<${tag} ${attrString}>${text}</${tag}>`} />
+  <div class="preview-tabs">
+    <button class="ptab is-active" data-ptab="preview" aria-pressed="true">Preview</button>
+    <button class="ptab" data-ptab="code" aria-pressed="false">Code</button>
+        <button class="copy-btn" data-preview-copy type="button" aria-label="Copy code to clipboard">Copy</button>
+  </div>
+  <div class="stage" data-pane="preview">
+    <Fragment set:html={rawExample ? rawExample : `<${tag} ${attrString}>${text}</${tag}>`} />
+  </div>
+  <div class="code" data-pane="code" hidden>
+    <pre><code>{rawExample ?? `<${tag} ${attrString}>${text}</${tag}>`}</code></pre>
   </div>
   <p class="tip">
     Rendered from <code>@santaka-ui/web-components</code>.
   </p>
 </div>
+
+<script>
+  // Tab toggle: Preview shows the live upgrade, Code shows the authored markup.
+  // One delegated listener for every preview on the page.
+  document.addEventListener("click", async (event) => {
+    const pcopy = event.target instanceof Element ? event.target.closest("[data-preview-copy]") : null
+    if (pcopy) {
+      const code = pcopy.closest("[data-preview]")?.querySelector("[data-pane=\"code\"] code")
+      try {
+        await navigator.clipboard.writeText(code?.textContent ?? "")
+        pcopy.textContent = "Copied"
+        pcopy.classList.add("copied")
+      } catch {
+        pcopy.textContent = "Press Ctrl+C"
+      }
+      setTimeout(() => { pcopy.textContent = "Copy"; pcopy.classList.remove("copied") }, 1600)
+      return
+    }
+    const tab = event.target instanceof HTMLElement ? event.target.closest<HTMLElement>("[data-ptab]") : null
+    if (!tab) return
+    const root = tab.closest("[data-preview]")
+    if (!root) return
+    for (const t of root.querySelectorAll("[data-ptab]")) {
+      const active = t === tab
+      t.classList.toggle("is-active", active)
+      t.setAttribute("aria-pressed", String(active))
+    }
+    root.classList.toggle("is-code", tab.dataset.ptab === "code")
+    for (const pane of root.querySelectorAll<HTMLElement>("[data-pane]")) {
+      pane.hidden = pane.dataset.pane !== tab.dataset.ptab
+    }
+  })
+</script>
 
 <script>
   // Registering the elements is a side effect, so it runs in the browser only —
@@ -50,15 +93,80 @@ const attrString = Object.entries(attrs)
 
 <style>
   .preview {
-    border: var(--docs-stroke) solid var(--docs-edge);
+    border: 1px solid var(--docs-edge);
+    border-radius: var(--sk-radius-lg, 14px);
     margin-block: 1.5rem;
+    overflow: hidden;
+    box-shadow: var(--sk-shadow-sm);
+    background: var(--sk-color-surface);
   }
+
+  /* Tab strip — Preview | Code — the affordance shadcn/Radix train users to
+     expect at the top of every component page. */
+  .preview-tabs {
+    display: flex;
+    gap: 0.15rem;
+    padding: 0.45rem 0.6rem 0;
+    border-block-end: 1px solid var(--docs-edge);
+    background: var(--docs-raised);
+  }
+
+  .ptab {
+    padding: 0.4rem 0.9rem;
+    border: 0;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--sk-color-text);
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--sk-radius-sm) var(--sk-radius-sm) 0 0;
+  }
+
+  .ptab.is-active {
+    color: var(--sk-color-text);
+    background: var(--sk-color-surface);
+    box-shadow: inset 0 -2px 0 var(--sk-color-primary);
+  }
+
+  /* display:flex di atas akan mengalahkan UA [hidden]; ini yang mengembalikan. */
+  [data-pane][hidden] {
+    display: none;
+  }
+
   .stage {
-    padding: 1.5rem;
+    padding: 2.25rem 1.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     align-items: center;
+    justify-content: center;
+    min-block-size: 7.5rem;
+  }
+  .code {
+    padding: 1.15rem 1.25rem 1.35rem;
+    background: #14110e;
+    border-block-end: 1px solid var(--docs-edge);
+    /* The chrome-dots colour from the parent card's theme is warm amber, which
+       would vibrate on dark. The three dots stay in the Preview tab only, so
+       the Code pane is one calm dark surface. */
+  }
+  .code pre {
+    margin: 0;
+    /* Un-do the global "pre" chrome from site.css — inside the dark code pane
+       it painted a light raised fill, a 2px border and a shadow, which is what
+       made the code read light-on-light. The pane itself is the surface. */
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--sk-color-ink-50, #faf5ec);
+  }
+  .code code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--sk-color-ink-50, #faf5ec);
   }
   .tip {
     border-block-start: 1px solid var(--docs-edge);
@@ -66,6 +174,41 @@ const attrString = Object.entries(attrs)
     padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
     color: var(--docs-muted);
+  }
+
+  /* The COPY affordance lives in the tab strip, docked right — the same
+     placement shadcn uses. The scoped copy script for prose pages is excluded
+     on this element (data-no-copy), so only this button exists here. */
+  .preview-tabs .copy-btn {
+    display: none;
+    margin-inline-start: auto;
+    padding: 0.25rem 0.7rem;
+    font-family: var(--docs-code);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sk-color-text);
+    background: var(--sk-color-surface);
+    border: 1px solid var(--docs-edge);
+    border-radius: var(--sk-radius-sm, 6px);
+    cursor: pointer;
+  }
+
+  [data-preview].is-code .copy-btn {
+    display: inline-flex;
+  }
+
+  .preview-tabs .copy-btn.copied {
+    color: var(--sk-color-primary);
+    border-color: var(--sk-color-primary);
+  }
+
+  /* Code text: krem on dark. */
+  .code code {
+    background: transparent;
+    border: 0;
+    padding: 0;
   }
   .tip--error {
     color: #b91c1c;

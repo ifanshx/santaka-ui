@@ -122,7 +122,9 @@ const isCurrent = (href: string) =>
     // shell, docks a plain button at its top end, and copies the textContent.
     // Decorative annoyance avoided: no toast, the button label flips to
     // "Copied" for 1.6s — the same feedback the hero's control uses.
-    const pres = document.querySelectorAll("main pre:not([data-no-copy])")
+    // Pres inside a [data-preview] card already have the preview's own copy
+    // control in its tab strip — wrapping those would produce a second button.
+    const pres = [...document.querySelectorAll("main pre:not([data-no-copy])")].filter((pre) => !pre.closest("[data-preview]"))
     for (const pre of pres) {
       if (pre.closest("[data-copy-shell]")) continue
       const shell = document.createElement("div")

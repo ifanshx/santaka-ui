@@ -18,7 +18,7 @@ import { componentPages } from "../../lib/components"
  * explicit rather than pretending to be derived — the same honesty rule the
  * generator's authored prose follows.
  */
-const PREVIEWABLE = ["badge", "button", "card", "separator", "skeleton", "spinner", "text", "link"]
+const PREVIEWABLE = ["accordion", "avatar", "avatar-group", "badge", "banner", "breadcrumb", "button", "card", "checkbox", "combobox", "empty-state", "input", "kbd", "label", "link", "pagination", "progress", "radio-group", "separator", "skeleton", "slider", "spinner", "switch", "table", "tabs", "text", "textarea", "tooltip", "taka"]
 
 export function getStaticPaths() {
   return componentPages().map((page) => ({
@@ -40,52 +40,25 @@ const { page } = Astro.props
 
   <p class="summary">{page.summary}</p>
 
+  {
+    /* The preview is the first thing a developer came for — above the meta grid
+       and the dos-and-don'ts, exactly where shadcn/Radix put theirs. The example
+       HTML comes from the registry's ai block, the same field the CLI and MCP
+       read, so a preview can never drift from the shipped code. Live only for
+       components that render meaningfully from an empty tag (see PREVIEWABLE). */
+    PREVIEWABLE.includes(page.name) ? (
+      <section class="hero-preview">
+        <Preview tag={page.tag} attrs={{}} text={page.name} rawExample={page.example} />
+      </section>
+    ) : null
+  }
+
   <div class="meta">
     <div><span>Behavior owner</span><strong>{page.behaviorOwner}</strong></div>
     <div><span>Version</span><strong>{page.version}</strong></div>
     <div><span>Locales</span><strong>{page.locales.join(", ") || "none"}</strong></div>
     <div><span>Frameworks</span><strong>{page.frameworks.join(", ")}</strong></div>
   </div>
-
-  <section>
-    <h2>When to use</h2>
-    <ul>{page.whenToUse.map((entry) => <li>{entry}</li>)}
-    </ul>
-  </section>
-
-  <section>
-    <h2>When not to use</h2>
-    <ul>{page.whenNotToUse.map((entry) => <li>{entry}</li>)}
-    </ul>
-  </section>
-
-  <section>
-    <h2>Example</h2>
-    <pre><code>{page.example}</code></pre>
-  </section>
-
-  {
-    // Preview only the components that render something meaningful from an empty
-    // tag. A Toast or a Dialog needs state to open, and a form control needs a
-    // `name` to be worth showing, so an empty-tag preview of those would be an
-    // empty box — worse than no preview.
-    //
-    // This is a curated list, and the honesty matters: the registry does not
-    // carry a "required" flag, so there is no data here to derive the decision
-    // from. Adding one would be the right fix; until then the list is explicit
-    // rather than pretending to be derived.
-    PREVIEWABLE.includes(page.name) && (
-      <section>
-        <h2>Live preview</h2>
-        <Preview tag={page.tag} attrs={{}} text={page.name} />
-      </section>
-    )
-  }
-
-  <section>
-    <h2>Accessibility</h2>
-    <p>{page.accessibility}</p>
-  </section>
 
   {page.props.length > 0 && (
     <section>
