@@ -363,6 +363,20 @@ footer.site nav {
   margin-block-end: 1rem;
 }
 
+/* The mono-uppercase chrome label, one source for every panel header. */
+.footer-label,
+.group-eyebrow,
+.machine-eyebrow {
+  font-family: var(--docs-code);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  font-size: 0.6875rem;
+  letter-spacing: 0.09em;
+  color: var(--sk-color-text-muted);
+}
+
 /* ── Reduced motion ──────────────────────────────────────────────────────
    The shell's own motion is a hover lift, which is exactly the kind a reader
    asking for less motion does not want. The state stays; the travel goes. */

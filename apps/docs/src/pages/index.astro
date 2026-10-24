@@ -395,7 +395,19 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   <sk-separator decorative />
 
+  {/* The terminal material from Santaka-Pay: dark chrome, three status dots,
+      monospace — the visual shorthand for "this is where the machine reads".
+      The registry links are the payload; the chrome tells an agent-minded
+      reader they are in the right place. */}
   <section class="machine">
+    <div class="machine-shell">
+      <div class="demo-chrome" aria-hidden="true">
+        <span class="dot dot-danger"></span>
+        <span class="dot dot-amber"></span>
+        <span class="dot dot-green"></span>
+        <span class="demo-title">santaka — machine registry</span>
+      </div>
+      <div class="machine-body">
     <h2 class="section-title">For machines</h2>
     <sk-text variant="sm" muted>
       The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page.
@@ -414,6 +426,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         <a href="/schema/registry-item-v1.json"><code>registry-item-v1.json</code></a> — the JSON Schema entries validate against
       </li>
     </ul>
+      </div>
+    </div>
   </section>
 </Layout>
 
@@ -760,7 +774,46 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     margin-block-start: var(--docs-rhythm);
   }
 
+  /* The terminal material: dark chrome + three dots, the visual shorthand for
+     "this is where the machine reads". Same construction as the hero demo. */
+  .machine-shell {
+    border: var(--docs-stroke) solid var(--sk-color-ink, #1b1714);
+    border-radius: var(--sk-radius-lg, 6px);
+    background: var(--sk-color-ink, #1b1714);
+    color: var(--sk-color-ink-50, #faf5ec);
+    box-shadow: var(--sk-shadow-brutal, 5px 5px 0 0);
+    overflow: hidden;
+  }
+
+  .machine-body {
+    padding: 1.25rem 1.35rem 1.5rem;
+    /* The shell's --docs-raised is mixed from the LIGHT surface, so inline
+       code inside this dark panel rendered light-on-light and failed the
+       contrast gate. The override re-mixes the raised tint from the panel's
+       own ink so inline code keeps its pill without a light-on-light fill. */
+    --docs-raised: rgb(250 245 236 / 0.08);
+    --docs-edge: #6B5E52;
+  }
+
+  .machine .section-title,
+  .machine-body sk-text {
+    color: var(--sk-color-ink-50, #faf5ec);
+  }
+
+  .machine-body sk-text[muted] {
+    color: #C9BCA8;
+  }
+
+  .machine .links li {
+    color: #C9BCA8;
+  }
+
+  .machine .links code {
+    color: var(--sk-color-ink-50, #faf5ec);
+  }
+
   .machine > sk-text {
+
     display: block;
     margin-block-end: 0.5rem;
   }
