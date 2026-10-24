@@ -29,6 +29,13 @@ a {
   text-underline-offset: 0.2em;
 }
 
+/* A component with a display value in its own root rule defeats the UA
+   [hidden] { display: none } — a host set to hidden stayed visible. This
+   restores the attribute across every element, native or custom. */
+[hidden] {
+  display: none !important;
+}
+
 :focus-visible {
   outline: var(--sk-ring-width, 2px) solid var(--sk-color-focus-ring, #6d28d9);
   outline-offset: var(--sk-ring-offset, 2px);

@@ -42,6 +42,10 @@ export default defineConfig({
           "@santaka-ui/web-components/package.json",
           "dist/santaka.css",
         ),
+        "@santaka-ui/styles/index.css": resolvePackage(
+          "@santaka-ui/styles/package.json",
+          "dist/index.css",
+        ),
       },
     },
   },

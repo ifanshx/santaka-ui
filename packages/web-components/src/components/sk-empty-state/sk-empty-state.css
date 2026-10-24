@@ -6,6 +6,10 @@
  * here makes it focusable or interactive, deliberately.
  */
 
+sk-empty-state[hidden] {
+  display: none;
+}
+
 sk-empty-state {
   --sk-empty-state-bg: var(--sk-color-surface-raised, #f7f5fb);
   --sk-empty-state-fg: var(--sk-color-text, #17141c);

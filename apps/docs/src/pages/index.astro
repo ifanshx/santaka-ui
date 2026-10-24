@@ -196,6 +196,9 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           </tbody>
         </table>
       </sk-table>
+      <div class="table-footer">
+        <sk-pagination page={3} count={12} siblings={0} />
+      </div>
     </sk-card>
 
     {/* Overlays: the components a reader cannot judge from a static image,
@@ -246,7 +249,6 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         <sk-skeleton variant="text" />
         <sk-skeleton variant="text" />
         <sk-spinner size="sm" label="Loading components" />
-        <sk-pagination page={3} count={12} />
       </div>
     </sk-card>
   </section>
@@ -991,6 +993,16 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     grid-column: span 4;
   }
 
+  .bento-loading {
+    /* Pagination needs ~14rem of row width or the next button wraps under the
+       previous one. Spanning 6 keeps it on one row. */
+    grid-column: span 6;
+  }
+
+  .bento-tabs {
+    grid-column: span 6;
+  }
+
   /* The card body takes the slack, so a short panel's content sits at the top
      rather than floating in the middle of a tall box. */
   .bento > sk-card [data-slot="body"] {
@@ -998,6 +1010,20 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+  }
+
+  /* sk-table paints its own brutal shadow on the viewport; inside a card that
+     is a shadow within a shadow. The card is the surface here. */
+  .bento-table .sk-table__viewport {
+    box-shadow: none;
+    border-inline-width: 0;
+    border-block-end: 1px solid var(--docs-edge);
+    border-radius: 0;
+  }
+
+  .table-footer {
+    padding: 0.75rem 1rem;
+    border-block-start: 1px solid var(--docs-edge);
   }
 
   .bento-stack {
