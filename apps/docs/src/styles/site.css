@@ -238,6 +238,9 @@ body {
 
 main {
   min-inline-size: 0;
+  /* The frosted bar overlays scrolled content; every anchor target needs this
+     offset or headings land underneath it. */
+  scroll-padding-block-start: 4.5rem;
 }
 
 /* ── Prose pages ───────────────────────────────────────────────────────────

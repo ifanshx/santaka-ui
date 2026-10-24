@@ -313,9 +313,9 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     <div class="filters">
       <sk-input
         id="filter-search"
-        label="Search components"
+        label="Filter"
         type="search"
-        placeholder="button, dialog, toast…"
+        placeholder="Filter by name…"
         size="sm"
       />
       <sk-select
@@ -341,15 +341,12 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           data-stability={page.stability}
         >
           <sk-card variant="default" padding="sm" heading={page.tag}>
-            <sk-text variant="sm" muted>{page.summary}</sk-text>
-            <div class="card-meta">
-              <sk-badge
-                variant={page.stability === "stable" ? "success" : "warning"}
-                size="sm"
-              >
+            {page.stability !== "stable" && (
+              <sk-badge slot="header" variant="warning" size="sm" class="card-flag">
                 {page.stability}
               </sk-badge>
-            </div>
+            )}
+            <sk-text variant="sm" muted>{page.summary}</sk-text>
           </sk-card>
         </a>
       ))}
@@ -746,12 +743,36 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   /* The link wraps the card so the whole surface is clickable; the card is the
      visual, the anchor is the target. */
   .card-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: inherit;
     text-decoration: none;
   }
 
   .card-link sk-card {
+    position: relative;
+  }
+
+  /* The "opens a page" cue lives INSIDE the card's top-right corner — an arrow
+     in the grid gutter read as a pipeline connector between cards. Visible at
+     0.4 at rest so touch devices see the affordance without hovering. */
+  .card-link sk-card::after {
+    content: "↗";
+    position: absolute;
+    inset-block-start: 0.55rem;
+    inset-inline-end: 0.7rem;
+    font-size: 0.95rem;
+    color: var(--docs-muted);
+    opacity: 0.4;
+    transition: opacity var(--sk-duration-control, 140ms) ease, translate var(--sk-duration-control, 140ms) ease;
+  }
+
+  .card-link:hover sk-card::after {
+    opacity: 1;
+    translate: 2px -2px;
+    color: var(--sk-color-primary);
+  }
     display: block;
     block-size: 100%;
   }
@@ -762,6 +783,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
      the select keeps its intrinsic size, and both collapse on narrow screens. */
   .catalogue {
     margin-block-start: var(--docs-rhythm);
+    scroll-margin-block-start: 4.5rem;
   }
 
   .catalogue-head {
@@ -777,10 +799,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     gap: 0.75rem;
     align-items: flex-end;
     margin-block-end: 1.25rem;
-    padding: 1rem;
-    border: var(--docs-stroke) solid var(--docs-edge);
-    border-radius: var(--sk-radius-md, 10px);
-    background: var(--docs-raised);
+    /* No container box: inputs sit on the page background, flush with the grid
+       edges — the bordered wrapper was a box inside a box above a box of cards. */
   }
 
   .filters sk-input {
@@ -826,10 +846,17 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     }
   }
 
-  .card-meta {
+  /* Hover affordance: an arrow reveals on hover so the card reads as a link. */
+);
+
+
+);
+
+
+  .catalogue-more {
+    margin-block-start: 1.5rem;
     display: flex;
-    gap: 0.35rem;
-    margin-block-start: 0.6rem;
+    justify-content: center;
   }
 
   .section-eyebrow {
