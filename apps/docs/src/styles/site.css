@@ -66,6 +66,16 @@ body {
   outline-offset: 3px;
 }
 
+/* ── Situs chrome focus ─────────────────────────────────────────────────
+   Components carry their own focus ring; the site's own chrome (nav links,
+   cards, footer) otherwise had none — a keyboard reader tabbing into the
+   catalogue saw nothing move. One rule, one token, everywhere. */
+:where(.bar a, .bar button, footer.site a, .card-link, .card-link sk-card):focus-visible {
+  outline: 3px solid var(--sk-color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--sk-radius-sm, 6px);
+}
+
 /* ── Header ──────────────────────────────────────────────────────────────
    Sticky, with the stroke doubling as the divider. The brand carries the mark,
    because a system with a mascot should show it rather than describe it. */

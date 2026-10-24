@@ -258,6 +258,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       page show the shape of the argument — one behaviour owner, three adapters
       — and let the reader open only the part they doubt. */}
   <section class="how">
+    <p class="section-eyebrow" aria-hidden="true">01 — Architecture</p>
     <h2 class="section-title">How it works</h2>
     <sk-text variant="sm" muted class="section-lede">
       One implementation, three adapters. Open the step you want evidence for.
@@ -303,6 +304,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       the filter excludes everything rather than leaving a blank grid. */}
   <section class="catalogue" id="components">
     <div class="catalogue-head">
+    <p class="section-eyebrow" aria-hidden="true">02 — Library</p>
       <h2 class="section-title">All components</h2>
       <sk-badge variant="primary" size="sm">{pages.length}</sk-badge>
     </div>
@@ -370,6 +372,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     blocks.length > 0 && (
       <section class="group" id="blocks">
         <div class="group-head">
+          <p class="section-eyebrow" aria-hidden="true">03 — Compositions</p>
           <h2 class="section-title">Blocks</h2>
           <sk-badge variant="neutral" size="sm">
             {blocks.length}
@@ -409,6 +412,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         <span class="demo-title">santaka — machine registry</span>
       </div>
       <div class="machine-body">
+    <p class="section-eyebrow" aria-hidden="true">04 — Machine registry</p>
     <h2 class="section-title">For machines</h2>
     <sk-text variant="sm" muted>
       The same registry is served three ways, so an agent, an editor, or a script does not have to scrape this page.
@@ -783,10 +787,49 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     display: none;
   }
 
+  /* Hover: the card lifts 2px and its shadow deepens one step — the same
+     affordance the components give their own pressables. This was missing:
+     a catalogue of 38 cards where nothing answered the pointer. */
+  .card-link {
+    transition:
+      translate var(--sk-duration-control, 140ms) var(--sk-ease-arcade),
+      box-shadow var(--sk-duration-control, 140ms) var(--sk-ease-arcade);
+  }
+
+  .card-link:hover {
+    translate: 0 -2px;
+  }
+
+  .card-link:hover sk-card {
+    /* Set the CUSTOM PROPERTY, not box-shadow: the component sets its own
+       box-shadow from --sk-card-shadow internally, and a plain box-shadow here
+       loses the cascade to it. The property is the public lever. */
+    --sk-card-shadow: var(--sk-shadow-brutal-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-link,
+    .card-link:hover {
+      transition: none;
+      translate: none;
+    }
+  }
+
   .card-meta {
     display: flex;
     gap: 0.35rem;
     margin-block-start: 0.6rem;
+  }
+
+  .section-eyebrow {
+    margin: 0 0 0.4rem;
+    font-family: var(--docs-code);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--sk-color-primary);
   }
 
   .section-title {
