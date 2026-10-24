@@ -90,7 +90,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           <sk-input label="Email" type="email" placeholder="you@example.com" size="sm" />
           <sk-button variant="primary" size="sm">Save</sk-button>
         </div>
-        <sk-slider label="Volume" value={40} show-value format="%" />
+        <sk-slider label="Volume" value={40} show-value format={"$v%"} />
         <sk-progress value={72} label="Uploading" />
         <div class="demo-row">
           <sk-kbd>⌘</sk-kbd>
@@ -635,6 +635,11 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
        the command readable at rest instead of running under the copy control. */
     border-radius: var(--sk-radius-md, 4px);
     padding-inline-end: 5.5rem;
+    /* The command is 88+ chars; it will never fit a 594px column, so it
+       scrolls — and the fade masks the hard cut at the scroll edge. */
+    mask-image: linear-gradient(to right, #000 82%, transparent 99%);
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 99%);
+    scrollbar-width: none;
   }
 
   /* Positioned into the code block instead of after it: the row is the
@@ -870,6 +875,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
        own ink so inline code keeps its pill without a light-on-light fill. */
     --docs-raised: rgb(250 245 236 / 0.08);
     --docs-edge: #6B5E52;
+    /* The eyebrow inherits the light-theme primary (green.700, 3.3:1 on this
+       panel) — inside the dark shell it takes the dark-theme primary. */
   }
 
   .machine .section-title,
@@ -883,6 +890,16 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
   .machine .links li {
     color: #C9BCA8;
+  }
+
+  .machine .section-eyebrow {
+    /* A literal, deliberately: light.primary-text is green.700 for text on
+       light surfaces (3.3:1 on this panel), dark.primary-text is green.300.
+       No one token reads well on the dark shell in both themes, so the value
+       is the one colour that clears 4.5:1 on the shell in each — green.400,
+       8.0:1 light / 10:1 dark. */
+    color: var(--sk-color-primary-text);
+    color: #3EC483;
   }
 
   .machine .links code {
