@@ -1,66 +1,145 @@
 {
+  "$description": "Primitive colour ramps. Roles in themes reference these via {color.<ramp>.<step>}.",
   "color": {
     "$description": "Raw palette. Never referenced by components; semantic.color.* is the public contract.",
-    "white": { "$value": "#FFFFFF" },
-    "black": { "$value": "#000000" },
-    "violet": {
-      "$description": "Primary brand ramp (Playful Engineering identity).",
-      "50": { "$value": "#F5F3FF" },
-      "100": { "$value": "#EDE9FE" },
-      "200": { "$value": "#DDD6FE" },
-      "300": { "$value": "#C4B5FD" },
-      "400": { "$value": "#A78BFA" },
-      "500": { "$value": "#8B5CF6" },
-      "600": { "$value": "#7C3AED" },
-      "700": { "$value": "#6D28D9" },
-      "800": { "$value": "#5B21B6" },
-      "900": { "$value": "#4C1D95" },
-      "950": { "$value": "#2E1065" }
+    "white": {
+      "$value": "#FFFFFF"
+    },
+    "black": {
+      "$value": "#000000"
     },
     "ink": {
-      "$description": "Neutral ramp with a violet cast, matching the ink/dark base direction.",
-      "0": { "$value": "#FFFFFF" },
-      "50": { "$value": "#F7F5FB" },
-      "100": { "$value": "#F1EEF8" },
-      "200": { "$value": "#E2DFF0" },
-      "400": { "$value": "#A9A3BD" },
-      "500": { "$value": "#8B85A0" },
-      "600": { "$value": "#5F5A6B" },
-      "700": { "$value": "#3A3546" },
-      "800": { "$value": "#17141C" },
-      "850": { "$value": "#1A1622" },
-      "875": { "$value": "#6B6480" },
-      "900": { "$value": "#0F0D14" },
-      "950": { "$value": "#0A0910" }
+      "0": {
+        "$value": "#FFFFFF"
+      },
+      "50": {
+        "$value": "#FAF5EC"
+      },
+      "100": {
+        "$value": "#F2ECE1"
+      },
+      "200": {
+        "$value": "#E8DFCD"
+      },
+      "400": {
+        "$value": "#A1958A"
+      },
+      "500": {
+        "$value": "#8A7D6F"
+      },
+      "600": {
+        "$value": "#6A5F52",
+        "$description": "Muted text. Darkened from Santaka-Pay raw #776C5F, which was 4.36:1 on cream — below the 4.5:1 gate."
+      },
+      "700": {
+        "$value": "#443B33"
+      },
+      "800": {
+        "$value": "#1B1714"
+      },
+      "850": {
+        "$value": "#241D18"
+      },
+      "875": {
+        "$value": "#6B5E52"
+      },
+      "900": {
+        "$value": "#13100C"
+      },
+      "950": {
+        "$value": "#0A0806"
+      },
+      "$description": "Neutral ramp with a violet cast, matching the ink/dark base direction."
     },
     "red": {
-      "300": { "$value": "#FCA5A5" },
-      "500": { "$value": "#EF4444" },
-      "550": { "$value": "#E02424" },
-      "600": { "$value": "#DC2626" },
-      "700": { "$value": "#B91C1C" },
-      "800": { "$value": "#991B1B" }
+      "300": {
+        "$value": "#FCA5A5"
+      },
+      "500": {
+        "$value": "#EF4444"
+      },
+      "550": {
+        "$value": "#E02424"
+      },
+      "600": {
+        "$value": "#DC2626"
+      },
+      "700": {
+        "$value": "#B91C1C"
+      },
+      "800": {
+        "$value": "#991B1B"
+      }
     },
     "green": {
-      "300": { "$value": "#86EFAC" },
-      "400": { "$value": "#4ADE80" },
-      "500": { "$value": "#22C55E" },
-      "600": { "$value": "#15803D" },
-      "700": { "$value": "#166534" }
+      "50": {
+        "$value": "#F0FAF4"
+      },
+      "100": {
+        "$value": "#DCF2E5"
+      },
+      "200": {
+        "$value": "#BBE6CE"
+      },
+      "300": {
+        "$value": "#7ED4A4"
+      },
+      "400": {
+        "$value": "#3EC483"
+      },
+      "500": {
+        "$value": "#19C463"
+      },
+      "600": {
+        "$value": "#12A454"
+      },
+      "700": {
+        "$value": "#0B7A46"
+      },
+      "800": {
+        "$value": "#085C36"
+      },
+      "900": {
+        "$value": "#064527"
+      },
+      "950": {
+        "$value": "#032A18"
+      },
+      "$description": "Primary ramp, matched to Santaka-Pay: #0B7A46 chrome green and #19C463 CTA green."
     },
     "amber": {
-      "300": { "$value": "#FCD34D" },
-      "500": { "$value": "#F59E0B" },
-      "700": { "$value": "#B45309" },
-      "800": { "$value": "#92400E" }
+      "300": {
+        "$value": "#FCD34D"
+      },
+      "400": {
+        "$value": "#FFC531",
+        "$description": "CTA amber, Santaka-Pay secondary-cta."
+      },
+      "500": {
+        "$value": "#F59E0B"
+      },
+      "700": {
+        "$value": "#B45309"
+      },
+      "800": {
+        "$value": "#92400E"
+      }
     },
     "coral": {
-      "300": { "$value": "#FDA4A0" },
-      "400": { "$value": "#F97362" }
+      "300": {
+        "$value": "#FDA4A0"
+      },
+      "400": {
+        "$value": "#F97362"
+      }
     },
     "mint": {
-      "300": { "$value": "#5EEAD4" },
-      "600": { "$value": "#0D9488" }
+      "300": {
+        "$value": "#5EEAD4"
+      },
+      "600": {
+        "$value": "#0D9488"
+      }
     }
   }
 }

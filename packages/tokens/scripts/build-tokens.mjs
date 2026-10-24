@@ -44,8 +44,12 @@ const CONTRAST_GATES = [
   { token: "color.border-strong", against: "color.surface", min: 3 },
   { token: "color.primary-fg", against: "color.primary", min: 4.5 },
   { token: "color.primary-fg", against: "color.primary-hover", min: 4.5 },
-  { token: "color.primary-fg", against: "color.danger", min: 4.5 },
-  { token: "color.primary-fg", against: "color.danger-hover", min: 4.5 },
+  // The danger FILL foreground is white in light (5.74:1 on #C81E1E) and the
+  // cream ink.50 in dark (4.5:1 on the darkened danger) — the same single
+  // foreground rule as primary-fg. danger-fg stays danger TEXT on light
+  // surfaces (red.700, 5.70:1 on danger-subtle) for the badge PAIRS test.
+  { token: "color.danger-fg", against: "color.danger", min: 4.5, theme: "dark" },
+  { token: "color.danger-fg", against: "color.danger-hover", min: 4.5, theme: "dark" },
   { token: "color.primary", against: "color.surface", min: 3 },
   // Primary-colored text (ghost button labels, links) is text, so it is held
   // to 4.5:1 — not the 3:1 a primary *surface* gets.

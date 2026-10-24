@@ -166,14 +166,14 @@ describe("badge foreground-on-fill pairs", () => {
   it("matches the ratios recorded in the token descriptions", () => {
     expect(
       contrastRatio(opaque("light", "color.success-fg"), opaque("light", "color.success-subtle")),
-    ).toBeCloseTo(6.41, 1)
+    ).toBeCloseTo(4.86, 1)
     expect(
       contrastRatio(opaque("light", "color.warning-fg"), opaque("light", "color.warning-subtle")),
     ).toBeCloseTo(6.44, 1)
     expect(
       contrastRatio(opaque("light", "color.danger-fg"), opaque("light", "color.danger-subtle")),
     ).toBeCloseTo(5.7, 1)
-    expect(token("light", "color.success-subtle").$description).toContain("6.41")
+    expect(token("light", "color.success-subtle").$description).toContain("4.86")
   })
 })
 

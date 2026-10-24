@@ -14,7 +14,7 @@
       "$description": "Wells, inset regions, table stripes."
     },
     "border": {
-      "$value": "#2A2438",
+      "$value": "#3A322A",
       "$description": "Decorative separators only; not load-bearing for meaning."
     },
     "border-strong": {
@@ -22,7 +22,7 @@
       "$description": "Input borders and control outlines. 3.46:1 vs surface."
     },
     "text": {
-      "$value": "#F5F3FA",
+      "$value": "{color.ink.50}",
       "$description": "Primary text. 17.54:1 vs surface."
     },
     "text-muted": {
@@ -30,32 +30,32 @@
       "$description": "Secondary text and helper copy. 7.96:1 vs surface."
     },
     "primary": {
-      "$value": "{color.violet.600}",
+      "$value": "{color.green.700}",
       "$description": "Primary action surface. White text 5.70:1."
     },
     "primary-text": {
-      "$value": "{color.violet.400}",
+      "$value": "{color.green.300}",
       "$description": "Primary-colored TEXT on the surface — ghost button labels, links. 7.09:1 vs surface, WCAG AA. `primary` itself is a surface color: on dark, violet.600 is 3.39:1 against surface, fine under white text and useless as text."
     },
     "primary-hover": {
-      "$value": "{color.violet.700}",
+      "$value": "{color.green.800}",
       "$description": "White text 7.10:1."
     },
     "primary-fg": {
-      "$value": "{color.white}",
+      "$value": "#FFFFFF",
       "$description": "Text and icon color on top of --sk-color-primary."
     },
     "danger": {
-      "$value": "{color.red.550}",
+      "$value": "#C81E1E",
       "$description": "Destructive action surface. White text 4.72:1; 4.09:1 vs surface."
     },
     "danger-hover": {
-      "$value": "{color.red.700}",
+      "$value": "#A61B1B",
       "$description": "White text 6.47:1; 5.72:1 vs surface."
     },
     "danger-fg": {
-      "$value": "{color.red.300}",
-      "$description": "Danger text and icons on dark surfaces."
+      "$value": "{color.ink.50}",
+      "$description": "Text and icons on the danger fill in dark theme. Cream clears 4.5:1 on the darkened danger surface."
     },
     "success": {
       "$value": "{color.green.400}",
@@ -63,7 +63,7 @@
     },
     "success-fg": {
       "$value": "{color.green.300}",
-      "$description": "Success text and icons on dark surfaces."
+      "$description": "Success text and icons on dark surfaces. On success-subtle #12291B it is 8.71:1."
     },
     "warning": {
       "$value": "{color.amber.300}",
@@ -71,7 +71,7 @@
     },
     "warning-fg": {
       "$value": "{color.amber.300}",
-      "$description": "Warning text and icons on dark surfaces."
+      "$description": "Warning text and icons on dark surfaces. On warning-subtle #2B1F0B it is 11.17:1."
     },
     "success-subtle": {
       "$value": "#12291B",
@@ -86,7 +86,7 @@
       "$description": "Tinted fill for badges and soft state chips. Danger foreground on it is 9.14:1."
     },
     "primary-subtle": {
-      "$value": "#1F1533",
+      "$value": "#0E2A1B",
       "$description": "Tinted fill for badges and soft state chips. Pair it with --sk-color-primary-fg, not --sk-color-primary: white on this fill is 17.31:1, while violet is 3.04:1. Note this is the reverse of the light theme, where the pairing flips — check the theme rather than assuming."
     },
     "accent-coral": {
@@ -98,21 +98,21 @@
       "$description": "Decoration and data-viz accent. Never the sole carrier of state."
     },
     "focus-ring": {
-      "$value": "{color.violet.300}",
+      "$value": "{color.green.300}",
       "$description": "Focus indicator. 10.46:1 vs surface; 3:1 against adjacent colors."
     },
     "shadow": {
-      "$value": "#0A0910",
+      "$value": "#000000",
       "$description": "Hard offset shadow color, dark theme. Near-black rather than pure black so the shadow stays a shadow on an already-dark surface. A shadow only darkens, so it cannot meet a 3:1 ratio against a dark surface in either direction; the gate therefore applies to the light theme, and the dark theme gates the visible chrome stroke (`color.border-strong`) instead."
     }
   },
   "glass": {
     "$description": "Glass overlay roles, dark theme. The only alpha values in the system; `blur` and `saturate` are theme-independent and declared in dimensions.tokens.json, every color here is per theme.",
     "bg": {
-      "$value": "rgb(26 22 34 / 0.72)"
+      "$value": "rgb(36 29 24 / 0.72)"
     },
     "bg-strong": {
-      "$value": "rgb(20 17 26 / 0.86)",
+      "$value": "rgb(28 24 19 / 0.86)",
       "$description": "Panels that sit over busy content and still need to carry text."
     },
     "border": {
@@ -123,14 +123,14 @@
       "$description": "Top-edge specular line; what reads as iOS rather than a translucent box."
     },
     "fallback": {
-      "$value": "rgb(15 13 20 / 0.98)",
+      "$value": "rgb(28 24 19 / 0.98)",
       "$description": "Solid surface used when `backdrop-filter` is unsupported, dark theme. Near-black rather than a light surface: a fallback must never put light text on a light panel."
     }
   },
   "shadow": {
     "$description": "Per-theme colour for the layered shadow. Kept out of color.* because the ambient layer carries alpha and a colour leaf must be a resolvable hex.",
     "hard": {
-      "$value": "#0A0910",
+      "$value": "#000000",
       "$description": "Hard offset shadow color, dark theme. Near-black rather than pure black so the shadow stays a shadow on an already-dark surface. A shadow only darkens, so it cannot meet a 3:1 ratio against a dark surface in either direction; the gate therefore applies to the light theme, and the dark theme gates the visible chrome stroke (`color.border-strong`) instead."
     },
     "ambient": {
