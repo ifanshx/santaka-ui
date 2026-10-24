@@ -140,6 +140,10 @@
     "ambient": {
       "$value": "rgb(27 23 20 / 0.35)",
       "$description": "Ambient layer under the hard offset: the same ink at low alpha, so a lifted surface reads as lifted in light theme without a second hard edge."
+    },
+    "soft": {
+      "$value": "rgb(27 23 20 / 0.06)",
+      "$description": "The contact layer: a 1px whisper under raised chrome. Lower alpha than ambient — it reads as precision, not as weight."
     }
   }
 }

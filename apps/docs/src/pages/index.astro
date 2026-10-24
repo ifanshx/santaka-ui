@@ -28,6 +28,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   description={`${pages.length} accessible web components with thin React, Vue, and Svelte adapters. Tokens, a CLI, a versioned registry, and MCP metadata — no framework lock-in.`}
 >
   <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-copy">
     <sk-badge variant="primary" size="sm">Design system</sk-badge>
 
@@ -49,6 +50,26 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     <div class="cta">
       <sk-button variant="primary" size="lg" href="/quick-start">Quick start</sk-button>
       <sk-button variant="outline" size="lg" href="/showcase">See them rendered</sk-button>
+    <div class="install">
+      <sk-text variant="sm" muted>Install</sk-text>
+      {/* The copy control sits inside the code block, the way shadcn/ui and
+          most developer documentation do, rather than beside it as a second
+          box with its own shadow. Two adjacent bordered boxes read as two
+          components; one box with a control in it reads as one. */}
+      <div class="install-row">
+        <pre tabindex="0" aria-label="Install command, scrollable"><code>{install}</code></pre>
+        <sk-button
+          class="install-copy"
+          variant="ghost"
+          size="sm"
+          id="copy-install"
+          data-copy={install}
+          aria-label="Copy the install command"
+        >
+          Copy
+        </sk-button>
+      </div>
+    </div>
     </div>
 
     </div>
@@ -79,26 +100,6 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
       </div>
     </aside>
 
-    <div class="install">
-      <sk-text variant="sm" muted>Install</sk-text>
-      {/* The copy control sits inside the code block, the way shadcn/ui and
-          most developer documentation do, rather than beside it as a second
-          box with its own shadow. Two adjacent bordered boxes read as two
-          components; one box with a control in it reads as one. */}
-      <div class="install-row">
-        <pre tabindex="0" aria-label="Install command, scrollable"><code>{install}</code></pre>
-        <sk-button
-          class="install-copy"
-          variant="ghost"
-          size="sm"
-          id="copy-install"
-          data-copy={install}
-          aria-label="Copy the install command"
-        >
-          Copy
-        </sk-button>
-      </div>
-    </div>
   </section>
 
   <section class="facts" aria-label="At a glance">
@@ -446,7 +447,40 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   }
 
   .hero {
+    position: relative;
+    isolation: isolate;
+    /* The glow is oversized by design; clip it to the hero so it never pushes
+       the document wider than the viewport. */
+    overflow: clip;
     padding-block: clamp(1.5rem, 4vw, 3rem) 0;
+  }
+
+  /* 2026 idiom: one soft radial glow behind the hero copy, in the primary
+     hue at very low alpha. Decorative only (aria-hidden), and a single
+     element — no gradient banner, no grid of sparkles. */
+  .hero-glow {
+    position: absolute;
+    inset-block-start: -20%;
+    inset-inline-start: 38%;
+    z-index: -1;
+    inline-size: min(52rem, 64vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--sk-color-primary) 22%, transparent),
+      transparent 70%
+    );
+    filter: blur(10px);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-glow {
+      filter: none;
+    }
+  }
+  .hero {
     /* Two-column hero: copy left, live demo right. Fills the right-hand void
        the page was criticized for, and the demo panel is REAL components — the
        same trick as the bento, moved above the fold. */

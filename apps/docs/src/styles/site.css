@@ -78,8 +78,20 @@ body {
   align-items: center;
   gap: 1rem 1.5rem;
   padding: 0.7rem var(--docs-gutter);
-  border-block-end: var(--docs-stroke) solid var(--docs-edge);
-  background: var(--sk-color-surface, #fff);
+  /* 2026-modern navbar: frosted glass over the page, with a hairline that
+     fades instead of a 2px stroke. Elevation reads through translucency, not
+     through a slab border. */
+  border-block-end: 1px solid var(--docs-edge);
+  background: var(--sk-glass-bg, rgb(255 253 248 / 0.72));
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: var(--sk-shadow-xs, 0 1px 2px var(--sk-shadow-soft));
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bar {
+    background: var(--sk-glass-fallback, rgb(250 245 236 / 0.98));
+  }
 }
 
 .brand {

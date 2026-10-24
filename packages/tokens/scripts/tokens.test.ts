@@ -223,21 +223,19 @@ describe("primary-subtle", () => {
 describe("shadow tokens", () => {
   // Hard offsets with zero blur. A blur radius creeping back in would soften the
   // treatment that the whole elevation ladder exists to create.
-  it("emits offsets with no blur radius", () => {
+  it("emits layered soft elevation, never a hard offset", () => {
+    // The 2026 pass retires the hard neo-brutalist offset: on cream it vibrated
+    // and on dark it vanished. Every shadow value now carries at least one
+    // blur — geometry references --sk-shadow-soft/-ambient rather than inline
+    // lengths, so the assertion is that a blur exists and an x/y offset of the
+    // hard kind does not.
     const dimensions = source("dimensions.tokens.json")
     for (const [path, leaf] of Object.entries(dimensions)) {
       if (!path.startsWith("shadow.") || !leaf) continue
       const value = String(leaf.$value)
       if (value === "none") continue
-      // Shorthand is `<x> <y> <blur> <spread>`; the zero blur and spread are
-      // written unitless because the whole ladder is unitless.
-      const [x, y, blur, spread] = value.split(/\s+/)
-      if (!x || !y || !blur || !spread) {
-        throw new Error(`${path} is not an x/y/blur/spread shorthand: ${value}`)
-      }
-      expect(Number.parseFloat(blur), `${path} must have zero blur`).toBe(0)
-      expect(Number.parseFloat(spread), `${path} must have zero spread`).toBe(0)
-      expect(Number.parseFloat(x), `${path} must offset horizontally`).not.toBe(0)
+      expect(value, `${path} keeps no hard solid offset block`).not.toMatch(/\b0 0 0\s*0(\s|$)/)
+      expect(/blur|var\(/.test(value), `${path} carries a blurred layer or a geometry variable`).toBe(true)
     }
   })
 

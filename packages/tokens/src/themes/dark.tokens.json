@@ -136,6 +136,10 @@
     "ambient": {
       "$value": "rgb(0 0 0 / 0.55)",
       "$description": "Ambient layer under the hard offset. Darker and stronger than light theme, because a dark surface swallows a light shadow and the hard offset alone would be invisible."
+    },
+    "soft": {
+      "$value": "rgb(0 0 0 / 0.24)",
+      "$description": "The contact layer: a 1px whisper under raised chrome. Lower alpha than ambient — it reads as precision, not as weight."
     }
   }
 }
