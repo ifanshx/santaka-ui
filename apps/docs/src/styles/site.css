@@ -367,17 +367,21 @@ th {
   font-size: clamp(1.05rem, 2.2vw, 1.2rem);
   line-height: 1.55;
   color: var(--docs-muted);
-  max-inline-size: 62ch;
-  margin-block-start: 1rem;
+  margin-block-start: 0.25rem;
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 footer.site {
   margin-block-start: 4rem;
-  padding-block-start: 1.5rem;
+  padding-block-start: 2rem;
   border-block-start: var(--docs-stroke) solid var(--docs-edge);
   font-size: 0.875rem;
   color: var(--docs-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
 }
 
 footer.site nav {
@@ -390,7 +394,7 @@ footer.site nav {
 
 footer.site .footer-taka {
   display: inline-block;
-  inline-size: 1.4rem;
+  inline-size: 2rem;
   vertical-align: -0.35rem;
   margin-inline-end: 0.4rem;
 }
