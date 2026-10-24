@@ -88,6 +88,7 @@ body {
   align-items: center;
   gap: 1rem 1.5rem;
   padding: 0.7rem var(--docs-gutter);
+
   /* 2026-modern navbar: frosted glass over the page, with a hairline that
      fades instead of a 2px stroke. Elevation reads through translucency, not
      through a slab border. */

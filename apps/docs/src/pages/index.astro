@@ -30,7 +30,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   <section class="hero">
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-copy">
-    <sk-badge variant="primary" size="sm">Design system</sk-badge>
+    <sk-badge variant="primary" size="sm">Open source · MIT</sk-badge>
 
     {/* A real <h1>. The page previously had none: `sk-text` renders a <span>,
         so the headline looked like a headline and was semantically nothing —
@@ -90,7 +90,7 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           <sk-input label="Email" type="email" placeholder="you@example.com" size="sm" />
           <sk-button variant="primary" size="sm">Save</sk-button>
         </div>
-        <sk-slider label="Volume" value={40} show-value format={"$v%"} />
+        <sk-slider label="Volume" value={60} show-value format={"$v%"} />
         <sk-progress value={72} label="Uploading" />
         <div class="demo-row">
           <sk-kbd>⌘</sk-kbd>
@@ -178,28 +178,12 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
 
     <sk-card class="bento-slider" heading="Range" padding="md">
       <div class="bento-stack">
-        <sk-slider label="Volume" value={40} show-value format="%" />
+        <sk-slider label="Volume" value={60} show-value format={"$v%"} />
         <sk-switch label="Reduce motion" />
       </div>
     </sk-card>
 
-    <sk-card class="bento-table" heading="Table" padding="none">
-      <sk-table striped compact>
-        <table>
-          <thead>
-            <tr><th>Component</th><th>Owner</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>sk-button</code></td><td>web-components</td></tr>
-            <tr><td><code>sk-dialog</code></td><td>web-components</td></tr>
-            <tr><td><code>sk-select</code></td><td>web-components</td></tr>
-          </tbody>
-        </table>
-      </sk-table>
-      <div class="table-footer">
-        <sk-pagination page={3} count={12} siblings={0} />
-      </div>
-    </sk-card>
+    
 
     {/* Overlays: the components a reader cannot judge from a static image,
         because their whole job is what happens after a click. A popover and a
@@ -239,11 +223,24 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
           <span>Tooltips delay 300ms and dismiss on Escape</span>
         </sk-tooltip>
       </div>
+    </sk-card><sk-card class="bento-table" heading="Table" padding="none">
+      <sk-table striped compact>
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>sk-button</code></td><td>web-components</td></tr>
+            <tr><td><code>sk-dialog</code></td><td>web-components</td></tr>
+            <tr><td><code>sk-select</code></td><td>web-components</td></tr>
+          </tbody>
+        </table>
+      </sk-table>
+      <div class="table-footer">
+        <sk-pagination page={3} count={12} siblings={0} />
+      </div>
     </sk-card>
 
-    {/* Loading and paging. A skeleton is the one component that only makes
-        sense in motion, and pagination is the one that only makes sense with
-        more than one page — so both are shown in the state they exist for. */}
     <sk-card class="bento-loading" heading="Loading" padding="md">
       <div class="bento-stack">
         <sk-skeleton variant="text" />
@@ -251,6 +248,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
         <sk-spinner size="sm" label="Loading components" />
       </div>
     </sk-card>
+
+    
   </section>
   <sk-separator decorative />
 
@@ -588,9 +587,9 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   .lede {
     display: block;
     margin-block-start: 1.5rem;
-    max-inline-size: 58ch;
+    max-inline-size: 52ch;
     font-size: 1.125rem;
-    line-height: 1.65;
+    line-height: 1.7;
   }
 
   .cta {
@@ -639,8 +638,8 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     padding-inline-end: 5.5rem;
     /* The command is 88+ chars; it will never fit a 594px column, so it
        scrolls — and the fade masks the hard cut at the scroll edge. */
-    mask-image: linear-gradient(to right, #000 82%, transparent 99%);
-    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 99%);
+    /* Fade mask on the INNER code element — the mask on pre was clipped by the
+       same element and never read as a fade. */
     scrollbar-width: none;
   }
 
@@ -650,6 +649,11 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
      so the affordance is unchanged. */
   .install-row {
     position: relative;
+  }
+
+  .install-row pre {
+    mask-image: linear-gradient(to right, #000 78%, transparent 97%);
+    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent 97%);
   }
 
   .install-copy {
@@ -960,8 +964,9 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
   .bento {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: minmax(0, auto);
-    align-items: stretch;
+    /* Natural heights, pairs grouped by content volume: a shorter card no longer
+       stretches into dead space to match its neighbour. */
+    align-items: start;
     gap: 1rem;
     margin-block: var(--docs-rhythm);
   }
