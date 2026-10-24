@@ -579,8 +579,10 @@ const install = "pnpm add @santaka-ui/web-components @santaka-ui/tokens @santaka
     margin: 0;
     /* Same elevation as every other raised surface: the code block is a card
        with a monospace face, not a flat panel. Without this it was the one
-       surface on the page with a stroke and no shadow. */
+       surface on the page with a stroke and no shadow. The end padding keeps
+       the command readable at rest instead of running under the copy control. */
     border-radius: var(--sk-radius-md, 4px);
+    padding-inline-end: 5.5rem;
   }
 
   /* Positioned into the code block instead of after it: the row is the
